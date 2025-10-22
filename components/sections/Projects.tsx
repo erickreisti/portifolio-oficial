@@ -28,7 +28,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
       <Card className="flex h-full flex-col overflow-hidden transition-all duration-300 hover:border-primary-default/50 hover:shadow-primary-default/20 shadow-xl bg-background/80 backdrop-blur-sm group">
         {/* Placeholder de Imagem com hover effect */}
         <div className="h-48 w-full bg-gradient-to-br from-primary-default/10 to-primary-default/5 flex items-center justify-center relative overflow-hidden">
-          <span className="text-foreground/70 font-semibold z-10">
+          <span className="text-foreground/70 font-sans font-semibold z-10">
             Imagem do Projeto ({project.title})
           </span>
           {/* Overlay no hover */}
@@ -36,10 +36,10 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
         </div>
 
         <CardHeader className="flex-grow">
-          <CardTitle className="text-xl font-bold text-foreground group-hover:text-primary-default transition-colors duration-300">
+          <CardTitle className="text-xl font-heading font-bold text-foreground group-hover:text-primary-default transition-colors duration-300">
             {project.title}
           </CardTitle>
-          <CardDescription className="text-base text-foreground/70 leading-relaxed">
+          <CardDescription className="text-base text-foreground/70 leading-relaxed font-sans">
             {project.description}
           </CardDescription>
         </CardHeader>
@@ -50,7 +50,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
               <Badge
                 key={tag}
                 variant="secondary"
-                className="text-xs font-medium bg-primary-default/10 text-primary-default border border-primary-default/20 hover:bg-primary-default/20 transition-colors"
+                className="text-xs font-sans font-medium bg-primary-default/10 text-primary-default border border-primary-default/20 hover:bg-primary-default/20 transition-colors"
               >
                 {tag}
               </Badge>
@@ -64,7 +64,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
               asChild
               variant="default"
               size="sm"
-              className="bg-primary-default hover:bg-primary-default/90 text-white"
+              className="bg-primary-default hover:bg-primary-default/90 text-white font-heading"
             >
               <NextLink href={project.githubUrl} target="_blank">
                 <Github className="mr-2 h-4 w-4" />
@@ -76,7 +76,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
                 asChild
                 variant="outline"
                 size="sm"
-                className="border-primary-default/30 text-foreground hover:bg-primary-default/10 hover:border-primary-default/50"
+                className="border-primary-default/30 text-foreground hover:bg-primary-default/10 hover:border-primary-default/50 font-heading"
               >
                 <NextLink href={project.liveUrl} target="_blank">
                   <LinkIcon className="mr-2 h-4 w-4" />
@@ -95,15 +95,18 @@ export const Projects = () => {
   return (
     <section
       id="projects"
-      className="py-20 lg:py-32 bg-gradient-to-br from-background via-blue-50/20 to-background dark:from-background dark:via-blue-950/10 dark:to-background border-t border-border relative overflow-hidden"
+      className="py-20 lg:py-32 bg-background border-t border-border/50 relative overflow-hidden"
     >
+      {/* Background sutil */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-50/30 to-background dark:from-gray-900/20 dark:to-background" />
+
       {/* Elementos decorativos */}
       <div className="absolute top-10 left-10 opacity-5">
         <Star className="h-32 w-32 text-primary-default" />
       </div>
 
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header da Seção */}
+        {/* Header da Seção - COM FONT POIPPINS */}
         <MotionDiv
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -111,17 +114,17 @@ export const Projects = () => {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          <div className="inline-flex items-center text-sm font-semibold uppercase tracking-widest text-primary-default bg-primary-default/10 px-4 py-2 rounded-full border border-primary-default/20 mb-4">
+          <div className="inline-flex items-center text-sm font-heading font-semibold uppercase tracking-widest text-primary-default bg-primary-default/10 px-4 py-2 rounded-full border border-primary-default/20 mb-4">
             <Star className="h-4 w-4 mr-2" />
             Portfolio
           </div>
-          <h2 className="text-4xl font-bold text-foreground sm:text-5xl lg:text-6xl">
+          <h2 className="text-4xl font-heading font-bold text-foreground sm:text-5xl lg:text-6xl">
             Projetos{" "}
             <span className="text-primary-default bg-gradient-to-r from-primary-default to-blue-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-cyan-400">
               em Destaque
             </span>
           </h2>
-          <p className="text-xl text-foreground/70 mt-6 max-w-2xl mx-auto">
+          <p className="text-xl text-foreground/70 mt-6 max-w-2xl mx-auto font-sans">
             Soluções reais desenvolvidas com tecnologias modernas e melhores
             práticas
           </p>
@@ -142,9 +145,9 @@ export const Projects = () => {
           viewport={{ once: true }}
           className="mt-16 text-center"
         >
-          <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
+          <p className="text-lg text-foreground/70 max-w-2xl mx-auto font-sans">
             Quer ver mais projetos ou discutir uma ideia?{" "}
-            <span className="text-primary-default font-semibold">
+            <span className="text-primary-default font-heading font-semibold">
               Vamos conversar!
             </span>
           </p>

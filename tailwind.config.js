@@ -16,6 +16,10 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["var(--font-open-sans)", "system-ui", "sans-serif"],
+        heading: ["var(--font-poppins)", "system-ui", "sans-serif"],
+      },
       colors: {
         // CINZAS DO RAINBOWIT (para usar no header)
         gray: {

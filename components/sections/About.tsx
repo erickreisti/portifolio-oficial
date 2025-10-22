@@ -37,18 +37,21 @@ export const About = () => {
   return (
     <section
       id="about"
-      className="py-20 lg:py-32 bg-gradient-to-br from-background via-blue-50/20 to-background dark:from-background dark:via-blue-950/10 dark:to-background border-t border-border relative overflow-hidden"
+      className="py-20 lg:py-32 bg-background border-t border-border/50 relative overflow-hidden"
     >
+      {/* Background sutil */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-50/30 to-background dark:from-gray-900/20 dark:to-background" />
+
       {/* Elementos decorativos sutis */}
       <div className="absolute top-10 left-10 opacity-5">
-        <Code2 className="h-32 w-32 text-blue-500" />
+        <Code2 className="h-32 w-32 text-primary-default" />
       </div>
       <div className="absolute bottom-10 right-10 opacity-5">
-        <Users className="h-32 w-32 text-blue-500" />
+        <Users className="h-32 w-32 text-primary-default" />
       </div>
 
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Título da Seção */}
+        {/* Título da Seção - COM FONT POIPPINS */}
         <MotionDiv
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -56,17 +59,17 @@ export const About = () => {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          <div className="inline-flex items-center text-sm font-semibold uppercase tracking-widest text-primary-default bg-primary-default/10 px-4 py-2 rounded-full border border-primary-default/20 mb-4">
+          <div className="inline-flex items-center text-sm font-heading font-semibold uppercase tracking-widest text-primary-default bg-primary-default/10 px-4 py-2 rounded-full border border-primary-default/20 mb-4">
             <Target className="h-4 w-4 mr-2" />
             Minha Jornada
           </div>
-          <h2 className="text-4xl font-bold text-foreground sm:text-5xl lg:text-6xl mt-4">
+          <h2 className="text-4xl font-heading font-bold text-foreground sm:text-5xl lg:text-6xl mt-4">
             Sobre{" "}
             <span className="text-primary-default bg-gradient-to-r from-primary-default to-blue-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-cyan-400">
               Mim
             </span>
           </h2>
-          <p className="text-xl text-foreground/70 mt-6 max-w-2xl mx-auto">
+          <p className="text-xl text-foreground/70 mt-6 max-w-2xl mx-auto font-sans">
             Conheça minha trajetória, paixões e o que me motiva a criar soluções
             incríveis
           </p>
@@ -81,7 +84,7 @@ export const About = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              <p className="text-xl text-foreground/80 leading-relaxed font-medium bg-background/50 p-6 rounded-2xl border border-border/50 backdrop-blur-sm">
+              <p className="text-xl text-foreground/80 leading-relaxed font-sans font-medium bg-background/50 p-6 rounded-2xl border border-border/50 backdrop-blur-sm">
                 {bioData.paragraph1}
               </p>
             </MotionDiv>
@@ -92,7 +95,7 @@ export const About = () => {
               transition={{ duration: 0.6, delay: 0.3 }}
               viewport={{ once: true }}
             >
-              <p className="text-xl text-foreground/80 leading-relaxed bg-background/50 p-6 rounded-2xl border border-border/50 backdrop-blur-sm">
+              <p className="text-xl text-foreground/80 leading-relaxed font-sans bg-background/50 p-6 rounded-2xl border border-border/50 backdrop-blur-sm">
                 {bioData.paragraph2}
               </p>
             </MotionDiv>
@@ -113,10 +116,10 @@ export const About = () => {
                   <div className="h-12 w-12 rounded-full bg-primary-default/10 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary-default/20 transition-colors duration-300">
                     <highlight.icon className="h-6 w-6 text-primary-default" />
                   </div>
-                  <div className="font-bold text-foreground text-lg">
+                  <div className="font-heading font-bold text-foreground text-lg">
                     {highlight.text}
                   </div>
-                  <div className="text-primary-default font-semibold text-sm mt-1">
+                  <div className="text-primary-default font-heading font-semibold text-sm mt-1">
                     {highlight.value}
                   </div>
                 </div>
@@ -134,13 +137,13 @@ export const About = () => {
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center space-x-3">
                   <Target className="h-6 w-6 text-primary-default" />
-                  <span className="text-xl font-bold text-primary-default">
+                  <span className="text-xl font-heading font-bold text-primary-default">
                     Pronto para o próximo desafio.
                   </span>
                 </div>
                 <Button
                   asChild
-                  className="bg-primary-default hover:bg-primary-default/90 text-black dark:text-white px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 relative overflow-hidden group"
+                  className="bg-primary-default hover:bg-primary-default/90 text-black dark:text-white px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 relative overflow-hidden group font-heading"
                 >
                   <a href="#contact">
                     Vamos Trabalhar Juntos
@@ -161,11 +164,11 @@ export const About = () => {
             >
               <Card className="h-full bg-background/80 backdrop-blur-sm border-2 border-primary-default/20 shadow-2xl hover:shadow-primary-default/20 transition-all duration-500 hover:scale-105">
                 <CardHeader className="pb-4 border-b border-border/50">
-                  <CardTitle className="text-2xl font-bold text-primary-default flex items-center">
+                  <CardTitle className="text-2xl font-heading font-bold text-primary-default flex items-center">
                     <Lightbulb className="h-6 w-6 mr-3" />
                     Foco & Paixões
                   </CardTitle>
-                  <p className="text-foreground/60 text-sm mt-2">
+                  <p className="text-foreground/60 text-sm mt-2 font-sans">
                     O que me motiva e direciona meu trabalho
                   </p>
                 </CardHeader>
@@ -182,7 +185,7 @@ export const About = () => {
                       <div className="h-10 w-10 rounded-full bg-primary-default/10 flex items-center justify-center group-hover:bg-primary-default/20 transition-colors duration-300">
                         <item.icon className="h-5 w-5 text-primary-default" />
                       </div>
-                      <p className="text-base text-foreground/80 font-medium leading-relaxed group-hover:text-foreground transition-colors duration-300">
+                      <p className="text-base text-foreground/80 font-sans font-medium leading-relaxed group-hover:text-foreground transition-colors duration-300">
                         {item.text}
                       </p>
                     </MotionDiv>
@@ -202,35 +205,35 @@ export const About = () => {
           className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8"
         >
           <div className="text-center p-8 bg-background/50 rounded-2xl border border-border hover:border-primary-default/30 transition-all duration-300 hover:scale-105 group">
-            <div className="text-4xl font-bold text-primary-default mb-3 group-hover:scale-110 transition-transform duration-300">
+            <div className="text-4xl font-heading font-bold text-primary-default mb-3 group-hover:scale-110 transition-transform duration-300">
               5+
             </div>
-            <div className="text-foreground/70 font-medium text-lg">
+            <div className="text-foreground/70 font-sans font-medium text-lg">
               Anos de Experiência
             </div>
-            <div className="text-foreground/50 text-sm mt-2">
+            <div className="text-foreground/50 font-sans text-sm mt-2">
               FullStack Development
             </div>
           </div>
           <div className="text-center p-8 bg-background/50 rounded-2xl border border-border hover:border-primary-default/30 transition-all duration-300 hover:scale-105 group">
-            <div className="text-4xl font-bold text-primary-default mb-3 group-hover:scale-110 transition-transform duration-300">
+            <div className="text-4xl font-heading font-bold text-primary-default mb-3 group-hover:scale-110 transition-transform duration-300">
               50+
             </div>
-            <div className="text-foreground/70 font-medium text-lg">
+            <div className="text-foreground/70 font-sans font-medium text-lg">
               Projetos Entregues
             </div>
-            <div className="text-foreground/50 text-sm mt-2">
+            <div className="text-foreground/50 font-sans text-sm mt-2">
               Clientes Satisfeitos
             </div>
           </div>
           <div className="text-center p-8 bg-background/50 rounded-2xl border border-border hover:border-primary-default/30 transition-all duration-300 hover:scale-105 group">
-            <div className="text-4xl font-bold text-primary-default mb-3 group-hover:scale-110 transition-transform duration-300">
+            <div className="text-4xl font-heading font-bold text-primary-default mb-3 group-hover:scale-110 transition-transform duration-300">
               100%
             </div>
-            <div className="text-foreground/70 font-medium text-lg">
+            <div className="text-foreground/70 font-sans font-medium text-lg">
               Satisfação do Cliente
             </div>
-            <div className="text-foreground/50 text-sm mt-2">
+            <div className="text-foreground/50 font-sans text-sm mt-2">
               Feedback Positivo
             </div>
           </div>

@@ -168,12 +168,15 @@ export const Hero = () => {
   return (
     <section
       id="hero"
-      className="pt-28 pb-20 lg:pt-32 lg:pb-32 bg-gradient-to-br from-background via-blue-50/20 to-background dark:from-background dark:via-blue-950/10 dark:to-background relative overflow-hidden"
+      className="pt-28 pb-20 lg:pt-32 lg:pb-32 bg-background relative overflow-hidden"
       ref={heroRef}
     >
+      {/* Background sutil como RainbowIT */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-50/50 to-background dark:from-gray-900/30 dark:to-background" />
+
       {/* Elemento decorativo sutil */}
       <div className="absolute top-20 right-10 opacity-5">
-        <Code className="h-40 w-40 text-blue-500" />
+        <Code className="h-40 w-40 text-primary-default" />
       </div>
 
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
@@ -182,19 +185,19 @@ export const Hero = () => {
           <div className="lg:w-7/12 order-2 lg:order-1 mt-12 lg:mt-0 text-center lg:text-left">
             {/* Tag / Nome */}
             <div className="hero-badge">
-              <span className="inline-flex items-center text-sm font-semibold uppercase tracking-widest text-primary-default bg-primary-default/10 px-4 py-2 rounded-full border border-primary-default/20">
+              <span className="inline-flex items-center text-sm font-heading font-semibold uppercase tracking-widest text-primary-default bg-primary-default/10 px-4 py-2 rounded-full border border-primary-default/20">
                 <Sparkles className="h-4 w-4 mr-2" />
-                👋 Olá, eu sou Erick Reis
+                Olá, eu sou Erick Reis
               </span>
             </div>
 
-            {/* Título de Impacto - COM FULLSTACK BEM DESTACADO */}
-            <h1 className="mt-8 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+            {/* Título de Impacto - COM FONT POIPPINS */}
+            <h1 className="mt-8 text-4xl font-heading font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
               <div>
                 Desenvolvedor{" "}
                 <span
                   ref={fullstackRef}
-                  className="bg-gradient-to-r from-blue-500 via-blue-400 to-cyan-400 bg-[length:200%_100%] bg-clip-text text-transparent font-black inline-block px-2 py-1"
+                  className="font-heading font-black bg-gradient-to-r from-blue-500 via-blue-400 to-cyan-400 bg-[length:200%_100%] bg-clip-text text-transparent inline-block px-2 py-1"
                   style={{
                     background:
                       "linear-gradient(90deg, #3b82f6, #60a5fa, #38bdf8, #3b82f6)",
@@ -207,28 +210,39 @@ export const Hero = () => {
                   FullStack
                 </span>
               </div>
-              <div className="hero-title-line mt-4 text-3xl sm:text-4xl lg:text-5xl font-semibold">
+              <div className="hero-title-line mt-4 text-3xl sm:text-4xl lg:text-5xl font-heading font-semibold">
                 Transformando Ideias
               </div>
-              <div className="hero-title-line text-primary-default font-bold text-2xl sm:text-3xl lg:text-4xl">
+              <div className="hero-title-line text-primary-default font-heading font-bold text-2xl sm:text-3xl lg:text-4xl">
                 em Código.
               </div>
             </h1>
 
-            {/* Descrição */}
+            {/* Descrição - COM FONT OPEN SANS */}
             <div className="hero-description">
-              <p className="mt-8 max-w-lg mx-auto lg:mx-0 text-lg text-foreground/70 leading-relaxed font-medium">
+              <p className="mt-8 max-w-lg mx-auto lg:mx-0 text-lg text-foreground/70 leading-relaxed font-sans font-medium">
                 Especializado em criar{" "}
-                <strong className="text-foreground">
+                <strong className="text-foreground font-sans font-semibold">
                   soluções digitais completas
                 </strong>{" "}
                 - do front-end ao back-end. Domino tecnologias modernas como{" "}
-                <strong className="text-foreground">Next.js</strong>,{" "}
-                <strong className="text-foreground">TypeScript</strong>,{" "}
-                <strong className="text-foreground">Node.js</strong> e{" "}
-                <strong className="text-foreground">Tailwind CSS</strong> para
-                entregar aplicações{" "}
-                <strong className="text-foreground">
+                <strong className="text-foreground font-sans font-semibold">
+                  Next.js
+                </strong>
+                ,{" "}
+                <strong className="text-foreground font-sans font-semibold">
+                  TypeScript
+                </strong>
+                ,{" "}
+                <strong className="text-foreground font-sans font-semibold">
+                  Node.js
+                </strong>{" "}
+                e{" "}
+                <strong className="text-foreground font-sans font-semibold">
+                  Tailwind CSS
+                </strong>{" "}
+                para entregar aplicações{" "}
+                <strong className="text-foreground font-sans font-semibold">
                   rápidas, escaláveis e com excelente UX
                 </strong>
                 .
@@ -237,31 +251,29 @@ export const Hero = () => {
 
             {/* CTAs com reflexo */}
             <div className="hero-buttons mt-10 flex flex-col space-y-4 sm:flex-row sm:space-x-6 sm:space-y-0 justify-center lg:justify-start">
-              {/* Botão Principal: Contato com reflexo - TEXTO PRETO E REFLEXO AZUL NO LIGHT */}
+              {/* Botão Principal */}
               <Button
                 asChild
                 size="lg"
-                className="h-14 text-base font-semibold bg-primary-default hover:bg-primary-default/90 text-black dark:text-white px-8 rounded-xl shadow-2xl hover:shadow-primary-default/40 transition-all duration-300 hover:scale-105 relative overflow-hidden group border-2 border-primary-default/20"
+                className="h-14 text-base font-heading font-semibold bg-primary-default hover:bg-primary-default/90 text-black dark:text-white px-8 rounded-xl shadow-2xl hover:shadow-primary-default/40 transition-all duration-300 hover:scale-105 relative overflow-hidden group border-2 border-primary-default/20"
               >
                 <Link href="#contact">
                   <Mail className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
                   Vamos Conversar
-                  {/* Efeito de reflexo AZUL no light, branco no dark */}
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 dark:via-white/30" />
                 </Link>
               </Button>
 
-              {/* Botão Secundário com reflexo */}
+              {/* Botão Secundário */}
               <Button
                 asChild
                 variant="outline"
                 size="lg"
-                className="h-14 text-base font-semibold border-2 border-primary-default/30 text-primary-default hover:bg-primary-default/10 hover:border-primary-default px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 relative overflow-hidden group bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm"
+                className="h-14 text-base font-heading font-semibold border-2 border-primary-default/30 text-primary-default hover:bg-primary-default/10 hover:border-primary-default px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 relative overflow-hidden group bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm"
               >
                 <a href="/docs/curriculo-erick-reis.pdf" download>
                   <Download className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
                   Baixar CV
-                  {/* Efeito de reflexo sutil */}
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-default/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                 </a>
               </Button>
@@ -270,26 +282,26 @@ export const Hero = () => {
             {/* Stats/Info adicional */}
             <div className="hero-stats mt-12 flex flex-wrap gap-8 justify-center lg:justify-start">
               <div className="text-center lg:text-left">
-                <div className="text-2xl font-bold text-primary-default bg-primary-default/10 px-3 py-1 rounded-lg">
+                <div className="text-2xl font-heading font-bold text-primary-default bg-primary-default/10 px-3 py-1 rounded-lg">
                   5+
                 </div>
-                <div className="text-sm text-foreground/60 mt-1 font-medium">
+                <div className="text-sm text-foreground/60 mt-1 font-sans font-medium">
                   Anos de Experiência
                 </div>
               </div>
               <div className="text-center lg:text-left">
-                <div className="text-2xl font-bold text-primary-default bg-primary-default/10 px-3 py-1 rounded-lg">
+                <div className="text-2xl font-heading font-bold text-primary-default bg-primary-default/10 px-3 py-1 rounded-lg">
                   50+
                 </div>
-                <div className="text-sm text-foreground/60 mt-1 font-medium">
+                <div className="text-sm text-foreground/60 mt-1 font-sans font-medium">
                   Projetos Entregues
                 </div>
               </div>
               <div className="text-center lg:text-left">
-                <div className="text-2xl font-bold text-primary-default bg-primary-default/10 px-3 py-1 rounded-lg">
+                <div className="text-2xl font-heading font-bold text-primary-default bg-primary-default/10 px-3 py-1 rounded-lg">
                   100%
                 </div>
-                <div className="text-sm text-foreground/60 mt-1 font-medium">
+                <div className="text-sm text-foreground/60 mt-1 font-sans font-medium">
                   Satisfação do Cliente
                 </div>
               </div>
@@ -308,12 +320,8 @@ export const Hero = () => {
                   sizes="(max-width: 768px) 288px, 384px"
                   className="object-cover object-center group-hover:scale-110 transition-transform duration-700"
                 />
-
-                {/* Overlay gradiente sutil no hover */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary-default/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
-
-              {/* Efeito de brilho */}
               <div
                 ref={sparkleRef}
                 className="absolute -inset-4 rounded-full bg-gradient-to-r from-primary-default/20 to-transparent opacity-0 blur-xl pointer-events-none"
@@ -332,7 +340,7 @@ export const Hero = () => {
                 ?.scrollIntoView({ behavior: "smooth" })
             }
           >
-            <span className="text-sm font-medium mb-3 group-hover:scale-110 transition-transform">
+            <span className="text-sm font-sans font-medium mb-3 group-hover:scale-110 transition-transform">
               Explore Mais
             </span>
             <div className="w-6 h-10 border-2 border-current rounded-full flex justify-center group-hover:border-primary-default transition-colors">

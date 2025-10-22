@@ -1,19 +1,23 @@
-// app/layout.tsx (Versão Final da FASE 5, completa)
+// app/layout.tsx
 import type { Metadata } from "next";
-import { Inter as FontSans } from "next/font/google";
+import { Poppins, Open_Sans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/app/providers";
 
-// Configuração da Fonte Inter (Otimização da FASE 4)
-const fontSans = FontSans({
+// Configuração das fonts do RainbowIT
+const poppins = Poppins({
   subsets: ["latin"],
-  variable: "--font-sans",
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-poppins",
 });
 
-// CORREÇÃO: Removida importação não utilizada de fontInter
+const openSans = Open_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-open-sans",
+});
 
-// Metadados Essenciais para SEO (FASE 4)
 export const metadata: Metadata = {
   title: "Erick Reis | Desenvolvedor FullStack & Arquiteto de Sistemas",
   description:
@@ -45,7 +49,8 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
+          poppins.variable,
+          openSans.variable
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
