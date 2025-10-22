@@ -1,4 +1,5 @@
-/* app/globals.css - Atualizado */
+/* app/globals.css - CSS Completo com Todas as Animações e Efeitos */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -78,21 +79,883 @@
   }
   body {
     @apply bg-background text-foreground;
-    /* Background clean como RainbowIT */
-    background-image: radial-gradient(
-        at 10% 20%,
-        rgba(59, 130, 246, 0.03) 0px,
-        transparent 50%
-      ),
-      radial-gradient(at 90% 80%, rgba(59, 130, 246, 0.03) 0px, transparent 50%);
+  }
+}
+
+/* ===== ANIMAÇÕES PERSONALIZADAS PARA O HERO ===== */
+
+/* Animação de flutuação para partículas */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+    opacity: 0.8;
+  }
+  33% {
+    transform: translateY(-25px) translateX(10px) rotate(120deg);
+    opacity: 1;
+  }
+  66% {
+    transform: translateY(-15px) translateX(-10px) rotate(240deg);
+    opacity: 0.9;
+  }
+}
+
+/* Animação de flutuação suave para elementos maiores */
+@keyframes float-smooth {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Efeito de brilho pulsante */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4),
+      0 0 40px rgba(59, 130, 246, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.8),
+      0 0 60px rgba(59, 130, 246, 0.4);
+  }
+}
+
+/* Efeito de brilho neon */
+@keyframes neon-pulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6));
+    opacity: 0.9;
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.9));
+    opacity: 1;
+  }
+}
+
+/* Efeito de brilho neon mais intenso */
+@keyframes neon-pulse-intense {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.6),
+      0 0 40px rgba(59, 130, 246, 0.3), 0 0 60px rgba(59, 130, 246, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(59, 130, 246, 0.9),
+      0 0 70px rgba(59, 130, 246, 0.5), 0 0 100px rgba(59, 130, 246, 0.3);
+  }
+}
+
+/* Efeito de digitação */
+@keyframes typing {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    width: 100%;
+    opacity: 1;
+  }
+}
+
+/* Efeito de piscar cursor */
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: rgba(59, 130, 246, 0.8);
+  }
+}
+
+/* Animação de entrada suave */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animação de escala pulsante */
+@keyframes scale-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Animação de rotação contínua */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animação de gradient background */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Animação de onda */
+@keyframes wave {
+  0% {
+    transform: translateX(0) translateY(0);
+  }
+  25% {
+    transform: translateX(-5px) translateY(-10px);
+  }
+  50% {
+    transform: translateX(0) translateY(0);
+  }
+  75% {
+    transform: translateX(5px) translateY(-5px);
+  }
+  100% {
+    transform: translateX(0) translateY(0);
+  }
+}
+
+/* Efeito de glitch */
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+/* ===== ANIMAÇÕES PARA PARTÍCULAS TECH ===== */
+
+/* Animação específica para partículas tech */
+@keyframes tech-float {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+    opacity: 0.7;
+  }
+  33% {
+    transform: translateY(-30px) translateX(15px) rotate(120deg);
+    opacity: 1;
+  }
+  66% {
+    transform: translateY(-20px) translateX(-15px) rotate(240deg);
+    opacity: 0.8;
+  }
+}
+
+/* Animação para linhas tech */
+@keyframes tech-line-pulse {
+  0%,
+  100% {
+    height: 20px;
+    opacity: 0.6;
+  }
+  50% {
+    height: 35px;
+    opacity: 1;
+  }
+}
+
+/* Animação para spin tech */
+@keyframes tech-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animação para bounce tech */
+@keyframes tech-bounce {
+  0%,
+  100% {
+    transform: rotate(45deg) translateY(0px);
+  }
+  50% {
+    transform: rotate(45deg) translateY(-25px);
+  }
+}
+
+/* Animação para conexões entre partículas */
+@keyframes connection-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scaleX(0.8);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scaleX(1.3);
+  }
+}
+
+/* Animação específica para ícones flutuantes tech */
+@keyframes float-tech {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.4;
+  }
+  25% {
+    transform: translateY(-25px) rotate(5deg);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-15px) rotate(-3deg);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translateY(-20px) rotate(3deg);
+    opacity: 0.6;
+  }
+}
+
+/* ===== ANIMAÇÕES PARA STATS ZIGUE-ZAGUE ===== */
+
+/* Animação zigue-zague para stats */
+@keyframes stat-float-zigzag {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-12px) translateX(8px) rotate(1deg);
+  }
+  50% {
+    transform: translateY(-8px) translateX(-6px) rotate(-1deg);
+  }
+  75% {
+    transform: translateY(-15px) translateX(4px) rotate(2deg);
+  }
+}
+
+/* Animação para ícones das stats */
+@keyframes icon-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.1);
+    filter: brightness(1.3);
+  }
+}
+
+/* ===== CLASSES UTILITÁRIAS ===== */
+
+.floating-element {
+  animation: float-smooth 6s ease-in-out infinite;
+}
+
+.pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.neon-pulse {
+  animation: neon-pulse 2s ease-in-out infinite;
+}
+
+.neon-pulse-intense {
+  animation: neon-pulse-intense 2s ease-in-out infinite;
+}
+
+.fade-in-up {
+  animation: fade-in-up 1s ease-out forwards;
+}
+
+.scale-pulse {
+  animation: scale-pulse 2s ease-in-out infinite;
+}
+
+.spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+.gradient-shift {
+  animation: gradient-shift 15s ease infinite;
+  background-size: 200% 200%;
+}
+
+.wave-animation {
+  animation: wave 8s ease-in-out infinite;
+}
+
+.glitch-effect {
+  animation: glitch 0.5s ease-in-out infinite;
+}
+
+.floating-tech {
+  animation: float-tech 8s ease-in-out infinite;
+}
+
+.floating-stat {
+  animation: stat-float-zigzag 6s ease-in-out infinite;
+}
+
+.stat-icon {
+  animation: icon-pulse 4s ease-in-out infinite;
+}
+
+/* Efeito de vidro (glass morphism) */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-effect-dark {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ===== ESTILOS PARA PARTÍCULAS (MAIS BRILHANTES) ===== */
+
+/* Partículas circulares tradicionais - MAIS BRILHANTES */
+.particle-circle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: 0 0 20px currentColor, 0 0 40px currentColor,
+    inset 0 0 20px currentColor;
+  background: radial-gradient(
+    circle,
+    rgba(59, 130, 246, 0.9) 0%,
+    rgba(37, 99, 235, 0.7) 100%
+  );
+  filter: brightness(1.3);
+}
+
+/* Partículas Tech - Formas geométricas - MAIS BRILHANTES */
+.particle-tech {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.8;
+  filter: brightness(1.4) drop-shadow(0 0 10px currentColor);
+}
+
+.particle-tech.particle-line {
+  width: 3px;
+  height: 25px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    #3b82f6,
+    #60a5fa,
+    transparent
+  );
+  animation: tech-line-pulse 4s ease-in-out infinite;
+  box-shadow: 0 0 15px #3b82f6;
+}
+
+.particle-tech.particle-triangle {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 14px solid #8b5cf6;
+  animation: tech-spin 10s linear infinite;
+  filter: drop-shadow(0 0 12px #8b5cf6);
+}
+
+.particle-tech.particle-square {
+  width: 10px;
+  height: 10px;
+  background: #06b6d4;
+  transform: rotate(45deg);
+  animation: tech-bounce 7s ease-in-out infinite;
+  box-shadow: 0 0 15px #06b6d4, inset 0 0 10px #67e8f9;
+}
+
+/* Conexões entre partículas - MAIS BRILHANTES */
+.particle-connection {
+  position: absolute;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(59, 130, 246, 0.8),
+    rgba(139, 92, 246, 0.8),
+    rgba(6, 182, 212, 0.8),
+    transparent
+  );
+  pointer-events: none;
+  opacity: 0.6;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+/* Efeito de partícula básico */
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(59, 130, 246, 1) 0%,
+    rgba(37, 99, 235, 0.8) 30%,
+    rgba(29, 78, 216, 0.6) 100%
+  );
+  animation: float 8s ease-in-out infinite;
+  pointer-events: none;
+  filter: brightness(1.5);
+  box-shadow: 0 0 25px rgba(59, 130, 246, 0.8), 0 0 50px rgba(59, 130, 246, 0.4),
+    inset 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+/* Background gradiente acinzentado mantido */
+.gradient-bg {
+  background: linear-gradient(
+    135deg,
+    rgba(71, 85, 105, 0.4) 0%,
+    rgba(30, 41, 59, 0.5) 50%,
+    rgba(15, 23, 42, 0.6) 100%
+  );
+}
+
+/* Grid animado */
+.animated-grid {
+  background-image: linear-gradient(
+      rgba(59, 130, 246, 0.15) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.15) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: grid-move 20s linear infinite;
+}
+
+@keyframes grid-move {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 50px;
+  }
+}
+
+/* Efeito de scanline */
+.scanline {
+  position: relative;
+  overflow: hidden;
+}
+
+.scanline::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #3b82f6,
+    #8b5cf6,
+    #06b6d4,
+    transparent
+  );
+  animation: scan 3s linear infinite;
+}
+
+@keyframes scan {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+/* Efeito de texto gradiente animado */
+.animated-gradient-text {
+  background: linear-gradient(
+    45deg,
+    #3b82f6,
+    #8b5cf6,
+    #06b6d4,
+    #10b981,
+    #3b82f6
+  );
+  background-size: 300% 300%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 8s ease infinite;
+}
+
+/* Efeito de borda gradiente */
+.gradient-border {
+  position: relative;
+  background: linear-gradient(45deg, #3b82f6, #8b5cf6, #06b6d4);
+  padding: 2px;
+  border-radius: 12px;
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  background: #0f172a;
+  border-radius: 10px;
+  z-index: -1;
+}
+
+/* Efeito de profundidade 3D */
+.depth-3d {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.depth-3d:hover {
+  transform: rotateY(10deg) rotateX(5deg) translateZ(20px);
+  transition: transform 0.5s ease;
+}
+
+/* Efeito de reflexo */
+.reflection {
+  position: relative;
+  overflow: hidden;
+}
+
+.reflection::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.3) 0%,
+    transparent 100%
+  );
+  transform: scaleY(-1);
+  opacity: 0;
+  filter: blur(5px);
+  transition: opacity 0.3s ease;
+}
+
+.reflection:hover::after {
+  opacity: 0.5;
+}
+
+/* Animações de entrada em sequência */
+.stagger-animation > * {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fade-in-up 0.8s ease forwards;
+}
+
+.stagger-animation > *:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.stagger-animation > *:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.stagger-animation > *:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.stagger-animation > *:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.stagger-animation > *:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.stagger-animation > *:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+/* Efeito de partículas conectadas */
+.particle-network {
+  position: relative;
+}
+
+.particle-network::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(
+      circle at 20% 80%,
+      rgba(59, 130, 246, 0.2) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(139, 92, 246, 0.2) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 40%,
+      rgba(6, 182, 212, 0.2) 0%,
+      transparent 50%
+    );
+  animation: particle-network-move 20s ease-in-out infinite;
+}
+
+@keyframes particle-network-move {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(180deg);
+  }
+}
+
+/* Efeito de brilho sutil para botões */
+.button-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.button-glow::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.6s ease;
+}
+
+.button-glow:hover::before {
+  left: 100%;
+}
+
+/* Efeitos para Stats */
+.stat-item {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.stat-item::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: radial-gradient(
+    circle,
+    rgba(59, 130, 246, 0.1) 0%,
+    transparent 70%
+  );
+  border-radius: 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.stat-item:hover::before {
+  opacity: 1;
+}
+
+.stat-item:hover {
+  transform: translateY(-5px) scale(1.02);
+}
+
+/* Efeito de brilho para scroll indicator */
+.scroll-indicator-glow {
+  position: relative;
+}
+
+.scroll-indicator-glow::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  background: radial-gradient(
+    circle,
+    rgba(59, 130, 246, 0.2) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.scroll-indicator-glow:hover::before {
+  opacity: 1;
+}
+
+/* Responsividade para animações */
+@media (max-width: 768px) {
+  .floating-element {
+    animation-duration: 8s;
   }
 
-  .dark body {
-    background-image: radial-gradient(
-        at 10% 20%,
-        rgba(59, 130, 246, 0.05) 0px,
-        transparent 50%
-      ),
-      radial-gradient(at 90% 80%, rgba(59, 130, 246, 0.05) 0px, transparent 50%);
+  .floating-tech {
+    animation-duration: 10s;
   }
+
+  .floating-stat {
+    animation-duration: 8s;
+  }
+
+  .particle {
+    animation-duration: 12s;
+  }
+
+  .gradient-shift {
+    animation-duration: 20s;
+  }
+
+  .pulse-glow {
+    animation-duration: 4s;
+  }
+
+  .neon-pulse {
+    animation-duration: 3s;
+  }
+
+  .stat-icon {
+    animation-duration: 5s;
+  }
+}
+
+/* Prevenir animações para usuários que preferem reduzir movimento */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Suporte para modo escuro específico do Hero */
+.hero-dark-overlay {
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.9) 0%,
+    rgba(30, 41, 59, 0.8) 50%,
+    rgba(51, 65, 85, 0.7) 100%
+  );
+}
+
+.hero-light-overlay {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+}
+
+/* Melhorias de performance */
+.particle,
+.particle-tech,
+.particle-connection {
+  will-change: transform, opacity;
+}
+
+.floating-tech,
+.floating-stat,
+.stat-icon {
+  will-change: transform;
+}
+
+/* Suporte para navegadores mais antigos */
+@supports not (backdrop-filter: blur(20px)) {
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .glass-effect-dark {
+    background: rgba(0, 0, 0, 0.25);
+  }
+}
+
+/* Estilos para scroll suave personalizado */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Melhorias de acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+  .floating-element,
+  .floating-tech,
+  .floating-stat,
+  .stat-icon,
+  .pulse-glow,
+  .neon-pulse {
+    animation: none;
+  }
+}
+
+/* Focus styles para melhor acessibilidade */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Loading states */
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid #3b82f6;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin-slow 1s linear infinite;
 }
