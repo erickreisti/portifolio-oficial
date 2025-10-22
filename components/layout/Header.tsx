@@ -3,10 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Download, Moon, Sun } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import ThemeToggle from "@/components/layout/ThemeToggle";
 
 const navItems = [
   { name: "Home", href: "#hero" },
@@ -19,11 +18,12 @@ const navItems = [
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
+  const [activeSection, setActiveSection] = useState("hero");
+  const [isDark, setIsDark] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      setIsScrolled(window.scrollY > 50);
 
       const sections = ["hero", "about", "skills", "projects", "contact"];
       const current = sections.find((section) => {
@@ -41,41 +41,66 @@ export const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const toggleTheme = () => {
+    setIsDark(!isDark);
+    // Aqui você integraria com seu sistema de tema
+    document.documentElement.classList.toggle("dark");
+  };
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled
-          ? "bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-sm py-3"
+          ? "bg-slate-950/95 backdrop-blur-xl shadow-2xl shadow-blue-500/10 py-3 border-b border-slate-800/50"
           : "bg-transparent py-6"
       }`}
     >
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Logo - MAIOR E SEM BORDA */}
-          <Link href="/" className="flex items-center space-x-3 group">
-            <div className="h-16 w-16 rounded-full flex items-center justify-center group-hover:bg-primary-default/5 transition-all duration-300 overflow-hidden">
-              <Image
-                src="/images/hashblue.svg"
-                alt="HashBlue Logo"
-                width={64}
-                height={64}
-                className="h-14 w-14 object-contain group-hover:scale-110 transition-transform duration-300"
-                priority
-              />
+          <Link
+            href="#hero"
+            className="flex items-center space-x-4 group relative"
+            onClick={(e) => {
+              e.preventDefault();
+              document
+                .getElementById("hero")
+                ?.scrollIntoView({ behavior: "smooth" });
+            }}
+          >
+            <div className="relative">
+              {/* Container da logo sem borda */}
+              <div className="h-20 w-20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-500 overflow-hidden">
+                <Image
+                  src="/images/hashblue.svg"
+                  alt="Erick Reis Logo"
+                  width={80}
+                  height={80}
+                  className="h-18 w-18 object-contain filter"
+                  priority
+                />
+              </div>
+
+              {/* Efeito de brilho pulsante - mantido mas sem blur */}
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-cyan-400/10 rounded-2xl opacity-0  transition-opacity duration-500" />
+
+              {/* Partículas ao redor da logo */}
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 particle delay-200" />
+              <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-cyan-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 particle delay-500" />
             </div>
 
             <div className="flex flex-col">
-              <span className="text-xl font-heading font-semibold text-gray-900 dark:text-white group-hover:text-primary-default transition-colors duration-300">
-                Érick Reis
+              <span className="text-2xl font-heading font-bold text-white group-hover:text-blue-300 transition-colors duration-300 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+                Erick Reis
               </span>
-              <span className="text-sm font-sans text-gray-500 dark:text-gray-400">
-                Full Stack Developer
+              <span className="text-sm font-mono text-slate-400 group-hover:text-slate-300 transition-colors duration-300 tracking-widest">
+                FULLSTACK DEV
               </span>
             </div>
           </Link>
 
-          {/* Desktop Navigation - CORES CORRETAS NO LIGHT MODE */}
-          <nav className="hidden lg:flex items-center space-x-10">
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center space-x-8">
             {navItems.map((item) => {
               const sectionName = item.href.replace("#", "");
               const isActive = activeSection === sectionName;
@@ -84,63 +109,105 @@ export const Header = () => {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`relative px-3 py-2 text-base font-heading font-light tracking-wide transition-all duration-300 group/nav-link ${
+                  className={`relative px-4 py-2 text-sm font-mono font-medium tracking-widest transition-all duration-300 group/nav-link ${
                     isActive
-                      ? "text-primary-default"
-                      : "text-gray-700 hover:text-primary-default dark:text-gray-300 dark:hover:text-primary-default"
+                      ? "text-blue-400 neon-pulse"
+                      : "text-slate-300 hover:text-white"
                   }`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document
+                      .getElementById(sectionName)
+                      ?.scrollIntoView({ behavior: "smooth" });
+                  }}
                 >
-                  {item.name}
+                  {item.name.toUpperCase()}
 
-                  {/* Indicador ativo */}
+                  {/* Indicador ativo animado */}
                   {isActive && (
-                    <div className="absolute -bottom-1 left-3 right-3 h-0.5 bg-primary-default rounded-full" />
+                    <div className="absolute -bottom-1 left-4 right-4 h-0.5 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full pulse-glow" />
                   )}
 
-                  {/* Efeito hover sutil - background */}
-                  <div className="absolute inset-0 bg-primary-default/0 rounded-lg group-hover/nav-link:bg-primary-default/5 transition-all duration-300 -z-10" />
+                  {/* Efeito hover com brilho */}
+                  <div className="absolute inset-0 bg-blue-500/0 rounded-lg group-hover/nav-link:bg-blue-500/5 transition-all duration-300 -z-10 border border-transparent group-hover/nav-link:border-blue-500/20" />
                 </Link>
               );
             })}
           </nav>
 
-          {/* Desktop Actions - TEXTO PRETO NO LIGHT MODE COM REFLEXO AZUL */}
+          {/* Desktop Actions */}
           <div className="hidden lg:flex items-center space-x-4">
-            <ThemeToggle />
+            {/* Toggle Theme - MAIS RELUZENTE */}
+            <button
+              onClick={toggleTheme}
+              className="relative h-12 w-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-sm border border-blue-400/30 hover:border-blue-400/50 transition-all duration-300 group/toggle hover:scale-110 pulse-glow"
+            >
+              {/* Ícone do sol/lua com mais brilho */}
+              {isDark ? (
+                <Sun className="h-5 w-5 text-yellow-300 group-hover/toggle:text-yellow-200 transition-colors duration-300 filter drop-shadow-[0_0_10px_rgba(255,255,0,0.5)]" />
+              ) : (
+                <Moon className="h-5 w-5 text-blue-300 group-hover/toggle:text-blue-200 transition-colors duration-300 filter drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
+              )}
+
+              {/* Efeito de brilho interno */}
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 to-transparent rounded-xl opacity-0 group-hover/toggle:opacity-100 transition-opacity duration-300" />
+
+              {/* Partículas de brilho */}
+              <div className="absolute -top-1 -right-1 w-2 h-2 bg-cyan-400 rounded-full opacity-0 group-hover/toggle:opacity-100 transition-opacity duration-500 animate-pulse" />
+              <div className="absolute -bottom-1 -left-1 w-1 h-1 bg-blue-400 rounded-full opacity-0 group-hover/toggle:opacity-100 transition-opacity duration-500 animate-pulse delay-200" />
+            </button>
+
             <Button
               asChild
-              className="bg-primary-default hover:bg-primary-default/90 text-black dark:text-white font-heading font-medium px-6 py-2.5 rounded-lg transition-all duration-300 hover:scale-105 relative overflow-hidden group border-2 border-primary-default/20"
+              className="group relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-mono font-bold text-sm px-6 py-2.5 rounded-xl shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:scale-105 border-0 pulse-glow overflow-hidden tracking-widest"
             >
-              <Link href="#contact">
-                <span className="relative z-10">Download CV</span>
+              <a href="/docs/curriculo-erick-reis.pdf" download>
+                <Download className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform duration-300" />
+                <span className="relative z-10">DOWNLOAD CV</span>
 
-                {/* Efeito de reflexo AZUL no light mode, branco no dark */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 dark:via-white/20" />
-              </Link>
+                {/* Efeito de reflexo */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-xl" />
+              </a>
             </Button>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="flex lg:hidden items-center space-x-3">
-            <ThemeToggle />
+            {/* Toggle Theme Mobile - MAIS RELUZENTE */}
+            <button
+              onClick={toggleTheme}
+              className="relative h-12 w-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-sm border border-blue-400/30 hover:border-blue-400/50 transition-all duration-300 group/toggle hover:scale-110 pulse-glow"
+            >
+              {isDark ? (
+                <Sun className="h-5 w-5 text-yellow-300 group-hover/toggle:text-yellow-200 transition-colors duration-300 filter drop-shadow-[0_0_10px_rgba(255,255,0,0.5)]" />
+              ) : (
+                <Moon className="h-5 w-5 text-blue-300 group-hover/toggle:text-blue-200 transition-colors duration-300 filter drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
+              )}
+
+              {/* Efeito de brilho interno */}
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 to-transparent rounded-xl opacity-0 group-hover/toggle:opacity-100 transition-opacity duration-300" />
+            </button>
+
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setIsOpen(!isOpen)}
-              className="h-10 w-10 rounded-lg text-gray-600 hover:text-primary-default dark:text-gray-400 dark:hover:text-primary-default hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300"
+              className="h-12 w-12 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 hover:border-blue-500/30 transition-all duration-300 group"
             >
               {isOpen ? (
-                <X className="h-5 w-5" />
+                <X className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
               ) : (
-                <Menu className="h-5 w-5" />
+                <Menu className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
               )}
+
+              <div className="absolute inset-0 bg-blue-500/0 rounded-xl group-hover:bg-blue-500/10 transition-all duration-300 -z-10" />
             </Button>
           </div>
         </div>
 
-        {/* Mobile Menu Dropdown - CORES CORRETAS NO LIGHT MODE */}
+        {/* Mobile Menu Dropdown */}
         {isOpen && (
-          <div className="lg:hidden absolute top-full left-0 right-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-t border-gray-200 dark:border-gray-700 shadow-lg">
+          <div className="lg:hidden absolute top-full left-0 right-0 bg-slate-900/95 backdrop-blur-xl border-t border-slate-800/50 shadow-2xl shadow-blue-500/20">
             <nav className="flex flex-col p-4">
               {navItems.map((item) => {
                 const sectionName = item.href.replace("#", "");
@@ -150,38 +217,43 @@ export const Header = () => {
                   <Link
                     key={item.name}
                     href={item.href}
-                    onClick={() => setIsOpen(false)}
-                    className={`flex items-center px-4 py-4 text-base font-heading font-light tracking-wide rounded-lg transition-all duration-200 group/mobile-link ${
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsOpen(false);
+                      document
+                        .getElementById(sectionName)
+                        ?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                    className={`flex items-center px-4 py-4 text-sm font-mono font-medium tracking-widest rounded-lg transition-all duration-200 group/mobile-link relative overflow-hidden ${
                       isActive
-                        ? "bg-primary-default/10 text-primary-default border-l-2 border-primary-default"
-                        : "text-gray-700 hover:text-primary-default dark:text-gray-300 dark:hover:text-primary-default"
+                        ? "bg-blue-500/10 text-blue-400 border-l-2 border-blue-400 neon-pulse"
+                        : "text-slate-300 hover:text-white"
                     }`}
                   >
-                    {item.name}
+                    {item.name.toUpperCase()}
 
-                    {/* Efeito hover sutil no mobile */}
                     <div
-                      className={`absolute inset-0 bg-primary-default/0 rounded-lg group-hover/mobile-link:bg-primary-default/5 transition-all duration-300 -z-10 ${
-                        isActive ? "bg-primary-default/10" : ""
+                      className={`absolute inset-0 bg-blue-500/0 rounded-lg group-hover/mobile-link:bg-blue-500/10 transition-all duration-300 -z-10 ${
+                        isActive ? "bg-blue-500/10" : ""
                       }`}
                     />
                   </Link>
                 );
               })}
 
-              {/* CTA Mobile - TEXTO PRETO NO LIGHT MODE COM BORDA */}
-              <div className="pt-4 mt-2 border-t border-gray-200 dark:border-gray-700">
+              {/* CTA Mobile */}
+              <div className="pt-4 mt-2 border-t border-slate-800/50">
                 <Button
                   asChild
-                  className="w-full bg-primary-default hover:bg-primary-default/90 text-black dark:text-white font-heading font-medium py-3 rounded-lg transition-all duration-300 hover:scale-105 border-2 border-primary-default/20 relative overflow-hidden group"
+                  className="w-full group relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-mono font-bold text-sm py-4 rounded-xl shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:scale-105 border-0 pulse-glow overflow-hidden tracking-widest"
                   onClick={() => setIsOpen(false)}
                 >
-                  <Link href="#contact">
-                    <span className="relative z-10">Download CV</span>
+                  <a href="/docs/curriculo-erick-reis.pdf" download>
+                    <Download className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform duration-300" />
+                    <span className="relative z-10">DOWNLOAD CV</span>
 
-                    {/* Efeito de reflexo AZUL no light mode, branco no dark */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 dark:via-white/20" />
-                  </Link>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-xl" />
+                  </a>
                 </Button>
               </div>
             </nav>

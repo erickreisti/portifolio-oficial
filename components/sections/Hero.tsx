@@ -286,7 +286,7 @@ export const Hero = () => {
                 </div>
                 <div className="h-6 w-px bg-white/20" />
                 <span className="text-xl font-heading font-bold text-white">
-                  Erick Reis
+                  Érick Reis
                 </span>
                 <div className="h-6 w-px bg-white/20" />
                 <div className="flex items-center space-x-2">
