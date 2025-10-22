@@ -3,12 +3,20 @@
 import MotionDiv from "@/components/ui/MotionDiv";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Code2, Database, Cloud, Zap } from "lucide-react";
+import {
+  Code2,
+  Database,
+  Cloud,
+  Zap,
+  Cpu,
+  CircuitBoard,
+  Binary,
+} from "lucide-react";
 
 // Dados das habilidades
 const skillsData = [
   {
-    category: "Frontend & Mobile",
+    category: "FRONTEND & MOBILE",
     icon: Code2,
     skills: [
       { name: "Next.js 14", level: 95, color: "from-gray-800 to-black" },
@@ -27,7 +35,7 @@ const skillsData = [
     ],
   },
   {
-    category: "Backend & Database",
+    category: "BACKEND & DATABASE",
     icon: Database,
     skills: [
       { name: "Node.js", level: 85, color: "from-green-600 to-green-700" },
@@ -42,7 +50,7 @@ const skillsData = [
     ],
   },
   {
-    category: "Cloud & DevOps",
+    category: "CLOUD & DEVOPS",
     icon: Cloud,
     skills: [
       { name: "AWS", level: 75, color: "from-orange-500 to-orange-600" },
@@ -64,29 +72,32 @@ const SkillBar: React.FC<SkillBarProps> = ({ name, level, color }) => {
   return (
     <div className="space-y-3 group">
       <div className="flex justify-between items-center">
-        <span className="text-base font-sans font-semibold text-foreground group-hover:text-primary-default transition-colors duration-300">
+        <span className="text-base font-mono font-semibold text-slate-300 group-hover:text-blue-300 transition-colors duration-300 tracking-wide">
           {name}
         </span>
         <Badge
           variant="secondary"
-          className="text-primary-default font-heading font-bold bg-primary-default/10 border border-primary-default/20 group-hover:scale-110 transition-transform duration-300"
+          className="text-blue-400 font-mono font-bold bg-blue-500/10 border border-blue-400/30 group-hover:scale-110 transition-all duration-300 neon-pulse"
         >
           {level}%
         </Badge>
       </div>
 
-      {/* Barra Animada */}
-      <div className="h-2.5 w-full rounded-full bg-background/50 overflow-hidden border border-border/50 shadow-inner">
+      {/* Barra Animada - Estilo Tech */}
+      <div className="h-3 w-full rounded-full bg-slate-800/50 overflow-hidden border border-slate-700/50 shadow-inner backdrop-blur-sm">
         <MotionDiv
           initial={{ width: 0 }}
           whileInView={{ width: `${level}%` }}
           whileHover={{ width: `${Math.min(level + 5, 100)}%` }}
           transition={{ duration: 1.5, ease: "easeOut" }}
           viewport={{ once: true }}
-          className={`h-full bg-gradient-to-r ${color} rounded-full relative overflow-hidden`}
+          className={`h-full bg-gradient-to-r ${color} rounded-full relative overflow-hidden group-hover:brightness-110 transition-all duration-300`}
         >
           {/* Efeito de brilho na barra */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+
+          {/* Partículas na barra */}
+          <div className="absolute top-0 right-2 w-1 h-1 bg-white rounded-full opacity-0 group-hover:opacity-100 animate-pulse" />
         </MotionDiv>
       </div>
     </div>
@@ -97,21 +108,28 @@ export const Skills = () => {
   return (
     <section
       id="skills"
-      className="py-20 lg:py-32 bg-background border-t border-border/50 relative overflow-hidden"
+      className="py-20 lg:py-32 bg-slate-950 relative overflow-hidden border-t border-slate-800/50"
     >
-      {/* Background sutil */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-50/30 to-background dark:from-gray-900/20 dark:to-background" />
+      {/* Background gradiente tech */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900" />
 
-      {/* Elementos decorativos */}
+      {/* Partículas sutis */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-20 left-10 w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
+        <div className="absolute top-40 right-20 w-1 h-1 bg-purple-400 rounded-full animate-pulse" />
+        <div className="absolute bottom-40 left-20 w-1 h-1 bg-cyan-400 rounded-full animate-pulse" />
+      </div>
+
+      {/* Elementos decorativos tech */}
       <div className="absolute top-10 left-10 opacity-5">
-        <Code2 className="h-32 w-32 text-primary-default" />
+        <Binary className="h-32 w-32 text-blue-400" />
       </div>
       <div className="absolute bottom-10 right-10 opacity-5">
-        <Database className="h-32 w-32 text-primary-default" />
+        <CircuitBoard className="h-32 w-32 text-cyan-400" />
       </div>
 
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Título da Seção - CORRIGIDO PARA LIGHT MODE */}
+        {/* Título da Seção - Estilo Tech */}
         <MotionDiv
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -119,22 +137,22 @@ export const Skills = () => {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          <div className="inline-flex items-center text-sm font-heading font-semibold uppercase tracking-widest text-primary-default bg-primary-default/10 px-4 py-2 rounded-full border border-primary-default/20 mb-4">
-            <Zap className="h-4 w-4 mr-2" />
-            Stack Tecnológica
+          <div className="inline-flex items-center text-sm font-mono font-bold uppercase tracking-widest text-blue-400 bg-blue-400/10 px-6 py-3 rounded-full border border-blue-400/30 mb-6 neon-pulse">
+            <Zap className="h-4 w-4 mr-3" />
+            STACK TECNOLÓGICA
           </div>
-          <h2 className="text-4xl font-heading font-bold text-foreground sm:text-5xl lg:text-6xl">
-            Minhas{" "}
-            <span className="text-primary-default bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
-              Habilidades
+          <h2 className="text-4xl font-heading font-black text-white sm:text-5xl lg:text-6xl">
+            MINHAS{" "}
+            <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+              HABILIDADES
             </span>
           </h2>
-          <p className="text-xl text-foreground/70 mt-6 max-w-2xl mx-auto font-sans">
+          <p className="text-xl text-slate-300 mt-6 max-w-2xl mx-auto font-mono tracking-wide">
             Domínio completo do ecossistema moderno de desenvolvimento FullStack
           </p>
         </MotionDiv>
 
-        {/* Resto do código permanece igual */}
+        {/* Grid de Skills */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {skillsData.map((group, index) => (
             <MotionDiv
@@ -144,14 +162,17 @@ export const Skills = () => {
               transition={{ duration: 0.6, delay: index * 0.2 }}
               viewport={{ once: true, amount: 0.3 }}
             >
-              <Card className="h-full bg-background/80 backdrop-blur-sm border-2 border-primary-default/20 shadow-2xl hover:shadow-primary-default/20 transition-all duration-500 hover:scale-105 group">
-                <CardHeader className="pb-4 border-b border-border/50">
-                  <CardTitle className="text-2xl font-heading font-bold text-primary-default flex items-center">
+              <Card className="h-full bg-slate-900/50 backdrop-blur-xl border-2 border-blue-400/20 shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 hover:scale-105 group relative overflow-hidden">
+                {/* Efeito de brilho no card */}
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+
+                <CardHeader className="pb-6 border-b border-slate-700/50">
+                  <CardTitle className="text-2xl font-heading font-black text-blue-400 flex items-center neon-pulse">
                     <group.icon className="h-6 w-6 mr-3" />
                     {group.category}
                   </CardTitle>
-                  <p className="text-foreground/60 text-sm mt-2 font-sans">
-                    {group.skills.length} tecnologias dominadas
+                  <p className="text-slate-400 text-sm mt-2 font-mono tracking-wide">
+                    {group.skills.length} TECNOLOGIAS DOMINADAS
                   </p>
                 </CardHeader>
                 <CardContent className="space-y-6 pt-6">
@@ -172,7 +193,7 @@ export const Skills = () => {
           ))}
         </div>
 
-        {/* Stats Footer */}
+        {/* Stats Footer - Estilo Tech */}
         <MotionDiv
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -180,42 +201,43 @@ export const Skills = () => {
           viewport={{ once: true }}
           className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8"
         >
-          <div className="text-center p-8 bg-background/50 rounded-2xl border border-border hover:border-primary-default/30 transition-all duration-300 hover:scale-105 group">
-            <div className="text-4xl font-heading font-bold text-primary-default mb-3 group-hover:scale-110 transition-transform duration-300">
-              15+
+          {[
+            {
+              number: "15+",
+              title: "Tecnologias Dominadas",
+              subtitle: "Stack Completa",
+            },
+            {
+              number: "85%",
+              title: "Proficiência Média",
+              subtitle: "Excelência Técnica",
+            },
+            {
+              number: "5+",
+              title: "Anos de Experiência",
+              subtitle: "Aprendizado Contínuo",
+            },
+          ].map((stat, index) => (
+            <div
+              key={index}
+              className="text-center p-8 bg-slate-900/50 backdrop-blur-xl rounded-2xl border border-slate-700/50 hover:border-blue-400/30 transition-all duration-500 hover:scale-105 group relative overflow-hidden"
+            >
+              <div className="text-5xl font-heading font-black text-blue-400 mb-4 group-hover:scale-110 transition-transform duration-300 neon-pulse">
+                {stat.number}
+              </div>
+              <div className="text-white font-heading font-bold text-lg mb-2">
+                {stat.title}
+              </div>
+              <div className="text-slate-400 font-mono text-sm tracking-wide">
+                {stat.subtitle}
+              </div>
+              {/* Efeito de brilho */}
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
             </div>
-            <div className="text-foreground/70 font-sans font-medium text-lg">
-              Tecnologias Dominadas
-            </div>
-            <div className="text-foreground/50 font-sans text-sm mt-2">
-              Stack Completa
-            </div>
-          </div>
-          <div className="text-center p-8 bg-background/50 rounded-2xl border border-border hover:border-primary-default/30 transition-all duration-300 hover:scale-105 group">
-            <div className="text-4xl font-heading font-bold text-primary-default mb-3 group-hover:scale-110 transition-transform duration-300">
-              85%
-            </div>
-            <div className="text-foreground/70 font-sans font-medium text-lg">
-              Proficiência Média
-            </div>
-            <div className="text-foreground/50 font-sans text-sm mt-2">
-              Excelência Técnica
-            </div>
-          </div>
-          <div className="text-center p-8 bg-background/50 rounded-2xl border border-border hover:border-primary-default/30 transition-all duration-300 hover:scale-105 group">
-            <div className="text-4xl font-heading font-bold text-primary-default mb-3 group-hover:scale-110 transition-transform duration-300">
-              5+
-            </div>
-            <div className="text-foreground/70 font-sans font-medium text-lg">
-              Anos de Experiência
-            </div>
-            <div className="text-foreground/50 font-sans text-sm mt-2">
-              Aprendizado Contínuo
-            </div>
-          </div>
+          ))}
         </MotionDiv>
 
-        {/* CTA Final */}
+        {/* CTA Final - Estilo Tech */}
         <MotionDiv
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -223,12 +245,20 @@ export const Skills = () => {
           viewport={{ once: true }}
           className="mt-16 text-center"
         >
-          <p className="text-lg text-foreground/70 max-w-2xl mx-auto font-sans">
-            Interessado em como posso aplicar essas habilidades no seu projeto?{" "}
-            <span className="text-primary-default font-heading font-semibold">
-              Vamos conversar!
-            </span>
-          </p>
+          <div className="bg-slate-900/30 backdrop-blur-xl p-8 rounded-2xl border border-slate-700/50 shadow-2xl max-w-2xl mx-auto">
+            <p className="text-lg text-slate-300 font-mono tracking-wide mb-4">
+              Interessado em como posso aplicar essas habilidades no seu
+              projeto?{" "}
+              <span className="text-blue-400 font-heading font-bold neon-pulse">
+                VAMOS CONVERSAR!
+              </span>
+            </p>
+            <div className="flex justify-center space-x-4">
+              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
+              <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse delay-200" />
+              <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse delay-400" />
+            </div>
+          </div>
         </MotionDiv>
       </div>
     </section>
