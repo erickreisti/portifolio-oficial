@@ -9,7 +9,7 @@ import AvatarPic from "@/public/images/avatar.webp";
 
 export const Hero = () => {
   return (
-    <section id="hero" className="pt-32 pb-20 lg:py-32 bg-background">
+    <section id="hero" className="pt-28 pb-20 lg:pt-32 lg:pb-32 bg-background">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-between lg:flex-row lg:space-x-12">
           {/* 1. Conteúdo de Texto e CTAs */}
