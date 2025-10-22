@@ -118,7 +118,7 @@ export const Skills = () => {
           </div>
           <h2 className="text-4xl font-bold text-foreground sm:text-5xl lg:text-6xl">
             Minhas{" "}
-            <span className="text-primary-default bg-gradient-to-r from-primary-default to-blue-600 bg-clip-text text-transparent">
+            <span className="text-primary-default bg-gradient-to-r from-primary-default to-blue-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-cyan-400">
               Habilidades
             </span>
           </h2>
