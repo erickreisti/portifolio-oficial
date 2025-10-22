@@ -51,7 +51,7 @@ export const About = () => {
       </div>
 
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Título da Seção - COM FONT POIPPINS */}
+        {/* Título da Seção - CORRIGIDO PARA LIGHT MODE */}
         <MotionDiv
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -65,7 +65,7 @@ export const About = () => {
           </div>
           <h2 className="text-4xl font-heading font-bold text-foreground sm:text-5xl lg:text-6xl mt-4">
             Sobre{" "}
-            <span className="text-primary-default bg-gradient-to-r from-primary-default to-blue-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-cyan-400">
+            <span className="text-primary-default bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
               Mim
             </span>
           </h2>
@@ -75,6 +75,7 @@ export const About = () => {
           </p>
         </MotionDiv>
 
+        {/* Resto do código permanece igual */}
         <div className="flex flex-col lg:flex-row lg:space-x-12">
           {/* Coluna de Texto e História */}
           <div className="lg:w-7/12 space-y-8">

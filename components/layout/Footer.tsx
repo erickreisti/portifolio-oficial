@@ -57,7 +57,7 @@ export const Footer = () => {
             </div>
             <div className="flex flex-col">
               <span className="text-2xl font-heading font-bold text-foreground group-hover:text-primary-default transition-colors duration-300">
-                Erick Reis
+                Érick Reis
               </span>
               <span className="text-sm text-foreground/60 font-sans font-medium">
                 Full Stack Developer
@@ -90,21 +90,16 @@ export const Footer = () => {
           {/* Texto de direitos autorais */}
           <div className="text-center md:text-left">
             <p className="text-foreground/70 text-sm font-sans font-medium">
-              © {currentYear} Erick Reis. Todos os direitos reservados.
+              © {currentYear} Érick Reis. Todos os direitos reservados.
             </p>
           </div>
 
           {/* Tech stack usada */}
           <div className="flex items-center space-x-2 text-foreground/60 text-sm font-sans font-medium">
-            <span>Desenvolvido com</span>
+            <span>Desenvolvido por</span>
             <Heart className="h-4 w-4 text-red-500 fill-current animate-pulse" />
-            <span>usando</span>
             <span className="text-primary-default font-heading font-semibold">
-              Next.js
-            </span>
-            <span>e</span>
-            <span className="text-primary-default font-heading font-semibold">
-              Tailwind CSS
+              Érick Reis
             </span>
           </div>
 

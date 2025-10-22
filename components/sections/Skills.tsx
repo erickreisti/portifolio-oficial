@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Code2, Database, Cloud, Zap } from "lucide-react";
 
-// Dados das habilidades - Atualizado com suas tecnologias reais
+// Dados das habilidades
 const skillsData = [
   {
     category: "Frontend & Mobile",
@@ -111,7 +111,7 @@ export const Skills = () => {
       </div>
 
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Título da Seção - COM FONT POIPPINS */}
+        {/* Título da Seção - CORRIGIDO PARA LIGHT MODE */}
         <MotionDiv
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -125,7 +125,7 @@ export const Skills = () => {
           </div>
           <h2 className="text-4xl font-heading font-bold text-foreground sm:text-5xl lg:text-6xl">
             Minhas{" "}
-            <span className="text-primary-default bg-gradient-to-r from-primary-default to-blue-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-cyan-400">
+            <span className="text-primary-default bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
               Habilidades
             </span>
           </h2>
@@ -134,7 +134,7 @@ export const Skills = () => {
           </p>
         </MotionDiv>
 
-        {/* Grid de Skills */}
+        {/* Resto do código permanece igual */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {skillsData.map((group, index) => (
             <MotionDiv

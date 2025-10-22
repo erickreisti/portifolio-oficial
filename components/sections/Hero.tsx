@@ -168,7 +168,7 @@ export const Hero = () => {
   return (
     <section
       id="hero"
-      className="min-h-screen flex items-center justify-center pt-20 pb-16 lg:pt-24 lg:pb-20 bg-background relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center pt-32 pb-20 lg:pt-36 lg:pb-24 bg-background relative overflow-hidden"
       ref={heroRef}
     >
       {/* Background sutil como RainbowIT */}
@@ -180,19 +180,19 @@ export const Hero = () => {
       </div>
 
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="flex flex-col items-center justify-between lg:flex-row lg:space-x-12">
+        <div className="flex flex-col items-center justify-between lg:flex-row lg:space-x-16">
           {/* 1. Conteúdo de Texto e CTAs */}
-          <div className="lg:w-7/12 order-2 lg:order-1 mt-8 lg:mt-0 text-center lg:text-left">
+          <div className="lg:w-7/12 order-2 lg:order-1 mt-12 lg:mt-0 text-center lg:text-left">
             {/* Tag / Nome */}
             <div className="hero-badge">
               <span className="inline-flex items-center text-sm font-heading font-semibold uppercase tracking-widest text-primary-default bg-primary-default/10 px-4 py-2 rounded-full border border-primary-default/20">
                 <Sparkles className="h-4 w-4 mr-2" />
-                👋 Olá, eu sou Erick Reis
+                Olá, eu sou Érick Reis
               </span>
             </div>
 
             {/* Título de Impacto - COM FONT POIPPINS */}
-            <h1 className="mt-6 text-3xl font-heading font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl xl:text-6xl">
+            <h1 className="mt-8 text-4xl font-heading font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
               <div>
                 Desenvolvedor{" "}
                 <span
@@ -210,17 +210,17 @@ export const Hero = () => {
                   FullStack
                 </span>
               </div>
-              <div className="hero-title-line mt-3 text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-heading font-semibold">
+              <div className="hero-title-line mt-4 text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-heading font-semibold">
                 Transformando Ideias
               </div>
-              <div className="hero-title-line text-primary-default font-heading font-bold text-xl sm:text-2xl lg:text-3xl xl:text-4xl">
+              <div className="hero-title-line text-primary-default font-heading font-bold text-2xl sm:text-3xl lg:text-4xl xl:text-5xl">
                 em Código.
               </div>
             </h1>
 
             {/* Descrição - COM FONT OPEN SANS */}
             <div className="hero-description">
-              <p className="mt-6 max-w-lg mx-auto lg:mx-0 text-base sm:text-lg text-foreground/70 leading-relaxed font-sans font-medium">
+              <p className="mt-8 max-w-2xl mx-auto lg:mx-0 text-lg sm:text-xl text-foreground/70 leading-relaxed font-sans font-medium">
                 Especializado em criar{" "}
                 <strong className="text-foreground font-sans font-semibold">
                   soluções digitais completas
@@ -250,15 +250,15 @@ export const Hero = () => {
             </div>
 
             {/* CTAs com reflexo */}
-            <div className="hero-buttons mt-8 flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0 justify-center lg:justify-start">
+            <div className="hero-buttons mt-10 flex flex-col space-y-4 sm:flex-row sm:space-x-6 sm:space-y-0 justify-center lg:justify-start">
               {/* Botão Principal */}
               <Button
                 asChild
                 size="lg"
-                className="h-12 sm:h-14 text-sm sm:text-base font-heading font-semibold bg-primary-default hover:bg-primary-default/90 text-black dark:text-white px-6 sm:px-8 rounded-xl shadow-2xl hover:shadow-primary-default/40 transition-all duration-300 hover:scale-105 relative overflow-hidden group border-2 border-primary-default/20"
+                className="h-14 text-base font-heading font-semibold bg-primary-default hover:bg-primary-default/90 text-black dark:text-white px-8 rounded-xl shadow-2xl hover:shadow-primary-default/40 transition-all duration-300 hover:scale-105 relative overflow-hidden group border-2 border-primary-default/20"
               >
                 <Link href="#contact">
-                  <Mail className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5 group-hover:scale-110 transition-transform duration-300" />
+                  <Mail className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
                   Vamos Conversar
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 dark:via-white/30" />
                 </Link>
@@ -269,10 +269,10 @@ export const Hero = () => {
                 asChild
                 variant="outline"
                 size="lg"
-                className="h-12 sm:h-14 text-sm sm:text-base font-heading font-semibold border-2 border-primary-default/30 text-primary-default hover:bg-primary-default/10 hover:border-primary-default px-6 sm:px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 relative overflow-hidden group bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm"
+                className="h-14 text-base font-heading font-semibold border-2 border-primary-default/30 text-primary-default hover:bg-primary-default/10 hover:border-primary-default px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 relative overflow-hidden group bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm"
               >
                 <a href="/docs/curriculo-erick-reis.pdf" download>
-                  <Download className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5 group-hover:scale-110 transition-transform duration-300" />
+                  <Download className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
                   Baixar CV
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-default/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                 </a>
@@ -280,28 +280,28 @@ export const Hero = () => {
             </div>
 
             {/* Stats/Info adicional */}
-            <div className="hero-stats mt-8 flex flex-wrap gap-4 sm:gap-6 justify-center lg:justify-start">
+            <div className="hero-stats mt-12 flex flex-wrap gap-6 sm:gap-8 justify-center lg:justify-start">
               <div className="text-center lg:text-left">
-                <div className="text-xl sm:text-2xl font-heading font-bold text-primary-default bg-primary-default/10 px-2 sm:px-3 py-1 rounded-lg">
+                <div className="text-2xl sm:text-3xl font-heading font-bold text-primary-default bg-primary-default/10 px-3 sm:px-4 py-2 rounded-lg">
                   5+
                 </div>
-                <div className="text-xs sm:text-sm text-foreground/60 mt-1 font-sans font-medium">
+                <div className="text-sm sm:text-base text-foreground/60 mt-2 font-sans font-medium">
                   Anos de Experiência
                 </div>
               </div>
               <div className="text-center lg:text-left">
-                <div className="text-xl sm:text-2xl font-heading font-bold text-primary-default bg-primary-default/10 px-2 sm:px-3 py-1 rounded-lg">
+                <div className="text-2xl sm:text-3xl font-heading font-bold text-primary-default bg-primary-default/10 px-3 sm:px-4 py-2 rounded-lg">
                   50+
                 </div>
-                <div className="text-xs sm:text-sm text-foreground/60 mt-1 font-sans font-medium">
+                <div className="text-sm sm:text-base text-foreground/60 mt-2 font-sans font-medium">
                   Projetos Entregues
                 </div>
               </div>
               <div className="text-center lg:text-left">
-                <div className="text-xl sm:text-2xl font-heading font-bold text-primary-default bg-primary-default/10 px-2 sm:px-3 py-1 rounded-lg">
+                <div className="text-2xl sm:text-3xl font-heading font-bold text-primary-default bg-primary-default/10 px-3 sm:px-4 py-2 rounded-lg">
                   100%
                 </div>
-                <div className="text-xs sm:text-sm text-foreground/60 mt-1 font-sans font-medium">
+                <div className="text-sm sm:text-base text-foreground/60 mt-2 font-sans font-medium">
                   Satisfação do Cliente
                 </div>
               </div>
@@ -311,27 +311,27 @@ export const Hero = () => {
           {/* 2. Avatar com efeito especial - TAMANHO AJUSTADO */}
           <div className="lg:w-5/12 order-1 lg:order-2 flex justify-center">
             <div className="relative">
-              <div className="hero-image relative h-56 w-56 sm:h-64 sm:w-64 md:h-72 md:w-72 lg:h-80 lg:w-80 rounded-full overflow-hidden border-4 border-primary-default/40 shadow-2xl bg-card group hover:shadow-primary-default/30 transition-all duration-500 hover:border-primary-default/60">
+              <div className="hero-image relative h-64 w-64 sm:h-72 sm:w-72 md:h-80 md:w-80 lg:h-96 lg:w-96 rounded-full overflow-hidden border-4 border-primary-default/40 shadow-2xl bg-card group hover:shadow-primary-default/30 transition-all duration-500 hover:border-primary-default/60">
                 <Image
                   src={AvatarPic}
                   alt="Avatar de Erick Reis"
                   fill
                   priority
-                  sizes="(max-width: 640px) 224px, (max-width: 768px) 256px, (max-width: 1024px) 288px, 320px"
+                  sizes="(max-width: 640px) 256px, (max-width: 768px) 288px, (max-width: 1024px) 320px, 384px"
                   className="object-cover object-center group-hover:scale-110 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-br from-primary-default/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
               <div
                 ref={sparkleRef}
-                className="absolute -inset-3 sm:-inset-4 rounded-full bg-gradient-to-r from-primary-default/20 to-transparent opacity-0 blur-xl pointer-events-none"
+                className="absolute -inset-4 sm:-inset-5 rounded-full bg-gradient-to-r from-primary-default/20 to-transparent opacity-0 blur-xl pointer-events-none"
               />
             </div>
           </div>
         </div>
 
         {/* Scroll indicator melhorado */}
-        <div className="mt-12 lg:mt-16 flex justify-center">
+        <div className="mt-16 lg:mt-1 flex justify-center">
           <div
             className="flex flex-col items-center text-foreground/60 hover:text-primary-default transition-all duration-300 cursor-pointer group"
             onClick={() =>
@@ -340,11 +340,11 @@ export const Hero = () => {
                 ?.scrollIntoView({ behavior: "smooth" })
             }
           >
-            <span className="text-xs sm:text-sm font-sans font-medium mb-2 group-hover:scale-110 transition-transform">
+            <span className="text-sm font-sans font-medium mb-3 group-hover:scale-110 transition-transform">
               Explore Mais
             </span>
-            <div className="w-5 h-8 sm:w-6 sm:h-10 border-2 border-current rounded-full flex justify-center group-hover:border-primary-default transition-colors">
-              <div className="w-1 h-2 sm:h-3 bg-current rounded-full mt-2 animate-bounce group-hover:bg-primary-default transition-colors" />
+            <div className="w-6 h-10 border-2 border-current rounded-full flex justify-center group-hover:border-primary-default transition-colors">
+              <div className="w-1 h-3 bg-current rounded-full mt-2 animate-bounce group-hover:bg-primary-default transition-colors" />
             </div>
           </div>
         </div>

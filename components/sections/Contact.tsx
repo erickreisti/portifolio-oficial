@@ -82,7 +82,7 @@ export const Contact = () => {
       </div>
 
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header da Seção - COM FONT POIPPINS */}
+        {/* Header da Seção - CORRIGIDO PARA LIGHT MODE */}
         <MotionDiv
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -96,7 +96,7 @@ export const Contact = () => {
           </div>
           <h2 className="text-4xl font-heading font-bold text-foreground sm:text-5xl lg:text-6xl">
             Vamos{" "}
-            <span className="text-primary-default bg-gradient-to-r from-primary-default to-blue-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-cyan-400">
+            <span className="text-primary-default bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
               Trabalhar Juntos
             </span>
           </h2>
@@ -292,7 +292,7 @@ export const Contact = () => {
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full h-14 text-base font-heading font-semibold bg-primary-default hover:bg-primary-default/90 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 border-2 border-primary-default/20"
+                    className="w-full h-14 text-base font-heading font-semibold bg-primary-default hover:bg-primary-default/90 text-black dark:text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 border-2 border-primary-default/20"
                   >
                     <span
                       className={`flex items-center transition-all duration-300 ${
@@ -311,7 +311,7 @@ export const Contact = () => {
                     )}
 
                     {/* Efeito de hover animado */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 dark:via-white/20" />
                   </Button>
                 </form>
               </CardContent>

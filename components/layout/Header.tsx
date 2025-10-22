@@ -66,7 +66,7 @@ export const Header = () => {
 
             <div className="flex flex-col">
               <span className="text-xl font-heading font-semibold text-gray-900 dark:text-white group-hover:text-primary-default transition-colors duration-300">
-                Erick Reis
+                Érick Reis
               </span>
               <span className="text-sm font-sans text-gray-500 dark:text-gray-400">
                 Full Stack Developer
