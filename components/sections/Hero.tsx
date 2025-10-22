@@ -1,16 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {
-  Download,
-  Mail,
-  Cpu,
-  Zap,
-  Globe,
-  CircuitBoard,
-  Binary,
-  Cog,
-} from "lucide-react";
+import { Download, Mail, Cpu, CircuitBoard, Binary, Cog } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import MotionDiv from "@/components/ui/MotionDiv";
