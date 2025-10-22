@@ -51,11 +51,11 @@ export const Header = () => {
     >
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          {/* Logo com imagem aumentada - sem bolinha verde */}
+          {/* Logo SEM BORDA - apenas a imagem limpa */}
           <Link href="/" className="flex items-center space-x-3 group">
             <div className="relative">
-              {/* Container da logo - AUMENTADO */}
-              <div className="h-14 w-14 rounded-full bg-white dark:bg-gray-900 flex items-center justify-center shadow-lg group-hover:shadow-blue-500/30 transition-all duration-300 overflow-hidden">
+              {/* Container da logo - SEM BORDA */}
+              <div className="h-14 w-14 rounded-full flex items-center justify-center group-hover:shadow-blue-500/30 transition-all duration-300 overflow-hidden">
                 <Image
                   src="/images/hashblue.svg"
                   alt="HashBlue Logo"
@@ -65,7 +65,6 @@ export const Header = () => {
                   priority
                 />
               </div>
-              {/* BOLINHA VERDE REMOVIDA */}
             </div>
 
             <div className="flex flex-col">

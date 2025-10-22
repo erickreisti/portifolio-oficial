@@ -237,17 +237,17 @@ export const Hero = () => {
 
             {/* CTAs com reflexo */}
             <div className="hero-buttons mt-10 flex flex-col space-y-4 sm:flex-row sm:space-x-6 sm:space-y-0 justify-center lg:justify-start">
-              {/* Botão Principal: Contato com reflexo */}
+              {/* Botão Principal: Contato com reflexo - TEXTO PRETO E REFLEXO AZUL NO LIGHT */}
               <Button
                 asChild
                 size="lg"
-                className="h-14 text-base font-semibold bg-primary-default hover:bg-primary-default/90 text-white px-8 rounded-xl shadow-2xl hover:shadow-primary-default/40 transition-all duration-300 hover:scale-105 relative overflow-hidden group border-2 border-primary-default/20"
+                className="h-14 text-base font-semibold bg-primary-default hover:bg-primary-default/90 text-black dark:text-white px-8 rounded-xl shadow-2xl hover:shadow-primary-default/40 transition-all duration-300 hover:scale-105 relative overflow-hidden group border-2 border-primary-default/20"
               >
                 <Link href="#contact">
                   <Mail className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
                   Vamos Conversar
-                  {/* Efeito de reflexo */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                  {/* Efeito de reflexo AZUL no light, branco no dark */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 dark:via-white/30" />
                 </Link>
               </Button>
 
