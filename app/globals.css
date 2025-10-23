@@ -73,447 +73,15 @@ body {
   }
 }
 
-/* ===== ANIMAÇÕES PARA PARTÍCULAS ===== */
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px) translateX(0px) rotate(0deg);
-    opacity: 0.8;
-  }
-  33% {
-    transform: translateY(-25px) translateX(10px) rotate(120deg);
-    opacity: 1;
-  }
-  66% {
-    transform: translateY(-15px) translateX(-10px) rotate(240deg);
-    opacity: 0.9;
-  }
-}
+/* ===== CURSOR E ANIMAÇÕES NEON ===== */
 
-@keyframes particle-pulse {
-  0%,
-  100% {
-    opacity: 0;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
-}
-
-@keyframes twinkle {
-  0%,
-  100% {
-    opacity: 0.2;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
-}
-
-@keyframes cosmic-pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.5;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.8;
-  }
-}
-
-@keyframes connection-pulse {
-  0%,
-  100% {
-    opacity: 0.4;
-    transform: scaleX(0.8);
-  }
-  50% {
-    opacity: 0.8;
-    transform: scaleX(1.3);
-  }
-}
-
-@keyframes black-hole-suction {
-  0% {
-    transform: scale(1) translate(0, 0);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(0) translate(var(--tx, 0), var(--ty, 0));
-    opacity: 0;
-  }
-}
-
-@keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes pulse-slow {
-  0%,
-  100% {
-    opacity: 0.5;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.8;
-    transform: scale(1.05);
-  }
-}
-
-/* ===== CLASSES DE ANIMAÇÃO ===== */
-.animate-pulse-slow {
-  animation: pulse-slow 4s ease-in-out infinite;
-}
-
-.animate-spin-slow {
-  animation: spin-slow 8s linear infinite;
-}
-
-.animate-black-hole-suction {
-  animation: black-hole-suction 2s ease-in-out infinite;
-}
-
-/* ===== PARTÍCULAS COLORIDAS E BRILHANTES ===== */
-.particle-circle {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-  box-shadow: 0 0 25px currentColor, 0 0 50px currentColor,
-    inset 0 0 25px rgba(255, 255, 255, 0.3);
-  filter: brightness(1.4) saturate(1.3);
-  animation: float 8s ease-in-out infinite;
-}
-
-/* Partículas coloridas */
-.particle-blue {
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(59, 130, 246, 0.95) 0%,
-    rgba(37, 99, 235, 0.8) 40%,
-    rgba(29, 78, 216, 0.6) 100%
-  );
-  color: #3b82f6;
-}
-
-.particle-purple {
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(139, 92, 246, 0.95) 0%,
-    rgba(124, 58, 237, 0.8) 40%,
-    rgba(109, 40, 217, 0.6) 100%
-  );
-  color: #8b5cf6;
-}
-
-.particle-cyan {
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(6, 182, 212, 0.95) 0%,
-    rgba(8, 145, 178, 0.8) 40%,
-    rgba(14, 116, 144, 0.6) 100%
-  );
-  color: #06b6d4;
-}
-
-.particle-pink {
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(236, 72, 153, 0.95) 0%,
-    rgba(219, 39, 119, 0.8) 40%,
-    rgba(190, 24, 93, 0.6) 100%
-  );
-  color: #ec4899;
-}
-
-.particle-green {
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(34, 197, 94, 0.95) 0%,
-    rgba(22, 163, 74, 0.8) 40%,
-    rgba(21, 128, 61, 0.6) 100%
-  );
-  color: #22c55e;
-}
-
-.particle-amber {
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(245, 158, 11, 0.95) 0%,
-    rgba(217, 119, 6, 0.8) 40%,
-    rgba(180, 83, 9, 0.6) 100%
-  );
-  color: #f59e0b;
-}
-
-/* Partículas brilhantes */
-.particle-shiny {
-  filter: brightness(1.6) saturate(1.5) drop-shadow(0 0 15px currentColor);
-  box-shadow: 0 0 30px currentColor, 0 0 60px currentColor,
-    inset 0 0 20px rgba(255, 255, 255, 0.4);
-  animation: particle-pulse 3s ease-in-out infinite;
-}
-
-/* Partículas estrela */
-.particle-star {
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(255, 255, 255, 0.8) 30%,
-    rgba(255, 255, 255, 0.4) 70%,
-    transparent 100%
-  );
-  box-shadow: 0 0 40px rgba(255, 255, 255, 0.8),
-    0 0 80px rgba(255, 255, 255, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.6);
-  filter: brightness(2);
-  animation: twinkle 2s ease-in-out infinite;
-}
-
-/* Partículas de conexão */
-.particle-connection-blue {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(59, 130, 246, 0.9),
-    rgba(37, 99, 235, 0.7),
-    transparent
-  );
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
-  animation: connection-pulse 6s ease-in-out infinite;
-}
-
-.particle-connection-purple {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(139, 92, 246, 0.9),
-    rgba(124, 58, 237, 0.7),
-    transparent
-  );
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
-  animation: connection-pulse 6s ease-in-out infinite;
-}
-
-.particle-connection-cyan {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(6, 182, 212, 0.9),
-    rgba(8, 145, 178, 0.7),
-    transparent
-  );
-  box-shadow: 0 0 20px rgba(6, 182, 212, 0.6);
-  animation: connection-pulse 6s ease-in-out infinite;
-}
-
-/* Partículas rápidas */
-.particle-fast {
-  animation: float 4s ease-in-out infinite;
-  filter: brightness(1.8) saturate(1.4);
-}
-
-/* Partículas grandes */
-.particle-large {
-  box-shadow: 0 0 40px currentColor, 0 0 80px currentColor,
-    inset 0 0 40px rgba(255, 255, 255, 0.3);
-  filter: brightness(1.7) saturate(1.6);
-  animation: cosmic-pulse 4s ease-in-out infinite;
-}
-
-/* Clusters de partículas */
-.particle-cluster {
-  position: absolute;
-  pointer-events: none;
-}
-
-.particle-cluster::before,
-.particle-cluster::after {
-  content: "";
-  position: absolute;
-  border-radius: 50%;
-  animation: float 6s ease-in-out infinite;
-}
-
-.particle-cluster::before {
-  width: 6px;
-  height: 6px;
-  background: radial-gradient(circle, #3b82f6, #1d4ed8);
-  box-shadow: 0 0 20px #3b82f6;
-  animation-delay: 0s;
-}
-
-.particle-cluster::after {
-  width: 4px;
-  height: 4px;
-  background: radial-gradient(circle, #8b5cf6, #6d28d9);
-  box-shadow: 0 0 15px #8b5cf6;
-  animation-delay: 2s;
-}
-
-/* Responsividade para partículas */
-@media (max-width: 768px) {
-  .particle-circle,
-  .particle-star,
-  .particle-cluster::before,
-  .particle-cluster::after {
-    transform: scale(0.8);
-  }
-
-  .particle {
-    animation-duration: 12s;
-  }
-}
-
-/* Prevenir animações para reduzir movimento */
-@media (prefers-reduced-motion: reduce) {
-  .particle-circle,
-  .particle-star,
-  .particle-connection-blue,
-  .particle-connection-purple,
-  .particle-connection-cyan,
-  .particle-cluster::before,
-  .particle-cluster::after {
-    animation: none;
-  }
-}
-
-/* ===== ANIMAÇÕES PARA BURACO NEGRO BRANCO ===== */
-@keyframes black-hole-particle {
-  0% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  50% {
-    opacity: 0.8;
-    transform: translate(calc(-50% + 50px), calc(-50% + 50px)) scale(0.7);
-  }
-  100% {
-    opacity: 0;
-    transform: translate(calc(-50% + 80px), calc(-50% + 80px)) scale(0.2);
-  }
-}
-
-@keyframes orbit-1 {
-  0% {
-    transform: rotate(0deg) translateX(12px) rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg) translateX(12px) rotate(-360deg);
-  }
-}
-
-@keyframes orbit-2 {
-  0% {
-    transform: rotate(60deg) translateX(12px) rotate(-60deg);
-  }
-  100% {
-    transform: rotate(420deg) translateX(12px) rotate(-420deg);
-  }
-}
-
-@keyframes orbit-3 {
-  0% {
-    transform: rotate(120deg) translateX(12px) rotate(-120deg);
-  }
-  100% {
-    transform: rotate(480deg) translateX(12px) rotate(-480deg);
-  }
-}
-
-@keyframes orbit-4 {
-  0% {
-    transform: rotate(180deg) translateX(12px) rotate(-180deg);
-  }
-  100% {
-    transform: rotate(540deg) translateX(12px) rotate(-540deg);
-  }
-}
-
-@keyframes orbit-5 {
-  0% {
-    transform: rotate(240deg) translateX(10px) rotate(-240deg);
-  }
-  100% {
-    transform: rotate(600deg) translateX(10px) rotate(-600deg);
-  }
-}
-
-@keyframes orbit-6 {
-  0% {
-    transform: rotate(300deg) translateX(10px) rotate(-300deg);
-  }
-  100% {
-    transform: rotate(660deg) translateX(10px) rotate(-660deg);
-  }
-}
-
-@keyframes pulse-slow {
-  0%,
-  100% {
-    opacity: 0.8;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
-  }
-}
-
-/* Classes de animação */
-.animate-orbit-1 {
-  animation: orbit-1 2s linear infinite;
-}
-
-.animate-orbit-2 {
-  animation: orbit-2 2.3s linear infinite;
-}
-
-.animate-orbit-3 {
-  animation: orbit-3 2.7s linear infinite;
-}
-
-.animate-orbit-4 {
-  animation: orbit-4 2.1s linear infinite;
-}
-
-.animate-orbit-5 {
-  animation: orbit-5 2.5s linear infinite;
-}
-
-.animate-orbit-6 {
-  animation: orbit-6 2.8s linear infinite;
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 2s ease-in-out infinite;
-}
-
-/* Efeitos de sombra para buraco negro branco - Ajustados */
-.shadow-white-glow {
-  box-shadow: 0 0 12px 2px rgba(255, 255, 255, 0.6),
-    inset 0 0 8px 1px rgba(255, 255, 255, 0.3) !important;
-}
-
-.shadow-white-glow-strong {
-  box-shadow: 0 0 20px 6px rgba(255, 255, 255, 0.8),
-    inset 0 0 12px 3px rgba(255, 255, 255, 0.4) !important;
-}
-
-/* Cursor geral */
+/* Remover rastro de partículas do mouse */
 * {
   cursor: none !important;
 }
 
-.fixed.pointer-events-none.z-\[9999\] {
+/* Cursor personalizado - apenas hover em elementos interativos */
+.custom-cursor-visible {
   display: block !important;
 }
 
@@ -523,7 +91,218 @@ body {
     cursor: auto !important;
   }
 
-  .fixed.pointer-events-none.z-\[9999\] {
+  .custom-cursor-visible {
     display: none !important;
+  }
+}
+
+/* ===== ANIMAÇÕES NEON PARA COMPONENTES ===== */
+@keyframes neon-pulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 5px currentColor) drop-shadow(0 0 10px currentColor)
+      drop-shadow(0 0 15px currentColor) brightness(1.2);
+    opacity: 0.8;
+  }
+  50% {
+    filter: drop-shadow(0 0 10px currentColor)
+      drop-shadow(0 0 20px currentColor) drop-shadow(0 0 30px currentColor)
+      brightness(1.8);
+    opacity: 1;
+  }
+}
+
+@keyframes neon-cyan {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 5px #00ffff) drop-shadow(0 0 10px #00ffff)
+      drop-shadow(0 0 15px #00ffff) brightness(1.3);
+    stroke: #00ffff;
+  }
+  50% {
+    filter: drop-shadow(0 0 10px #00ffff) drop-shadow(0 0 20px #00ffff)
+      drop-shadow(0 0 30px #00ffff) brightness(2);
+    stroke: #80ffff;
+  }
+}
+
+@keyframes neon-blue {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 5px #0066ff) drop-shadow(0 0 10px #0066ff)
+      drop-shadow(0 0 15px #0066ff) brightness(1.3);
+    stroke: #0066ff;
+  }
+  50% {
+    filter: drop-shadow(0 0 10px #0066ff) drop-shadow(0 0 20px #0066ff)
+      drop-shadow(0 0 30px #0066ff) brightness(2);
+    stroke: #4d94ff;
+  }
+}
+
+@keyframes neon-purple {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 5px #9933ff) drop-shadow(0 0 10px #9933ff)
+      drop-shadow(0 0 15px #9933ff) brightness(1.3);
+    stroke: #9933ff;
+  }
+  50% {
+    filter: drop-shadow(0 0 10px #9933ff) drop-shadow(0 0 20px #9933ff)
+      drop-shadow(0 0 30px #9933ff) brightness(2);
+    stroke: #cc99ff;
+  }
+}
+
+@keyframes neon-green {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 5px #00ff99) drop-shadow(0 0 10px #00ff99)
+      drop-shadow(0 0 15px #00ff99) brightness(1.3);
+    stroke: #00ff99;
+  }
+  50% {
+    filter: drop-shadow(0 0 10px #00ff99) drop-shadow(0 0 20px #00ff99)
+      drop-shadow(0 0 30px #00ff99) brightness(2);
+    stroke: #80ffcc;
+  }
+}
+
+/* Classes de animação neon */
+.animate-neon-cyan {
+  animation: neon-cyan 2s ease-in-out infinite;
+}
+
+.animate-neon-blue {
+  animation: neon-blue 2.2s ease-in-out infinite;
+}
+
+.animate-neon-purple {
+  animation: neon-purple 2.4s ease-in-out infinite;
+}
+
+.animate-neon-green {
+  animation: neon-green 2.1s ease-in-out infinite;
+}
+
+.animate-neon-pulse {
+  animation: neon-pulse 2.5s ease-in-out infinite;
+}
+
+/* Efeito de brilho para elementos interativos */
+.interactive-glow {
+  transition: all 0.3s ease;
+}
+
+.interactive-glow:hover {
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3))
+    drop-shadow(0 0 20px rgba(255, 255, 255, 0.2));
+}
+
+/* ===== ANIMAÇÕES DE ÓRBITA PARA CURSOR ===== */
+@keyframes orbit-cursor-1 {
+  0% {
+    transform: rotate(0deg) translateX(8px) rotate(0deg) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: rotate(180deg) translateX(8px) rotate(-180deg) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(360deg) translateX(8px) rotate(-360deg) scale(1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes orbit-cursor-2 {
+  0% {
+    transform: rotate(90deg) translateX(8px) rotate(-90deg) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: rotate(270deg) translateX(8px) rotate(-270deg) scale(1.3);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(450deg) translateX(8px) rotate(-450deg) scale(1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes orbit-cursor-3 {
+  0% {
+    transform: rotate(180deg) translateX(8px) rotate(-180deg) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: rotate(360deg) translateX(8px) rotate(-360deg) scale(1.4);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(540deg) translateX(8px) rotate(-540deg) scale(1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes orbit-cursor-4 {
+  0% {
+    transform: rotate(270deg) translateX(8px) rotate(-270deg) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: rotate(450deg) translateX(8px) rotate(-450deg) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(630deg) translateX(8px) rotate(-630deg) scale(1);
+    opacity: 0.8;
+  }
+}
+
+.animate-orbit-cursor-1 {
+  animation: orbit-cursor-1 1.5s linear infinite;
+}
+
+.animate-orbit-cursor-2 {
+  animation: orbit-cursor-2 1.8s linear infinite;
+}
+
+.animate-orbit-cursor-3 {
+  animation: orbit-cursor-3 2.1s linear infinite;
+}
+
+.animate-orbit-cursor-4 {
+  animation: orbit-cursor-4 1.6s linear infinite;
+}
+
+/* ===== ANIMAÇÕES PARA HERO ===== */
+@keyframes float-gentle {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  50% {
+    transform: translateY(-20px) translateX(10px);
+  }
+}
+
+.animate-float-gentle {
+  animation: float-gentle 6s ease-in-out infinite;
+}
+
+/* Prevenir animações para reduzir movimento */
+@media (prefers-reduced-motion: reduce) {
+  .animate-neon-cyan,
+  .animate-neon-blue,
+  .animate-neon-purple,
+  .animate-neon-green,
+  .animate-neon-pulse,
+  .animate-orbit-cursor-1,
+  .animate-orbit-cursor-2,
+  .animate-orbit-cursor-3,
+  .animate-orbit-cursor-4,
+  .animate-float-gentle {
+    animation: none;
   }
 }

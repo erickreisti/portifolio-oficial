@@ -4,10 +4,8 @@ import { useEffect, useRef, useState } from "react";
 
 export const SimpleTechCursor = () => {
   const cursorRef = useRef<HTMLDivElement>(null);
-  const particlesRef = useRef<HTMLDivElement>(null);
   const [isPointer, setIsPointer] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const particleCountRef = useRef(0);
 
   useEffect(() => {
     setIsClient(true);
@@ -17,8 +15,7 @@ export const SimpleTechCursor = () => {
     if (!isClient) return;
 
     const cursor = cursorRef.current;
-    const particlesContainer = particlesRef.current;
-    if (!cursor || !particlesContainer) return;
+    if (!cursor) return;
 
     const handleMouseMove = (e: MouseEvent) => {
       if (cursor) {
@@ -26,50 +23,18 @@ export const SimpleTechCursor = () => {
         cursor.style.top = e.clientY + "px";
       }
 
-      // Criar partículas mais frequentemente para efeito de buraco negro
-      if (Math.random() > 0.3 && particleCountRef.current < 20) {
-        createParticle(e.clientX, e.clientY);
-      }
-
+      // Verificar apenas elementos interativos
       const target = e.target as HTMLElement;
       const shouldBePointer =
         target.tagName === "BUTTON" ||
         target.tagName === "A" ||
         target.closest("button") !== null ||
-        target.closest("a") !== null;
+        target.closest("a") !== null ||
+        target.closest('[role="button"]') !== null ||
+        target.closest('[class*="cursor-pointer"]') !== null ||
+        target.closest('[class*="interactive"]') !== null;
 
       setIsPointer(shouldBePointer);
-    };
-
-    const createParticle = (x: number, y: number) => {
-      const particle = document.createElement("div");
-      const size = 1.5 + Math.random() * 4;
-      const colors = ["#3b82f6", "#6366f1", "#8b5cf6", "#10b981", "#c084fc"];
-      const color = colors[Math.floor(Math.random() * colors.length)];
-
-      particle.className = "absolute rounded-full pointer-events-none";
-      particle.style.cssText = `
-        width: ${size}px;
-        height: ${size}px;
-        background: ${color};
-        left: ${x}px;
-        top: ${y}px;
-        opacity: 0.9;
-        transform: translate(-50%, -50%);
-        animation: black-hole-particle 1.5s ease-out forwards;
-        filter: blur(${Math.random() * 0.5}px);
-        z-index: 9997;
-      `;
-
-      particlesContainer.appendChild(particle);
-      particleCountRef.current++;
-
-      setTimeout(() => {
-        if (particle.parentNode) {
-          particle.parentNode.removeChild(particle);
-          particleCountRef.current--;
-        }
-      }, 1500);
     };
 
     document.addEventListener("mousemove", handleMouseMove);
@@ -82,42 +47,38 @@ export const SimpleTechCursor = () => {
   }
 
   return (
-    <>
+    <div
+      ref={cursorRef}
+      className="custom-cursor-visible fixed pointer-events-none z-[9999] transform -translate-x-1/2 -translate-y-1/2"
+      style={{ left: 0, top: 0 }}
+    >
+      {/* Círculo principal do cursor */}
       <div
-        ref={particlesRef}
-        className="fixed pointer-events-none z-[9998] inset-0"
+        className={`w-8 h-8 rounded-full border-2 transition-all duration-200 ${
+          isPointer
+            ? "border-cyan-400 bg-cyan-400/20 shadow-[0_0_20px_#00ffff] scale-125"
+            : "border-white bg-white/10 shadow-[0_0_10px_rgba(255,255,255,0.5)] scale-100"
+        } backdrop-blur-sm`}
       />
 
+      {/* Núcleo pulsante */}
       <div
-        ref={cursorRef}
-        className="fixed pointer-events-none z-[9999] transform -translate-x-1/2 -translate-y-1/2"
-        style={{ left: 0, top: 0 }} // Posição inicial fixa
-      >
-        <div
-          className={`w-10 h-10 rounded-full border-2 ${
-            isPointer
-              ? "border-white/90 bg-white/30 shadow-white-glow-strong"
-              : "border-white bg-white/10 shadow-white-glow"
-          } backdrop-blur-sm transition-all duration-300 animate-pulse-slow`}
-        />
+        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-200 ${
+          isPointer
+            ? "bg-cyan-400 w-3 h-3 shadow-[0_0_15px_#00ffff]"
+            : "bg-white w-2 h-2 shadow-[0_0_5px_white]"
+        }`}
+      />
 
-        <div
-          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full ${
-            isPointer ? "bg-white/90 w-4 h-4" : "bg-white/70 w-3 h-3"
-          } transition-all duration-300 shadow-inner`}
-        />
-
-        {isPointer && (
-          <>
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-blue-400 rounded-full animate-orbit-1 shadow-lg shadow-blue-400/60" />
-            <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-1.5 h-1.5 bg-purple-400 rounded-full animate-orbit-2 shadow-lg shadow-purple-400/60" />
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-1.5 h-1.5 bg-green-400 rounded-full animate-orbit-3 shadow-lg shadow-green-400/60" />
-            <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-cyan-400 rounded-full animate-orbit-4 shadow-lg shadow-cyan-400/60" />
-            <div className="absolute top-1/4 -right-2 -translate-y-1/2 w-1 h-1 bg-blue-300 rounded-full animate-orbit-5 shadow-lg shadow-blue-300/50" />
-            <div className="absolute bottom-1/4 -left-2 -translate-y-1/2 w-1 h-1 bg-purple-300 rounded-full animate-orbit-6 shadow-lg shadow-purple-300/50" />
-          </>
-        )}
-      </div>
-    </>
+      {/* Partículas orbitais apenas no hover */}
+      {isPointer && (
+        <>
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-cyan-400 rounded-full animate-orbit-cursor-1 shadow-[0_0_8px_#00ffff]" />
+          <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-1.5 h-1.5 bg-blue-400 rounded-full animate-orbit-cursor-2 shadow-[0_0_8px_#0066ff]" />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-1.5 h-1.5 bg-purple-400 rounded-full animate-orbit-cursor-3 shadow-[0_0_8px_#9933ff]" />
+          <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-green-400 rounded-full animate-orbit-cursor-4 shadow-[0_0_8px_#00ff99]" />
+        </>
+      )}
+    </div>
   );
 };

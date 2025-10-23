@@ -111,41 +111,50 @@ export const Contact = () => {
       {/* Background Premium */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900" />
-        <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-blue-500/10 rounded-full blur-3xl animate-pulse-slow" />
+        <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
         <div
-          className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-purple-500/10 rounded-full blur-3xl animate-pulse-slow"
+          className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-purple-500/10 rounded-full blur-3xl animate-pulse"
           style={{ animationDelay: "2s" }}
         />
-      </div>
 
-      {/* Partículas de Fundo */}
-      <div className="absolute inset-0">
-        {[...Array(8)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-cyan-400/15 rounded-full animate-float"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 6}s`,
-              animationDuration: `${Math.random() * 10 + 8}s`,
-            }}
-          />
-        ))}
+        {/* Partículas Tech Brilhantes */}
+        <div className="absolute inset-0">
+          {[...Array(12)].map((_, i) => (
+            <div
+              key={i}
+              className={`absolute rounded-full animate-float-gentle ${
+                i % 3 === 0
+                  ? "bg-cyan-400/40 shadow-lg shadow-cyan-400/50"
+                  : i % 3 === 1
+                  ? "bg-blue-400/40 shadow-lg shadow-blue-400/50"
+                  : "bg-purple-400/40 shadow-lg shadow-purple-400/50"
+              }`}
+              style={{
+                width: `${Math.random() * 5 + 2}px`,
+                height: `${Math.random() * 5 + 2}px`,
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 6}s`,
+                animationDuration: `${Math.random() * 10 + 8}s`,
+                filter: "blur(0.5px)",
+              }}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Elementos Decorativos */}
-      <div className="hidden lg:block absolute top-10 right-10 opacity-5 animate-float-slow">
+      <div className="hidden lg:block absolute top-10 right-10 opacity-10 animate-float-gentle">
         <Binary className="h-32 w-32 text-blue-400" />
       </div>
       <div
-        className="hidden lg:block absolute bottom-10 left-10 opacity-5 animate-float-slow"
+        className="hidden lg:block absolute bottom-10 left-10 opacity-10 animate-float-gentle"
         style={{ animationDelay: "3s" }}
       >
         <CircuitBoard className="h-32 w-32 text-cyan-400" />
       </div>
       <div
-        className="hidden lg:block absolute top-20 left-20 opacity-5 animate-float-slow"
+        className="hidden lg:block absolute top-20 left-20 opacity-10 animate-float-gentle"
         style={{ animationDelay: "6s" }}
       >
         <Globe className="h-24 w-24 text-purple-400" />
@@ -179,7 +188,7 @@ export const Contact = () => {
           >
             <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-heading font-black text-white mt-2 lg:mt-4 px-4 lg:px-0">
               VAMOS CRIAR{" "}
-              <span className="text-gradient-animated animate-gradient-x">
+              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
                 JUNTOS
               </span>
             </h1>
@@ -199,10 +208,10 @@ export const Contact = () => {
             viewport={{ once: true, amount: 0.2 }}
             className="lg:col-span-1"
           >
-            <Card className="h-full glass-premium border border-blue-400/20 shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:scale-105 group card-glow">
+            <Card className="h-full bg-slate-900/60 backdrop-blur-xl border border-blue-400/20 shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:scale-105 group">
               <CardHeader className="pb-4 lg:pb-6 border-b border-slate-700/50">
                 <CardTitle className="text-xl lg:text-2xl font-heading font-black text-blue-400 flex items-center">
-                  <Cpu className="h-5 w-5 lg:h-6 lg:w-6 mr-2 lg:mr-3 filter-glow" />
+                  <Cpu className="h-5 w-5 lg:h-6 lg:w-6 mr-2 lg:mr-3" />
                   CONECTE-SE
                 </CardTitle>
                 <p className="text-slate-300 text-xs lg:text-sm mt-1 lg:mt-2 font-sans leading-relaxed">
@@ -214,8 +223,8 @@ export const Contact = () => {
               <CardContent className="space-y-4 lg:space-y-6 pt-4 lg:pt-6">
                 <div className="space-y-4 lg:space-y-6">
                   <div className="flex items-start space-x-3 lg:space-x-4 group p-3 lg:p-4 rounded-lg lg:rounded-xl hover:bg-blue-500/10 transition-all duration-300 border border-transparent hover:border-blue-400/30 cursor-pointer">
-                    <div className="h-10 w-10 lg:h-12 lg:w-12 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center group-hover:from-blue-500/30 group-hover:to-purple-500/30 transition-all duration-300 border border-blue-400/30 flex-shrink-0 neon-pulse">
-                      <Mail className="h-4 w-4 lg:h-5 lg:w-5 text-blue-400 group-hover:text-blue-300 transition-colors duration-300 filter-glow" />
+                    <div className="h-10 w-10 lg:h-12 lg:w-12 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center group-hover:from-blue-500/30 group-hover:to-purple-500/30 transition-all duration-300 border border-blue-400/30 flex-shrink-0">
+                      <Mail className="h-4 w-4 lg:h-5 lg:w-5 text-blue-400 group-hover:text-blue-300 transition-colors duration-300" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="font-heading font-bold text-white group-hover:text-blue-300 transition-colors duration-300 text-sm lg:text-base">
@@ -231,8 +240,8 @@ export const Contact = () => {
                   </div>
 
                   <div className="flex items-start space-x-3 lg:space-x-4 group p-3 lg:p-4 rounded-lg lg:rounded-xl hover:bg-cyan-500/10 transition-all duration-300 border border-transparent hover:border-cyan-400/30 cursor-pointer">
-                    <div className="h-10 w-10 lg:h-12 lg:w-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center group-hover:from-cyan-500/30 group-hover:to-blue-500/30 transition-all duration-300 border border-cyan-400/30 flex-shrink-0 neon-pulse">
-                      <MapPin className="h-4 w-4 lg:h-5 lg:w-5 text-cyan-400 group-hover:text-cyan-300 transition-colors duration-300 filter-glow" />
+                    <div className="h-10 w-10 lg:h-12 lg:w-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center group-hover:from-cyan-500/30 group-hover:to-blue-500/30 transition-all duration-300 border border-cyan-400/30 flex-shrink-0">
+                      <MapPin className="h-4 w-4 lg:h-5 lg:w-5 text-cyan-400 group-hover:text-cyan-300 transition-colors duration-300" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="font-heading font-bold text-white group-hover:text-cyan-300 transition-colors duration-300 text-sm lg:text-base">
@@ -248,8 +257,8 @@ export const Contact = () => {
                   </div>
 
                   <div className="flex items-start space-x-3 lg:space-x-4 group p-3 lg:p-4 rounded-lg lg:rounded-xl hover:bg-purple-500/10 transition-all duration-300 border border-transparent hover:border-purple-400/30 cursor-pointer">
-                    <div className="h-10 w-10 lg:h-12 lg:w-12 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center group-hover:from-purple-500/30 group-hover:to-pink-500/30 transition-all duration-300 border border-purple-400/30 flex-shrink-0 neon-pulse">
-                      <Phone className="h-4 w-4 lg:h-5 lg:w-5 text-purple-400 group-hover:text-purple-300 transition-colors duration-300 filter-glow" />
+                    <div className="h-10 w-10 lg:h-12 lg:w-12 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center group-hover:from-purple-500/30 group-hover:to-pink-500/30 transition-all duration-300 border border-purple-400/30 flex-shrink-0">
+                      <Phone className="h-4 w-4 lg:h-5 lg:w-5 text-purple-400 group-hover:text-purple-300 transition-colors duration-300" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="font-heading font-bold text-white group-hover:text-purple-300 transition-colors duration-300 text-sm lg:text-base">
@@ -284,10 +293,10 @@ export const Contact = () => {
             viewport={{ once: true, amount: 0.2 }}
             className="lg:col-span-2"
           >
-            <Card className="h-full glass-premium border border-purple-400/20 shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 hover:scale-105 group card-glow">
+            <Card className="h-full bg-slate-900/60 backdrop-blur-xl border border-purple-400/20 shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 hover:scale-105 group">
               <CardHeader className="pb-4 lg:pb-6 border-b border-slate-700/50">
                 <CardTitle className="text-xl lg:text-2xl font-heading font-black text-purple-400 flex items-center">
-                  <Send className="h-5 w-5 lg:h-6 lg:w-6 mr-2 lg:mr-3 filter-glow" />
+                  <Send className="h-5 w-5 lg:h-6 lg:w-6 mr-2 lg:mr-3" />
                   MENSAGEM RÁPIDA
                 </CardTitle>
                 <p className="text-slate-300 text-xs lg:text-sm mt-1 lg:mt-2 font-sans leading-relaxed">
@@ -427,11 +436,11 @@ export const Contact = () => {
                     </MotionDiv>
                   )}
 
-                  {/* Botão com Loading usando animações do CSS */}
+                  {/* Botão com Loading */}
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full h-12 lg:h-14 text-sm lg:text-base font-heading font-bold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-lg lg:rounded-xl shadow-2xl hover:shadow-blue-500/40 transition-all duration-500 hover:scale-105 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 border-0 tracking-widest button-glow"
+                    className="w-full h-12 lg:h-14 text-sm lg:text-base font-heading font-bold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-lg lg:rounded-xl shadow-2xl hover:shadow-blue-500/40 transition-all duration-500 hover:scale-105 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 border-0 tracking-widest"
                   >
                     {!isLoading ? (
                       <span className="flex items-center justify-center">
@@ -440,9 +449,8 @@ export const Contact = () => {
                       </span>
                     ) : (
                       <div className="flex items-center justify-center space-x-2">
-                        {/* Spinner com animação do CSS */}
-                        <div className="w-4 h-4 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin-slow" />
-                        <span className="text-cyan-300 font-mono text-xs lg:text-sm animate-pulse">
+                        <div className="w-4 h-4 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+                        <span className="text-cyan-300 font-mono text-xs lg:text-sm">
                           ENVIANDO...
                         </span>
                       </div>
@@ -462,7 +470,7 @@ export const Contact = () => {
           viewport={{ once: true }}
           className="mt-12 lg:mt-16 px-4 lg:px-0"
         >
-          <div className="glass-premium p-6 lg:p-8 rounded-xl lg:rounded-2xl border border-slate-700/50 shadow-2xl relative overflow-hidden text-center">
+          <div className="bg-slate-900/60 backdrop-blur-xl p-6 lg:p-8 rounded-xl lg:rounded-2xl border border-slate-700/50 shadow-2xl relative overflow-hidden text-center">
             <div className="relative z-10">
               <h3 className="text-xl lg:text-2xl font-heading font-black text-white mb-2 lg:mb-3">
                 Vamos criar algo extraordinário juntos? 🚀
