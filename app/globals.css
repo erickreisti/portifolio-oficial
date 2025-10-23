@@ -16,87 +16,240 @@ body {
   width: 100%;
 }
 
-.intergalactic-loading {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  z-index: 9999 !important;
-  background: #0f172a !important;
+/* ===== PARTÍCULAS DINÂMICAS PREMIUM ===== */
+.particles-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
 }
 
-/* ===== TAILWIND ===== */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* ===== BASE STYLES ===== */
-@layer base {
-  html {
-    scroll-behavior: smooth;
-  }
-
-  :root {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 217 78% 60%;
-    --primary-foreground: 0 0% 98%;
-    --primary-default: 217 78% 60%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-    --radius: 0.5rem;
-  }
-
-  body {
-    @apply bg-slate-950 text-white;
-  }
+.particle {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+  will-change: transform, opacity;
 }
 
-@layer base {
-  * {
-    @apply border-border;
-    box-sizing: border-box;
+/* Formas das partículas */
+.particle-circle {
+  border-radius: 50%;
+  animation: particle-float-circle 8s ease-in-out infinite;
+}
+
+.particle-square {
+  border-radius: 2px;
+  animation: particle-float-square 10s ease-in-out infinite;
+}
+
+.particle-triangle {
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  animation: particle-float-triangle 12s ease-in-out infinite;
+}
+
+.particle-hexagon {
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  animation: particle-float-hexagon 9s ease-in-out infinite;
+}
+
+.particle-star {
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+  animation: particle-float-star 11s ease-in-out infinite;
+}
+
+/* Animações específicas para cada forma */
+@keyframes particle-float-circle {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 0.6;
   }
-}
-
-/* ===== CURSOR E ANIMAÇÕES NEON ===== */
-
-/* Remover rastro de partículas do mouse */
-* {
-  cursor: none !important;
-}
-
-/* Cursor personalizado - apenas hover em elementos interativos */
-.custom-cursor-visible {
-  display: block !important;
-}
-
-/* Dispositivos touch */
-@media (hover: none) and (pointer: coarse) {
-  * {
-    cursor: auto !important;
+  25% {
+    transform: translate(40px, -60px) rotate(90deg) scale(1.2);
+    opacity: 0.8;
   }
-
-  .custom-cursor-visible {
-    display: none !important;
+  50% {
+    transform: translate(80px, -30px) rotate(180deg) scale(1.1);
+    opacity: 1;
+  }
+  75% {
+    transform: translate(20px, -80px) rotate(270deg) scale(0.9);
+    opacity: 0.7;
   }
 }
 
-/* ===== ANIMAÇÕES NEON MAIS FORTES E BRILHANTES ===== */
+@keyframes particle-float-square {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 0.5;
+  }
+  20% {
+    transform: translate(-50px, -40px) rotate(45deg) scale(1.3);
+    opacity: 0.8;
+  }
+  40% {
+    transform: translate(-80px, 20px) rotate(90deg) scale(1.1);
+    opacity: 0.9;
+  }
+  60% {
+    transform: translate(-20px, 60px) rotate(135deg) scale(0.8);
+    opacity: 0.6;
+  }
+  80% {
+    transform: translate(60px, 40px) rotate(180deg) scale(1.2);
+    opacity: 0.7;
+  }
+}
+
+@keyframes particle-float-triangle {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 0.7;
+  }
+  30% {
+    transform: translate(60px, -80px) rotate(120deg) scale(1.4);
+    opacity: 1;
+  }
+  60% {
+    transform: translate(-40px, -40px) rotate(240deg) scale(0.7);
+    opacity: 0.5;
+  }
+  90% {
+    transform: translate(80px, 20px) rotate(300deg) scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes particle-float-hexagon {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 0.6;
+  }
+  25% {
+    transform: translate(-60px, -20px) rotate(60deg) scale(1.2);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translate(40px, -60px) rotate(120deg) scale(0.9);
+    opacity: 0.7;
+  }
+  75% {
+    transform: translate(20px, 40px) rotate(180deg) scale(1.3);
+    opacity: 0.8;
+  }
+}
+
+@keyframes particle-float-star {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 0.8;
+  }
+  20% {
+    transform: translate(70px, -50px) rotate(72deg) scale(1.5);
+    opacity: 1;
+  }
+  40% {
+    transform: translate(-30px, -70px) rotate(144deg) scale(0.8);
+    opacity: 0.6;
+  }
+  60% {
+    transform: translate(-60px, 30px) rotate(216deg) scale(1.2);
+    opacity: 0.9;
+  }
+  80% {
+    transform: translate(50px, 60px) rotate(288deg) scale(1.1);
+    opacity: 0.7;
+  }
+}
+
+/* Efeitos de brilho e pulso para partículas */
+@keyframes particle-glow {
+  0%,
+  100% {
+    opacity: 0.4;
+    box-shadow: 0 0 8px currentColor, 0 0 15px currentColor,
+      0 0 25px currentColor;
+    filter: brightness(1.2);
+  }
+  50% {
+    opacity: 0.9;
+    box-shadow: 0 0 20px currentColor, 0 0 35px currentColor,
+      0 0 50px currentColor;
+    filter: brightness(1.8);
+  }
+}
+
+.particle-glow {
+  animation: particle-glow 4s ease-in-out infinite;
+}
+
+/* Animações de rotação contínua */
+@keyframes particle-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.particle-rotate-slow {
+  animation: particle-rotate 15s linear infinite;
+}
+
+.particle-rotate-medium {
+  animation: particle-rotate 10s linear infinite;
+}
+
+.particle-rotate-fast {
+  animation: particle-rotate 5s linear infinite;
+}
+
+/* ===== EFEITOS PREMIUM ADICIONAIS ===== */
+.premium-glass {
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.premium-button {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6, #06b6d4);
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+.premium-button-outline {
+  border: 2px solid;
+  border-image: linear-gradient(135deg, #3b82f6, #8b5cf6, #06b6d4) 1;
+}
+
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* ===== ANIMAÇÕES NEON INTENSAS ===== */
 @keyframes neon-pulse {
   0%,
   100% {
@@ -189,94 +342,7 @@ body {
   animation: neon-pulse 2.5s ease-in-out infinite;
 }
 
-/* Efeito de brilho mais intenso para elementos interativos */
-.interactive-glow {
-  transition: all 0.3s ease;
-}
-
-.interactive-glow:hover {
-  filter: drop-shadow(0 0 15px currentColor) drop-shadow(0 0 30px currentColor)
-    drop-shadow(0 0 45px currentColor) brightness(2);
-}
-
-/* ===== ANIMAÇÕES DE ÓRBITA PARA CURSOR ===== */
-@keyframes orbit-cursor-1 {
-  0% {
-    transform: rotate(0deg) translateX(8px) rotate(0deg) scale(1);
-    opacity: 0.8;
-  }
-  50% {
-    transform: rotate(180deg) translateX(8px) rotate(-180deg) scale(1.2);
-    opacity: 1;
-  }
-  100% {
-    transform: rotate(360deg) translateX(8px) rotate(-360deg) scale(1);
-    opacity: 0.8;
-  }
-}
-
-@keyframes orbit-cursor-2 {
-  0% {
-    transform: rotate(90deg) translateX(8px) rotate(-90deg) scale(1);
-    opacity: 0.8;
-  }
-  50% {
-    transform: rotate(270deg) translateX(8px) rotate(-270deg) scale(1.3);
-    opacity: 1;
-  }
-  100% {
-    transform: rotate(450deg) translateX(8px) rotate(-450deg) scale(1);
-    opacity: 0.8;
-  }
-}
-
-@keyframes orbit-cursor-3 {
-  0% {
-    transform: rotate(180deg) translateX(8px) rotate(-180deg) scale(1);
-    opacity: 0.8;
-  }
-  50% {
-    transform: rotate(360deg) translateX(8px) rotate(-360deg) scale(1.4);
-    opacity: 1;
-  }
-  100% {
-    transform: rotate(540deg) translateX(8px) rotate(-540deg) scale(1);
-    opacity: 0.8;
-  }
-}
-
-@keyframes orbit-cursor-4 {
-  0% {
-    transform: rotate(270deg) translateX(8px) rotate(-270deg) scale(1);
-    opacity: 0.8;
-  }
-  50% {
-    transform: rotate(450deg) translateX(8px) rotate(-450deg) scale(1.2);
-    opacity: 1;
-  }
-  100% {
-    transform: rotate(630deg) translateX(8px) rotate(-630deg) scale(1);
-    opacity: 0.8;
-  }
-}
-
-.animate-orbit-cursor-1 {
-  animation: orbit-cursor-1 1.5s linear infinite;
-}
-
-.animate-orbit-cursor-2 {
-  animation: orbit-cursor-2 1.8s linear infinite;
-}
-
-.animate-orbit-cursor-3 {
-  animation: orbit-cursor-3 2.1s linear infinite;
-}
-
-.animate-orbit-cursor-4 {
-  animation: orbit-cursor-4 1.6s linear infinite;
-}
-
-/* ===== ANIMAÇÕES PARA HERO ===== */
+/* ===== ANIMAÇÕES DE FLUTUAÇÃO ===== */
 @keyframes float-gentle {
   0%,
   100% {
@@ -291,123 +357,36 @@ body {
   animation: float-gentle 6s ease-in-out infinite;
 }
 
-/* ===== EFEITOS DE PARTÍCULAS BRILHANTES ===== */
-@keyframes particle-glow {
+@keyframes float-slow {
   0%,
   100% {
-    opacity: 0.4;
-    box-shadow: 0 0 8px currentColor, 0 0 15px currentColor,
-      0 0 25px currentColor;
+    transform: translateY(0px);
   }
   50% {
-    opacity: 0.9;
-    box-shadow: 0 0 20px currentColor, 0 0 35px currentColor,
-      0 0 50px currentColor;
+    transform: translateY(-10px);
   }
 }
 
-.particle-glow {
-  animation: particle-glow 3s ease-in-out infinite;
+.animate-float-slow {
+  animation: float-slow 6s ease-in-out infinite;
 }
 
-/* Animações de flutuação FIXAS para partículas (sem movimento de mouse) */
-@keyframes float-particle {
-  0%,
-  100% {
-    transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
-  }
-  25% {
-    transform: translateY(-15px) translateX(0px) rotate(0deg) scale(1.1);
-  }
-  50% {
-    transform: translateY(-25px) translateX(0px) rotate(0deg) scale(1.2);
-  }
-  75% {
-    transform: translateY(-10px) translateX(0px) rotate(0deg) scale(1.05);
-  }
-}
-
-.animate-float-particle {
-  animation: float-particle 8s ease-in-out infinite;
-  /* Remover qualquer efeito de parallax */
-  transform: none !important;
-  will-change: auto;
-}
-
-/* Garantir que as partículas não sejam afetadas pelo movimento do mouse */
-.hero-bg-elements .absolute {
-  transform: none !important;
-  will-change: auto;
-}
-
-/* Remover parallax das partículas especificamente */
-.hero-bg-elements > .absolute > .absolute {
-  transform: none !important;
-}
-
-/* ===== EFEITOS NEON PARA CONTACT ===== */
-.card-neon-glow {
+/* ===== EFEITOS INTERATIVOS ===== */
+.interactive-glow {
   transition: all 0.3s ease;
 }
 
-.card-neon-glow:hover {
-  box-shadow: 0 0 25px rgba(59, 130, 246, 0.4), 0 0 50px rgba(59, 130, 246, 0.3),
-    0 0 75px rgba(59, 130, 246, 0.2);
+.interactive-glow:hover {
+  filter: drop-shadow(0 0 15px currentColor) drop-shadow(0 0 30px currentColor)
+    drop-shadow(0 0 45px currentColor) brightness(2);
 }
 
-/* Efeito de brilho para elementos interativos do Contact */
-.contact-interactive-glow {
-  transition: all 0.3s ease;
+.interactive {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.contact-interactive-glow:hover {
-  filter: drop-shadow(0 0 12px currentColor) drop-shadow(0 0 24px currentColor)
-    drop-shadow(0 0 36px currentColor);
-}
-
-/* Animações neon específicas para ícones do Contact */
-.contact-neon-cyan {
-  animation: neon-cyan 2s ease-in-out infinite;
-}
-
-.contact-neon-blue {
-  animation: neon-blue 2.2s ease-in-out infinite;
-}
-
-.contact-neon-purple {
-  animation: neon-purple 2.4s ease-in-out infinite;
-}
-
-.contact-neon-green {
-  animation: neon-green 2.1s ease-in-out infinite;
-}
-
-.contact-neon-pulse {
-  animation: neon-pulse 2.5s ease-in-out infinite;
-}
-
-/* Efeitos de foco para inputs com neon */
-.focus-neon-blue:focus {
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3),
-    0 0 25px rgba(59, 130, 246, 0.5) !important;
-  border-color: rgba(59, 130, 246, 0.7) !important;
-}
-
-.focus-neon-cyan:focus {
-  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.3),
-    0 0 25px rgba(34, 211, 238, 0.5) !important;
-  border-color: rgba(34, 211, 238, 0.7) !important;
-}
-
-.focus-neon-purple:focus {
-  box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.3),
-    0 0 25px rgba(168, 85, 247, 0.5) !important;
-  border-color: rgba(168, 85, 247, 0.7) !important;
-}
-
-.focus-neon-green:focus {
-  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.3), 0 0 25px rgba(34, 197, 94, 0.5) !important;
-  border-color: rgba(34, 197, 94, 0.7) !important;
+.interactive:hover {
+  transform: translateY(-2px);
 }
 
 /* ===== ANIMAÇÕES GLOBAIS ===== */
@@ -423,20 +402,6 @@ body {
 
 .animate-pulse-slow {
   animation: pulse-slow 3s ease-in-out infinite;
-}
-
-@keyframes float-slow {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.animate-float-slow {
-  animation: float-slow 6s ease-in-out infinite;
 }
 
 @keyframes gradient-x {
@@ -467,107 +432,83 @@ body {
   animation: spin-slow 3s linear infinite;
 }
 
-/* ===== UTILITÁRIOS PERSONALIZADOS ===== */
+/* ===== UTILITÁRIOS PREMIUM ===== */
 .glass-premium {
   background: rgba(15, 23, 42, 0.7);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.filter-glow {
-  filter: drop-shadow(0 0 10px currentColor) drop-shadow(0 0 20px currentColor);
+.text-glow {
+  text-shadow: 0 0 15px currentColor, 0 0 30px currentColor,
+    0 0 45px currentColor;
 }
 
-.button-glow {
-  box-shadow: 0 0 25px rgba(59, 130, 246, 0.4), 0 0 50px rgba(59, 130, 246, 0.3);
+.neon-text {
+  text-shadow: 0 0 10px currentColor, 0 0 20px currentColor,
+    0 0 30px currentColor;
 }
 
-.text-gradient-animated {
-  background: linear-gradient(90deg, #60a5fa, #a855f7, #06b6d4, #60a5fa);
-  background-size: 300% 300%;
-  animation: gradient-x 3s ease infinite;
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+  .particles-container {
+    display: none;
+  }
+
+  .floating-elements {
+    display: none;
+  }
+
+  .particle-glow {
+    animation-duration: 6s;
+  }
 }
 
-.neon-pulse {
-  animation: neon-pulse 2s ease-in-out infinite;
-}
-
-/* ===== RESPONSIVIDADE E ACESSIBILIDADE ===== */
-
-/* Prevenir animações para reduzir movimento */
+/* ===== ACESSIBILIDADE ===== */
 @media (prefers-reduced-motion: reduce) {
   .animate-neon-cyan,
   .animate-neon-blue,
   .animate-neon-purple,
   .animate-neon-green,
   .animate-neon-pulse,
-  .animate-orbit-cursor-1,
-  .animate-orbit-cursor-2,
-  .animate-orbit-cursor-3,
-  .animate-orbit-cursor-4,
   .animate-float-gentle,
-  .animate-float-particle,
   .animate-float-slow,
   .animate-pulse-slow,
   .animate-gradient-x,
   .animate-spin-slow,
   .particle-glow,
-  .card-neon-glow,
-  .interactive-glow,
-  .contact-interactive-glow,
-  .contact-neon-cyan,
-  .contact-neon-blue,
-  .contact-neon-purple,
-  .contact-neon-green,
-  .contact-neon-pulse,
-  .neon-pulse {
+  .particle-circle,
+  .particle-square,
+  .particle-triangle,
+  .particle-hexagon,
+  .particle-star,
+  .particle-rotate-slow,
+  .particle-rotate-medium,
+  .particle-rotate-fast,
+  .interactive-glow {
     animation: none;
   }
-
-  .filter-glow,
-  .button-glow {
-    filter: none;
-    box-shadow: none;
-  }
 }
 
-/* Otimizações para mobile */
-@media (max-width: 768px) {
-  .hero-bg-elements .floating-elements {
-    display: none;
-  }
-
-  .particle-glow {
-    animation-duration: 4s;
-  }
-}
-
-/* Suporte para dark mode nativo */
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-  }
-}
-
-/* Melhorias de performance - REMOVIDO will-change das partículas */
-.hero-bg-elements,
-.floating-elements {
-  will-change: transform, opacity;
+/* ===== PERFORMANCE ===== */
+.particles-container,
+.particle {
   transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
 }
 
-/* Scroll suave para toda a aplicação */
-html {
-  scroll-behavior: smooth;
+/* Estados de loading */
+.intergalactic-loading {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 9999 !important;
+  background: #0f172a !important;
 }
 
-/* Foco visível para acessibilidade */
-*:focus-visible {
-  outline: 2px solid #60a5fa;
-  outline-offset: 2px;
-}
-
-/* Loading states */
 .skeleton-loading {
   background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
   background-size: 200% 100%;
@@ -583,20 +524,7 @@ html {
   }
 }
 
-/* Estados de hover otimizados */
-.interactive {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.interactive:hover {
-  transform: translateY(-2px);
-}
-
-/* Animações de entrada suaves */
-.fade-in-up {
-  animation: fadeInUp 0.6s ease-out;
-}
-
+/* ===== ANIMAÇÕES DE ENTRADA ===== */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -608,13 +536,24 @@ html {
   }
 }
 
-/* Efeitos de brilho para textos */
-.text-glow {
-  text-shadow: 0 0 15px currentColor, 0 0 30px currentColor,
-    0 0 45px currentColor;
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
 }
 
-/* Gradientes animados para backgrounds */
+/* ===== EFEITOS DE BRILHO ESPECIAIS ===== */
+.glow-cyan {
+  box-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff, 0 0 60px #00ffff;
+}
+
+.glow-blue {
+  box-shadow: 0 0 20px #0066ff, 0 0 40px #0066ff, 0 0 60px #0066ff;
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px #9933ff, 0 0 40px #9933ff, 0 0 60px #9933ff;
+}
+
+/* ===== GRADIENTES ANIMADOS ===== */
 .bg-gradient-animated {
   background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #0f172a);
   background-size: 400% 400%;
@@ -633,182 +572,65 @@ html {
   }
 }
 
-/* ===== CORREÇÕES ESPECÍFICAS PARA PARTÍCULAS ===== */
-/* Garantir que nenhuma partícula seja afetada por transformações externas */
-.hero-bg-elements > div:not(.floating-elements):not(.light-effects) {
-  transform: none !important;
+.text-gradient-animated {
+  background: linear-gradient(90deg, #60a5fa, #a855f7, #06b6d4, #60a5fa);
+  background-size: 300% 300%;
+  animation: gradient-x 3s ease infinite;
 }
 
-/* Partículas devem ficar completamente estáticas em relação ao mouse */
-.particle-static {
-  transform: none !important;
-  will-change: auto !important;
+/* ===== SCROLL SUAVE ===== */
+html {
+  scroll-behavior: smooth;
 }
 
-/* Remover qualquer efeito de parallax do container de partículas */
-.particles-container {
-  transform: none !important;
-  will-change: auto !important;
+/* ===== FOCO VISÍVEL ===== */
+*:focus-visible {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
 }
 
-/* ===== ISOLAMENTO COMPLETO DAS PARTÍCULAS ===== */
-.particles-container {
-  position: absolute !important;
-  inset: 0 !important;
-  transform: none !important;
-  will-change: auto !important;
-  pointer-events: none !important;
-}
+/* ===== TAILWIND BASE ===== */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-.particle-static {
-  transform: none !important;
-  will-change: auto !important;
-  pointer-events: none !important;
-}
-
-/* Garantir que nenhum container pai afete as partículas */
-.hero-bg-elements .particles-container,
-.hero-bg-elements .particle-static {
-  transform: none !important;
-}
-
-/* Remover qualquer transformação herdada */
-.particles-container * {
-  transform: none !important;
-}
-
-/* Forçar isolamento completo */
-.particles-container,
-.particles-container * {
-  transform: translate3d(0, 0, 0) !important;
-  will-change: auto !important;
-}
-
-/* ===== NEON INTENSIFICADO PARA TODOS OS ELEMENTOS ===== */
-.neon-intense {
-  filter: drop-shadow(0 0 10px currentColor) drop-shadow(0 0 20px currentColor)
-    drop-shadow(0 0 30px currentColor);
-}
-
-.neon-cyan-intense {
-  filter: drop-shadow(0 0 10px #00ffff) drop-shadow(0 0 20px #00ffff)
-    drop-shadow(0 0 30px #00ffff);
-}
-
-.neon-blue-intense {
-  filter: drop-shadow(0 0 10px #0066ff) drop-shadow(0 0 20px #0066ff)
-    drop-shadow(0 0 30px #0066ff);
-}
-
-.neon-purple-intense {
-  filter: drop-shadow(0 0 10px #9933ff) drop-shadow(0 0 20px #9933ff)
-    drop-shadow(0 0 30px #9933ff);
-}
-
-/* ===== ANIMAÇÕES DE ENTRADA DRAMÁTICAS ===== */
-@keyframes slideInFromTop {
-  from {
-    opacity: 0;
-    transform: translateY(-50px);
+@layer base {
+  html {
+    scroll-behavior: smooth;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  :root {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 217 78% 60%;
+    --primary-foreground: 0 0% 98%;
+    --primary-default: 217 78% 60%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+    --radius: 0.5rem;
+  }
+
+  body {
+    @apply bg-slate-950 text-white;
   }
 }
 
-@keyframes slideInFromBottom {
-  from {
-    opacity: 0;
-    transform: translateY(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideInFromLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInFromRight {
-  from {
-    opacity: 0;
-    transform: translateX(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.animate-slide-top {
-  animation: slideInFromTop 0.8s ease-out;
-}
-
-.animate-slide-bottom {
-  animation: slideInFromBottom 0.8s ease-out;
-}
-
-.animate-slide-left {
-  animation: slideInFromLeft 0.8s ease-out;
-}
-
-.animate-slide-right {
-  animation: slideInFromRight 0.8s ease-out;
-}
-
-/* ===== EFEITOS DE BRILHO ESPECIAIS ===== */
-.glow-cyan {
-  box-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff, 0 0 60px #00ffff;
-}
-
-.glow-blue {
-  box-shadow: 0 0 20px #0066ff, 0 0 40px #0066ff, 0 0 60px #0066ff;
-}
-
-.glow-purple {
-  box-shadow: 0 0 20px #9933ff, 0 0 40px #9933ff, 0 0 60px #9933ff;
-}
-
-/* Efeito de pulso mais intenso */
-@keyframes intense-pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.8;
-  }
-}
-
-.animate-intense-pulse {
-  animation: intense-pulse 2s ease-in-out infinite;
-}
-
-/* ===== MELHORIAS DE PERFORMANCE ===== */
-@media (prefers-reduced-motion: reduce) {
+@layer base {
   * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* Otimização para dispositivos com baixa bateria */
-@media (prefers-reduced-data: reduce) {
-  .bg-gradient-animated,
-  .text-gradient-animated {
-    animation: none;
+    @apply border-border;
+    box-sizing: border-box;
   }
 }
