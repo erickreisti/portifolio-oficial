@@ -39,10 +39,10 @@ const skillsData = [
         description: "Type Safety & Advanced Patterns",
       },
       {
-        name: "React/React Native",
+        name: "React",
         level: 92,
         color: "from-cyan-500 to-blue-600",
-        description: "Cross-platform Development",
+        description: "Hooks, Context & Performance",
       },
       {
         name: "Tailwind CSS",
@@ -64,10 +64,10 @@ const skillsData = [
         description: "REST & GraphQL APIs",
       },
       {
-        name: "Python & FastAPI",
+        name: "Prisma & ORM",
         level: 85,
         color: "from-yellow-500 to-yellow-600",
-        description: "High-performance APIs",
+        description: "Data Modeling & Migrations",
       },
       {
         name: "PostgreSQL",
@@ -76,10 +76,10 @@ const skillsData = [
         description: "Complex Queries & Optimization",
       },
       {
-        name: "MongoDB",
+        name: "Supabase & MongoDB",
         level: 82,
         color: "from-green-500 to-green-600",
-        description: "NoSQL & Aggregation Pipelines",
+        description: "Realtime & NoSQL Databases",
       },
     ],
   },

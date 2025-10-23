@@ -4,7 +4,6 @@ import {
   Send,
   Mail,
   MapPin,
-  Loader2,
   CheckCircle,
   AlertCircle,
   MessageCircle,
@@ -14,6 +13,8 @@ import {
   Sparkles,
   Phone,
   Globe,
+  Rocket,
+  Satellite,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -427,24 +428,54 @@ export const Contact = () => {
                     </MotionDiv>
                   )}
 
+                  {/* Botão com Loading Intergalático */}
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full h-12 lg:h-14 text-sm lg:text-base font-heading font-bold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-lg lg:rounded-xl shadow-2xl hover:shadow-blue-500/40 transition-all duration-500 hover:scale-105 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 border-0 tracking-widest"
+                    className="w-full h-12 lg:h-14 text-sm lg:text-base font-heading font-bold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-lg lg:rounded-xl shadow-2xl hover:shadow-blue-500/40 transition-all duration-500 hover:scale-105 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 border-0 tracking-widest intergalactic-loading"
                   >
+                    {/* Conteúdo normal */}
                     <span
                       className={`flex items-center justify-center transition-all duration-300 ${
                         isLoading ? "opacity-0" : "opacity-100"
                       }`}
                     >
                       <Send className="mr-2 lg:mr-3 h-4 w-4 lg:h-5 lg:w-5 group-hover:translate-x-1 transition-transform duration-200" />
-                      {isLoading ? "ENVIANDO..." : "ENVIAR PROPOSTA"}
+                      ENVIAR PROPOSTA
                     </span>
 
+                    {/* Loading Intergalático */}
                     {isLoading && (
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <Loader2 className="h-4 w-4 lg:h-5 lg:w-5 animate-spin" />
+                        <div className="rocket-container relative">
+                          {/* Foguete central */}
+                          <Rocket className="h-5 w-5 lg:h-6 lg:w-6 text-cyan-400 animate-rocket-launch" />
+
+                          {/* Satélites orbitais */}
+                          <div className="satellite bg-blue-400 animate-satellite-orbit" />
+                          <div
+                            className="satellite bg-purple-400 animate-satellite-orbit"
+                            style={{ animationDelay: "1s" }}
+                          />
+                          <div
+                            className="satellite bg-cyan-400 animate-satellite-orbit"
+                            style={{ animationDelay: "2s" }}
+                          />
+                        </div>
+
+                        {/* Texto animado */}
+                        <span className="text-cyan-300 font-mono text-xs lg:text-sm animate-pulse ml-3">
+                          TRANSMITINDO...
+                        </span>
                       </div>
+                    )}
+
+                    {/* Efeitos de brilho durante o loading */}
+                    {isLoading && (
+                      <>
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-cosmic-shimmer rounded-lg lg:rounded-xl" />
+                        <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 rounded-lg lg:rounded-xl blur opacity-30 animate-nebula-glow" />
+                      </>
                     )}
                   </Button>
                 </form>

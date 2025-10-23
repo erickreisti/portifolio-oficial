@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Menu, X, Download } from "lucide-react";
@@ -88,7 +87,7 @@ export const Header = () => {
             {/* Texto ajustado para acompanhar o aumento da logo */}
             <div className="flex flex-col">
               <span className="text-xl lg:text-2xl font-heading font-bold text-white group-hover:text-blue-300 transition-colors duration-300 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
-                Erick Reis
+                Érick Reis
               </span>
               <span className="text-xs lg:text-sm font-mono text-slate-400 group-hover:text-slate-300 transition-colors duration-300 tracking-widest hidden sm:block">
                 FULLSTACK DEV

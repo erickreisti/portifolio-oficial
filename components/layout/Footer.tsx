@@ -187,7 +187,7 @@ export const Footer = () => {
 
             <div className="flex flex-col">
               <span className="text-xl lg:text-2xl font-heading font-black text-white group-hover:text-blue-300 transition-colors duration-300 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
-                Erick Reis
+                Érick Reis
               </span>
               <span className="text-xs lg:text-sm text-slate-400 font-mono tracking-widest group-hover:text-slate-300 transition-colors duration-300">
                 FULLSTACK DEV
@@ -244,7 +244,7 @@ export const Footer = () => {
           {/* Direitos Autorais - CENTRALIZADO MOBILE */}
           <div className="text-center lg:text-left order-2 lg:order-1">
             <p className="text-slate-400 text-sm font-mono font-bold tracking-wide flex flex-col lg:flex-row items-center space-y-1 lg:space-y-0 lg:space-x-2">
-              <span>© {currentYear} ERICK REIS</span>
+              <span>© {currentYear} ÉRICK REIS</span>
               <span className="hidden lg:inline text-blue-400">•</span>
               <span>TODOS OS DIREITOS</span>
             </p>
@@ -260,7 +260,7 @@ export const Footer = () => {
               <span className="hidden sm:inline">DESENVOLVIDO</span>
               <Heart className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-red-500 fill-current animate-pulse" />
               <span className="text-blue-400 font-heading font-semibold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent text-xs lg:text-sm">
-                ERICK
+                ÉRICK
               </span>
             </div>
           </div>
