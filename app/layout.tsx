@@ -3,6 +3,7 @@ import { Poppins, Open_Sans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/app/providers";
+import { LoadingProvider } from "@/providers/LoadingProvider";
 
 // Configuração das fonts do RainbowIT
 const poppins = Poppins({
@@ -52,7 +53,9 @@ export default function RootLayout({
           openSans.variable
         )}
       >
-        <ThemeProvider>{children}</ThemeProvider>
+        <LoadingProvider>
+          <ThemeProvider>{children}</ThemeProvider>
+        </LoadingProvider>
       </body>
     </html>
   );

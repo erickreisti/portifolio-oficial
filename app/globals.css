@@ -407,7 +407,7 @@
   }
 }
 
-/* ===== NOVAS ANIMAÇÕES PARA O FOOTER ===== */
+/* ===== ANIMAÇÕES PARA O FOOTER ===== */
 
 @keyframes rocketLaunch {
   0% {
@@ -462,6 +462,105 @@
   100% {
     transform: translateY(-70px) scale(1.4);
     opacity: 0;
+  }
+}
+
+/* ===== ANIMAÇÕES PARA LOADING INTERGALÁCTICO ===== */
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes float-astronaut {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-8px) rotate(-5deg);
+  }
+}
+
+@keyframes warp-speed {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1) rotate(180deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+    opacity: 1;
+  }
+}
+
+@keyframes particle-stream {
+  0% {
+    transform: translateX(-100%) translateY(0px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%) translateY(-20px);
+    opacity: 0;
+  }
+}
+
+@keyframes cosmic-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes orbit-fast {
+  0% {
+    transform: rotate(0deg) translateX(30px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(30px) rotate(-360deg);
+  }
+}
+
+@keyframes nebula-drift {
+  0%,
+  100% {
+    transform: translateX(0px) translateY(0px);
+  }
+  25% {
+    transform: translateX(10px) translateY(-5px);
+  }
+  50% {
+    transform: translateX(5px) translateY(5px);
+  }
+  75% {
+    transform: translateX(-5px) translateY(-3px);
   }
 }
 
@@ -580,6 +679,34 @@
 
 .animate-rocket-takeoff {
   animation: rocketTakeoff 0.8s ease-out forwards;
+}
+
+.animate-twinkle {
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+.animate-float-astronaut {
+  animation: float-astronaut 6s ease-in-out infinite;
+}
+
+.animate-warp-speed {
+  animation: warp-speed 4s linear infinite;
+}
+
+.animate-particle-stream {
+  animation: particle-stream 2s linear infinite;
+}
+
+.animate-cosmic-pulse {
+  animation: cosmic-pulse 3s ease-in-out infinite;
+}
+
+.animate-orbit-fast {
+  animation: orbit-fast 2s linear infinite;
+}
+
+.animate-nebula-drift {
+  animation: nebula-drift 10s ease-in-out infinite;
 }
 
 /* Efeito de vidro (glass morphism) */
@@ -945,6 +1072,14 @@
     animation-duration: 4s;
   }
 
+  .animate-twinkle {
+    animation-duration: 4s;
+  }
+
+  .animate-float-astronaut {
+    animation-duration: 8s;
+  }
+
   .hover-lift:hover {
     transform: translateY(-4px);
   }
@@ -1010,7 +1145,14 @@ html {
   .animate-typewriter,
   .animate-rocket-launch,
   .animate-black-hole-suction,
-  .animate-rocket-takeoff {
+  .animate-rocket-takeoff,
+  .animate-twinkle,
+  .animate-float-astronaut,
+  .animate-warp-speed,
+  .animate-particle-stream,
+  .animate-cosmic-pulse,
+  .animate-orbit-fast,
+  .animate-nebula-drift {
     animation: none;
   }
 }
@@ -1142,4 +1284,18 @@ a:focus-visible {
 /* Efeito de clique no botão do foguete */
 .rocket-button:active .group-hover\:animate-rocket-launch {
   animation: rocketTakeoff 0.8s ease-out forwards;
+}
+
+/* Loading intergaláctico específico */
+.intergalactic-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
