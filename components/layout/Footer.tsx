@@ -126,7 +126,7 @@ export const Footer = () => {
                 <AlertTriangle className="h-3 w-3 lg:h-4 lg:w-4 text-red-400 animate-pulse" />
               </div>
             </div>
-            <div className="absolute top-10 -right-1/4 transform -translate-x-1/2 translate-y-1/2">
+            <div className="absolute top-5 -right-1/4 transform -translate-x-1/2 translate-y-1/2">
               <span className="text-xs lg:text-sm font-mono font-bold text-purple-400 whitespace-nowrap bg-purple-900/50 px-2 lg:px-3 py-1 rounded-full">
                 🚀 INFINITO! 🚀
               </span>
