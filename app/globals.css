@@ -96,18 +96,18 @@ body {
   }
 }
 
-/* ===== ANIMAÇÕES NEON PARA COMPONENTES ===== */
+/* ===== ANIMAÇÕES NEON MAIS FORTES E BRILHANTES ===== */
 @keyframes neon-pulse {
   0%,
   100% {
-    filter: drop-shadow(0 0 5px currentColor) drop-shadow(0 0 10px currentColor)
-      drop-shadow(0 0 15px currentColor) brightness(1.2);
-    opacity: 0.8;
+    filter: drop-shadow(0 0 8px currentColor) drop-shadow(0 0 15px currentColor)
+      drop-shadow(0 0 25px currentColor) brightness(1.5);
+    opacity: 0.9;
   }
   50% {
-    filter: drop-shadow(0 0 10px currentColor)
-      drop-shadow(0 0 20px currentColor) drop-shadow(0 0 30px currentColor)
-      brightness(1.8);
+    filter: drop-shadow(0 0 15px currentColor)
+      drop-shadow(0 0 30px currentColor) drop-shadow(0 0 45px currentColor)
+      brightness(2.2);
     opacity: 1;
   }
 }
@@ -115,41 +115,41 @@ body {
 @keyframes neon-cyan {
   0%,
   100% {
-    filter: drop-shadow(0 0 5px #00ffff) drop-shadow(0 0 10px #00ffff)
-      drop-shadow(0 0 15px #00ffff) brightness(1.3);
+    filter: drop-shadow(0 0 8px #00ffff) drop-shadow(0 0 15px #00ffff)
+      drop-shadow(0 0 25px #00ffff) brightness(1.8);
     stroke: #00ffff;
   }
   50% {
-    filter: drop-shadow(0 0 10px #00ffff) drop-shadow(0 0 20px #00ffff)
-      drop-shadow(0 0 30px #00ffff) brightness(2);
-    stroke: #80ffff;
+    filter: drop-shadow(0 0 15px #00ffff) drop-shadow(0 0 30px #00ffff)
+      drop-shadow(0 0 45px #00ffff) brightness(2.5);
+    stroke: #b3ffff;
   }
 }
 
 @keyframes neon-blue {
   0%,
   100% {
-    filter: drop-shadow(0 0 5px #0066ff) drop-shadow(0 0 10px #0066ff)
-      drop-shadow(0 0 15px #0066ff) brightness(1.3);
+    filter: drop-shadow(0 0 8px #0066ff) drop-shadow(0 0 15px #0066ff)
+      drop-shadow(0 0 25px #0066ff) brightness(1.8);
     stroke: #0066ff;
   }
   50% {
-    filter: drop-shadow(0 0 10px #0066ff) drop-shadow(0 0 20px #0066ff)
-      drop-shadow(0 0 30px #0066ff) brightness(2);
-    stroke: #4d94ff;
+    filter: drop-shadow(0 0 15px #0066ff) drop-shadow(0 0 30px #0066ff)
+      drop-shadow(0 0 45px #0066ff) brightness(2.5);
+    stroke: #4da6ff;
   }
 }
 
 @keyframes neon-purple {
   0%,
   100% {
-    filter: drop-shadow(0 0 5px #9933ff) drop-shadow(0 0 10px #9933ff)
-      drop-shadow(0 0 15px #9933ff) brightness(1.3);
+    filter: drop-shadow(0 0 8px #9933ff) drop-shadow(0 0 15px #9933ff)
+      drop-shadow(0 0 25px #9933ff) brightness(1.8);
     stroke: #9933ff;
   }
   50% {
-    filter: drop-shadow(0 0 10px #9933ff) drop-shadow(0 0 20px #9933ff)
-      drop-shadow(0 0 30px #9933ff) brightness(2);
+    filter: drop-shadow(0 0 15px #9933ff) drop-shadow(0 0 30px #9933ff)
+      drop-shadow(0 0 45px #9933ff) brightness(2.5);
     stroke: #cc99ff;
   }
 }
@@ -157,13 +157,13 @@ body {
 @keyframes neon-green {
   0%,
   100% {
-    filter: drop-shadow(0 0 5px #00ff99) drop-shadow(0 0 10px #00ff99)
-      drop-shadow(0 0 15px #00ff99) brightness(1.3);
+    filter: drop-shadow(0 0 8px #00ff99) drop-shadow(0 0 15px #00ff99)
+      drop-shadow(0 0 25px #00ff99) brightness(1.8);
     stroke: #00ff99;
   }
   50% {
-    filter: drop-shadow(0 0 10px #00ff99) drop-shadow(0 0 20px #00ff99)
-      drop-shadow(0 0 30px #00ff99) brightness(2);
+    filter: drop-shadow(0 0 15px #00ff99) drop-shadow(0 0 30px #00ff99)
+      drop-shadow(0 0 45px #00ff99) brightness(2.5);
     stroke: #80ffcc;
   }
 }
@@ -189,14 +189,14 @@ body {
   animation: neon-pulse 2.5s ease-in-out infinite;
 }
 
-/* Efeito de brilho para elementos interativos */
+/* Efeito de brilho mais intenso para elementos interativos */
 .interactive-glow {
   transition: all 0.3s ease;
 }
 
 .interactive-glow:hover {
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3))
-    drop-shadow(0 0 20px rgba(255, 255, 255, 0.2));
+  filter: drop-shadow(0 0 15px currentColor) drop-shadow(0 0 30px currentColor)
+    drop-shadow(0 0 45px currentColor) brightness(2);
 }
 
 /* ===== ANIMAÇÕES DE ÓRBITA PARA CURSOR ===== */
@@ -291,6 +291,209 @@ body {
   animation: float-gentle 6s ease-in-out infinite;
 }
 
+/* ===== EFEITOS DE PARTÍCULAS BRILHANTES ===== */
+@keyframes particle-glow {
+  0%,
+  100% {
+    opacity: 0.4;
+    box-shadow: 0 0 8px currentColor, 0 0 15px currentColor,
+      0 0 25px currentColor;
+  }
+  50% {
+    opacity: 0.9;
+    box-shadow: 0 0 20px currentColor, 0 0 35px currentColor,
+      0 0 50px currentColor;
+  }
+}
+
+.particle-glow {
+  animation: particle-glow 3s ease-in-out infinite;
+}
+
+/* Animações de flutuação FIXAS para partículas (sem movimento de mouse) */
+@keyframes float-particle {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translateY(-15px) translateX(0px) rotate(0deg) scale(1.1);
+  }
+  50% {
+    transform: translateY(-25px) translateX(0px) rotate(0deg) scale(1.2);
+  }
+  75% {
+    transform: translateY(-10px) translateX(0px) rotate(0deg) scale(1.05);
+  }
+}
+
+.animate-float-particle {
+  animation: float-particle 8s ease-in-out infinite;
+  /* Remover qualquer efeito de parallax */
+  transform: none !important;
+  will-change: auto;
+}
+
+/* Garantir que as partículas não sejam afetadas pelo movimento do mouse */
+.hero-bg-elements .absolute {
+  transform: none !important;
+  will-change: auto;
+}
+
+/* Remover parallax das partículas especificamente */
+.hero-bg-elements > .absolute > .absolute {
+  transform: none !important;
+}
+
+/* ===== EFEITOS NEON PARA CONTACT ===== */
+.card-neon-glow {
+  transition: all 0.3s ease;
+}
+
+.card-neon-glow:hover {
+  box-shadow: 0 0 25px rgba(59, 130, 246, 0.4), 0 0 50px rgba(59, 130, 246, 0.3),
+    0 0 75px rgba(59, 130, 246, 0.2);
+}
+
+/* Efeito de brilho para elementos interativos do Contact */
+.contact-interactive-glow {
+  transition: all 0.3s ease;
+}
+
+.contact-interactive-glow:hover {
+  filter: drop-shadow(0 0 12px currentColor) drop-shadow(0 0 24px currentColor)
+    drop-shadow(0 0 36px currentColor);
+}
+
+/* Animações neon específicas para ícones do Contact */
+.contact-neon-cyan {
+  animation: neon-cyan 2s ease-in-out infinite;
+}
+
+.contact-neon-blue {
+  animation: neon-blue 2.2s ease-in-out infinite;
+}
+
+.contact-neon-purple {
+  animation: neon-purple 2.4s ease-in-out infinite;
+}
+
+.contact-neon-green {
+  animation: neon-green 2.1s ease-in-out infinite;
+}
+
+.contact-neon-pulse {
+  animation: neon-pulse 2.5s ease-in-out infinite;
+}
+
+/* Efeitos de foco para inputs com neon */
+.focus-neon-blue:focus {
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3),
+    0 0 25px rgba(59, 130, 246, 0.5) !important;
+  border-color: rgba(59, 130, 246, 0.7) !important;
+}
+
+.focus-neon-cyan:focus {
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.3),
+    0 0 25px rgba(34, 211, 238, 0.5) !important;
+  border-color: rgba(34, 211, 238, 0.7) !important;
+}
+
+.focus-neon-purple:focus {
+  box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.3),
+    0 0 25px rgba(168, 85, 247, 0.5) !important;
+  border-color: rgba(168, 85, 247, 0.7) !important;
+}
+
+.focus-neon-green:focus {
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.3), 0 0 25px rgba(34, 197, 94, 0.5) !important;
+  border-color: rgba(34, 197, 94, 0.7) !important;
+}
+
+/* ===== ANIMAÇÕES GLOBAIS ===== */
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+@keyframes gradient-x {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 3s ease infinite;
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+/* ===== UTILITÁRIOS PERSONALIZADOS ===== */
+.glass-premium {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.filter-glow {
+  filter: drop-shadow(0 0 10px currentColor) drop-shadow(0 0 20px currentColor);
+}
+
+.button-glow {
+  box-shadow: 0 0 25px rgba(59, 130, 246, 0.4), 0 0 50px rgba(59, 130, 246, 0.3);
+}
+
+.text-gradient-animated {
+  background: linear-gradient(90deg, #60a5fa, #a855f7, #06b6d4, #60a5fa);
+  background-size: 300% 300%;
+  animation: gradient-x 3s ease infinite;
+}
+
+.neon-pulse {
+  animation: neon-pulse 2s ease-in-out infinite;
+}
+
+/* ===== RESPONSIVIDADE E ACESSIBILIDADE ===== */
+
 /* Prevenir animações para reduzir movimento */
 @media (prefers-reduced-motion: reduce) {
   .animate-neon-cyan,
@@ -302,7 +505,310 @@ body {
   .animate-orbit-cursor-2,
   .animate-orbit-cursor-3,
   .animate-orbit-cursor-4,
-  .animate-float-gentle {
+  .animate-float-gentle,
+  .animate-float-particle,
+  .animate-float-slow,
+  .animate-pulse-slow,
+  .animate-gradient-x,
+  .animate-spin-slow,
+  .particle-glow,
+  .card-neon-glow,
+  .interactive-glow,
+  .contact-interactive-glow,
+  .contact-neon-cyan,
+  .contact-neon-blue,
+  .contact-neon-purple,
+  .contact-neon-green,
+  .contact-neon-pulse,
+  .neon-pulse {
+    animation: none;
+  }
+
+  .filter-glow,
+  .button-glow {
+    filter: none;
+    box-shadow: none;
+  }
+}
+
+/* Otimizações para mobile */
+@media (max-width: 768px) {
+  .hero-bg-elements .floating-elements {
+    display: none;
+  }
+
+  .particle-glow {
+    animation-duration: 4s;
+  }
+}
+
+/* Suporte para dark mode nativo */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+/* Melhorias de performance - REMOVIDO will-change das partículas */
+.hero-bg-elements,
+.floating-elements {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+/* Scroll suave para toda a aplicação */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Foco visível para acessibilidade */
+*:focus-visible {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+}
+
+/* Loading states */
+.skeleton-loading {
+  background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Estados de hover otimizados */
+.interactive {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.interactive:hover {
+  transform: translateY(-2px);
+}
+
+/* Animações de entrada suaves */
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Efeitos de brilho para textos */
+.text-glow {
+  text-shadow: 0 0 15px currentColor, 0 0 30px currentColor,
+    0 0 45px currentColor;
+}
+
+/* Gradientes animados para backgrounds */
+.bg-gradient-animated {
+  background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #0f172a);
+  background-size: 400% 400%;
+  animation: gradientShift 8s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ===== CORREÇÕES ESPECÍFICAS PARA PARTÍCULAS ===== */
+/* Garantir que nenhuma partícula seja afetada por transformações externas */
+.hero-bg-elements > div:not(.floating-elements):not(.light-effects) {
+  transform: none !important;
+}
+
+/* Partículas devem ficar completamente estáticas em relação ao mouse */
+.particle-static {
+  transform: none !important;
+  will-change: auto !important;
+}
+
+/* Remover qualquer efeito de parallax do container de partículas */
+.particles-container {
+  transform: none !important;
+  will-change: auto !important;
+}
+
+/* ===== ISOLAMENTO COMPLETO DAS PARTÍCULAS ===== */
+.particles-container {
+  position: absolute !important;
+  inset: 0 !important;
+  transform: none !important;
+  will-change: auto !important;
+  pointer-events: none !important;
+}
+
+.particle-static {
+  transform: none !important;
+  will-change: auto !important;
+  pointer-events: none !important;
+}
+
+/* Garantir que nenhum container pai afete as partículas */
+.hero-bg-elements .particles-container,
+.hero-bg-elements .particle-static {
+  transform: none !important;
+}
+
+/* Remover qualquer transformação herdada */
+.particles-container * {
+  transform: none !important;
+}
+
+/* Forçar isolamento completo */
+.particles-container,
+.particles-container * {
+  transform: translate3d(0, 0, 0) !important;
+  will-change: auto !important;
+}
+
+/* ===== NEON INTENSIFICADO PARA TODOS OS ELEMENTOS ===== */
+.neon-intense {
+  filter: drop-shadow(0 0 10px currentColor) drop-shadow(0 0 20px currentColor)
+    drop-shadow(0 0 30px currentColor);
+}
+
+.neon-cyan-intense {
+  filter: drop-shadow(0 0 10px #00ffff) drop-shadow(0 0 20px #00ffff)
+    drop-shadow(0 0 30px #00ffff);
+}
+
+.neon-blue-intense {
+  filter: drop-shadow(0 0 10px #0066ff) drop-shadow(0 0 20px #0066ff)
+    drop-shadow(0 0 30px #0066ff);
+}
+
+.neon-purple-intense {
+  filter: drop-shadow(0 0 10px #9933ff) drop-shadow(0 0 20px #9933ff)
+    drop-shadow(0 0 30px #9933ff);
+}
+
+/* ===== ANIMAÇÕES DE ENTRADA DRAMÁTICAS ===== */
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-top {
+  animation: slideInFromTop 0.8s ease-out;
+}
+
+.animate-slide-bottom {
+  animation: slideInFromBottom 0.8s ease-out;
+}
+
+.animate-slide-left {
+  animation: slideInFromLeft 0.8s ease-out;
+}
+
+.animate-slide-right {
+  animation: slideInFromRight 0.8s ease-out;
+}
+
+/* ===== EFEITOS DE BRILHO ESPECIAIS ===== */
+.glow-cyan {
+  box-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff, 0 0 60px #00ffff;
+}
+
+.glow-blue {
+  box-shadow: 0 0 20px #0066ff, 0 0 40px #0066ff, 0 0 60px #0066ff;
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px #9933ff, 0 0 40px #9933ff, 0 0 60px #9933ff;
+}
+
+/* Efeito de pulso mais intenso */
+@keyframes intense-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+.animate-intense-pulse {
+  animation: intense-pulse 2s ease-in-out infinite;
+}
+
+/* ===== MELHORIAS DE PERFORMANCE ===== */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Otimização para dispositivos com baixa bateria */
+@media (prefers-reduced-data: reduce) {
+  .bg-gradient-animated,
+  .text-gradient-animated {
     animation: none;
   }
 }
