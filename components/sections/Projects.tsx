@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import NextLink from "next/link";
 import {
   Github,
@@ -12,6 +13,8 @@ import {
   Eye,
   Code,
   ExternalLink,
+  X,
+  Tag,
 } from "lucide-react";
 
 import MotionDiv from "@/components/ui/MotionDiv";
@@ -26,6 +29,115 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
+
+// Componente Modal para mostrar todas as tags
+const TagsModal = ({
+  project,
+  isOpen,
+  onClose,
+}: {
+  project: any;
+  isOpen: boolean;
+  onClose: () => void;
+}) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+      <MotionDiv
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.8 }}
+        className="bg-slate-900/95 backdrop-blur-xl border border-blue-400/30 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl"
+      >
+        {/* Header do Modal */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-2">
+            <Tag className="h-5 w-5 text-blue-400" />
+            <h3 className="text-lg font-heading font-bold text-white">
+              Tecnologias Utilizadas
+            </h3>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            className="h-8 w-8 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+
+        {/* Nome do Projeto */}
+        <div className="mb-4">
+          <h4 className="text-xl font-heading font-black text-blue-400 mb-2">
+            {project.title}
+          </h4>
+          <p className="text-slate-300 text-sm">{project.description}</p>
+        </div>
+
+        {/* Lista de Tags */}
+        <div className="space-y-3">
+          <p className="text-slate-400 text-sm font-mono font-bold tracking-wide">
+            STACK COMPLETA ({project.tags.length} tecnologias):
+          </p>
+          <div className="flex flex-wrap gap-2 max-h-60 overflow-y-auto pr-2">
+            {project.tags.map((tag: string, index: number) => (
+              <MotionDiv
+                key={tag}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.2, delay: index * 0.05 }}
+              >
+                <Badge
+                  variant="secondary"
+                  className="text-xs font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-400/40 hover:bg-blue-500/30 hover:scale-105 transition-all duration-300 cursor-default"
+                >
+                  {tag}
+                </Badge>
+              </MotionDiv>
+            ))}
+          </div>
+        </div>
+
+        {/* Links do Projeto */}
+        <div className="flex space-x-3 mt-6 pt-4 border-t border-slate-700/50">
+          <Button
+            asChild
+            size="sm"
+            className="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-mono font-bold text-xs"
+          >
+            <a
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <ExternalLink className="h-3 w-3 mr-2" />
+              VER CÓDIGO
+            </a>
+          </Button>
+          {project.liveUrl && (
+            <Button
+              asChild
+              size="sm"
+              variant="outline"
+              className="flex-1 border-blue-400/40 text-blue-300 hover:bg-blue-500/15 font-mono font-bold text-xs"
+            >
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <ExternalLink className="h-3 w-3 mr-2" />
+                VER DEMO
+              </a>
+            </Button>
+          )}
+        </div>
+      </MotionDiv>
+    </div>
+  );
+};
 
 // Dados dos seus projetos adaptados
 const projects = [
@@ -153,121 +265,144 @@ const ProjectCard: React.FC<{
   project: (typeof projects)[0];
   index: number;
 }> = ({ project, index }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
-    <MotionDiv
-      initial={{ opacity: 0, y: 40, scale: 0.9 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{
-        duration: 0.6,
-        delay: index * 0.1,
-        type: "spring",
-        stiffness: 100,
-      }}
-      viewport={{ once: true, amount: 0.2 }}
-      className="h-full"
-    >
-      <Card className="flex h-full flex-col overflow-hidden transition-all duration-500 hover:scale-105 bg-slate-900/60 backdrop-blur-xl border border-blue-400/20 lg:border-2 shadow-2xl hover:shadow-blue-500/30 group relative hover-lift">
-        {/* Header do Projeto com Imagem */}
-        <div className="h-32 lg:h-48 w-full bg-gradient-to-br from-blue-500/15 to-purple-500/10 flex items-center justify-center relative overflow-hidden border-b border-slate-700/50">
-          <div className="relative w-full h-full">
-            <Image
-              src={project.image}
-              alt={project.title}
-              fill
-              className="object-cover transition-transform duration-500 group-hover:scale-110"
-            />
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/10" />
-          </div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center relative z-10">
-              <MotionDiv
-                whileHover={{ scale: 1.1, rotate: 5 }}
-                transition={{ type: "spring", stiffness: 300 }}
-                className="mb-2 lg:mb-3"
-              >
-                <Cpu className="h-8 w-8 lg:h-14 lg:w-14 text-blue-400 mx-auto drop-shadow-lg" />
-              </MotionDiv>
-              <span className="text-slate-200 font-heading font-bold text-sm lg:text-lg tracking-wide bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent px-2">
-                {project.title}
-              </span>
+    <>
+      <MotionDiv
+        initial={{ opacity: 0, y: 40, scale: 0.9 }}
+        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{
+          duration: 0.6,
+          delay: index * 0.1,
+          type: "spring",
+          stiffness: 100,
+        }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="h-full"
+      >
+        <Card className="flex h-full flex-col overflow-hidden transition-all duration-500 hover:scale-105 bg-slate-900/60 backdrop-blur-xl border border-blue-400/20 lg:border-2 shadow-2xl hover:shadow-blue-500/30 group relative hover-lift">
+          {/* Header do Projeto com Imagem */}
+          <div className="h-32 lg:h-48 w-full bg-gradient-to-br from-blue-500/15 to-purple-500/10 flex items-center justify-center relative overflow-hidden border-b border-slate-700/50">
+            <div className="relative w-full h-full">
+              <Image
+                src={project.image}
+                alt={project.title}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/10" />
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center relative z-10">
+                <MotionDiv
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                  className="mb-2 lg:mb-3"
+                >
+                  <Cpu className="h-8 w-8 lg:h-14 lg:w-14 text-blue-400 mx-auto drop-shadow-lg" />
+                </MotionDiv>
+                <span className="text-slate-200 font-heading font-bold text-sm lg:text-lg tracking-wide bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent px-2">
+                  {project.title}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <CardHeader className="flex-grow pb-3 lg:pb-4">
-          <CardTitle className="text-lg lg:text-xl font-heading font-black text-white group-hover:text-blue-300 transition-colors duration-300 flex items-center justify-between">
-            <span className="truncate mr-2">{project.title}</span>
-            <MotionDiv
-              whileHover={{ scale: 1.1, rotate: 15 }}
-              className="text-blue-400 flex-shrink-0"
-            >
-              <Rocket className="h-4 w-4 lg:h-5 lg:w-5" />
-            </MotionDiv>
-          </CardTitle>
-          <CardDescription className="text-sm lg:text-base text-slate-300 leading-relaxed font-sans mt-2 lg:mt-3 line-clamp-3">
-            {project.description}
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent className="pb-3 lg:pb-4">
-          <div className="flex flex-wrap gap-1 lg:gap-2">
-            {project.tags.slice(0, 3).map((tag, tagIndex) => (
+          <CardHeader className="flex-grow pb-3 lg:pb-4">
+            <CardTitle className="text-lg lg:text-xl font-heading font-black text-white group-hover:text-blue-300 transition-colors duration-300 flex items-center justify-between">
+              <span className="truncate mr-2">{project.title}</span>
               <MotionDiv
-                key={tag}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.2, delay: tagIndex * 0.05 }}
-                viewport={{ once: true }}
+                whileHover={{ scale: 1.1, rotate: 15 }}
+                className="text-blue-400 flex-shrink-0"
               >
-                <Badge
-                  variant="secondary"
-                  className="text-xs font-mono font-bold bg-blue-500/15 text-blue-300 border border-blue-400/40 hover:bg-blue-500/25 hover:scale-110 transition-all duration-300 tracking-wide cursor-pointer group/badge"
-                >
-                  {tag}
-                </Badge>
+                <Rocket className="h-4 w-4 lg:h-5 lg:w-5" />
               </MotionDiv>
-            ))}
-            {project.tags.length > 3 && (
-              <Badge
-                variant="secondary"
-                className="text-xs font-mono font-bold bg-slate-500/15 text-slate-300 border border-slate-400/40"
-              >
-                +{project.tags.length - 3}
-              </Badge>
-            )}
-          </div>
-        </CardContent>
+            </CardTitle>
+            <CardDescription className="text-sm lg:text-base text-slate-300 leading-relaxed font-sans mt-2 lg:mt-3 line-clamp-3">
+              {project.description}
+            </CardDescription>
+          </CardHeader>
 
-        <CardFooter className="mt-auto pt-3 lg:pt-4 border-t border-slate-700/50">
-          <div className="flex space-x-2 lg:space-x-3 w-full">
-            <Button
-              asChild
-              variant="default"
-              size="sm"
-              className="group/btn relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-mono font-bold text-xs px-3 lg:px-4 py-2 lg:py-2.5 rounded-lg lg:rounded-xl shadow-lg hover:shadow-blue-500/40 transition-all duration-500 hover:scale-105 border-0 overflow-hidden flex-1"
-            >
-              <NextLink href={project.githubUrl} target="_blank">
-                <Github className="mr-1 lg:mr-2 h-3 w-3 lg:h-3.5 lg:w-3.5 group-hover/btn:scale-110 transition-transform duration-300" />
-                CÓDIGO
-              </NextLink>
-            </Button>
-            {project.liveUrl && (
+          <CardContent className="pb-3 lg:pb-4">
+            <div className="flex flex-wrap gap-1 lg:gap-2">
+              {project.tags.slice(0, 3).map((tag: string, tagIndex: number) => (
+                <MotionDiv
+                  key={tag}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.2, delay: tagIndex * 0.05 }}
+                  viewport={{ once: true }}
+                >
+                  <Badge
+                    variant="secondary"
+                    className="text-xs font-mono font-bold bg-blue-500/15 text-blue-300 border border-blue-400/40 hover:bg-blue-500/25 hover:scale-110 transition-all duration-300 tracking-wide cursor-pointer group/badge"
+                  >
+                    {tag}
+                  </Badge>
+                </MotionDiv>
+              ))}
+
+              {/* Badge interativo para mostrar todas as tags */}
+              {project.tags.length > 3 && (
+                <MotionDiv
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.2, delay: 0.15 }}
+                  viewport={{ once: true }}
+                >
+                  <Badge
+                    variant="secondary"
+                    onClick={() => setIsModalOpen(true)}
+                    className="text-xs font-mono font-bold bg-purple-500/15 text-purple-300 border border-purple-400/40 hover:bg-purple-500/25 hover:scale-110 transition-all duration-300 cursor-pointer group/badge relative"
+                  >
+                    +{project.tags.length - 3}
+                    {/* Efeito de brilho no hover */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-400/10 to-transparent opacity-0 group-hover/badge:opacity-100 transition-opacity duration-300 rounded-full" />
+                  </Badge>
+                </MotionDiv>
+              )}
+            </div>
+          </CardContent>
+
+          <CardFooter className="mt-auto pt-3 lg:pt-4 border-t border-slate-700/50">
+            <div className="flex space-x-2 lg:space-x-3 w-full">
               <Button
                 asChild
-                variant="outline"
+                variant="default"
                 size="sm"
-                className="group/btn relative bg-slate-800/60 backdrop-blur-sm border-blue-400/40 text-blue-300 hover:bg-blue-500/15 hover:border-blue-400/60 hover:text-blue-200 font-mono font-bold text-xs px-3 lg:px-4 py-2 lg:py-2.5 rounded-lg lg:rounded-xl transition-all duration-500 hover:scale-105 tracking-widest flex-1"
+                className="group/btn relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-mono font-bold text-xs px-3 lg:px-4 py-2 lg:py-2.5 rounded-lg lg:rounded-xl shadow-lg hover:shadow-blue-500/40 transition-all duration-500 hover:scale-105 border-0 overflow-hidden flex-1"
               >
-                <NextLink href={project.liveUrl} target="_blank">
-                  <ExternalLink className="mr-1 lg:mr-2 h-3 w-3 lg:h-3.5 lg:w-3.5 group-hover/btn:scale-110 transition-transform duration-300" />
-                  DEMO
+                <NextLink href={project.githubUrl} target="_blank">
+                  <Github className="mr-1 lg:mr-2 h-3 w-3 lg:h-3.5 lg:w-3.5 group-hover/btn:scale-110 transition-transform duration-300" />
+                  CÓDIGO
                 </NextLink>
               </Button>
-            )}
-          </div>
-        </CardFooter>
-      </Card>
-    </MotionDiv>
+              {project.liveUrl && (
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="group/btn relative bg-slate-800/60 backdrop-blur-sm border-blue-400/40 text-blue-300 hover:bg-blue-500/15 hover:border-blue-400/60 hover:text-blue-200 font-mono font-bold text-xs px-3 lg:px-4 py-2 lg:py-2.5 rounded-lg lg:rounded-xl transition-all duration-500 hover:scale-105 tracking-widest flex-1"
+                >
+                  <NextLink href={project.liveUrl} target="_blank">
+                    <ExternalLink className="mr-1 lg:mr-2 h-3 w-3 lg:h-3.5 lg:w-3.5 group-hover/btn:scale-110 transition-transform duration-300" />
+                    DEMO
+                  </NextLink>
+                </Button>
+              )}
+            </div>
+          </CardFooter>
+        </Card>
+      </MotionDiv>
+
+      {/* Modal para mostrar todas as tags */}
+      <TagsModal
+        project={project}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+    </>
   );
 };
 
