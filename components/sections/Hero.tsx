@@ -25,7 +25,9 @@ export const Hero = () => {
   const [isHovering, setIsHovering] = useState(false);
 
   const checkMobile = useCallback(() => {
-    setIsMobile(window.innerWidth < 768);
+    const mobile = window.innerWidth < 768;
+    const tablet = window.innerWidth < 1024;
+    setIsMobile(mobile);
   }, []);
 
   const handleMouseMove = useCallback(
@@ -47,7 +49,7 @@ export const Hero = () => {
     return () => window.removeEventListener("resize", checkMobile);
   }, [checkMobile]);
 
-  // Efeito de partículas otimizado
+  // Efeito de partículas otimizado para mobile
   useEffect(() => {
     if (!mounted || !particlesRef.current) return;
 
@@ -61,15 +63,15 @@ export const Hero = () => {
     };
 
     const particleConfig = {
-      circles: isMobile ? 12 : 30,
-      connections: isMobile ? 6 : 15,
+      circles: isMobile ? 8 : 30,
+      connections: isMobile ? 4 : 15,
     };
 
     particles.innerHTML = "";
 
     // Partículas circulares
     for (let i = 0; i < particleConfig.circles; i++) {
-      const size = Math.random() * (isMobile ? 4 : 8) + 2;
+      const size = Math.random() * (isMobile ? 3 : 8) + 2;
       particles.appendChild(
         createParticle("circle", {
           width: `${size}px`,
@@ -87,23 +89,25 @@ export const Hero = () => {
       );
     }
 
-    // Conexões de rede
-    for (let i = 0; i < particleConfig.connections; i++) {
-      particles.appendChild(
-        createParticle("connection", {
-          width: `${Math.random() * (isMobile ? 60 : 120) + 30}px`,
-          left: `${Math.random() * 100}%`,
-          top: `${Math.random() * 100}%`,
-          transform: `rotate(${Math.random() * 360}deg)`,
-          background: `linear-gradient(90deg, 
-          transparent 0%, 
-          rgba(59, 130, 246, ${0.3 + Math.random() * 0.3}) 50%, 
-          transparent 100%)`,
-          animation: `connection-pulse ${
-            Math.random() * 8 + 6
-          }s infinite ease-in-out ${Math.random() * 3}s`,
-        })
-      );
+    // Conexões de rede (apenas desktop)
+    if (!isMobile) {
+      for (let i = 0; i < particleConfig.connections; i++) {
+        particles.appendChild(
+          createParticle("connection", {
+            width: `${Math.random() * 120 + 30}px`,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            transform: `rotate(${Math.random() * 360}deg)`,
+            background: `linear-gradient(90deg, 
+            transparent 0%, 
+            rgba(59, 130, 246, ${0.3 + Math.random() * 0.3}) 50%, 
+            transparent 100%)`,
+            animation: `connection-pulse ${
+              Math.random() * 8 + 6
+            }s infinite ease-in-out ${Math.random() * 3}s`,
+          })
+        );
+      }
     }
 
     return () => {
@@ -111,7 +115,7 @@ export const Hero = () => {
     };
   }, [mounted, isMobile]);
 
-  // Efeitos de animação principal otimizados
+  // Efeitos de animação otimizados para mobile
   useEffect(() => {
     if (!mounted || !heroRef.current) return;
 
@@ -129,14 +133,14 @@ export const Hero = () => {
         .fromTo(
           ".hero-bg-elements",
           { opacity: 0 },
-          { opacity: 1, duration: 1.5 }
+          { opacity: 1, duration: isMobile ? 1 : 1.5 }
         )
         .fromTo(
           ".title-line-1",
           {
-            y: isMobile ? 60 : 120,
+            y: isMobile ? 40 : 120,
             opacity: 0,
-            rotationX: 45,
+            rotationX: isMobile ? 30 : 45,
             filter: "blur(10px)",
           },
           {
@@ -144,17 +148,17 @@ export const Hero = () => {
             opacity: 1,
             rotationX: 0,
             filter: "blur(0px)",
-            duration: 1.2,
+            duration: isMobile ? 0.8 : 1.2,
             ease: "back.out(1.7)",
           },
-          "+=0.2"
+          "+=0.1"
         )
         .fromTo(
           ".title-line-2",
           {
-            y: isMobile ? 60 : 120,
+            y: isMobile ? 40 : 120,
             opacity: 0,
-            rotationX: -45,
+            rotationX: isMobile ? -30 : -45,
             filter: "blur(10px)",
           },
           {
@@ -162,15 +166,46 @@ export const Hero = () => {
             opacity: 1,
             rotationX: 0,
             filter: "blur(0px)",
-            duration: 1.4,
+            duration: isMobile ? 1 : 1.4,
             ease: "back.out(1.7)",
           },
-          "-=0.8"
+          isMobile ? "-=0.6" : "-=0.8"
         )
         .fromTo(
           ".hero-description",
           {
-            y: 50,
+            y: isMobile ? 30 : 50,
+            opacity: 0,
+            scale: 0.95,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: isMobile ? 0.7 : 1,
+          },
+          isMobile ? "-=0.4" : "-=0.6"
+        )
+        .fromTo(
+          ".name-badge",
+          {
+            scale: 0,
+            opacity: 0,
+            rotationY: isMobile ? 45 : 90,
+          },
+          {
+            scale: 1,
+            opacity: 1,
+            rotationY: 0,
+            duration: isMobile ? 0.6 : 0.8,
+            ease: "back.out(2)",
+          },
+          isMobile ? "-=0.2" : "-=0.4"
+        )
+        .fromTo(
+          ".cta-primary",
+          {
+            y: isMobile ? 40 : 60,
             opacity: 0,
             scale: 0.9,
           },
@@ -178,55 +213,24 @@ export const Hero = () => {
             y: 0,
             opacity: 1,
             scale: 1,
-            duration: 1,
+            duration: isMobile ? 0.5 : 0.7,
           },
-          "-=0.6"
-        )
-        .fromTo(
-          ".name-badge",
-          {
-            scale: 0,
-            opacity: 0,
-            rotationY: 90,
-          },
-          {
-            scale: 1,
-            opacity: 1,
-            rotationY: 0,
-            duration: 0.8,
-            ease: "back.out(2)",
-          },
-          "-=0.4"
-        )
-        .fromTo(
-          ".cta-primary",
-          {
-            y: 60,
-            opacity: 0,
-            scale: 0.8,
-          },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.7,
-          },
-          "-=0.3"
+          isMobile ? "-=0.1" : "-=0.3"
         )
         .fromTo(
           ".cta-secondary",
           {
-            y: 60,
+            y: isMobile ? 40 : 60,
             opacity: 0,
-            scale: 0.8,
+            scale: 0.9,
           },
           {
             y: 0,
             opacity: 1,
             scale: 1,
-            duration: 0.7,
+            duration: isMobile ? 0.5 : 0.7,
           },
-          "-=0.5"
+          isMobile ? "-=0.3" : "-=0.5"
         );
 
       if (!isMobile) {
@@ -252,8 +256,9 @@ export const Hero = () => {
         });
       }
 
+      // Efeito de pulso mais sutil em mobile
       gsap.to(".cta-button", {
-        scale: 1.02,
+        scale: isMobile ? 1.01 : 1.02,
         duration: 2,
         repeat: -1,
         yoyo: true,
@@ -298,19 +303,19 @@ export const Hero = () => {
   const statsData = [
     {
       number: "50+",
-      label: "Projetos Concluídos",
+      label: "Projetos",
       icon: "🚀",
       color: "from-blue-400 to-cyan-400",
     },
     {
       number: "5+",
-      label: "Anos de Experiência",
+      label: "Anos Exp",
       icon: "💎",
-      color: "from-purple-400 to-pink-400",
+      color: "from-green-400 to-emerald-400",
     },
     {
       number: "100%",
-      label: "Qualidade Garantida",
+      label: "Qualidade",
       icon: "⭐",
       color: "from-amber-400 to-yellow-400",
     },
@@ -318,13 +323,13 @@ export const Hero = () => {
 
   if (!mounted) {
     return (
-      <section className="min-h-screen relative overflow-hidden bg-slate-950 pt-20 pb-20 md:pt-32 md:pb-32">
+      <section className="min-h-screen relative overflow-hidden bg-slate-950 pt-16 pb-16 md:pt-32 md:pb-32">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="min-h-[70vh] md:min-h-[75vh] flex items-center justify-center">
             <div className="text-center space-y-4">
-              <div className="h-16 w-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl animate-pulse mx-auto" />
-              <div className="h-8 w-64 bg-slate-800 rounded animate-pulse mx-auto" />
-              <div className="h-4 w-48 bg-slate-800 rounded animate-pulse mx-auto" />
+              <div className="h-12 w-12 md:h-16 md:w-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl animate-pulse mx-auto" />
+              <div className="h-6 w-48 md:h-8 md:w-64 bg-slate-800 rounded animate-pulse mx-auto" />
+              <div className="h-3 w-32 md:h-4 md:w-48 bg-slate-800 rounded animate-pulse mx-auto" />
             </div>
           </div>
         </div>
@@ -336,11 +341,9 @@ export const Hero = () => {
     <section
       ref={heroRef}
       id="hero"
-      className="min-h-screen relative overflow-hidden bg-slate-950 pt-20 pb-20 md:pt-32 md:pb-32"
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
+      className="min-h-screen relative overflow-hidden bg-slate-950 pt-16 pb-16 md:pt-32 md:pb-32"
     >
-      {/* Background Elements */}
+      {/* Background Elements - Otimizado para mobile */}
       <div className="hero-bg-elements">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900/20 to-blue-900/10" />
 
@@ -349,6 +352,7 @@ export const Hero = () => {
           className="absolute inset-0 pointer-events-none"
         />
 
+        {/* Elementos apenas para desktop */}
         {!isMobile && (
           <div className="floating-elements">
             <div className="absolute top-32 left-10 floating-tech">
@@ -375,109 +379,116 @@ export const Hero = () => {
           </div>
         )}
 
+        {/* Efeitos de luz otimizados para mobile */}
         <div className="light-effects">
-          <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse-slow" />
           <div
-            className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse-slow"
+            className={`${
+              isMobile ? "w-40 h-40 blur-2xl" : "w-80 h-80 blur-3xl"
+            } absolute top-1/4 left-1/4 bg-blue-500/10 rounded-full animate-pulse-slow`}
+          />
+          <div
+            className={`${
+              isMobile ? "w-48 h-48 blur-2xl" : "w-96 h-96 blur-3xl"
+            } absolute bottom-1/3 right-1/4 bg-purple-500/10 rounded-full animate-pulse-slow`}
             style={{ animationDelay: "2s" }}
           />
-          <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl animate-pulse-slow"
-            style={{ animationDelay: "4s" }}
-          />
+          {!isMobile && (
+            <div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl animate-pulse-slow"
+              style={{ animationDelay: "4s" }}
+            />
+          )}
         </div>
       </div>
 
-      {/* Conteúdo Principal */}
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+      {/* Conteúdo Principal - Totalmente responsivo */}
+      <div className="container mx-auto max-w-7xl px-4 sm:px-5 lg:px-8 relative z-10">
         <div className="min-h-[70vh] md:min-h-[75vh] flex flex-col lg:flex-row items-center justify-between">
-          {/* Conteúdo de Texto e CTAs - Ocupa mais espaço no desktop */}
-          <div className="text-center lg:text-left lg:w-2/3 xl:w-3/4 lg:pr-8 xl:pr-16">
-            {/* Título Principal */}
-            <div ref={titleRef} className="main-title mb-8 md:mb-12">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-heading font-black text-white mb-6 md:mb-10 leading-tight">
-                <span className="title-line-1 block bg-gradient-to-r from-white via-blue-100 to-cyan-100 bg-clip-text text-transparent mb-4 md:mb-6">
+          {/* Conteúdo de Texto e CTAs - Layout mobile otimizado */}
+          <div className="text-center lg:text-left w-full lg:w-2/3 xl:w-3/4 lg:pr-8 xl:pr-16">
+            {/* Título Principal - Tamanhos responsivos */}
+            <div ref={titleRef} className="main-title mb-6 md:mb-12">
+              <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-heading font-black text-white mb-4 md:mb-10 leading-tight">
+                <span className="title-line-1 block bg-gradient-to-r from-white via-blue-100 to-cyan-100 bg-clip-text text-transparent mb-3 md:mb-6">
                   IDEIAS EXTRAORDINÁRIAS
                 </span>
-                <span className="title-line-2 block bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent relative">
+                <span className="title-line-2 block bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent relative text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
                   CÓDIGO EXCEPCIONAL
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400/0 via-blue-400/20 to-cyan-400/0 blur-xl opacity-0 hover:opacity-100 transition-opacity duration-1000" />
                 </span>
               </h1>
             </div>
 
-            {/* Descrição */}
+            {/* Descrição - Texto adaptado para mobile */}
             <MotionDiv
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="hero-description mb-8 md:mb-10"
+              className="hero-description mb-6 md:mb-10"
             >
-              <p className="text-lg sm:text-xl md:text-2xl lg:text-xl xl:text-2xl text-white/90 font-sans font-light max-w-3xl lg:max-w-2xl xl:max-w-3xl mx-auto lg:mx-0 leading-relaxed">
+              <p className="text-base xs:text-lg sm:text-xl md:text-2xl lg:text-xl xl:text-2xl text-white/90 font-sans font-light max-w-2xl lg:max-w-2xl xl:max-w-3xl mx-auto lg:mx-0 leading-relaxed px-2 sm:px-0">
                 Transformo{" "}
-                <span className="text-blue-300 font-semibold relative inline-block">
-                  <span className="relative z-10">visões ambiciosas</span>
-                  <Sparkles className="absolute -top-2 -right-2 h-3 w-3 text-blue-300 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <span className="text-blue-300 font-semibold">
+                  visões ambiciosas
                 </span>{" "}
                 em{" "}
-                <span className="text-purple-300 font-semibold relative inline-block group">
-                  <span className="relative z-10">soluções digitais</span>
+                <span className="text-purple-300 font-semibold">
+                  soluções digitais
                 </span>{" "}
                 com{" "}
-                <span className="text-cyan-300 font-semibold relative inline-block group">
-                  <span className="relative z-10">tecnologia de ponta</span>
+                <span className="text-cyan-300 font-semibold">
+                  tecnologia de ponta
                 </span>
                 {!isMobile && (
                   <>
                     {" "}
                     e{" "}
-                    <span className="text-green-300 font-semibold relative inline-block group">
-                      <span className="relative z-10">performance máxima</span>
+                    <span className="text-green-300 font-semibold">
+                      performance máxima
                     </span>
                   </>
                 )}
               </p>
             </MotionDiv>
 
-            {/* Badge */}
-            <div className="name-badge mb-8 md:mb-10">
+            {/* Badge - Compacto no mobile */}
+            <div className="name-badge mb-6 md:mb-10">
               <div
-                className="inline-flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4 md:space-x-6 bg-white/5 backdrop-blur-xl rounded-2xl px-6 py-4 md:px-8 md:py-5 border border-white/10 shadow-2xl hover:shadow-blue-500/25 transition-all duration-500 hover:scale-105 group cursor-pointer"
+                className="inline-flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-3 md:space-x-6 bg-white/5 backdrop-blur-xl rounded-xl md:rounded-2xl px-4 py-3 md:px-8 md:py-5 border border-white/10 shadow-xl md:shadow-2xl hover:shadow-blue-500/25 transition-all duration-500 hover:scale-105 group cursor-pointer"
                 style={parallaxStyle}
               >
                 <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-ping" />
-                  <span className="text-sm md:text-base font-sans font-medium text-white/70">
+                  <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-green-400 rounded-full animate-ping" />
+                  <span className="text-xs sm:text-sm md:text-base font-sans font-medium text-white/70">
                     Desenvolvido por
                   </span>
                 </div>
-                <div className="hidden sm:block h-6 w-px bg-white/20" />
-                <span className="text-lg md:text-xl font-heading font-bold text-white group-hover:text-blue-300 transition-colors duration-300">
+                <div className="hidden sm:block h-4 md:h-6 w-px bg-white/20" />
+                <span className="text-sm sm:text-base md:text-lg lg:text-xl font-heading font-bold text-white group-hover:text-blue-300 transition-colors duration-300">
                   Érick Reis
                 </span>
-                <div className="hidden sm:block h-6 w-px bg-white/20" />
-                <div className="flex items-center space-x-2 group-hover:scale-110 transition-transform duration-300">
-                  <Cpu className="h-4 w-4 text-blue-400" />
-                  <span className="text-xs md:text-sm font-mono font-medium text-blue-400 uppercase tracking-wider">
+                <div className="hidden sm:block h-4 md:h-6 w-px bg-white/20" />
+                <div className="flex items-center space-x-1 md:space-x-2 group-hover:scale-110 transition-transform duration-300">
+                  <Cpu className="h-3 w-3 md:h-4 md:w-4 text-blue-400" />
+                  <span className="text-xs font-mono font-medium text-blue-400 uppercase tracking-wider">
                     Fullstack
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* CTAs */}
-            <div className="cta-section mb-8 lg:mb-0">
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 md:gap-6">
+            {/* CTAs - Botões empilhados no mobile */}
+            <div className="cta-section mb-6 lg:mb-0">
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 md:gap-6 w-full">
                 <Button
                   asChild
                   size={isMobile ? "default" : "lg"}
-                  className="cta-button cta-primary group relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-heading font-bold text-base md:text-lg px-8 md:px-14 py-6 md:py-7 rounded-2xl shadow-2xl hover:shadow-blue-500/50 transition-all duration-500 hover:scale-105 border-0 overflow-hidden"
+                  className="cta-button cta-primary group relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-heading font-bold text-sm sm:text-base md:text-lg w-full sm:w-auto px-6 md:px-14 py-4 md:py-7 rounded-xl md:rounded-2xl shadow-xl md:shadow-2xl hover:shadow-blue-500/50 transition-all duration-500 hover:scale-105 border-0 overflow-hidden"
                   style={parallaxStyle}
                 >
                   <Link href="#contact">
-                    <Mail className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
+                    <Mail className="mr-2 h-4 w-4 md:mr-3 md:h-5 md:w-5 group-hover:scale-110 transition-transform duration-300" />
                     INICIAR PROJETO
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-xl md:rounded-2xl" />
                   </Link>
                 </Button>
 
@@ -485,20 +496,20 @@ export const Hero = () => {
                   asChild
                   variant="outline"
                   size={isMobile ? "default" : "lg"}
-                  className="cta-button cta-secondary group relative bg-white/10 backdrop-blur-lg border-white/30 text-white hover:bg-white/20 font-heading font-semibold text-base md:text-lg px-6 md:px-12 py-6 md:py-7 rounded-2xl shadow-2xl hover:shadow-white/40 transition-all duration-500 hover:scale-105 overflow-hidden"
+                  className="cta-button cta-secondary group relative bg-white/10 backdrop-blur-lg border-white/30 text-white hover:bg-white/20 font-heading font-semibold text-sm sm:text-base md:text-lg w-full sm:w-auto px-4 md:px-12 py-4 md:py-7 rounded-xl md:rounded-2xl shadow-xl md:shadow-2xl hover:shadow-white/40 transition-all duration-500 hover:scale-105 overflow-hidden"
                   style={parallaxStyle}
                 >
                   <a href="/docs/curriculo-erick-reis.pdf" download>
-                    <Download className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
+                    <Download className="mr-2 h-4 w-4 md:mr-3 md:h-5 md:w-5 group-hover:scale-110 transition-transform duration-300" />
                     BAIXAR CV
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-xl md:rounded-2xl" />
                   </a>
                 </Button>
               </div>
             </div>
           </div>
 
-          {/* Stats Desktop - Agora em uma coluna à direita, sem sobrepor o texto */}
+          {/* Stats Desktop */}
           {!isMobile && (
             <div className="hidden lg:flex flex-col justify-center space-y-12 lg:space-y-16 xl:space-y-20 w-1/4 xl:w-1/5 pl-8 border-l border-white/10">
               {statsData.map((stat, index) => (
@@ -508,7 +519,28 @@ export const Hero = () => {
                   style={statsParallaxStyle}
                 >
                   <div className="flex lg:flex-col xl:flex-row items-center justify-end space-x-3 lg:space-x-0 xl:space-x-3 mb-3">
-                    <div className="text-2xl lg:text-3xl xl:text-2xl group-hover:scale-110 transition-transform duration-300">
+                    <div
+                      className={`
+                      text-2xl lg:text-3xl xl:text-2xl 
+                      group-hover:scale-110 transition-transform duration-300
+                      filter
+                      ${
+                        stat.icon === "🚀"
+                          ? "drop-shadow-[0_0_20px_rgba(59,130,246,0.9)]"
+                          : ""
+                      }
+                      ${
+                        stat.icon === "💎"
+                          ? "drop-shadow-[0_0_20px_rgba(34,197,94,0.9)]"
+                          : ""
+                      }
+                      ${
+                        stat.icon === "⭐"
+                          ? "drop-shadow-[0_0_20px_rgba(234,179,8,0.9)]"
+                          : ""
+                      }
+                    `}
+                    >
                       {stat.icon}
                     </div>
                   </div>
@@ -526,24 +558,44 @@ export const Hero = () => {
           )}
         </div>
 
-        {/* Stats Mobile - Abaixo do conteúdo principal */}
+        {/* Stats Mobile - Posicionado abaixo dos CTAs */}
         {isMobile && (
-          <div className="mt-8 px-4">
-            <div className="grid grid-cols-3 gap-4">
+          <div className="mt-6 px-2">
+            <div className="grid grid-cols-3 gap-3">
               {statsData.map((stat, index) => (
                 <div
                   key={stat.label}
-                  className="stat-item group cursor-pointer transition-all duration-500 hover:scale-105 text-center"
+                  className="stat-item group cursor-pointer transition-all duration-500 hover:scale-105 text-center p-2"
                 >
-                  <div className="text-2xl mb-2 group-hover:scale-110 transition-transform duration-300">
+                  <div
+                    className={`
+                    text-xl mb-1 group-hover:scale-110 transition-transform duration-300
+                    filter
+                    ${
+                      stat.icon === "🚀"
+                        ? "drop-shadow-[0_0_12px_rgba(59,130,246,0.9)]"
+                        : ""
+                    }
+                    ${
+                      stat.icon === "💎"
+                        ? "drop-shadow-[0_0_12px_rgba(34,197,94,0.9)]"
+                        : ""
+                    }
+                    ${
+                      stat.icon === "⭐"
+                        ? "drop-shadow-[0_0_12px_rgba(234,179,8,0.9)]"
+                        : ""
+                    }
+                  `}
+                  >
                     {stat.icon}
                   </div>
                   <div
-                    className={`${stat.color} bg-clip-text text-transparent font-heading font-bold text-2xl mb-1 group-hover:scale-105 transition-transform duration-300`}
+                    className={`${stat.color} bg-clip-text text-transparent font-heading font-bold text-lg mb-1 group-hover:scale-105 transition-transform duration-300`}
                   >
                     {stat.number}
                   </div>
-                  <div className="text-white/80 font-sans text-xs group-hover:text-white transition-colors duration-300">
+                  <div className="text-white/80 font-sans text-xs group-hover:text-white transition-colors duration-300 leading-tight">
                     {stat.label}
                   </div>
                 </div>
@@ -553,18 +605,18 @@ export const Hero = () => {
         )}
       </div>
 
-      {/* Scroll Indicator */}
-      <div className="scroll-indicator absolute bottom-8 left-1/2 -translate-x-1/2 z-30">
+      {/* Scroll Indicator - Menor no mobile */}
+      <div className="scroll-indicator absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 z-30">
         <button
           onClick={() => scrollToSection("about")}
-          className="flex flex-col items-center space-y-3 group cursor-pointer transition-all duration-300 hover:scale-110"
+          className="flex flex-col items-center space-y-2 md:space-y-3 group cursor-pointer transition-all duration-300 hover:scale-110"
           aria-label="Scroll para a próxima seção"
         >
           <span className="text-white/70 text-xs font-mono font-light tracking-widest group-hover:text-white transition-colors duration-300">
             EXPLORAR
           </span>
-          <div className="w-px h-16 bg-gradient-to-b from-blue-400 to-transparent relative overflow-hidden">
-            <div className="absolute top-0 w-full h-6 bg-gradient-to-b from-blue-400 to-cyan-400 rounded-full animate-bounce group-hover:from-purple-400 group-hover:to-pink-400 transition-all duration-300" />
+          <div className="w-px h-12 md:h-16 bg-gradient-to-b from-blue-400 to-transparent relative overflow-hidden">
+            <div className="absolute top-0 w-full h-4 md:h-6 bg-gradient-to-b from-blue-400 to-cyan-400 rounded-full animate-bounce group-hover:from-purple-400 group-hover:to-pink-400 transition-all duration-300" />
           </div>
         </button>
       </div>
