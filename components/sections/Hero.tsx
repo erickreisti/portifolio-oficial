@@ -22,12 +22,9 @@ export const Hero = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [isHovering, setIsHovering] = useState(false);
 
   const checkMobile = useCallback(() => {
-    const mobile = window.innerWidth < 768;
-    const tablet = window.innerWidth < 1024;
-    setIsMobile(mobile);
+    setIsMobile(window.innerWidth < 768);
   }, []);
 
   const handleMouseMove = useCallback(
@@ -55,57 +52,150 @@ export const Hero = () => {
 
     const particles = particlesRef.current;
 
-    const createParticle = (type: string, styles: any) => {
+    const createParticle = (type: string, styles: any, className = "") => {
       const particle = document.createElement("div");
       Object.assign(particle.style, styles);
-      particle.className = `particle particle-${type}`;
+      particle.className = `particle particle-${type} ${className}`;
       return particle;
     };
 
     const particleConfig = {
-      circles: isMobile ? 8 : 30,
-      connections: isMobile ? 4 : 15,
+      circles: isMobile ? 15 : 50,
+      connections: isMobile ? 8 : 25,
+      stars: isMobile ? 10 : 20,
+      clusters: isMobile ? 5 : 12,
     };
 
     particles.innerHTML = "";
 
-    // Partículas circulares
+    // Cores disponíveis para partículas
+    const particleColors = [
+      { name: "blue", class: "particle-blue" },
+      { name: "purple", class: "particle-purple" },
+      { name: "cyan", class: "particle-cyan" },
+      { name: "pink", class: "particle-pink" },
+      { name: "green", class: "particle-green" },
+      { name: "amber", class: "particle-amber" },
+    ];
+
+    const shinyTypes = ["particle-shiny", "particle-fast", "particle-large"];
+
+    // Partículas circulares coloridas
     for (let i = 0; i < particleConfig.circles; i++) {
-      const size = Math.random() * (isMobile ? 3 : 8) + 2;
+      const size = Math.random() * (isMobile ? 4 : 10) + 2;
+      const color =
+        particleColors[Math.floor(Math.random() * particleColors.length)];
+      const isShiny = Math.random() > 0.7;
+      const shinyClass = isShiny
+        ? shinyTypes[Math.floor(Math.random() * shinyTypes.length)]
+        : "";
+
       particles.appendChild(
-        createParticle("circle", {
-          width: `${size}px`,
-          height: `${size}px`,
-          left: `${Math.random() * 100}%`,
-          top: `${Math.random() * 100}%`,
-          background: `radial-gradient(circle, 
-          rgba(59, 130, 246, ${0.7 + Math.random() * 0.3}) 0%, 
-          rgba(37, 99, 235, ${0.5 + Math.random() * 0.3}) 100%)`,
-          animation: `float ${Math.random() * 10 + 8}s infinite ease-in-out ${
-            Math.random() * 5
-          }s`,
-          filter: `blur(${Math.random() * 2 + 1}px)`,
-        })
+        createParticle(
+          "circle",
+          {
+            width: `${size}px`,
+            height: `${size}px`,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            zIndex: Math.floor(Math.random() * 10),
+          },
+          `${color.class} ${shinyClass}`
+        )
       );
     }
 
-    // Conexões de rede (apenas desktop)
-    if (!isMobile) {
-      for (let i = 0; i < particleConfig.connections; i++) {
-        particles.appendChild(
-          createParticle("connection", {
-            width: `${Math.random() * 120 + 30}px`,
+    // Partículas estrela brilhantes
+    for (let i = 0; i < particleConfig.stars; i++) {
+      const size = Math.random() * (isMobile ? 2 : 4) + 1;
+      particles.appendChild(
+        createParticle(
+          "star",
+          {
+            width: `${size}px`,
+            height: `${size}px`,
             left: `${Math.random() * 100}%`,
             top: `${Math.random() * 100}%`,
-            transform: `rotate(${Math.random() * 360}deg)`,
-            background: `linear-gradient(90deg, 
-            transparent 0%, 
-            rgba(59, 130, 246, ${0.3 + Math.random() * 0.3}) 50%, 
-            transparent 100%)`,
-            animation: `connection-pulse ${
-              Math.random() * 8 + 6
-            }s infinite ease-in-out ${Math.random() * 3}s`,
-          })
+            zIndex: Math.floor(Math.random() * 5),
+          },
+          "particle-star"
+        )
+      );
+    }
+
+    // Clusters de partículas
+    for (let i = 0; i < particleConfig.clusters; i++) {
+      const cluster = document.createElement("div");
+      cluster.className = "particle-cluster";
+      cluster.style.left = `${Math.random() * 100}%`;
+      cluster.style.top = `${Math.random() * 100}%`;
+      cluster.style.setProperty("--tx", `${Math.random() * 20 - 10}px`);
+      cluster.style.setProperty("--ty", `${Math.random() * 20 - 10}px`);
+
+      // Adicionar partículas ao cluster
+      for (let j = 0; j < (isMobile ? 2 : 4); j++) {
+        const size = Math.random() * 2 + 1;
+        const color =
+          particleColors[Math.floor(Math.random() * particleColors.length)];
+        const miniParticle = createParticle(
+          "mini",
+          {
+            width: `${size}px`,
+            height: `${size}px`,
+            left: `${Math.random() * 20 - 10}px`,
+            top: `${Math.random() * 20 - 10}px`,
+          },
+          color.class
+        );
+        cluster.appendChild(miniParticle);
+      }
+
+      particles.appendChild(cluster);
+    }
+
+    // Conexões de rede coloridas (apenas desktop)
+    if (!isMobile) {
+      const connectionColors = [
+        "particle-connection-blue",
+        "particle-connection-purple",
+        "particle-connection-cyan",
+      ];
+
+      for (let i = 0; i < particleConfig.connections; i++) {
+        const colorClass =
+          connectionColors[Math.floor(Math.random() * connectionColors.length)];
+        particles.appendChild(
+          createParticle(
+            "connection",
+            {
+              width: `${Math.random() * 150 + 50}px`,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              transform: `rotate(${Math.random() * 360}deg)`,
+            },
+            colorClass
+          )
+        );
+      }
+    }
+
+    // Partículas especiais grandes (apenas desktop)
+    if (!isMobile) {
+      for (let i = 0; i < 8; i++) {
+        const size = Math.random() * 15 + 8;
+        const color =
+          particleColors[Math.floor(Math.random() * particleColors.length)];
+        particles.appendChild(
+          createParticle(
+            "special",
+            {
+              width: `${size}px`,
+              height: `${size}px`,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            },
+            `${color.class} particle-large`
+          )
         );
       }
     }
@@ -254,6 +344,17 @@ export const Hero = () => {
           ease: "sine.inOut",
           stagger: 1,
         });
+
+        // Animação para partículas especiais
+        gsap.to(".particle-large", {
+          scale: "random(0.8, 1.2)",
+          rotation: "random(-180, 180)",
+          duration: "random(4, 8)",
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+          stagger: 0.5,
+        });
       }
 
       // Efeito de pulso mais sutil em mobile
@@ -263,6 +364,17 @@ export const Hero = () => {
         repeat: -1,
         yoyo: true,
         ease: "sine.inOut",
+      });
+
+      // Animação para clusters
+      gsap.to(".particle-cluster", {
+        x: "random(-10, 10)",
+        y: "random(-10, 10)",
+        duration: "random(6, 12)",
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        stagger: 1,
       });
     }, heroRef);
 
@@ -343,13 +455,14 @@ export const Hero = () => {
       id="hero"
       className="min-h-screen relative overflow-hidden bg-slate-950 pt-16 pb-16 md:pt-32 md:pb-32"
     >
-      {/* Background Elements - Otimizado para mobile */}
+      {/* Background Elements - Otimizado para mobile COM MAIS PARTÍCULAS */}
       <div className="hero-bg-elements">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900/20 to-blue-900/10" />
 
+        {/* Container de partículas - AGORA COM MAIS PARTÍCULAS */}
         <div
           ref={particlesRef}
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 pointer-events-none overflow-hidden"
         />
 
         {/* Elementos apenas para desktop */}
