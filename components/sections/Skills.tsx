@@ -8,7 +8,6 @@ import {
   Database,
   Cloud,
   Zap,
-  Cpu,
   CircuitBoard,
   Binary,
 } from "lucide-react";

@@ -1,12 +1,9 @@
 "use client";
 
 import {
-  Heart,
-  Target,
   Zap,
   Code2,
   Users,
-  Cpu,
   CircuitBoard,
   Binary,
   Rocket,
