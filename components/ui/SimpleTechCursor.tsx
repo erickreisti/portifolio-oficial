@@ -4,33 +4,26 @@ import { useEffect, useRef, useState } from "react";
 
 export const SimpleTechCursor = () => {
   const cursorRef = useRef<HTMLDivElement>(null);
+  const particlesRef = useRef<HTMLDivElement>(null);
   const [isPointer, setIsPointer] = useState(false);
-  const rafIdRef = useRef<number>(0);
+  const particleCountRef = useRef(0);
 
   useEffect(() => {
     const cursor = cursorRef.current;
-    if (!cursor) return;
-
-    let mouseX = 0;
-    let mouseY = 0;
-    let cursorX = 0;
-    let cursorY = 0;
-
-    const updateCursor = () => {
-      // Movimento instantâneo sem easing para máxima fluidez
-      cursorX = mouseX;
-      cursorY = mouseY;
-
-      cursor.style.left = cursorX + "px";
-      cursor.style.top = cursorY + "px";
-      rafIdRef.current = requestAnimationFrame(updateCursor);
-    };
+    const particlesContainer = particlesRef.current;
+    if (!cursor || !particlesContainer) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
+      if (cursor) {
+        cursor.style.left = e.clientX + "px";
+        cursor.style.top = e.clientY + "px";
+      }
 
-      // Detectar elementos clicáveis (com throttle simples)
+      // Criar partículas mais frequentemente para efeito de buraco negro
+      if (Math.random() > 0.3 && particleCountRef.current < 20) {
+        createParticle(e.clientX, e.clientY);
+      }
+
       const target = e.target as HTMLElement;
       const shouldBePointer =
         target.tagName === "BUTTON" ||
@@ -41,46 +34,86 @@ export const SimpleTechCursor = () => {
       setIsPointer(shouldBePointer);
     };
 
-    // Iniciar animation loop
-    rafIdRef.current = requestAnimationFrame(updateCursor);
+    const createParticle = (x: number, y: number) => {
+      const particle = document.createElement("div");
+      const size = 1.5 + Math.random() * 4; // Partículas um pouco menores
+      const colors = ["#3b82f6", "#6366f1", "#8b5cf6", "#10b981", "#c084fc"];
+      const color = colors[Math.floor(Math.random() * colors.length)];
 
-    document.addEventListener("mousemove", handleMouseMove, { passive: true });
+      particle.className = "absolute rounded-full pointer-events-none";
+      particle.style.cssText = `
+        width: ${size}px;
+        height: ${size}px;
+        background: ${color};
+        left: ${x}px;
+        top: ${y}px;
+        opacity: 0.9;
+        transform: translate(-50%, -50%);
+        animation: black-hole-particle 1.5s ease-out forwards;
+        filter: blur(${Math.random() * 0.5}px);
+        z-index: 9997;
+      `;
 
-    return () => {
-      cancelAnimationFrame(rafIdRef.current);
-      document.removeEventListener("mousemove", handleMouseMove);
+      particlesContainer.appendChild(particle);
+      particleCountRef.current++;
+
+      // Remover partícula após animação
+      setTimeout(() => {
+        if (particle.parentNode) {
+          particle.parentNode.removeChild(particle);
+          particleCountRef.current--;
+        }
+      }, 1500);
     };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    return () => document.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   return (
-    <div
-      ref={cursorRef}
-      className="fixed pointer-events-none z-[9999] transform -translate-x-1/2 -translate-y-1/2"
-    >
-      {/* Círculo externo - SEM TRANSITION */}
+    <>
+      {/* Container de partículas */}
       <div
-        className={`w-6 h-6 rounded-full border-2 ${
-          isPointer
-            ? "border-blue-400 bg-blue-400/20"
-            : "border-white/80 bg-white/10"
-        }`}
+        ref={particlesRef}
+        className="fixed pointer-events-none z-[9998] inset-0"
       />
 
-      {/* Círculo médio - SEM TRANSITION */}
+      {/* Cursor principal - Buraco Negro Branco Simplificado */}
       <div
-        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full ${
-          isPointer ? "bg-blue-400 w-3 h-3" : "bg-white w-2 h-2"
-        }`}
-      />
+        ref={cursorRef}
+        className="fixed pointer-events-none z-[9999] transform -translate-x-1/2 -translate-y-1/2"
+      >
+        {/* Círculo principal único - TAMANHO REDUZIDO */}
+        <div
+          className={`w-10 h-10 rounded-full border-2 ${
+            isPointer
+              ? "border-white/90 bg-white/30 shadow-white-glow-strong"
+              : "border-white bg-white/10 shadow-white-glow"
+          } backdrop-blur-sm transition-all duration-300 animate-pulse-slow`}
+        />
 
-      {/* Efeito de brilho - SEM TRANSITION */}
-      <div
-        className={`absolute inset-0 rounded-full ${
-          isPointer
-            ? "shadow-[0_0_15px_3px_rgba(59,130,246,0.4)]"
-            : "shadow-[0_0_10px_2px_rgba(255,255,255,0.2)]"
-        }`}
-      />
-    </div>
+        {/* Núcleo pulsante - AUMENTADO */}
+        <div
+          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full ${
+            isPointer
+              ? "bg-white/90 w-4 h-4" // Aumentado de w-3/h-3 para w-4/h-4
+              : "bg-white/70 w-3 h-3" // Aumentado de w-2/h-2 para w-3/h-3
+          } transition-all duration-300 shadow-inner`}
+        />
+
+        {/* Partículas orbitais COLORIDAS (azul/roxo/verde) - Ajustadas ao novo tamanho */}
+        {isPointer && (
+          <>
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-blue-400 rounded-full animate-orbit-1 shadow-lg shadow-blue-400/60" />
+            <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-1.5 h-1.5 bg-purple-400 rounded-full animate-orbit-2 shadow-lg shadow-purple-400/60" />
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-1.5 h-1.5 bg-green-400 rounded-full animate-orbit-3 shadow-lg shadow-green-400/60" />
+            <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-cyan-400 rounded-full animate-orbit-4 shadow-lg shadow-cyan-400/60" />
+            {/* Partículas extras para mais destaque */}
+            <div className="absolute top-1/4 -right-2 -translate-y-1/2 w-1 h-1 bg-blue-300 rounded-full animate-orbit-5 shadow-lg shadow-blue-300/50" />
+            <div className="absolute bottom-1/4 -left-2 -translate-y-1/2 w-1 h-1 bg-purple-300 rounded-full animate-orbit-6 shadow-lg shadow-purple-300/50" />
+          </>
+        )}
+      </div>
+    </>
   );
 };

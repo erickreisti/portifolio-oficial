@@ -386,28 +386,135 @@ body {
   }
 }
 
-/* ===== CURSOR ULTRA FLUIDO ===== */
+/* ===== ANIMAÇÕES PARA BURACO NEGRO BRANCO ===== */
+@keyframes black-hole-particle {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(calc(-50% + 50px), calc(-50% + 50px)) scale(0.7);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + 80px), calc(-50% + 80px)) scale(0.2);
+  }
+}
+
+@keyframes orbit-1 {
+  0% {
+    transform: rotate(0deg) translateX(12px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(12px) rotate(-360deg);
+  }
+}
+
+@keyframes orbit-2 {
+  0% {
+    transform: rotate(60deg) translateX(12px) rotate(-60deg);
+  }
+  100% {
+    transform: rotate(420deg) translateX(12px) rotate(-420deg);
+  }
+}
+
+@keyframes orbit-3 {
+  0% {
+    transform: rotate(120deg) translateX(12px) rotate(-120deg);
+  }
+  100% {
+    transform: rotate(480deg) translateX(12px) rotate(-480deg);
+  }
+}
+
+@keyframes orbit-4 {
+  0% {
+    transform: rotate(180deg) translateX(12px) rotate(-180deg);
+  }
+  100% {
+    transform: rotate(540deg) translateX(12px) rotate(-540deg);
+  }
+}
+
+@keyframes orbit-5 {
+  0% {
+    transform: rotate(240deg) translateX(10px) rotate(-240deg);
+  }
+  100% {
+    transform: rotate(600deg) translateX(10px) rotate(-600deg);
+  }
+}
+
+@keyframes orbit-6 {
+  0% {
+    transform: rotate(300deg) translateX(10px) rotate(-300deg);
+  }
+  100% {
+    transform: rotate(660deg) translateX(10px) rotate(-660deg);
+  }
+}
+
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+/* Classes de animação */
+.animate-orbit-1 {
+  animation: orbit-1 2s linear infinite;
+}
+
+.animate-orbit-2 {
+  animation: orbit-2 2.3s linear infinite;
+}
+
+.animate-orbit-3 {
+  animation: orbit-3 2.7s linear infinite;
+}
+
+.animate-orbit-4 {
+  animation: orbit-4 2.1s linear infinite;
+}
+
+.animate-orbit-5 {
+  animation: orbit-5 2.5s linear infinite;
+}
+
+.animate-orbit-6 {
+  animation: orbit-6 2.8s linear infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2s ease-in-out infinite;
+}
+
+/* Efeitos de sombra para buraco negro branco - Ajustados */
+.shadow-white-glow {
+  box-shadow: 0 0 12px 2px rgba(255, 255, 255, 0.6),
+    inset 0 0 8px 1px rgba(255, 255, 255, 0.3) !important;
+}
+
+.shadow-white-glow-strong {
+  box-shadow: 0 0 20px 6px rgba(255, 255, 255, 0.8),
+    inset 0 0 12px 3px rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Cursor geral */
 * {
   cursor: none !important;
 }
 
-/* Performance máxima - sem transições */
 .fixed.pointer-events-none.z-\[9999\] {
   display: block !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  will-change: transform;
-  backface-visibility: hidden;
-  transform: translate3d(0, 0, 0);
-}
-
-/* Efeitos de sombra otimizados */
-.shadow-\[0_0_15px_3px_rgba\(59\2c 130\2c 246\2c 0\.4\)\] {
-  box-shadow: 0 0 15px 3px rgba(59, 130, 246, 0.4) !important;
-}
-
-.shadow-\[0_0_10px_2px_rgba\(255\2c 255\2c 255\2c 0\.2\)\] {
-  box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.2) !important;
 }
 
 /* Dispositivos touch */
