@@ -11,68 +11,94 @@ export const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<HTMLDivElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [mounted, setMounted] = useState(false);
 
-  // Efeito de partículas tech mais evidentes
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Efeito de partículas otimizado
+  useEffect(() => {
+    if (!mounted) return;
+
     const particles = particlesRef.current;
     if (!particles) return;
 
-    // Partículas circulares tradicionais - MAIS BRILHANTES
-    for (let i = 0; i < 35; i++) {
-      const particle = document.createElement("div");
-      particle.className = "particle particle-circle";
-      particle.style.width = `${Math.random() * 8 + 3}px`;
-      particle.style.height = particle.style.width;
-      particle.style.left = `${Math.random() * 100}%`;
-      particle.style.top = `${Math.random() * 100}%`;
-      particle.style.background = `radial-gradient(circle, rgba(59, 130, 246, 0.9) 0%, rgba(37, 99, 235, 0.7) 100%)`;
-      particle.style.animation = `float ${
-        Math.random() * 8 + 6
-      }s infinite ease-in-out ${Math.random() * 3}s`;
-      particles.appendChild(particle);
-    }
+    const createParticles = (
+      circleCount: number,
+      techCount: number,
+      connectionCount: number
+    ) => {
+      // Limpar partículas existentes
+      particles.innerHTML = "";
 
-    // Partículas tech (linhas, triângulos, quadrados) - MAIS BRILHANTES
-    for (let i = 0; i < 25; i++) {
-      const techParticle = document.createElement("div");
-      const types = ["line", "triangle", "square"];
-      const type = types[Math.floor(Math.random() * types.length)];
+      // Partículas circulares
+      for (let i = 0; i < circleCount; i++) {
+        const particle = document.createElement("div");
+        particle.className = "particle particle-circle";
+        particle.style.width = `${Math.random() * 6 + 2}px`;
+        particle.style.height = particle.style.width;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.background = `radial-gradient(circle, rgba(59, 130, 246, 0.9) 0%, rgba(37, 99, 235, 0.7) 100%)`;
+        particle.style.animation = `float ${
+          Math.random() * 8 + 6
+        }s infinite ease-in-out ${Math.random() * 3}s`;
+        particles.appendChild(particle);
+      }
 
-      techParticle.className = `particle particle-tech particle-${type}`;
-      techParticle.style.left = `${Math.random() * 100}%`;
-      techParticle.style.top = `${Math.random() * 100}%`;
-      techParticle.style.animation = `tech-float ${
-        Math.random() * 12 + 8
-      }s infinite ease-in-out ${Math.random() * 5}s`;
+      // Partículas tech
+      for (let i = 0; i < techCount; i++) {
+        const techParticle = document.createElement("div");
+        const types = ["line", "triangle", "square"];
+        const type = types[Math.floor(Math.random() * types.length)];
 
-      particles.appendChild(techParticle);
-    }
+        techParticle.className = `particle particle-tech particle-${type}`;
+        techParticle.style.left = `${Math.random() * 100}%`;
+        techParticle.style.top = `${Math.random() * 100}%`;
+        techParticle.style.animation = `tech-float ${
+          Math.random() * 12 + 8
+        }s infinite ease-in-out ${Math.random() * 5}s`;
 
-    // Partículas de conexão (linhas entre partículas) - MAIS BRILHANTES
-    for (let i = 0; i < 20; i++) {
-      const connection = document.createElement("div");
-      connection.className = "particle-connection";
-      connection.style.width = `${Math.random() * 100 + 60}px`;
-      connection.style.left = `${Math.random() * 100}%`;
-      connection.style.top = `${Math.random() * 100}%`;
-      connection.style.transform = `rotate(${Math.random() * 360}deg)`;
-      connection.style.animation = `connection-pulse ${
-        Math.random() * 6 + 4
-      }s infinite ease-in-out ${Math.random() * 2}s`;
-      particles.appendChild(connection);
+        particles.appendChild(techParticle);
+      }
+
+      // Conexões
+      for (let i = 0; i < connectionCount; i++) {
+        const connection = document.createElement("div");
+        connection.className = "particle-connection";
+        connection.style.width = `${Math.random() * 80 + 40}px`;
+        connection.style.left = `${Math.random() * 100}%`;
+        connection.style.top = `${Math.random() * 100}%`;
+        connection.style.transform = `rotate(${Math.random() * 360}deg)`;
+        connection.style.animation = `connection-pulse ${
+          Math.random() * 6 + 4
+        }s infinite ease-in-out ${Math.random() * 2}s`;
+        particles.appendChild(connection);
+      }
+    };
+
+    // Responsive particles
+    if (typeof window !== "undefined") {
+      if (window.innerWidth < 768) {
+        createParticles(15, 12, 8);
+      } else {
+        createParticles(25, 18, 12);
+      }
     }
 
     return () => {
       if (particles) particles.innerHTML = "";
     };
-  }, []);
+  }, [mounted]);
 
   // Efeitos de animação
   useEffect(() => {
+    if (!mounted) return;
+
     const ctx = gsap.context(() => {
       const tl = gsap.timeline();
 
-      // Animação da chamada principal
       tl.fromTo(
         ".main-cta",
         { y: 100, opacity: 0, scale: 0.8 },
@@ -103,7 +129,6 @@ export const Hero = () => {
           "-=0.4"
         );
 
-      // Animação contínua dos elementos flutuantes
       gsap.to(".floating-tech", {
         y: 30,
         rotation: 5,
@@ -114,22 +139,6 @@ export const Hero = () => {
         stagger: 0.6,
       });
 
-      // Animação zigue-zague para stats
-      gsap.to(".stat-item", {
-        y: -15,
-        x: 10,
-        rotation: 2,
-        duration: 4,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        stagger: {
-          each: 0.8,
-          from: "random",
-        },
-      });
-
-      // Animação mais complexa para stats (zigue-zague)
       gsap.to(".stat-item", {
         keyframes: {
           "0%": { y: 0, x: 0, rotation: 0 },
@@ -148,7 +157,6 @@ export const Hero = () => {
       });
     }, heroRef);
 
-    // Efeito de movimento do mouse
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({
         x: (e.clientX / window.innerWidth - 0.5) * 25,
@@ -162,35 +170,46 @@ export const Hero = () => {
       ctx.revert();
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, []);
+  }, [mounted]);
 
-  // Função para scroll suave até a seção about
-  const scrollToAbout = () => {
-    const aboutSection = document.getElementById("about");
-    if (aboutSection) {
-      aboutSection.scrollIntoView({
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({
         behavior: "smooth",
         block: "start",
       });
     }
   };
 
+  if (!mounted) {
+    return (
+      <section className="min-h-screen relative overflow-hidden bg-slate-950 pt-32 pb-32">
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="min-h-[75vh] flex items-center justify-center">
+            <div className="text-center">
+              <div className="h-16 w-16 bg-slate-800 rounded-2xl animate-pulse mx-auto mb-4" />
+              <div className="h-8 w-64 bg-slate-800 rounded animate-pulse mx-auto" />
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section
       ref={heroRef}
       id="hero"
-      className="min-h-screen relative overflow-hidden bg-slate-950 pt-32 pb-32" // Aumentado pb para mais espaço
+      className="min-h-screen relative overflow-hidden bg-slate-950 pt-32 pb-32"
     >
-      {/* Background Gradiente Acentuado */}
       <div className="gradient-bg gradient-shift absolute inset-0 bg-gradient-to-br from-slate-800/30 via-slate-900/40 to-slate-700/20" />
 
-      {/* Partículas Tech - MAIS BRILHANTES */}
       <div
         ref={particlesRef}
         className="absolute inset-0 pointer-events-none"
       />
 
-      {/* Elementos Tech Flutuantes */}
       <div className="absolute top-32 left-10 floating-tech">
         <CircuitBoard className="h-16 w-16 text-blue-400/40" />
       </div>
@@ -215,11 +234,7 @@ export const Hero = () => {
 
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="min-h-[75vh] flex items-center justify-between">
-          {" "}
-          {/* Altura reduzida para mais espaço abaixo */}
-          {/* Conteúdo Principal (Esquerda) */}
           <div className="text-center lg:text-left w-full lg:w-2/3">
-            {/* CHAMADA PRINCIPAL (MAIOR DESTAQUE) */}
             <MotionDiv
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -235,7 +250,6 @@ export const Hero = () => {
               </h1>
             </MotionDiv>
 
-            {/* Descrição Impactante */}
             <MotionDiv
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
@@ -261,7 +275,6 @@ export const Hero = () => {
               </p>
             </MotionDiv>
 
-            {/* Nome com Badge Integrado */}
             <MotionDiv
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -289,17 +302,16 @@ export const Hero = () => {
               </div>
             </MotionDiv>
 
-            {/* CTAs com Máximo Destaque */}
             <MotionDiv
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
-              className="cta-buttons mb-24" // Aumentado significativamente o margin-bottom
+              className="cta-buttons mb-24"
             >
               <div className="flex flex-col sm:flex-row items-center space-y-6 sm:space-y-0 sm:space-x-8">
                 <Button
                   asChild
                   size="lg"
-                  className="group relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-heading font-bold text-lg px-14 py-7 rounded-2xl shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:scale-105 border-0 pulse-glow overflow-hidden"
+                  className="group relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-heading font-bold text-lg px-14 py-7 rounded-2xl shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:scale-105 border-0 overflow-hidden"
                   style={{
                     transform: `translate(${mousePosition.x * 0.3}px, ${
                       mousePosition.y * 0.3
@@ -333,11 +345,11 @@ export const Hero = () => {
               </div>
             </MotionDiv>
           </div>
-          {/* Stats em Coluna (Direita) com animação zigue-zague */}
+
           <MotionDiv
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 1, x: 0 }}
-            className="hero-stats hidden lg:flex flex-col items-end justify-center space-y-16 w-1/3 pr-8" // Aumentado space-y
+            className="hero-stats hidden lg:flex flex-col items-end justify-center space-y-16 w-1/3 pr-8"
           >
             {[
               {
@@ -386,10 +398,9 @@ export const Hero = () => {
         </div>
       </div>
 
-      {/* Scroll Indicator Tech - Mais espaço acima */}
       <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 z-30">
         <button
-          onClick={scrollToAbout}
+          onClick={() => scrollToSection("about")}
           className="flex flex-col items-center space-y-3 group cursor-pointer transition-all duration-300 hover:scale-110"
           aria-label="Scroll para a seção About"
         >
@@ -397,12 +408,11 @@ export const Hero = () => {
             EXPLORAR MAIS
           </span>
           <div className="w-px h-20 bg-gradient-to-b from-blue-400/80 to-transparent relative group-hover:from-blue-300 transition-colors duration-300">
-            <div className="absolute top-0 w-1 h-6 bg-blue-400 rounded-full animate-bounce pulse-glow group-hover:bg-blue-300 transition-colors duration-300" />
+            <div className="absolute top-0 w-1 h-6 bg-blue-400 rounded-full animate-bounce group-hover:bg-blue-300 transition-colors duration-300" />
           </div>
         </button>
       </div>
 
-      {/* Efeitos de Luz Tech */}
       <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl" />
       <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl" />

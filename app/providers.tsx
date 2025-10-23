@@ -1,23 +1,27 @@
-// app/providers.tsx
 "use client";
 
 import * as React from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 
-// REMOVIDA: A importação problemática 'next-themes/dist/types'
-// Agora, inferimos o tipo das props do componente principal:
-type ThemeProviderProps = React.ComponentProps<typeof NextThemesProvider>;
+interface ThemeProviderProps {
+  children: React.ReactNode;
+  attribute?: "class" | "data-theme";
+  defaultTheme?: string;
+  enableSystem?: boolean;
+}
 
-/**
- * Componente Provedor de Tema que envolve a aplicação.
- * Usa a biblioteca next-themes.
- */
-export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
+export function ThemeProvider({
+  children,
+  attribute = "class",
+  defaultTheme = "system",
+  enableSystem = true,
+  ...props
+}: ThemeProviderProps) {
   return (
     <NextThemesProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
+      attribute={attribute}
+      defaultTheme={defaultTheme}
+      enableSystem={enableSystem}
       {...props}
     >
       {children}

@@ -22,18 +22,45 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 export const Contact = () => {
-  // Estados para controlar loading, sucesso e erro
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
-  // Função para lidar com o envio do formulário
+  const validateForm = (formData: FormData) => {
+    const errors: Record<string, string> = {};
+    const email = formData.get("email") as string;
+    const name = formData.get("name") as string;
+    const subject = formData.get("subject") as string;
+    const message = formData.get("message") as string;
+
+    if (!name || name.trim().length < 2) {
+      errors.name = "Nome deve ter pelo menos 2 caracteres";
+    }
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errors.email = "Email inválido";
+    }
+
+    if (!subject || subject.trim().length < 5) {
+      errors.subject = "Assunto deve ter pelo menos 5 caracteres";
+    }
+
+    if (!message || message.trim().length < 10) {
+      errors.message = "Mensagem deve ter pelo menos 10 caracteres";
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSubmit = async (formData: FormData) => {
+    if (!validateForm(formData)) return;
+
     setIsLoading(true);
     setError(null);
 
     try {
-      // Envia os dados para a API
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
@@ -49,22 +76,18 @@ export const Contact = () => {
 
       const data = await response.json();
 
-      // Verifica se a resposta foi bem-sucedida
       if (!response.ok) {
         throw new Error(data.error || "Erro ao enviar mensagem");
       }
 
-      // Mostra mensagem de sucesso
       setIsSuccess(true);
-
-      // Reseta o formulário após 5 segundos
       setTimeout(() => {
         const form = document.querySelector("form") as HTMLFormElement;
         form?.reset();
         setIsSuccess(false);
+        setFormErrors({});
       }, 5000);
     } catch (err) {
-      // Mostra mensagem de erro
       setError(err instanceof Error ? err.message : "Erro ao enviar mensagem");
     } finally {
       setIsLoading(false);
@@ -76,17 +99,14 @@ export const Contact = () => {
       id="contact"
       className="py-20 lg:py-32 bg-slate-950 relative overflow-hidden border-t border-slate-800/50"
     >
-      {/* Background gradiente tech */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900" />
 
-      {/* Partículas sutis */}
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-20 left-10 w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
         <div className="absolute top-40 right-20 w-1 h-1 bg-purple-400 rounded-full animate-pulse" />
         <div className="absolute bottom-40 left-20 w-1 h-1 bg-cyan-400 rounded-full animate-pulse" />
       </div>
 
-      {/* Elementos decorativos tech */}
       <div className="absolute top-10 right-10 opacity-5">
         <Binary className="h-32 w-32 text-blue-400" />
       </div>
@@ -95,7 +115,6 @@ export const Contact = () => {
       </div>
 
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header da Seção - Estilo Tech */}
         <MotionDiv
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -103,7 +122,7 @@ export const Contact = () => {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          <div className="inline-flex items-center text-sm font-mono font-bold uppercase tracking-widest text-blue-400 bg-blue-400/10 px-6 py-3 rounded-full border border-blue-400/30 mb-6 neon-pulse">
+          <div className="inline-flex items-center text-sm font-mono font-bold uppercase tracking-widest text-blue-400 bg-blue-400/10 px-6 py-3 rounded-full border border-blue-400/30 mb-6">
             <MessageCircle className="h-4 w-4 mr-3" />
             VAMOS CONVERSAR
           </div>
@@ -120,7 +139,6 @@ export const Contact = () => {
         </MotionDiv>
 
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-          {/* Coluna de informações de contato */}
           <MotionDiv
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -129,11 +147,10 @@ export const Contact = () => {
             className="lg:col-span-1"
           >
             <Card className="h-full bg-slate-900/50 backdrop-blur-xl border-2 border-blue-400/20 shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 hover:scale-105 group relative overflow-hidden">
-              {/* Efeito de brilho no card */}
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
 
               <CardHeader className="pb-6 border-b border-slate-700/50">
-                <CardTitle className="text-2xl font-heading font-black text-blue-400 flex items-center neon-pulse">
+                <CardTitle className="text-2xl font-heading font-black text-blue-400 flex items-center">
                   <Cpu className="h-6 w-6 mr-3" />
                   INFORMAÇÕES
                 </CardTitle>
@@ -179,7 +196,6 @@ export const Contact = () => {
             </Card>
           </MotionDiv>
 
-          {/* Coluna do formulário de contato */}
           <MotionDiv
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -188,11 +204,10 @@ export const Contact = () => {
             className="lg:col-span-2"
           >
             <Card className="h-full bg-slate-900/50 backdrop-blur-xl border-2 border-purple-400/20 shadow-2xl hover:shadow-purple-500/20 transition-all duration-500 hover:scale-105 group relative overflow-hidden">
-              {/* Efeito de brilho no card */}
               <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-pink-500/5 to-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
 
               <CardHeader className="pb-6 border-b border-slate-700/50">
-                <CardTitle className="text-2xl font-heading font-black text-purple-400 flex items-center neon-pulse">
+                <CardTitle className="text-2xl font-heading font-black text-purple-400 flex items-center">
                   <Send className="h-6 w-6 mr-3" />
                   ENVIE SUA MENSAGEM
                 </CardTitle>
@@ -202,7 +217,6 @@ export const Contact = () => {
               </CardHeader>
               <CardContent className="pt-6">
                 <form action={handleSubmit} className="space-y-6">
-                  {/* Campos de nome e email */}
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div className="space-y-3">
                       <Label
@@ -220,6 +234,11 @@ export const Contact = () => {
                         disabled={isLoading}
                         className="h-12 text-base font-sans transition-all duration-300 focus:scale-[1.02] focus:border-blue-400 border-2 border-slate-700/50 bg-slate-800/50 backdrop-blur-sm text-white placeholder:text-slate-400 disabled:opacity-50 rounded-xl"
                       />
+                      {formErrors.name && (
+                        <p className="text-red-400 text-sm font-mono">
+                          {formErrors.name}
+                        </p>
+                      )}
                     </div>
                     <div className="space-y-3">
                       <Label
@@ -237,10 +256,14 @@ export const Contact = () => {
                         disabled={isLoading}
                         className="h-12 text-base font-sans transition-all duration-300 focus:scale-[1.02] focus:border-blue-400 border-2 border-slate-700/50 bg-slate-800/50 backdrop-blur-sm text-white placeholder:text-slate-400 disabled:opacity-50 rounded-xl"
                       />
+                      {formErrors.email && (
+                        <p className="text-red-400 text-sm font-mono">
+                          {formErrors.email}
+                        </p>
+                      )}
                     </div>
                   </div>
 
-                  {/* Campo de assunto */}
                   <div className="space-y-3">
                     <Label
                       htmlFor="subject"
@@ -257,9 +280,13 @@ export const Contact = () => {
                       disabled={isLoading}
                       className="h-12 text-base font-sans transition-all duration-300 focus:scale-[1.02] focus:border-purple-400 border-2 border-slate-700/50 bg-slate-800/50 backdrop-blur-sm text-white placeholder:text-slate-400 disabled:opacity-50 rounded-xl"
                     />
+                    {formErrors.subject && (
+                      <p className="text-red-400 text-sm font-mono">
+                        {formErrors.subject}
+                      </p>
+                    )}
                   </div>
 
-                  {/* Campo de mensagem */}
                   <div className="space-y-3">
                     <Label
                       htmlFor="message"
@@ -276,9 +303,13 @@ export const Contact = () => {
                       disabled={isLoading}
                       className="text-base font-sans transition-all duration-300 focus:scale-[1.02] focus:border-cyan-400 border-2 border-slate-700/50 bg-slate-800/50 backdrop-blur-sm text-white placeholder:text-slate-400 resize-none disabled:opacity-50 rounded-xl min-h-[120px]"
                     />
+                    {formErrors.message && (
+                      <p className="text-red-400 text-sm font-mono">
+                        {formErrors.message}
+                      </p>
+                    )}
                   </div>
 
-                  {/* Mensagem de erro */}
                   {error && (
                     <MotionDiv
                       initial={{ opacity: 0, y: -10 }}
@@ -292,7 +323,6 @@ export const Contact = () => {
                     </MotionDiv>
                   )}
 
-                  {/* Mensagem de sucesso */}
                   {isSuccess && (
                     <MotionDiv
                       initial={{ opacity: 0, y: -10 }}
@@ -307,11 +337,10 @@ export const Contact = () => {
                     </MotionDiv>
                   )}
 
-                  {/* Botão de envio */}
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full h-14 text-base font-mono font-bold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-xl shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:scale-105 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 border-0 pulse-glow tracking-widest"
+                    className="w-full h-14 text-base font-mono font-bold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-xl shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:scale-105 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 border-0 tracking-widest"
                   >
                     <span
                       className={`flex items-center transition-all duration-300 ${
@@ -322,14 +351,12 @@ export const Contact = () => {
                       {isLoading ? "ENVIANDO..." : "ENVIAR MENSAGEM"}
                     </span>
 
-                    {/* Spinner de loading */}
                     {isLoading && (
                       <div className="absolute inset-0 flex items-center justify-center">
                         <Loader2 className="h-5 w-5 animate-spin" />
                       </div>
                     )}
 
-                    {/* Efeito de hover animado */}
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-xl" />
                   </Button>
                 </form>
@@ -338,7 +365,6 @@ export const Contact = () => {
           </MotionDiv>
         </div>
 
-        {/* CTA Final - Estilo Tech */}
         <MotionDiv
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -349,7 +375,7 @@ export const Contact = () => {
           <div className="bg-slate-900/30 backdrop-blur-xl p-8 rounded-2xl border border-slate-700/50 shadow-2xl max-w-2xl mx-auto">
             <p className="text-lg text-slate-300 font-mono tracking-wide mb-4">
               Não encontrou o que procurava?{" "}
-              <span className="text-blue-400 font-heading font-bold neon-pulse">
+              <span className="text-blue-400 font-heading font-bold">
                 ESTOU SEMPRE DISPONÍVEL PARA UMA CONVERSA!
               </span>
             </p>

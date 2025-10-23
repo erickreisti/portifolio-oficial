@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Menu, X, Download, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
 
@@ -19,7 +20,13 @@ export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
-  const [isDark, setIsDark] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,10 +49,32 @@ export const Header = () => {
   }, []);
 
   const toggleTheme = () => {
-    setIsDark(!isDark);
-    // Aqui você integraria com seu sistema de tema
-    document.documentElement.classList.toggle("dark");
+    setTheme(theme === "dark" ? "light" : "dark");
   };
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+    setIsOpen(false);
+  };
+
+  // Evitar hydration mismatch
+  if (!mounted) {
+    return (
+      <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/95 backdrop-blur-xl shadow-2xl shadow-blue-500/10 py-3 border-b border-slate-800/50">
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between">
+            <div className="h-20 w-20 rounded-2xl bg-slate-800 animate-pulse" />
+          </div>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header
@@ -57,19 +86,12 @@ export const Header = () => {
     >
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          {/* Logo - MAIOR E SEM BORDA */}
-          <Link
-            href="#hero"
+          {/* Logo */}
+          <button
+            onClick={() => scrollToSection("hero")}
             className="flex items-center space-x-4 group relative"
-            onClick={(e) => {
-              e.preventDefault();
-              document
-                .getElementById("hero")
-                ?.scrollIntoView({ behavior: "smooth" });
-            }}
           >
             <div className="relative">
-              {/* Container da logo sem borda */}
               <div className="h-20 w-20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-500 overflow-hidden">
                 <Image
                   src="/images/hashblue.svg"
@@ -81,12 +103,10 @@ export const Header = () => {
                 />
               </div>
 
-              {/* Efeito de brilho pulsante - mantido mas sem blur */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-cyan-400/10 rounded-2xl opacity-0  transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-cyan-400/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-              {/* Partículas ao redor da logo */}
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 particle delay-200" />
-              <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-cyan-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 particle delay-500" />
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse delay-200" />
+              <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-cyan-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse delay-500" />
             </div>
 
             <div className="flex flex-col">
@@ -97,7 +117,7 @@ export const Header = () => {
                 FULLSTACK DEV
               </span>
             </div>
-          </Link>
+          </button>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
@@ -106,66 +126,54 @@ export const Header = () => {
               const isActive = activeSection === sectionName;
 
               return (
-                <Link
+                <button
                   key={item.name}
-                  href={item.href}
+                  onClick={() => scrollToSection(sectionName)}
                   className={`relative px-4 py-2 text-sm font-mono font-medium tracking-widest transition-all duration-300 group/nav-link ${
                     isActive
-                      ? "text-blue-400 neon-pulse"
+                      ? "text-blue-400"
                       : "text-slate-300 hover:text-white"
                   }`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    document
-                      .getElementById(sectionName)
-                      ?.scrollIntoView({ behavior: "smooth" });
-                  }}
                 >
                   {item.name.toUpperCase()}
 
-                  {/* Indicador ativo animado */}
                   {isActive && (
-                    <div className="absolute -bottom-1 left-4 right-4 h-0.5 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full pulse-glow" />
+                    <div className="absolute -bottom-1 left-4 right-4 h-0.5 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full animate-pulse" />
                   )}
 
-                  {/* Efeito hover com brilho */}
                   <div className="absolute inset-0 bg-blue-500/0 rounded-lg group-hover/nav-link:bg-blue-500/5 transition-all duration-300 -z-10 border border-transparent group-hover/nav-link:border-blue-500/20" />
-                </Link>
+                </button>
               );
             })}
           </nav>
 
           {/* Desktop Actions */}
           <div className="hidden lg:flex items-center space-x-4">
-            {/* Toggle Theme - MAIS RELUZENTE */}
+            {/* Toggle Theme */}
             <button
               onClick={toggleTheme}
-              className="relative h-12 w-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-sm border border-blue-400/30 hover:border-blue-400/50 transition-all duration-300 group/toggle hover:scale-110 pulse-glow"
+              className="relative h-12 w-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-sm border border-blue-400/30 hover:border-blue-400/50 transition-all duration-300 group/toggle hover:scale-110"
             >
-              {/* Ícone do sol/lua com mais brilho */}
-              {isDark ? (
-                <Sun className="h-5 w-5 text-yellow-300 group-hover/toggle:text-yellow-200 transition-colors duration-300 filter drop-shadow-[0_0_10px_rgba(255,255,0,0.5)]" />
+              {theme === "dark" ? (
+                <Sun className="h-5 w-5 text-yellow-300 group-hover/toggle:text-yellow-200 transition-colors duration-300" />
               ) : (
-                <Moon className="h-5 w-5 text-blue-300 group-hover/toggle:text-blue-200 transition-colors duration-300 filter drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
+                <Moon className="h-5 w-5 text-blue-300 group-hover/toggle:text-blue-200 transition-colors duration-300" />
               )}
 
-              {/* Efeito de brilho interno */}
               <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 to-transparent rounded-xl opacity-0 group-hover/toggle:opacity-100 transition-opacity duration-300" />
 
-              {/* Partículas de brilho */}
               <div className="absolute -top-1 -right-1 w-2 h-2 bg-cyan-400 rounded-full opacity-0 group-hover/toggle:opacity-100 transition-opacity duration-500 animate-pulse" />
               <div className="absolute -bottom-1 -left-1 w-1 h-1 bg-blue-400 rounded-full opacity-0 group-hover/toggle:opacity-100 transition-opacity duration-500 animate-pulse delay-200" />
             </button>
 
             <Button
               asChild
-              className="group relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-mono font-bold text-sm px-6 py-2.5 rounded-xl shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:scale-105 border-0 pulse-glow overflow-hidden tracking-widest"
+              className="group relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-mono font-bold text-sm px-6 py-2.5 rounded-xl shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:scale-105 border-0 overflow-hidden tracking-widest"
             >
               <a href="/docs/curriculo-erick-reis.pdf" download>
                 <Download className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform duration-300" />
                 <span className="relative z-10">DOWNLOAD CV</span>
 
-                {/* Efeito de reflexo */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-xl" />
               </a>
             </Button>
@@ -173,18 +181,16 @@ export const Header = () => {
 
           {/* Mobile Menu Button */}
           <div className="flex lg:hidden items-center space-x-3">
-            {/* Toggle Theme Mobile - MAIS RELUZENTE */}
             <button
               onClick={toggleTheme}
-              className="relative h-12 w-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-sm border border-blue-400/30 hover:border-blue-400/50 transition-all duration-300 group/toggle hover:scale-110 pulse-glow"
+              className="relative h-12 w-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-sm border border-blue-400/30 hover:border-blue-400/50 transition-all duration-300 group/toggle hover:scale-110"
             >
-              {isDark ? (
-                <Sun className="h-5 w-5 text-yellow-300 group-hover/toggle:text-yellow-200 transition-colors duration-300 filter drop-shadow-[0_0_10px_rgba(255,255,0,0.5)]" />
+              {theme === "dark" ? (
+                <Sun className="h-5 w-5 text-yellow-300 group-hover/toggle:text-yellow-200 transition-colors duration-300" />
               ) : (
-                <Moon className="h-5 w-5 text-blue-300 group-hover/toggle:text-blue-200 transition-colors duration-300 filter drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
+                <Moon className="h-5 w-5 text-blue-300 group-hover/toggle:text-blue-200 transition-colors duration-300" />
               )}
 
-              {/* Efeito de brilho interno */}
               <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 to-transparent rounded-xl opacity-0 group-hover/toggle:opacity-100 transition-opacity duration-300" />
             </button>
 
@@ -214,19 +220,12 @@ export const Header = () => {
                 const isActive = activeSection === sectionName;
 
                 return (
-                  <Link
+                  <button
                     key={item.name}
-                    href={item.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setIsOpen(false);
-                      document
-                        .getElementById(sectionName)
-                        ?.scrollIntoView({ behavior: "smooth" });
-                    }}
+                    onClick={() => scrollToSection(sectionName)}
                     className={`flex items-center px-4 py-4 text-sm font-mono font-medium tracking-widest rounded-lg transition-all duration-200 group/mobile-link relative overflow-hidden ${
                       isActive
-                        ? "bg-blue-500/10 text-blue-400 border-l-2 border-blue-400 neon-pulse"
+                        ? "bg-blue-500/10 text-blue-400 border-l-2 border-blue-400"
                         : "text-slate-300 hover:text-white"
                     }`}
                   >
@@ -237,15 +236,14 @@ export const Header = () => {
                         isActive ? "bg-blue-500/10" : ""
                       }`}
                     />
-                  </Link>
+                  </button>
                 );
               })}
 
-              {/* CTA Mobile */}
               <div className="pt-4 mt-2 border-t border-slate-800/50">
                 <Button
                   asChild
-                  className="w-full group relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-mono font-bold text-sm py-4 rounded-xl shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:scale-105 border-0 pulse-glow overflow-hidden tracking-widest"
+                  className="w-full group relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-mono font-bold text-sm py-4 rounded-xl shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:scale-105 border-0 overflow-hidden tracking-widest"
                   onClick={() => setIsOpen(false)}
                 >
                   <a href="/docs/curriculo-erick-reis.pdf" download>
