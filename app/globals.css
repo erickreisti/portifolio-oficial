@@ -386,39 +386,37 @@ body {
   }
 }
 
-/* ===== CURSOR OTIMIZADO ===== */
+/* ===== CURSOR ULTRA FLUIDO ===== */
 * {
   cursor: none !important;
 }
 
-/* Hardware acceleration para máximo desempenho */
-.fixed.pointer-events-none.z-\\[9999\\] {
+/* Performance máxima - sem transições */
+.fixed.pointer-events-none.z-\[9999\] {
   display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  will-change: transform;
   backface-visibility: hidden;
-  perspective: 1000;
   transform: translate3d(0, 0, 0);
 }
 
-/* Transições mais rápidas apenas para transform */
-.transition-transform {
-  transition-property: transform;
-  transition-timing-function: linear;
+/* Efeitos de sombra otimizados */
+.shadow-\[0_0_15px_3px_rgba\(59\2c 130\2c 246\2c 0\.4\)\] {
+  box-shadow: 0 0 15px 3px rgba(59, 130, 246, 0.4) !important;
 }
 
-/* Dispositivos touch - mostrar cursor normal */
+.shadow-\[0_0_10px_2px_rgba\(255\2c 255\2c 255\2c 0\.2\)\] {
+  box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Dispositivos touch */
 @media (hover: none) and (pointer: coarse) {
   * {
     cursor: auto !important;
   }
 
-  .fixed.pointer-events-none.z-\\[9999\\] {
+  .fixed.pointer-events-none.z-\[9999\] {
     display: none !important;
-  }
-}
-
-/* Reduzir movimento para acessibilidade */
-@media (prefers-reduced-motion: reduce) {
-  .transition-transform {
-    transition: none;
   }
 }

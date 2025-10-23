@@ -13,12 +13,16 @@ export const SimpleTechCursor = () => {
 
     let mouseX = 0;
     let mouseY = 0;
-    let lastX = 0;
-    let lastY = 0;
+    let cursorX = 0;
+    let cursorY = 0;
 
     const updateCursor = () => {
-      // Usar transform para melhor performance (GPU accelerated)
-      cursor.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+      // Movimento instantâneo sem easing para máxima fluidez
+      cursorX = mouseX;
+      cursorY = mouseY;
+
+      cursor.style.left = cursorX + "px";
+      cursor.style.top = cursorY + "px";
       rafIdRef.current = requestAnimationFrame(updateCursor);
     };
 
@@ -26,67 +30,55 @@ export const SimpleTechCursor = () => {
       mouseX = e.clientX;
       mouseY = e.clientY;
 
-      // Verificar se é um elemento clicável (usando throttle)
-      if (Math.abs(e.clientX - lastX) > 2 || Math.abs(e.clientY - lastY) > 2) {
-        const target = e.target as HTMLElement;
-        const shouldBePointer =
-          target.tagName === "BUTTON" ||
-          target.tagName === "A" ||
-          target.closest("button") !== null ||
-          target.closest("a") !== null;
+      // Detectar elementos clicáveis (com throttle simples)
+      const target = e.target as HTMLElement;
+      const shouldBePointer =
+        target.tagName === "BUTTON" ||
+        target.tagName === "A" ||
+        target.closest("button") !== null ||
+        target.closest("a") !== null;
 
-        setIsPointer(shouldBePointer);
-        lastX = e.clientX;
-        lastY = e.clientY;
-      }
-    };
-
-    const handleMouseEnter = () => {
-      cursor.style.opacity = "1";
-    };
-
-    const handleMouseLeave = () => {
-      cursor.style.opacity = "0";
+      setIsPointer(shouldBePointer);
     };
 
     // Iniciar animation loop
     rafIdRef.current = requestAnimationFrame(updateCursor);
 
-    // Usar passive events para melhor performance
     document.addEventListener("mousemove", handleMouseMove, { passive: true });
-    document.addEventListener("mouseenter", handleMouseEnter, {
-      passive: true,
-    });
-    document.addEventListener("mouseleave", handleMouseLeave, {
-      passive: true,
-    });
 
-    // Mostrar cursor inicialmente
-    cursor.style.opacity = "1";
-
-    // Cleanup
     return () => {
       cancelAnimationFrame(rafIdRef.current);
       document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseenter", handleMouseEnter);
-      document.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, []);
 
   return (
     <div
       ref={cursorRef}
-      className="fixed pointer-events-none z-[9999] will-change-transform"
-      style={{
-        left: "0px",
-        top: "0px",
-      }}
+      className="fixed pointer-events-none z-[9999] transform -translate-x-1/2 -translate-y-1/2"
     >
+      {/* Círculo externo - SEM TRANSITION */}
       <div
-        className={`w-4 h-4 rounded-full border-2 transition-transform duration-75 ${
+        className={`w-6 h-6 rounded-full border-2 ${
           isPointer
-            ? "border-blue-400 bg-blue-400/30 scale-125"
-            : "border-white bg-white/20 scale-100"
+            ? "border-blue-400 bg-blue-400/20"
+            : "border-white/80 bg-white/10"
+        }`}
+      />
+
+      {/* Círculo médio - SEM TRANSITION */}
+      <div
+        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full ${
+          isPointer ? "bg-blue-400 w-3 h-3" : "bg-white w-2 h-2"
+        }`}
+      />
+
+      {/* Efeito de brilho - SEM TRANSITION */}
+      <div
+        className={`absolute inset-0 rounded-full ${
+          isPointer
+            ? "shadow-[0_0_15px_3px_rgba(59,130,246,0.4)]"
+            : "shadow-[0_0_10px_2px_rgba(255,255,255,0.2)]"
         }`}
       />
     </div>
