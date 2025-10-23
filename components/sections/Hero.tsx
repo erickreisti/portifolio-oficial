@@ -377,7 +377,7 @@ export const Hero = () => {
                 <div className="text-3xl font-heading font-bold text-white mb-2 group-hover:text-blue-300 transition-colors duration-300">
                   {stat.number}
                 </div>
-                <div className="text-white/60 font-sans text-sm group-hover:text-white/80 transition-colors duration-300 max-w-[140px] ml-auto">
+                <div className="text-white font-sans text-sm group-hover:text-white/80 transition-colors duration-300 max-w-[140px] ml-auto">
                   {stat.label}
                 </div>
               </div>
