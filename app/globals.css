@@ -658,36 +658,139 @@ body {
   animation: gradient-x 3s ease infinite;
 }
 
-/* ===== RESPONSIVIDADE ===== */
-@media (max-width: 768px) {
-  .particles-container {
-    display: none;
+/* ===== CURSOR PREMIUM MELHORADO ===== */
+@keyframes cursorPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
-
-  .floating-elements {
-    display: none;
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
   }
+}
 
-  .premium-button,
-  .premium-button-outline {
-    padding: 1.5rem 2rem !important;
-    font-size: 1rem !important;
+@keyframes cursorTrail {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
   }
-
-  .developer-badge .inline-flex {
-    flex-direction: column;
-    gap: 0.75rem;
-    padding: 1.5rem;
+  100% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
   }
+}
 
-  .developer-badge .h-8 {
-    display: none;
+@keyframes orbitFast {
+  0% {
+    transform: rotate(0deg) translateX(15px) rotate(0deg);
   }
+  100% {
+    transform: rotate(360deg) translateX(15px) rotate(-360deg);
+  }
+}
 
-  .particle-glow,
-  .particle-breathe,
-  .particle-drift {
-    animation-duration: 8s;
+@keyframes orbitFaster {
+  0% {
+    transform: rotate(90deg) translateX(20px) rotate(-90deg);
+  }
+  100% {
+    transform: rotate(450deg) translateX(20px) rotate(-450deg);
+  }
+}
+
+@keyframes orbitFastest {
+  0% {
+    transform: rotate(180deg) translateX(25px) rotate(-180deg);
+  }
+  100% {
+    transform: rotate(540deg) translateX(25px) rotate(-540deg);
+  }
+}
+
+@keyframes orbitReverse {
+  0% {
+    transform: rotate(270deg) translateX(12px) rotate(-270deg);
+  }
+  100% {
+    transform: rotate(630deg) translateX(12px) rotate(-630deg);
+  }
+}
+
+.custom-cursor-visible {
+  transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    height 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 0.3s ease,
+    border-color 0.3s ease;
+  pointer-events: none !important;
+  z-index: 9999 !important;
+}
+
+.cursor-pulse {
+  animation: cursorPulse 2s ease-in-out infinite;
+}
+
+.cursor-trail {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, currentColor 0%, transparent 70%);
+  animation: cursorTrail 0.6s ease-out forwards;
+}
+
+.animate-orbit-fast {
+  animation: orbitFast 1s linear infinite;
+}
+
+.animate-orbit-faster {
+  animation: orbitFaster 0.7s linear infinite;
+}
+
+.animate-orbit-fastest {
+  animation: orbitFastest 0.5s linear infinite;
+}
+
+.animate-orbit-reverse {
+  animation: orbitReverse 1.2s linear infinite;
+}
+
+/* Efeito de partículas do cursor */
+.cursor-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: cursorParticle 1.5s ease-out forwards;
+}
+
+@keyframes cursorParticle {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(var(--tx) * 60px), calc(var(--ty) * 60px))
+      scale(0);
+    opacity: 0;
+  }
+}
+
+/* Cursor principal melhorado */
+.cursor-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, #00ffff 0%, transparent 70%);
+  box-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff, inset 0 0 10px #00ffff;
+  animation: cursorPulse 1.5s ease-in-out infinite;
+}
+
+/* ===== RESPONSIVIDADE PARA CURSOR ===== */
+@media (max-width: 768px), (hover: none) {
+  .custom-cursor-visible {
+    display: none !important;
   }
 }
 
@@ -713,7 +816,12 @@ body {
   .particle-diamond,
   .interactive-glow,
   .premium-button,
-  .premium-button-outline {
+  .premium-button-outline,
+  .cursor-pulse,
+  .animate-orbit-fast,
+  .animate-orbit-faster,
+  .animate-orbit-fastest,
+  .animate-orbit-reverse {
     animation: none;
   }
 
