@@ -19,10 +19,16 @@ export const LoadingProvider = ({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simula o tempo de carregamento
+    // Atualiza atributo para controle de transição
+    document.documentElement.setAttribute("data-loading", "true");
+
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 3500); // 3.5 segundos para mostrar toda a animação
+      // Habilita transições suaves após o loading
+      setTimeout(() => {
+        document.documentElement.setAttribute("data-loading", "false");
+      }, 100);
+    }, 3500);
 
     return () => clearTimeout(timer);
   }, []);

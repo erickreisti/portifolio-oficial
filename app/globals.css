@@ -2,9 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Garante que o tema escuro seja aplicado */
+:root,
+.dark {
+  color-scheme: dark;
+}
+
+/* Previne flash durante hidratação */
+[data-loading="true"] {
+  opacity: 0;
+}
+
+[data-loading="false"] {
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
+    background: #0f172a; /* slate-950 */
+    transition: none !important;
   }
 
   :root {
@@ -41,6 +59,7 @@
 
   body {
     @apply bg-slate-950 text-white;
+    background: #0f172a; /* Força o background inicial */
   }
 }
 
