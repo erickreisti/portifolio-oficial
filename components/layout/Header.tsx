@@ -3,8 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Menu, X, Download, Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Menu, X, Download } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -20,13 +19,6 @@ export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
-  const [mounted, setMounted] = useState(false);
-
-  const { theme, setTheme } = useTheme();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,10 +40,6 @@ export const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
-
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -62,19 +50,6 @@ export const Header = () => {
     }
     setIsOpen(false);
   };
-
-  // Evitar hydration mismatch
-  if (!mounted) {
-    return (
-      <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/95 backdrop-blur-xl shadow-2xl shadow-blue-500/10 py-3 border-b border-slate-800/50">
-        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <div className="h-20 w-20 rounded-2xl bg-slate-800 animate-pulse" />
-          </div>
-        </div>
-      </header>
-    );
-  }
 
   return (
     <header
@@ -149,23 +124,6 @@ export const Header = () => {
 
           {/* Desktop Actions */}
           <div className="hidden lg:flex items-center space-x-4">
-            {/* Toggle Theme */}
-            <button
-              onClick={toggleTheme}
-              className="relative h-12 w-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-sm border border-blue-400/30 hover:border-blue-400/50 transition-all duration-300 group/toggle hover:scale-110"
-            >
-              {theme === "dark" ? (
-                <Sun className="h-5 w-5 text-yellow-300 group-hover/toggle:text-yellow-200 transition-colors duration-300" />
-              ) : (
-                <Moon className="h-5 w-5 text-blue-300 group-hover/toggle:text-blue-200 transition-colors duration-300" />
-              )}
-
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 to-transparent rounded-xl opacity-0 group-hover/toggle:opacity-100 transition-opacity duration-300" />
-
-              <div className="absolute -top-1 -right-1 w-2 h-2 bg-cyan-400 rounded-full opacity-0 group-hover/toggle:opacity-100 transition-opacity duration-500 animate-pulse" />
-              <div className="absolute -bottom-1 -left-1 w-1 h-1 bg-blue-400 rounded-full opacity-0 group-hover/toggle:opacity-100 transition-opacity duration-500 animate-pulse delay-200" />
-            </button>
-
             <Button
               asChild
               className="group relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-mono font-bold text-sm px-6 py-2.5 rounded-xl shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:scale-105 border-0 overflow-hidden tracking-widest"
@@ -181,19 +139,6 @@ export const Header = () => {
 
           {/* Mobile Menu Button */}
           <div className="flex lg:hidden items-center space-x-3">
-            <button
-              onClick={toggleTheme}
-              className="relative h-12 w-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-sm border border-blue-400/30 hover:border-blue-400/50 transition-all duration-300 group/toggle hover:scale-110"
-            >
-              {theme === "dark" ? (
-                <Sun className="h-5 w-5 text-yellow-300 group-hover/toggle:text-yellow-200 transition-colors duration-300" />
-              ) : (
-                <Moon className="h-5 w-5 text-blue-300 group-hover/toggle:text-blue-200 transition-colors duration-300" />
-              )}
-
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 to-transparent rounded-xl opacity-0 group-hover/toggle:opacity-100 transition-opacity duration-300" />
-            </button>
-
             <Button
               variant="ghost"
               size="icon"
