@@ -61,27 +61,34 @@ export const Header = () => {
     >
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          {/* Logo */}
+          {/* Logo SEM BACKGROUND */}
           <button
             onClick={() => scrollToSection("hero")}
             className="flex items-center space-x-4 group relative"
           >
             <div className="relative">
+              {/* Container da logo SEM background - apenas a imagem */}
               <div className="h-20 w-20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-500 overflow-hidden">
                 <Image
                   src="/images/hashblue.svg"
                   alt="Erick Reis Logo"
                   width={80}
                   height={80}
-                  className="h-18 w-18 object-contain filter"
+                  className="h-18 w-18 object-contain filter brightness-125"
                   priority
                 />
               </div>
 
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-cyan-400/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              {/* Efeitos de brilho e partículas MANTIDOS mas sem background */}
+              <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                {/* Gradiente sutil no hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 to-cyan-400/5 rounded-2xl" />
+              </div>
 
+              {/* Partículas ao redor da logo */}
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse delay-200" />
               <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-cyan-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse delay-500" />
+              <div className="absolute -top-2 -left-2 w-2 h-2 bg-purple-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse delay-700" />
             </div>
 
             <div className="flex flex-col">
