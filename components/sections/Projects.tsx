@@ -2,7 +2,6 @@
 
 import NextLink from "next/link";
 import {
-  Link as LinkIcon,
   Github,
   Star,
   Cpu,
@@ -26,13 +25,77 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Project, projects } from "@/lib/project-data";
+import Image from "next/image";
+
+// Dados dos seus projetos adaptados
+const projects = [
+  {
+    id: 1,
+    title: "CodeCraft Academy",
+    description:
+      "Plataforma de cursos fullstack com stack moderna: catálogo, carrinho, checkout, dashboard de aluno e administrador integrados.",
+    image: "/images/website1.webp",
+    githubUrl: "https://github.com/erickreisti/codecraft-academy",
+    liveUrl: "https://codecraft-academy-three.vercel.app/",
+    tags: ["Next.js", "TypeScript", "Tailwind", "Prisma", "Stripe", "Auth"],
+  },
+  {
+    id: 2,
+    title: "Wine for Life",
+    description:
+      "Desenvolvimento de site institucional para vinícola, criando identidade visual que transmite tradição e frescor através de design persuasivo e limpo.",
+    image: "/images/website2.webp",
+    githubUrl: "https://github.com/erickreisti/wine-for-life",
+    liveUrl: "https://erickreisti.github.io/wine-for-life/",
+    tags: ["HTML5", "CSS3", "JavaScript", "Responsive", "UI/UX"],
+  },
+  {
+    id: 3,
+    title: "Bio Fitness",
+    description:
+      "Projeto de landing page com design clean e copy estratégico para conversão em marca do segmento wellness e nutrição.",
+    image: "/images/website3.webp",
+    githubUrl: "https://github.com/erickreisti/biofitness",
+    liveUrl: "https://erickreisti.github.io/biofitness/",
+    tags: ["HTML5", "CSS3", "JavaScript", "Landing Page", "Conversion"],
+  },
+  {
+    id: 4,
+    title: "Petcare Petshop",
+    description:
+      "Site para petshop com foco em grooming e cuidados veterinários, oferecendo serviços especializados para saúde e bem-estar dos animais de estimação.",
+    image: "/images/website4.webp",
+    githubUrl: "https://github.com/erickreisti/petcare-petshop",
+    liveUrl: "https://erickreisti.github.io/petcare-petshop/",
+    tags: ["HTML5", "CSS3", "JavaScript", "Pet Care", "Services"],
+  },
+  {
+    id: 5,
+    title: "Copa do Mundo 2022",
+    description:
+      "Site conceitual para a Seleção Brasileira na Copa do Mundo FIFA 2022, com design patriótico e navegação temática inspirada no universo do futebol.",
+    image: "/images/website5.webp",
+    githubUrl: "https://github.com/erickreisti/world-cup-2022",
+    liveUrl: null,
+    tags: ["HTML5", "CSS3", "JavaScript", "Sports", "Concept"],
+  },
+  {
+    id: 6,
+    title: "Boi de Ouro",
+    description:
+      "Landing page premium para churrascaria com cardápio digital integrado, sistema de pedidos online e design que une tradição gaúcha à modernidade.",
+    image: "/images/website6.webp",
+    githubUrl: "https://github.com/erickreisti/projectboi",
+    liveUrl: "https://erickreisti.github.io/projectboi/",
+    tags: ["HTML5", "CSS3", "JavaScript", "Restaurant", "E-commerce"],
+  },
+];
 
 // Componente para um único card de Projeto Premium Responsivo
-const ProjectCard: React.FC<{ project: Project; index: number }> = ({
-  project,
-  index,
-}) => {
+const ProjectCard: React.FC<{
+  project: (typeof projects)[0];
+  index: number;
+}> = ({ project, index }) => {
   return (
     <MotionDiv
       initial={{ opacity: 0, y: 40, scale: 0.9 }}
@@ -47,21 +110,33 @@ const ProjectCard: React.FC<{ project: Project; index: number }> = ({
       className="h-full"
     >
       <Card className="flex h-full flex-col overflow-hidden transition-all duration-500 hover:scale-105 bg-slate-900/60 backdrop-blur-xl border border-blue-400/20 lg:border-2 shadow-2xl hover:shadow-blue-500/30 group relative hover-lift">
-        {/* Header do Projeto com Ícone Animado */}
+        {/* Header do Projeto com Imagem */}
         <div className="h-32 lg:h-48 w-full bg-gradient-to-br from-blue-500/15 to-purple-500/10 flex items-center justify-center relative overflow-hidden border-b border-slate-700/50">
-          <div className="text-center relative z-10">
-            <MotionDiv
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              transition={{ type: "spring", stiffness: 300 }}
-              className="mb-2 lg:mb-3"
-            >
-              <Cpu className="h-8 w-8 lg:h-14 lg:w-14 text-blue-400 mx-auto drop-shadow-lg" />
-            </MotionDiv>
-            <span className="text-slate-200 font-heading font-bold text-sm lg:text-lg tracking-wide bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent px-2">
-              {project.title}
-            </span>
+          <div className="relative w-full h-full">
+            <Image
+              src={project.image}
+              alt={project.title}
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/10" />
+          </div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center relative z-10">
+              <MotionDiv
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                className="mb-2 lg:mb-3"
+              >
+                <Cpu className="h-8 w-8 lg:h-14 lg:w-14 text-blue-400 mx-auto drop-shadow-lg" />
+              </MotionDiv>
+              <span className="text-slate-200 font-heading font-bold text-sm lg:text-lg tracking-wide bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent px-2">
+                {project.title}
+              </span>
+            </div>
           </div>
         </div>
+
         <CardHeader className="flex-grow pb-3 lg:pb-4">
           <CardTitle className="text-lg lg:text-xl font-heading font-black text-white group-hover:text-blue-300 transition-colors duration-300 flex items-center justify-between">
             <span className="truncate mr-2">{project.title}</span>
@@ -75,8 +150,8 @@ const ProjectCard: React.FC<{ project: Project; index: number }> = ({
           <CardDescription className="text-sm lg:text-base text-slate-300 leading-relaxed font-sans mt-2 lg:mt-3 line-clamp-3">
             {project.description}
           </CardDescription>
-        </CardHeader>{" "}
-        {/* ✅ Fechamento correto do CardHeader */}
+        </CardHeader>
+
         <CardContent className="pb-3 lg:pb-4">
           <div className="flex flex-wrap gap-1 lg:gap-2">
             {project.tags.slice(0, 3).map((tag, tagIndex) => (
@@ -105,6 +180,7 @@ const ProjectCard: React.FC<{ project: Project; index: number }> = ({
             )}
           </div>
         </CardContent>
+
         <CardFooter className="mt-auto pt-3 lg:pt-4 border-t border-slate-700/50">
           <div className="flex space-x-2 lg:space-x-3 w-full">
             <Button
