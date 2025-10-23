@@ -144,20 +144,55 @@ export const Contact = () => {
       </div>
 
       {/* Elementos Decorativos */}
-      <div className="hidden lg:block absolute top-10 right-10 opacity-10 animate-float-gentle">
-        <Binary className="h-32 w-32 text-blue-400" />
+      <div className="hidden lg:block absolute top-10 right-10 opacity-20 animate-float-gentle">
+        <svg
+          className="h-32 w-32 animate-neon-blue interactive-glow"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+          />
+        </svg>
       </div>
       <div
-        className="hidden lg:block absolute bottom-10 left-10 opacity-10 animate-float-gentle"
+        className="hidden lg:block absolute bottom-10 left-10 opacity-20 animate-float-gentle"
         style={{ animationDelay: "3s" }}
       >
-        <CircuitBoard className="h-32 w-32 text-cyan-400" />
+        <svg
+          className="h-32 w-32 animate-neon-cyan interactive-glow"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+          <path d="M11 9h4a2 2 0 0 0 2-2V3"></path>
+          <circle cx="9" cy="9" r="2"></circle>
+          <path d="M7 21v-4a2 2 0 0 1 2-2h4"></path>
+          <circle cx="15" cy="15" r="2"></circle>
+        </svg>
       </div>
       <div
-        className="hidden lg:block absolute top-20 left-20 opacity-10 animate-float-gentle"
+        className="hidden lg:block absolute top-20 left-20 opacity-20 animate-float-gentle"
         style={{ animationDelay: "6s" }}
       >
-        <Globe className="h-24 w-24 text-purple-400" />
+        <svg
+          className="h-24 w-24 animate-neon-purple interactive-glow"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M13 10V3L4 14h7v7l9-11h-7z"
+          />
+        </svg>
       </div>
 
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
