@@ -18,12 +18,12 @@ import MotionDiv from "@/components/ui/MotionDiv";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
-// Dados da biografia atualizados
+// Dados da biografia atualizados com o novo texto
 const bioData = {
   paragraph1:
-    "Minha paixão por tecnologia começou cedo, mas foi há 5 anos que mergulhei de cabeça no desenvolvimento. Iniciei no Back-end com Node.js e Python, construindo APIs robustas e sistemas escaláveis. A necessidade de criar experiências completas me levou ao Front-end, onde me especializei no ecossistema React e, mais recentemente, Next.js 14+.",
+    "Olá! Sou Erick Reis, um Desenvolvedor FullStack & Arquiteto de Sistemas apaixonado por transformar ideias em soluções digitais robustas e escaláveis. Minha jornada na tecnologia começou com formação em Tecnologia da Informação e Sistemas de Informação, seguida por especialização em Redes de Computadores. Essa base técnica diversificada me proporcionou uma visão holística de sistemas, que hoje aplico no desenvolvimento de aplicações modernas.",
   paragraph2:
-    "Como arquiteto de software, meu foco está em criar soluções que não apenas funcionam, mas excelam. Sou obcecado por performance, código limpo e design systems que escalam. Minha missão é transformar desafios complexos em experiências digitais intuitivas e de alto impacto.",
+    "Acredito que código bem escrito resolve problemas reais. Minha abordagem combina arquitetura limpa, performance como prioridade, segurança desde a concepção e escalabilidade pensada para o crescimento. Minha experiência multidisciplinar em TI me permite entregar soluções completas — desde a modelagem do banco de dados até a experiência do usuário final. Não apenas codifico features, mas orquestro sistemas que funcionam em harmonia.",
   passions: [
     {
       icon: Brain,
@@ -37,13 +37,13 @@ const bioData = {
     },
     {
       icon: Users,
-      text: "Liderança Técnica & Mentoria",
-      description: "Gestão de squads e desenvolvimento de talentos",
+      text: "Visão Holística de Sistemas",
+      description: "Do backend à experiência do usuário final",
     },
     {
       icon: Rocket,
-      text: "Inovação Tecnológica",
-      description: "Serverless, AI/ML, Web3 e tecnologias emergentes",
+      text: "Soluções Escaláveis",
+      description: "Arquitetura preparada para crescimento",
     },
   ],
   highlights: [
@@ -55,14 +55,14 @@ const bioData = {
     },
     {
       icon: Code2,
-      text: "Qualidade",
-      value: "Clean Code",
+      text: "Arquitetura Limpa",
+      value: "Código Sólido",
       color: "from-purple-400 to-pink-400",
     },
     {
       icon: Shield,
-      text: "Confiança",
-      value: "Entrega Garantida",
+      text: "Segurança",
+      value: "Desde a Concepção",
       color: "from-green-400 to-emerald-400",
     },
   ],
