@@ -1,15 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {
-  Download,
-  Mail,
-  Cpu,
-  CircuitBoard,
-  Binary,
-  Cog,
-  Sparkles,
-} from "lucide-react";
+import { Download, Mail, Cpu, CircuitBoard, Binary, Cog } from "lucide-react";
 import { useRef, useEffect, useState, useCallback } from "react";
 import gsap from "gsap";
 import MotionDiv from "@/components/ui/MotionDiv";
@@ -46,7 +38,7 @@ export const Hero = () => {
     return () => window.removeEventListener("resize", checkMobile);
   }, [checkMobile]);
 
-  // Efeito de partículas otimizado para mobile
+  // Efeito de partículas corrigido - sem vazamento
   useEffect(() => {
     if (!mounted || !particlesRef.current) return;
 
@@ -56,14 +48,20 @@ export const Hero = () => {
       const particle = document.createElement("div");
       Object.assign(particle.style, styles);
       particle.className = `particle particle-${type} ${className}`;
+
+      // CORREÇÃO: Garantir que as partículas não saiam do container
+      particle.style.position = "absolute";
+      particle.style.overflow = "hidden";
+      particle.style.willChange = "transform";
+
       return particle;
     };
 
     const particleConfig = {
-      circles: isMobile ? 15 : 50,
-      connections: isMobile ? 8 : 25,
-      stars: isMobile ? 10 : 20,
-      clusters: isMobile ? 5 : 12,
+      circles: isMobile ? 12 : 35,
+      connections: isMobile ? 5 : 15,
+      stars: isMobile ? 8 : 15,
+      clusters: isMobile ? 3 : 8,
     };
 
     particles.innerHTML = "";
@@ -80,9 +78,9 @@ export const Hero = () => {
 
     const shinyTypes = ["particle-shiny", "particle-fast", "particle-large"];
 
-    // Partículas circulares coloridas
+    // Partículas circulares coloridas - CORRIGIDO: limites mais conservadores
     for (let i = 0; i < particleConfig.circles; i++) {
-      const size = Math.random() * (isMobile ? 4 : 10) + 2;
+      const size = Math.random() * (isMobile ? 3 : 8) + 2;
       const color =
         particleColors[Math.floor(Math.random() * particleColors.length)];
       const isShiny = Math.random() > 0.7;
@@ -90,14 +88,18 @@ export const Hero = () => {
         ? shinyTypes[Math.floor(Math.random() * shinyTypes.length)]
         : "";
 
+      // CORREÇÃO: Garantir que as partículas fiquem dentro dos limites visíveis
+      const left = Math.random() * 95 + 2.5; // Evitar bordas
+      const top = Math.random() * 95 + 2.5;
+
       particles.appendChild(
         createParticle(
           "circle",
           {
             width: `${size}px`,
             height: `${size}px`,
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
+            left: `${left}%`,
+            top: `${top}%`,
             zIndex: Math.floor(Math.random() * 10),
           },
           `${color.class} ${shinyClass}`
@@ -105,17 +107,20 @@ export const Hero = () => {
       );
     }
 
-    // Partículas estrela brilhantes
+    // Partículas estrela brilhantes - CORRIGIDO: limites controlados
     for (let i = 0; i < particleConfig.stars; i++) {
-      const size = Math.random() * (isMobile ? 2 : 4) + 1;
+      const size = Math.random() * (isMobile ? 1.5 : 3) + 1;
+      const left = Math.random() * 96 + 2;
+      const top = Math.random() * 96 + 2;
+
       particles.appendChild(
         createParticle(
           "star",
           {
             width: `${size}px`,
             height: `${size}px`,
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
+            left: `${left}%`,
+            top: `${top}%`,
             zIndex: Math.floor(Math.random() * 5),
           },
           "particle-star"
@@ -123,18 +128,20 @@ export const Hero = () => {
       );
     }
 
-    // Clusters de partículas
+    // Clusters de partículas - CORRIGIDO: posicionamento mais controlado
     for (let i = 0; i < particleConfig.clusters; i++) {
       const cluster = document.createElement("div");
       cluster.className = "particle-cluster";
-      cluster.style.left = `${Math.random() * 100}%`;
-      cluster.style.top = `${Math.random() * 100}%`;
-      cluster.style.setProperty("--tx", `${Math.random() * 20 - 10}px`);
-      cluster.style.setProperty("--ty", `${Math.random() * 20 - 10}px`);
+
+      // CORREÇÃO: Clusters dentro de limites seguros
+      cluster.style.left = `${Math.random() * 90 + 5}%`;
+      cluster.style.top = `${Math.random() * 90 + 5}%`;
+      cluster.style.position = "absolute";
+      cluster.style.overflow = "hidden";
 
       // Adicionar partículas ao cluster
-      for (let j = 0; j < (isMobile ? 2 : 4); j++) {
-        const size = Math.random() * 2 + 1;
+      for (let j = 0; j < (isMobile ? 2 : 3); j++) {
+        const size = Math.random() * 1.5 + 0.5;
         const color =
           particleColors[Math.floor(Math.random() * particleColors.length)];
         const miniParticle = createParticle(
@@ -142,8 +149,9 @@ export const Hero = () => {
           {
             width: `${size}px`,
             height: `${size}px`,
-            left: `${Math.random() * 20 - 10}px`,
-            top: `${Math.random() * 20 - 10}px`,
+            left: `${Math.random() * 15 - 7.5}px`, // CORREÇÃO: Movimento limitado
+            top: `${Math.random() * 15 - 7.5}px`,
+            position: "absolute",
           },
           color.class
         );
@@ -153,7 +161,7 @@ export const Hero = () => {
       particles.appendChild(cluster);
     }
 
-    // Conexões de rede coloridas (apenas desktop)
+    // Conexões de rede coloridas (apenas desktop) - CORRIGIDO: limites controlados
     if (!isMobile) {
       const connectionColors = [
         "particle-connection-blue",
@@ -164,13 +172,16 @@ export const Hero = () => {
       for (let i = 0; i < particleConfig.connections; i++) {
         const colorClass =
           connectionColors[Math.floor(Math.random() * connectionColors.length)];
+        const left = Math.random() * 90 + 5;
+        const top = Math.random() * 90 + 5;
+
         particles.appendChild(
           createParticle(
             "connection",
             {
-              width: `${Math.random() * 150 + 50}px`,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              width: `${Math.random() * 100 + 30}px`, // CORREÇÃO: Largura reduzida
+              left: `${left}%`,
+              top: `${top}%`,
               transform: `rotate(${Math.random() * 360}deg)`,
             },
             colorClass
@@ -179,20 +190,23 @@ export const Hero = () => {
       }
     }
 
-    // Partículas especiais grandes (apenas desktop)
+    // Partículas especiais grandes (apenas desktop) - CORRIGIDO: limites seguros
     if (!isMobile) {
-      for (let i = 0; i < 8; i++) {
-        const size = Math.random() * 15 + 8;
+      for (let i = 0; i < 5; i++) {
+        const size = Math.random() * 12 + 6;
         const color =
           particleColors[Math.floor(Math.random() * particleColors.length)];
+        const left = Math.random() * 92 + 4;
+        const top = Math.random() * 92 + 4;
+
         particles.appendChild(
           createParticle(
             "special",
             {
               width: `${size}px`,
               height: `${size}px`,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${left}%`,
+              top: `${top}%`,
             },
             `${color.class} particle-large`
           )
@@ -201,7 +215,10 @@ export const Hero = () => {
     }
 
     return () => {
-      particles.innerHTML = "";
+      // Cleanup mais eficiente
+      if (particles) {
+        particles.innerHTML = "";
+      }
     };
   }, [mounted, isMobile]);
 
@@ -324,11 +341,12 @@ export const Hero = () => {
         );
 
       if (!isMobile) {
+        // CORREÇÃO: Animações com limites controlados para evitar vazamento
         gsap.to(".floating-tech", {
-          y: "random(-30, 30)",
-          x: "random(-20, 20)",
-          rotation: "random(-5, 5)",
-          duration: "random(8, 12)",
+          y: "random(-20, 20)",
+          x: "random(-15, 15)",
+          rotation: "random(-3, 3)",
+          duration: "random(6, 10)",
           repeat: -1,
           yoyo: true,
           ease: "sine.inOut",
@@ -336,8 +354,8 @@ export const Hero = () => {
         });
 
         gsap.to(".stat-item", {
-          y: -10,
-          scale: 1.05,
+          y: -8,
+          scale: 1.03,
           duration: 3,
           repeat: -1,
           yoyo: true,
@@ -345,11 +363,11 @@ export const Hero = () => {
           stagger: 1,
         });
 
-        // Animação para partículas especiais
+        // Animação para partículas especiais - CORREÇÃO: limites reduzidos
         gsap.to(".particle-large", {
-          scale: "random(0.8, 1.2)",
-          rotation: "random(-180, 180)",
-          duration: "random(4, 8)",
+          scale: "random(0.9, 1.1)",
+          rotation: "random(-90, 90)",
+          duration: "random(5, 7)",
           repeat: -1,
           yoyo: true,
           ease: "sine.inOut",
@@ -366,11 +384,11 @@ export const Hero = () => {
         ease: "sine.inOut",
       });
 
-      // Animação para clusters
+      // Animação para clusters - CORREÇÃO: movimento mais contido
       gsap.to(".particle-cluster", {
-        x: "random(-10, 10)",
-        y: "random(-10, 10)",
-        duration: "random(6, 12)",
+        x: "random(-5, 5)",
+        y: "random(-5, 5)",
+        duration: "random(8, 10)",
         repeat: -1,
         yoyo: true,
         ease: "sine.inOut",
@@ -455,14 +473,17 @@ export const Hero = () => {
       id="hero"
       className="min-h-screen relative overflow-hidden bg-slate-950 pt-16 pb-16 md:pt-32 md:pb-32"
     >
-      {/* Background Elements - Otimizado para mobile COM MAIS PARTÍCULAS */}
-      <div className="hero-bg-elements">
+      {/* CORREÇÃO: Container de partículas com overflow hidden e limites estritos */}
+      <div className="hero-bg-elements absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900/20 to-blue-900/10" />
 
-        {/* Container de partículas - AGORA COM MAIS PARTÍCULAS */}
+        {/* Container de partículas - CORRIGIDO: overflow hidden e limites estritos */}
         <div
           ref={particlesRef}
           className="absolute inset-0 pointer-events-none overflow-hidden"
+          style={{
+            clipPath: "inset(0 0 0 0)", // Garante que nada vaze
+          }}
         />
 
         {/* Elementos apenas para desktop */}

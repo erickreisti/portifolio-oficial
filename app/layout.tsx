@@ -129,16 +129,18 @@ export default function RootLayout({
       </head>
       <body
         className={cn(
-          "min-h-screen bg-slate-950 text-white font-sans antialiased",
+          "min-h-screen bg-slate-950 text-white font-sans antialiased overflow-x-hidden",
           poppins.variable,
           openSans.variable
         )}
         suppressHydrationWarning
       >
-        <ThemeFlashPrevent />
-        <LoadingProvider>
-          <ThemeProvider>{children}</ThemeProvider>
-        </LoadingProvider>
+        <div className="overflow-x-hidden w-full">
+          <ThemeFlashPrevent />
+          <LoadingProvider>
+            <ThemeProvider>{children}</ThemeProvider>
+          </LoadingProvider>
+        </div>
       </body>
     </html>
   );
