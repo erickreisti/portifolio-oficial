@@ -14,7 +14,6 @@ import {
   Phone,
   Globe,
   Rocket,
-  Satellite,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -119,7 +118,7 @@ export const Contact = () => {
         />
       </div>
 
-      {/* Partículas de Fundo - Reduzidas para mobile */}
+      {/* Partículas de Fundo */}
       <div className="absolute inset-0">
         {[...Array(8)].map((_, i) => (
           <div
@@ -135,7 +134,7 @@ export const Contact = () => {
         ))}
       </div>
 
-      {/* Elementos Decorativos - Escondidos em mobile */}
+      {/* Elementos Decorativos */}
       <div className="hidden lg:block absolute top-10 right-10 opacity-5 animate-float-slow">
         <Binary className="h-32 w-32 text-blue-400" />
       </div>
@@ -153,7 +152,7 @@ export const Contact = () => {
       </div>
 
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header da Seção - Premium Responsivo */}
+        {/* Header da Seção */}
         <MotionDiv
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -180,7 +179,7 @@ export const Contact = () => {
           >
             <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-heading font-black text-white mt-2 lg:mt-4 px-4 lg:px-0">
               VAMOS CRIAR{" "}
-              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent animate-gradient-x">
+              <span className="text-gradient-animated animate-gradient-x">
                 JUNTOS
               </span>
             </h1>
@@ -192,7 +191,7 @@ export const Contact = () => {
         </MotionDiv>
 
         <div className="grid grid-cols-1 gap-6 lg:gap-8 lg:grid-cols-3">
-          {/* Informações de Contato - Premium Responsivo */}
+          {/* Informações de Contato */}
           <MotionDiv
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -200,10 +199,10 @@ export const Contact = () => {
             viewport={{ once: true, amount: 0.2 }}
             className="lg:col-span-1"
           >
-            <Card className="h-full bg-slate-900/60 backdrop-blur-xl border border-blue-400/20 lg:border-2 shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:scale-105 group relative overflow-hidden">
+            <Card className="h-full glass-premium border border-blue-400/20 shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:scale-105 group card-glow">
               <CardHeader className="pb-4 lg:pb-6 border-b border-slate-700/50">
                 <CardTitle className="text-xl lg:text-2xl font-heading font-black text-blue-400 flex items-center">
-                  <Cpu className="h-5 w-5 lg:h-6 lg:w-6 mr-2 lg:mr-3" />
+                  <Cpu className="h-5 w-5 lg:h-6 lg:w-6 mr-2 lg:mr-3 filter-glow" />
                   CONECTE-SE
                 </CardTitle>
                 <p className="text-slate-300 text-xs lg:text-sm mt-1 lg:mt-2 font-sans leading-relaxed">
@@ -215,8 +214,8 @@ export const Contact = () => {
               <CardContent className="space-y-4 lg:space-y-6 pt-4 lg:pt-6">
                 <div className="space-y-4 lg:space-y-6">
                   <div className="flex items-start space-x-3 lg:space-x-4 group p-3 lg:p-4 rounded-lg lg:rounded-xl hover:bg-blue-500/10 transition-all duration-300 border border-transparent hover:border-blue-400/30 cursor-pointer">
-                    <div className="h-10 w-10 lg:h-12 lg:w-12 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center group-hover:from-blue-500/30 group-hover:to-purple-500/30 transition-all duration-300 border border-blue-400/30 flex-shrink-0">
-                      <Mail className="h-4 w-4 lg:h-5 lg:w-5 text-blue-400 group-hover:text-blue-300 transition-colors duration-300" />
+                    <div className="h-10 w-10 lg:h-12 lg:w-12 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center group-hover:from-blue-500/30 group-hover:to-purple-500/30 transition-all duration-300 border border-blue-400/30 flex-shrink-0 neon-pulse">
+                      <Mail className="h-4 w-4 lg:h-5 lg:w-5 text-blue-400 group-hover:text-blue-300 transition-colors duration-300 filter-glow" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="font-heading font-bold text-white group-hover:text-blue-300 transition-colors duration-300 text-sm lg:text-base">
@@ -232,8 +231,8 @@ export const Contact = () => {
                   </div>
 
                   <div className="flex items-start space-x-3 lg:space-x-4 group p-3 lg:p-4 rounded-lg lg:rounded-xl hover:bg-cyan-500/10 transition-all duration-300 border border-transparent hover:border-cyan-400/30 cursor-pointer">
-                    <div className="h-10 w-10 lg:h-12 lg:w-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center group-hover:from-cyan-500/30 group-hover:to-blue-500/30 transition-all duration-300 border border-cyan-400/30 flex-shrink-0">
-                      <MapPin className="h-4 w-4 lg:h-5 lg:w-5 text-cyan-400 group-hover:text-cyan-300 transition-colors duration-300" />
+                    <div className="h-10 w-10 lg:h-12 lg:w-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center group-hover:from-cyan-500/30 group-hover:to-blue-500/30 transition-all duration-300 border border-cyan-400/30 flex-shrink-0 neon-pulse">
+                      <MapPin className="h-4 w-4 lg:h-5 lg:w-5 text-cyan-400 group-hover:text-cyan-300 transition-colors duration-300 filter-glow" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="font-heading font-bold text-white group-hover:text-cyan-300 transition-colors duration-300 text-sm lg:text-base">
@@ -249,8 +248,8 @@ export const Contact = () => {
                   </div>
 
                   <div className="flex items-start space-x-3 lg:space-x-4 group p-3 lg:p-4 rounded-lg lg:rounded-xl hover:bg-purple-500/10 transition-all duration-300 border border-transparent hover:border-purple-400/30 cursor-pointer">
-                    <div className="h-10 w-10 lg:h-12 lg:w-12 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center group-hover:from-purple-500/30 group-hover:to-pink-500/30 transition-all duration-300 border border-purple-400/30 flex-shrink-0">
-                      <Phone className="h-4 w-4 lg:h-5 lg:w-5 text-purple-400 group-hover:text-purple-300 transition-colors duration-300" />
+                    <div className="h-10 w-10 lg:h-12 lg:w-12 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center group-hover:from-purple-500/30 group-hover:to-pink-500/30 transition-all duration-300 border border-purple-400/30 flex-shrink-0 neon-pulse">
+                      <Phone className="h-4 w-4 lg:h-5 lg:w-5 text-purple-400 group-hover:text-purple-300 transition-colors duration-300 filter-glow" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="font-heading font-bold text-white group-hover:text-purple-300 transition-colors duration-300 text-sm lg:text-base">
@@ -268,7 +267,7 @@ export const Contact = () => {
 
                 <div className="pt-3 lg:pt-4 border-t border-slate-700/50">
                   <p className="text-slate-300 text-xs lg:text-sm font-sans leading-relaxed">
-                    <Sparkles className="h-3 w-3 lg:h-4 lg:w-4 text-blue-400 inline mr-1 lg:mr-2" />
+                    <Sparkles className="h-3 w-3 lg:h-4 lg:w-4 text-blue-400 inline mr-1 lg:mr-2 animate-pulse" />
                     Vamos transformar suas ideias em soluções digitais
                     extraordinárias com tecnologia de ponta e criatividade.
                   </p>
@@ -277,7 +276,7 @@ export const Contact = () => {
             </Card>
           </MotionDiv>
 
-          {/* Formulário de Contato - Premium Responsivo */}
+          {/* Formulário de Contato */}
           <MotionDiv
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -285,10 +284,10 @@ export const Contact = () => {
             viewport={{ once: true, amount: 0.2 }}
             className="lg:col-span-2"
           >
-            <Card className="h-full bg-slate-900/60 backdrop-blur-xl border border-purple-400/20 lg:border-2 shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 hover:scale-105 group relative overflow-hidden">
+            <Card className="h-full glass-premium border border-purple-400/20 shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 hover:scale-105 group card-glow">
               <CardHeader className="pb-4 lg:pb-6 border-b border-slate-700/50">
                 <CardTitle className="text-xl lg:text-2xl font-heading font-black text-purple-400 flex items-center">
-                  <Send className="h-5 w-5 lg:h-6 lg:w-6 mr-2 lg:mr-3" />
+                  <Send className="h-5 w-5 lg:h-6 lg:w-6 mr-2 lg:mr-3 filter-glow" />
                   MENSAGEM RÁPIDA
                 </CardTitle>
                 <p className="text-slate-300 text-xs lg:text-sm mt-1 lg:mt-2 font-sans leading-relaxed">
@@ -314,7 +313,7 @@ export const Contact = () => {
                         placeholder="Como prefere ser chamado?"
                         required
                         disabled={isLoading}
-                        className="h-10 lg:h-12 text-sm lg:text-base font-sans transition-all duration-300 focus:scale-[1.02] focus:border-blue-400 border border-slate-700/50 lg:border-2 bg-slate-800/50 backdrop-blur-sm text-white placeholder:text-slate-400 disabled:opacity-50 rounded-lg lg:rounded-xl"
+                        className="h-10 lg:h-12 text-sm lg:text-base font-sans transition-all duration-300 focus:scale-[1.02] focus:border-blue-400 border border-slate-700/50 bg-slate-800/50 text-white placeholder:text-slate-400 disabled:opacity-50 rounded-lg lg:rounded-xl"
                       />
                       {formErrors.name && (
                         <p className="text-red-400 text-xs lg:text-sm font-sans mt-1 flex items-center">
@@ -337,7 +336,7 @@ export const Contact = () => {
                         placeholder="seu.melhor@email.com"
                         required
                         disabled={isLoading}
-                        className="h-10 lg:h-12 text-sm lg:text-base font-sans transition-all duration-300 focus:scale-[1.02] focus:border-blue-400 border border-slate-700/50 lg:border-2 bg-slate-800/50 backdrop-blur-sm text-white placeholder:text-slate-400 disabled:opacity-50 rounded-lg lg:rounded-xl"
+                        className="h-10 lg:h-12 text-sm lg:text-base font-sans transition-all duration-300 focus:scale-[1.02] focus:border-blue-400 border border-slate-700/50 bg-slate-800/50 text-white placeholder:text-slate-400 disabled:opacity-50 rounded-lg lg:rounded-xl"
                       />
                       {formErrors.email && (
                         <p className="text-red-400 text-xs lg:text-sm font-sans mt-1 flex items-center">
@@ -362,7 +361,7 @@ export const Contact = () => {
                       placeholder="Ex: Site Institucional, App Mobile, Sistema Web..."
                       required
                       disabled={isLoading}
-                      className="h-10 lg:h-12 text-sm lg:text-base font-sans transition-all duration-300 focus:scale-[1.02] focus:border-purple-400 border border-slate-700/50 lg:border-2 bg-slate-800/50 backdrop-blur-sm text-white placeholder:text-slate-400 disabled:opacity-50 rounded-lg lg:rounded-xl"
+                      className="h-10 lg:h-12 text-sm lg:text-base font-sans transition-all duration-300 focus:scale-[1.02] focus:border-purple-400 border border-slate-700/50 bg-slate-800/50 text-white placeholder:text-slate-400 disabled:opacity-50 rounded-lg lg:rounded-xl"
                     />
                     {formErrors.subject && (
                       <p className="text-red-400 text-xs lg:text-sm font-sans mt-1 flex items-center">
@@ -386,7 +385,7 @@ export const Contact = () => {
                       placeholder="Descreva sua visão, objetivos, tecnologias preferidas, prazo estimado e qualquer detalhe relevante..."
                       required
                       disabled={isLoading}
-                      className="text-sm lg:text-base font-sans transition-all duration-300 focus:scale-[1.02] focus:border-cyan-400 border border-slate-700/50 lg:border-2 bg-slate-800/50 backdrop-blur-sm text-white placeholder:text-slate-400 resize-none disabled:opacity-50 rounded-lg lg:rounded-xl min-h-[100px] lg:min-h-[140px]"
+                      className="text-sm lg:text-base font-sans transition-all duration-300 focus:scale-[1.02] focus:border-cyan-400 border border-slate-700/50 bg-slate-800/50 text-white placeholder:text-slate-400 resize-none disabled:opacity-50 rounded-lg lg:rounded-xl min-h-[100px] lg:min-h-[140px]"
                     />
                     {formErrors.message && (
                       <p className="text-red-400 text-xs lg:text-sm font-sans mt-1 flex items-center">
@@ -401,7 +400,7 @@ export const Contact = () => {
                     <MotionDiv
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="p-3 lg:p-4 bg-red-500/10 border border-red-400/30 lg:border-2 rounded-lg lg:rounded-xl flex items-center space-x-2 lg:space-x-3 backdrop-blur-sm"
+                      className="p-3 lg:p-4 bg-red-500/10 border border-red-400/30 rounded-lg lg:rounded-xl flex items-center space-x-2 lg:space-x-3 backdrop-blur-sm"
                     >
                       <AlertCircle className="h-4 w-4 lg:h-5 lg:w-5 text-red-400 flex-shrink-0" />
                       <p className="text-red-400 text-xs lg:text-sm font-sans font-semibold tracking-wide">
@@ -414,7 +413,7 @@ export const Contact = () => {
                     <MotionDiv
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="p-3 lg:p-4 bg-green-500/10 border border-green-400/30 lg:border-2 rounded-lg lg:rounded-xl flex items-center space-x-2 lg:space-x-3 backdrop-blur-sm"
+                      className="p-3 lg:p-4 bg-green-500/10 border border-green-400/30 rounded-lg lg:rounded-xl flex items-center space-x-2 lg:space-x-3 backdrop-blur-sm"
                     >
                       <CheckCircle className="h-4 w-4 lg:h-5 lg:w-5 text-green-400 flex-shrink-0" />
                       <div>
@@ -428,54 +427,25 @@ export const Contact = () => {
                     </MotionDiv>
                   )}
 
-                  {/* Botão com Loading Intergalático */}
+                  {/* Botão com Loading usando animações do CSS */}
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full h-12 lg:h-14 text-sm lg:text-base font-heading font-bold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-lg lg:rounded-xl shadow-2xl hover:shadow-blue-500/40 transition-all duration-500 hover:scale-105 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 border-0 tracking-widest intergalactic-loading"
+                    className="w-full h-12 lg:h-14 text-sm lg:text-base font-heading font-bold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-lg lg:rounded-xl shadow-2xl hover:shadow-blue-500/40 transition-all duration-500 hover:scale-105 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 border-0 tracking-widest button-glow"
                   >
-                    {/* Conteúdo normal */}
-                    <span
-                      className={`flex items-center justify-center transition-all duration-300 ${
-                        isLoading ? "opacity-0" : "opacity-100"
-                      }`}
-                    >
-                      <Send className="mr-2 lg:mr-3 h-4 w-4 lg:h-5 lg:w-5 group-hover:translate-x-1 transition-transform duration-200" />
-                      ENVIAR PROPOSTA
-                    </span>
-
-                    {/* Loading Intergalático */}
-                    {isLoading && (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="rocket-container relative">
-                          {/* Foguete central */}
-                          <Rocket className="h-5 w-5 lg:h-6 lg:w-6 text-cyan-400 animate-rocket-launch" />
-
-                          {/* Satélites orbitais */}
-                          <div className="satellite bg-blue-400 animate-satellite-orbit" />
-                          <div
-                            className="satellite bg-purple-400 animate-satellite-orbit"
-                            style={{ animationDelay: "1s" }}
-                          />
-                          <div
-                            className="satellite bg-cyan-400 animate-satellite-orbit"
-                            style={{ animationDelay: "2s" }}
-                          />
-                        </div>
-
-                        {/* Texto animado */}
-                        <span className="text-cyan-300 font-mono text-xs lg:text-sm animate-pulse ml-3">
-                          TRANSMITINDO...
+                    {!isLoading ? (
+                      <span className="flex items-center justify-center">
+                        <Send className="mr-2 lg:mr-3 h-4 w-4 lg:h-5 lg:w-5 group-hover:translate-x-1 transition-transform duration-200" />
+                        ENVIAR PROPOSTA
+                      </span>
+                    ) : (
+                      <div className="flex items-center justify-center space-x-2">
+                        {/* Spinner com animação do CSS */}
+                        <div className="w-4 h-4 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin-slow" />
+                        <span className="text-cyan-300 font-mono text-xs lg:text-sm animate-pulse">
+                          ENVIANDO...
                         </span>
                       </div>
-                    )}
-
-                    {/* Efeitos de brilho durante o loading */}
-                    {isLoading && (
-                      <>
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-cosmic-shimmer rounded-lg lg:rounded-xl" />
-                        <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 rounded-lg lg:rounded-xl blur opacity-30 animate-nebula-glow" />
-                      </>
                     )}
                   </Button>
                 </form>
@@ -484,7 +454,7 @@ export const Contact = () => {
           </MotionDiv>
         </div>
 
-        {/* CTA Final - Premium Responsivo */}
+        {/* CTA Final */}
         <MotionDiv
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -492,7 +462,7 @@ export const Contact = () => {
           viewport={{ once: true }}
           className="mt-12 lg:mt-16 px-4 lg:px-0"
         >
-          <div className="bg-gradient-to-r from-slate-900/60 to-slate-800/40 backdrop-blur-xl p-6 lg:p-8 rounded-xl lg:rounded-2xl border border-slate-700/50 shadow-2xl relative overflow-hidden text-center">
+          <div className="glass-premium p-6 lg:p-8 rounded-xl lg:rounded-2xl border border-slate-700/50 shadow-2xl relative overflow-hidden text-center">
             <div className="relative z-10">
               <h3 className="text-xl lg:text-2xl font-heading font-black text-white mb-2 lg:mb-3">
                 Vamos criar algo extraordinário juntos? 🚀

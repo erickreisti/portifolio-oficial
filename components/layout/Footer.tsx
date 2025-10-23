@@ -4,10 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   Github,
-  Linkedin,
-  Mail,
+  Instagram,
   Heart,
-  ArrowUp,
   Cpu,
   CircuitBoard,
   Rocket,
@@ -17,26 +15,38 @@ import {
   AlertTriangle,
 } from "lucide-react";
 
+const XIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path d="M13.795 10.533 20.68 2h-3.073l-5.255 6.517L7.69 2H1l7.806 10.91L1.47 22h3.074l5.705-7.07L15.31 22H22l-8.205-11.467Zm-2.38 2.95L9.97 11.464 4.36 3.627h2.31l4.528 6.317 1.443 2.02 6.018 8.409h-2.31l-4.934-6.89Z" />
+  </svg>
+);
+
 // Links atualizados com suas informações reais
 const socialLinks = [
   {
     icon: Github,
-    href: "https://github.com/erickreis",
+    href: "https://github.com/erickreisti",
     label: "GitHub",
     color: "from-gray-400 to-white",
     hoverColor: "from-white to-gray-300",
   },
   {
-    icon: Linkedin,
-    href: "https://linkedin.com/in/erick-reis",
-    label: "LinkedIn",
+    icon: Instagram,
+    href: "https://www.instagram.com/ereislimati/",
+    label: "Instagram",
     color: "from-blue-400 to-blue-600",
     hoverColor: "from-blue-300 to-blue-500",
   },
   {
-    icon: Mail,
-    href: "mailto:erickreisti@gmail.com",
-    label: "Email",
+    icon: XIcon,
+    href: "https://x.com/ereislima",
+    label: "X",
     color: "from-red-400 to-red-600",
     hoverColor: "from-red-300 to-red-500",
   },
