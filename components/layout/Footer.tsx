@@ -14,6 +14,7 @@ import {
   Sparkles,
   Globe,
   Zap,
+  AlertTriangle,
 } from "lucide-react";
 
 // Links atualizados com suas informações reais
@@ -93,65 +94,83 @@ export const Footer = () => {
         <Globe className="h-20 w-20 text-purple-400" />
       </div>
 
-      {/* BURACO NEGRO GIRATÓRIO */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64">
+      {/* BURACO NEGRO GIGANTE - AUMENTADO */}
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96">
         {/* Anel externo giratório */}
-        <div className="absolute inset-0 rounded-full border-2 border-transparent bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-cyan-500/20 animate-spin-slow">
+        <div className="absolute inset-0 rounded-full border-4 border-transparent bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-cyan-500/30 animate-spin-slow">
           <div
-            className="absolute inset-4 rounded-full border border-blue-400/30 animate-spin-slow"
-            style={{ animationDirection: "reverse", animationDuration: "8s" }}
+            className="absolute inset-6 rounded-full border-2 border-blue-400/40 animate-spin-slow"
+            style={{ animationDirection: "reverse", animationDuration: "6s" }}
           />
         </div>
 
         {/* Vortex central */}
-        <div className="absolute inset-8 rounded-full bg-gradient-to-br from-slate-900 via-slate-950 to-black shadow-2xl animate-pulse-slow">
+        <div className="absolute inset-12 rounded-full bg-gradient-to-br from-slate-900 via-slate-950 to-black shadow-2xl animate-pulse-slow">
           {/* Efeito de profundidade */}
           <div
-            className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500/10 to-purple-500/10 animate-pulse"
-            style={{ animationDuration: "4s" }}
+            className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 animate-pulse"
+            style={{ animationDuration: "3s" }}
           />
 
-          {/* Textos orbitais */}
+          {/* Textos orbitais ALARMANTES */}
           <div
             className="absolute inset-0 animate-spin-slow"
-            style={{ animationDuration: "15s" }}
+            style={{ animationDuration: "12s" }}
           >
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-              <span className="text-xs font-mono font-bold text-blue-400 whitespace-nowrap">
-                NÃO ENTRE NO BURACO NEGRO!
-              </span>
+              <div className="flex items-center space-x-2 bg-red-900/80 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-red-500/60 shadow-lg shadow-red-500/30">
+                <AlertTriangle className="h-4 w-4 text-red-400 animate-pulse" />
+                <span className="text-sm font-mono font-black text-red-300 whitespace-nowrap animate-pulse">
+                  ⚠️ PERIGO! NÃO ENTRE NO BURACO NEGRO! ⚠️
+                </span>
+                <AlertTriangle className="h-4 w-4 text-red-400 animate-pulse" />
+              </div>
             </div>
             <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
-              <span className="text-xs font-mono font-bold text-purple-400 whitespace-nowrap">
-                VIAJE COMIGO!
+              <span className="text-sm font-mono font-bold text-purple-400 whitespace-nowrap bg-purple-900/50 px-3 py-1 rounded-full">
+                🚀 VIAJE COMIGO PARA O INFINITO! 🚀
               </span>
             </div>
           </div>
 
-          {/* Partículas sendo sugadas */}
-          <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-cyan-400 rounded-full animate-black-hole-suction" />
+          {/* Partículas sendo sugadas - MAIORES */}
+          <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-cyan-400 rounded-full animate-black-hole-suction shadow-lg shadow-cyan-400/50" />
           <div
-            className="absolute -right-2 top-1/2 transform -translate-y-1/2 w-1 h-1 bg-blue-400 rounded-full animate-black-hole-suction"
-            style={{ animationDelay: "0.5s" }}
+            className="absolute -right-4 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-blue-400 rounded-full animate-black-hole-suction shadow-lg shadow-blue-400/50"
+            style={{ animationDelay: "0.3s" }}
           />
           <div
-            className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-purple-400 rounded-full animate-black-hole-suction"
-            style={{ animationDelay: "1s" }}
+            className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-purple-400 rounded-full animate-black-hole-suction shadow-lg shadow-purple-400/50"
+            style={{ animationDelay: "0.6s" }}
           />
           <div
-            className="absolute -left-2 top-1/2 transform -translate-y-1/2 w-1 h-1 bg-cyan-400 rounded-full animate-black-hole-suction"
+            className="absolute -left-4 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-cyan-400 rounded-full animate-black-hole-suction shadow-lg shadow-cyan-400/50"
+            style={{ animationDelay: "0.9s" }}
+          />
+
+          {/* Partículas adicionais para mais drama */}
+          <div
+            className="absolute -top-6 left-1/4 transform -translate-x-1/2 w-1.5 h-1.5 bg-red-400 rounded-full animate-black-hole-suction shadow-lg shadow-red-400/50"
+            style={{ animationDelay: "1.2s" }}
+          />
+          <div
+            className="absolute -right-6 top-1/4 transform -translate-y-1/2 w-1.5 h-1.5 bg-yellow-400 rounded-full animate-black-hole-suction shadow-lg shadow-yellow-400/50"
             style={{ animationDelay: "1.5s" }}
           />
         </div>
 
-        {/* Anéis concêntricos */}
+        {/* Anéis concêntricos - MAIORES */}
         <div
-          className="absolute inset-4 rounded-full border border-cyan-400/20 animate-pulse-slow"
-          style={{ animationDuration: "3s" }}
+          className="absolute inset-6 rounded-full border-2 border-cyan-400/30 animate-pulse-slow"
+          style={{ animationDuration: "2s" }}
         />
         <div
-          className="absolute inset-10 rounded-full border border-purple-400/20 animate-pulse-slow"
-          style={{ animationDuration: "5s", animationDelay: "1s" }}
+          className="absolute inset-16 rounded-full border-2 border-purple-400/30 animate-pulse-slow"
+          style={{ animationDuration: "4s", animationDelay: "0.5s" }}
+        />
+        <div
+          className="absolute inset-24 rounded-full border border-red-400/20 animate-pulse-slow"
+          style={{ animationDuration: "6s", animationDelay: "1s" }}
         />
       </div>
 
@@ -194,7 +213,7 @@ export const Footer = () => {
                 Erick Reis
               </span>
               <span className="text-sm text-slate-400 font-mono tracking-widest group-hover:text-slate-300 transition-colors duration-300">
-                FULLSTACK ARCHITECT
+                FULLSTACK DEV
               </span>
               <div className="flex items-center space-x-2 mt-1">
                 <Zap className="h-3 w-3 text-amber-400 animate-pulse" />
@@ -292,7 +311,7 @@ export const Footer = () => {
           <div className="inline-flex items-center space-x-4 bg-slate-900/40 backdrop-blur-xl px-6 py-4 rounded-2xl border border-slate-700/50 hover:border-blue-400/30 transition-all duration-500 group cursor-pointer">
             <Sparkles className="h-5 w-5 text-blue-400 animate-pulse group-hover:scale-110 transition-transform duration-300" />
             <p className="text-slate-400 text-sm font-mono font-bold tracking-widest group-hover:text-slate-300 transition-colors duration-300">
-              PRONTO PARA O PRÓXIMO DESAFIO COSMICO! 🚀
+              PRONTO PARA O PRÓXIMO DESAFIO CÓSMICO! 🚀
             </p>
             <div className="flex space-x-1">
               <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse" />
