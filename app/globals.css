@@ -385,3 +385,40 @@ body {
     animation: none;
   }
 }
+
+/* ===== CURSOR OTIMIZADO ===== */
+* {
+  cursor: none !important;
+}
+
+/* Hardware acceleration para máximo desempenho */
+.fixed.pointer-events-none.z-\\[9999\\] {
+  display: block !important;
+  backface-visibility: hidden;
+  perspective: 1000;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Transições mais rápidas apenas para transform */
+.transition-transform {
+  transition-property: transform;
+  transition-timing-function: linear;
+}
+
+/* Dispositivos touch - mostrar cursor normal */
+@media (hover: none) and (pointer: coarse) {
+  * {
+    cursor: auto !important;
+  }
+
+  .fixed.pointer-events-none.z-\\[9999\\] {
+    display: none !important;
+  }
+}
+
+/* Reduzir movimento para acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+  .transition-transform {
+    transition: none;
+  }
+}
