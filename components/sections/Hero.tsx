@@ -24,12 +24,10 @@ export const Hero = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
 
-  // Otimização: useCallback para evitar recriações desnecessárias
   const checkMobile = useCallback(() => {
     setIsMobile(window.innerWidth < 768);
   }, []);
 
-  // Mouse move effect otimizado - MOVIDO PARA FORA DO useEffect
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
       if (!isMobile) {
@@ -64,7 +62,6 @@ export const Hero = () => {
 
     const particleConfig = {
       circles: isMobile ? 12 : 30,
-      tech: isMobile ? 8 : 20,
       connections: isMobile ? 6 : 15,
     };
 
@@ -119,7 +116,6 @@ export const Hero = () => {
     if (!mounted || !heroRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Configuração de performance
       gsap.config({
         force3D: true,
         autoSleep: 60,
@@ -129,7 +125,6 @@ export const Hero = () => {
         defaults: { ease: "power3.out" },
       });
 
-      // Animação de entrada sequencial
       masterTimeline
         .fromTo(
           ".hero-bg-elements",
@@ -234,9 +229,7 @@ export const Hero = () => {
           "-=0.5"
         );
 
-      // Animações contínuas apenas para desktop
       if (!isMobile) {
-        // Floating elements com física mais realista
         gsap.to(".floating-tech", {
           y: "random(-30, 30)",
           x: "random(-20, 20)",
@@ -248,7 +241,6 @@ export const Hero = () => {
           stagger: 0.5,
         });
 
-        // Efeito de respiração nos stats
         gsap.to(".stat-item", {
           y: -10,
           scale: 1.05,
@@ -260,7 +252,6 @@ export const Hero = () => {
         });
       }
 
-      // Efeito de pulso sutil nos CTAs
       gsap.to(".cta-button", {
         scale: 1.02,
         duration: 2,
@@ -270,7 +261,6 @@ export const Hero = () => {
       });
     }, heroRef);
 
-    // Adiciona event listener para mouse move
     if (!isMobile) {
       window.addEventListener("mousemove", handleMouseMove, { passive: true });
     }
@@ -281,9 +271,8 @@ export const Hero = () => {
         window.removeEventListener("mousemove", handleMouseMove);
       }
     };
-  }, [mounted, isMobile, handleMouseMove]); // Adicionado handleMouseMove como dependência
+  }, [mounted, isMobile, handleMouseMove]);
 
-  // Efeito de parallax suave
   const parallaxStyle = !isMobile
     ? {
         transform: `translate3d(${mousePosition.x * 0.3}px, ${
@@ -306,7 +295,27 @@ export const Hero = () => {
     element?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  // Loading state otimizado
+  const statsData = [
+    {
+      number: "50+",
+      label: "Projetos Concluídos",
+      icon: "🚀",
+      color: "from-blue-400 to-cyan-400",
+    },
+    {
+      number: "5+",
+      label: "Anos de Experiência",
+      icon: "💎",
+      color: "from-purple-400 to-pink-400",
+    },
+    {
+      number: "100%",
+      label: "Qualidade Garantida",
+      icon: "⭐",
+      color: "from-amber-400 to-yellow-400",
+    },
+  ];
+
   if (!mounted) {
     return (
       <section className="min-h-screen relative overflow-hidden bg-slate-950 pt-20 pb-20 md:pt-32 md:pb-32">
@@ -323,30 +332,6 @@ export const Hero = () => {
     );
   }
 
-  const statsData = [
-    {
-      number: "50+",
-      label: "Projetos Concluídos",
-      icon: "🚀",
-      color: "from-blue-400 to-cyan-400",
-      gradient: "bg-gradient-to-r from-blue-400 to-cyan-400",
-    },
-    {
-      number: "5+",
-      label: "Anos de Experiência",
-      icon: "💎",
-      color: "from-purple-400 to-pink-400",
-      gradient: "bg-gradient-to-r from-purple-400 to-pink-400",
-    },
-    {
-      number: "100%",
-      label: "Qualidade Garantida",
-      icon: "⭐",
-      color: "from-amber-400 to-yellow-400",
-      gradient: "bg-gradient-to-r from-amber-400 to-yellow-400",
-    },
-  ];
-
   return (
     <section
       ref={heroRef}
@@ -355,7 +340,7 @@ export const Hero = () => {
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
-      {/* Background Elements Otimizados */}
+      {/* Background Elements */}
       <div className="hero-bg-elements">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900/20 to-blue-900/10" />
 
@@ -364,7 +349,6 @@ export const Hero = () => {
           className="absolute inset-0 pointer-events-none"
         />
 
-        {/* Elementos Tech Flutuantes com Performance */}
         {!isMobile && (
           <div className="floating-elements">
             <div className="absolute top-32 left-10 floating-tech">
@@ -391,7 +375,6 @@ export const Hero = () => {
           </div>
         )}
 
-        {/* Efeitos de Luz com Performance */}
         <div className="light-effects">
           <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse-slow" />
           <div
@@ -407,30 +390,30 @@ export const Hero = () => {
 
       {/* Conteúdo Principal */}
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="min-h-[70vh] md:min-h-[75vh] flex items-center">
-          <div className="text-center w-full">
-            {/* Título Principal com Efeitos */}
-            <div ref={titleRef} className="main-title mb-8 md:mb-16">
-              <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-heading font-black text-white mb-6 md:mb-12 leading-tight">
+        <div className="min-h-[70vh] md:min-h-[75vh] flex flex-col lg:flex-row items-center justify-between">
+          {/* Conteúdo de Texto e CTAs - Ocupa mais espaço no desktop */}
+          <div className="text-center lg:text-left lg:w-2/3 xl:w-3/4 lg:pr-8 xl:pr-16">
+            {/* Título Principal */}
+            <div ref={titleRef} className="main-title mb-8 md:mb-12">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-heading font-black text-white mb-6 md:mb-10 leading-tight">
                 <span className="title-line-1 block bg-gradient-to-r from-white via-blue-100 to-cyan-100 bg-clip-text text-transparent mb-4 md:mb-6">
                   IDEIAS EXTRAORDINÁRIAS
                 </span>
                 <span className="title-line-2 block bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent relative">
                   CÓDIGO EXCEPCIONAL
-                  {/* Efeito de brilho no título */}
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-400/0 via-blue-400/20 to-cyan-400/0 blur-xl opacity-0 hover:opacity-100 transition-opacity duration-1000" />
                 </span>
               </h1>
             </div>
 
-            {/* Descrição Dinâmica */}
+            {/* Descrição */}
             <MotionDiv
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="hero-description mb-8 md:mb-12"
+              className="hero-description mb-8 md:mb-10"
             >
-              <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 font-sans font-light max-w-4xl mx-auto leading-relaxed px-4 md:px-0">
+              <p className="text-lg sm:text-xl md:text-2xl lg:text-xl xl:text-2xl text-white/90 font-sans font-light max-w-3xl lg:max-w-2xl xl:max-w-3xl mx-auto lg:mx-0 leading-relaxed">
                 Transformo{" "}
                 <span className="text-blue-300 font-semibold relative inline-block">
                   <span className="relative z-10">visões ambiciosas</span>
@@ -456,8 +439,8 @@ export const Hero = () => {
               </p>
             </MotionDiv>
 
-            {/* Badge Interativa */}
-            <div className="name-badge mb-8 md:mb-12">
+            {/* Badge */}
+            <div className="name-badge mb-8 md:mb-10">
               <div
                 className="inline-flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4 md:space-x-6 bg-white/5 backdrop-blur-xl rounded-2xl px-6 py-4 md:px-8 md:py-5 border border-white/10 shadow-2xl hover:shadow-blue-500/25 transition-all duration-500 hover:scale-105 group cursor-pointer"
                 style={parallaxStyle}
@@ -482,13 +465,13 @@ export const Hero = () => {
               </div>
             </div>
 
-            {/* CTAs com Efeitos Avançados */}
-            <div className="cta-section mb-12 md:mb-20">
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 px-4 md:px-0">
+            {/* CTAs */}
+            <div className="cta-section mb-8 lg:mb-0">
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 md:gap-6">
                 <Button
                   asChild
                   size={isMobile ? "default" : "lg"}
-                  className="cta-button cta-primary group relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-heading font-bold text-base md:text-lg px-8 md:px-16 py-6 md:py-8 rounded-2xl shadow-2xl hover:shadow-blue-500/50 transition-all duration-500 hover:scale-105 border-0 overflow-hidden"
+                  className="cta-button cta-primary group relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-heading font-bold text-base md:text-lg px-8 md:px-14 py-6 md:py-7 rounded-2xl shadow-2xl hover:shadow-blue-500/50 transition-all duration-500 hover:scale-105 border-0 overflow-hidden"
                   style={parallaxStyle}
                 >
                   <Link href="#contact">
@@ -502,7 +485,7 @@ export const Hero = () => {
                   asChild
                   variant="outline"
                   size={isMobile ? "default" : "lg"}
-                  className="cta-button cta-secondary group relative bg-white/10 backdrop-blur-lg border-white/30 text-white hover:bg-white/20 font-heading font-semibold text-base md:text-lg px-6 md:px-14 py-6 md:py-8 rounded-2xl shadow-2xl hover:shadow-white/40 transition-all duration-500 hover:scale-105 overflow-hidden"
+                  className="cta-button cta-secondary group relative bg-white/10 backdrop-blur-lg border-white/30 text-white hover:bg-white/20 font-heading font-semibold text-base md:text-lg px-6 md:px-12 py-6 md:py-7 rounded-2xl shadow-2xl hover:shadow-white/40 transition-all duration-500 hover:scale-105 overflow-hidden"
                   style={parallaxStyle}
                 >
                   <a href="/docs/curriculo-erick-reis.pdf" download>
@@ -513,66 +496,64 @@ export const Hero = () => {
                 </Button>
               </div>
             </div>
+          </div>
 
-            {/* Stats Responsivos */}
-            <div className={`stats-container ${isMobile ? "px-4" : ""}`}>
-              <div
-                className={
-                  isMobile
-                    ? "grid grid-cols-3 gap-4"
-                    : "hidden lg:flex flex-col items-end space-y-12 absolute right-8 top-1/2 -translate-y-1/2"
-                }
-              >
-                {statsData.map((stat, index) => (
-                  <div
-                    key={stat.label}
-                    className={`stat-item group cursor-pointer transition-all duration-500 hover:scale-110 ${
-                      isMobile ? "text-center" : "text-right"
-                    }`}
-                    style={isMobile ? {} : statsParallaxStyle}
-                  >
-                    <div
-                      className={`${
-                        isMobile
-                          ? "mb-2"
-                          : "flex items-center justify-end space-x-3 mb-3"
-                      }`}
-                    >
-                      <div
-                        className={`text-2xl ${
-                          isMobile ? "mx-auto" : ""
-                        } group-hover:scale-110 transition-transform duration-300`}
-                      >
-                        {stat.icon}
-                      </div>
-                    </div>
-                    <div
-                      className={`${
-                        stat.color
-                      } bg-clip-text text-transparent font-heading font-bold ${
-                        isMobile ? "text-2xl mb-1" : "text-3xl mb-2"
-                      } group-hover:scale-105 transition-transform duration-300`}
-                    >
-                      {stat.number}
-                    </div>
-                    <div
-                      className={`text-white/80 font-sans ${
-                        isMobile
-                          ? "text-xs"
-                          : "text-sm max-w-[140px] ml-auto leading-relaxed"
-                      } group-hover:text-white transition-colors duration-300`}
-                    >
-                      {stat.label}
+          {/* Stats Desktop - Agora em uma coluna à direita, sem sobrepor o texto */}
+          {!isMobile && (
+            <div className="hidden lg:flex flex-col justify-center space-y-12 lg:space-y-16 xl:space-y-20 w-1/4 xl:w-1/5 pl-8 border-l border-white/10">
+              {statsData.map((stat, index) => (
+                <div
+                  key={stat.label}
+                  className="stat-item group cursor-pointer transition-all duration-500 hover:scale-110 text-center lg:text-right"
+                  style={statsParallaxStyle}
+                >
+                  <div className="flex lg:flex-col xl:flex-row items-center justify-end space-x-3 lg:space-x-0 xl:space-x-3 mb-3">
+                    <div className="text-2xl lg:text-3xl xl:text-2xl group-hover:scale-110 transition-transform duration-300">
+                      {stat.icon}
                     </div>
                   </div>
-                ))}
-              </div>
+                  <div
+                    className={`${stat.color} bg-clip-text text-transparent font-heading font-bold text-3xl lg:text-4xl xl:text-3xl mb-2 group-hover:scale-105 transition-transform duration-300`}
+                  >
+                    {stat.number}
+                  </div>
+                  <div className="text-white/80 font-sans text-sm lg:text-xs xl:text-sm group-hover:text-white transition-colors duration-300 leading-tight">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Stats Mobile - Abaixo do conteúdo principal */}
+        {isMobile && (
+          <div className="mt-8 px-4">
+            <div className="grid grid-cols-3 gap-4">
+              {statsData.map((stat, index) => (
+                <div
+                  key={stat.label}
+                  className="stat-item group cursor-pointer transition-all duration-500 hover:scale-105 text-center"
+                >
+                  <div className="text-2xl mb-2 group-hover:scale-110 transition-transform duration-300">
+                    {stat.icon}
+                  </div>
+                  <div
+                    className={`${stat.color} bg-clip-text text-transparent font-heading font-bold text-2xl mb-1 group-hover:scale-105 transition-transform duration-300`}
+                  >
+                    {stat.number}
+                  </div>
+                  <div className="text-white/80 font-sans text-xs group-hover:text-white transition-colors duration-300">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Scroll Indicator Melhorado */}
+      {/* Scroll Indicator */}
       <div className="scroll-indicator absolute bottom-8 left-1/2 -translate-x-1/2 z-30">
         <button
           onClick={() => scrollToSection("about")}
