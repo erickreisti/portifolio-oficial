@@ -8,6 +8,9 @@ import {
   CheckCircle,
   AlertCircle,
   MessageCircle,
+  Cpu,
+  CircuitBoard,
+  Binary,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -71,18 +74,28 @@ export const Contact = () => {
   return (
     <section
       id="contact"
-      className="py-20 lg:py-32 bg-background border-t border-border/50 relative overflow-hidden"
+      className="py-20 lg:py-32 bg-slate-950 relative overflow-hidden border-t border-slate-800/50"
     >
-      {/* Background sutil */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-50/30 to-background dark:from-gray-900/20 dark:to-background" />
+      {/* Background gradiente tech */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900" />
 
-      {/* Elementos decorativos */}
+      {/* Partículas sutis */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-20 left-10 w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
+        <div className="absolute top-40 right-20 w-1 h-1 bg-purple-400 rounded-full animate-pulse" />
+        <div className="absolute bottom-40 left-20 w-1 h-1 bg-cyan-400 rounded-full animate-pulse" />
+      </div>
+
+      {/* Elementos decorativos tech */}
       <div className="absolute top-10 right-10 opacity-5">
-        <MessageCircle className="h-32 w-32 text-primary-default" />
+        <Binary className="h-32 w-32 text-blue-400" />
+      </div>
+      <div className="absolute bottom-10 left-10 opacity-5">
+        <CircuitBoard className="h-32 w-32 text-cyan-400" />
       </div>
 
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header da Seção - CORRIGIDO PARA LIGHT MODE */}
+        {/* Header da Seção - Estilo Tech */}
         <MotionDiv
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -90,17 +103,17 @@ export const Contact = () => {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          <div className="inline-flex items-center text-sm font-heading font-semibold uppercase tracking-widest text-primary-default bg-primary-default/10 px-4 py-2 rounded-full border border-primary-default/20 mb-4">
-            <MessageCircle className="h-4 w-4 mr-2" />
-            Vamos Conversar
+          <div className="inline-flex items-center text-sm font-mono font-bold uppercase tracking-widest text-blue-400 bg-blue-400/10 px-6 py-3 rounded-full border border-blue-400/30 mb-6 neon-pulse">
+            <MessageCircle className="h-4 w-4 mr-3" />
+            VAMOS CONVERSAR
           </div>
-          <h2 className="text-4xl font-heading font-bold text-foreground sm:text-5xl lg:text-6xl">
-            Vamos{" "}
-            <span className="text-primary-default bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
-              Trabalhar Juntos
+          <h2 className="text-4xl font-heading font-black text-white sm:text-5xl lg:text-6xl">
+            VAMOS{" "}
+            <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+              TRABALHAR JUNTOS
             </span>
           </h2>
-          <p className="text-xl text-foreground/70 mt-6 max-w-2xl mx-auto font-sans">
+          <p className="text-xl text-slate-300 mt-6 max-w-2xl mx-auto font-mono tracking-wide">
             Pronto para transformar suas ideias em realidade? Vamos conversar
             sobre seu projeto.
           </p>
@@ -115,45 +128,48 @@ export const Contact = () => {
             viewport={{ once: true }}
             className="lg:col-span-1"
           >
-            <Card className="h-full bg-background/80 backdrop-blur-sm border-2 border-primary-default/20 shadow-2xl hover:shadow-primary-default/20 transition-all duration-500 hover:scale-105">
-              <CardHeader className="pb-4 border-b border-border/50">
-                <CardTitle className="text-2xl font-heading font-bold text-primary-default flex items-center">
-                  <Mail className="h-6 w-6 mr-3" />
-                  Informações
+            <Card className="h-full bg-slate-900/50 backdrop-blur-xl border-2 border-blue-400/20 shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 hover:scale-105 group relative overflow-hidden">
+              {/* Efeito de brilho no card */}
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+
+              <CardHeader className="pb-6 border-b border-slate-700/50">
+                <CardTitle className="text-2xl font-heading font-black text-blue-400 flex items-center neon-pulse">
+                  <Cpu className="h-6 w-6 mr-3" />
+                  INFORMAÇÕES
                 </CardTitle>
-                <p className="text-foreground/60 text-sm mt-2 font-sans">
+                <p className="text-slate-400 text-sm mt-2 font-mono tracking-wide">
                   Entre em contato por qualquer um dos canais
                 </p>
               </CardHeader>
               <CardContent className="space-y-6 pt-6">
-                <p className="text-lg text-foreground/80 leading-relaxed font-sans">
+                <p className="text-lg text-slate-300 leading-relaxed font-sans">
                   Estou sempre aberto a novas oportunidades, desafios e
                   parcerias. Vamos criar algo incrível juntos!
                 </p>
 
                 <div className="space-y-6 pt-4">
-                  <div className="flex items-start space-x-4 group p-3 rounded-lg hover:bg-primary-default/5 transition-all duration-300">
-                    <div className="h-10 w-10 rounded-full bg-primary-default/10 flex items-center justify-center group-hover:bg-primary-default/20 transition-colors duration-300 flex-shrink-0">
-                      <Mail className="h-5 w-5 text-primary-default" />
+                  <div className="flex items-start space-x-4 group p-4 rounded-xl hover:bg-blue-500/10 transition-all duration-300 border border-transparent hover:border-blue-400/20">
+                    <div className="h-12 w-12 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center group-hover:from-blue-500/30 group-hover:to-purple-500/30 transition-all duration-300 border border-blue-400/20 flex-shrink-0">
+                      <Mail className="h-5 w-5 text-blue-400 group-hover:text-blue-300 transition-colors duration-300" />
                     </div>
                     <div>
-                      <p className="font-heading font-semibold text-foreground group-hover:text-primary-default transition-colors duration-300">
-                        Email
+                      <p className="font-heading font-bold text-white group-hover:text-blue-300 transition-colors duration-300">
+                        EMAIL
                       </p>
-                      <p className="text-foreground/70 text-sm mt-1 font-sans">
+                      <p className="text-slate-400 text-sm mt-1 font-mono tracking-wide">
                         erickreisti@gmail.com
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-start space-x-4 group p-3 rounded-lg hover:bg-primary-default/5 transition-all duration-300">
-                    <div className="h-10 w-10 rounded-full bg-primary-default/10 flex items-center justify-center group-hover:bg-primary-default/20 transition-colors duration-300 flex-shrink-0">
-                      <MapPin className="h-5 w-5 text-primary-default" />
+                  <div className="flex items-start space-x-4 group p-4 rounded-xl hover:bg-cyan-500/10 transition-all duration-300 border border-transparent hover:border-cyan-400/20">
+                    <div className="h-12 w-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center group-hover:from-cyan-500/30 group-hover:to-blue-500/30 transition-all duration-300 border border-cyan-400/20 flex-shrink-0">
+                      <MapPin className="h-5 w-5 text-cyan-400 group-hover:text-cyan-300 transition-colors duration-300" />
                     </div>
                     <div>
-                      <p className="font-heading font-semibold text-foreground group-hover:text-primary-default transition-colors duration-300">
-                        Localização
+                      <p className="font-heading font-bold text-white group-hover:text-cyan-300 transition-colors duration-300">
+                        LOCALIZAÇÃO
                       </p>
-                      <p className="text-foreground/70 text-sm mt-1 font-sans">
+                      <p className="text-slate-400 text-sm mt-1 font-mono tracking-wide">
                         Rio de Janeiro, Brasil
                       </p>
                     </div>
@@ -171,13 +187,16 @@ export const Contact = () => {
             viewport={{ once: true }}
             className="lg:col-span-2"
           >
-            <Card className="h-full bg-background/80 backdrop-blur-sm border-2 border-primary-default/20 shadow-2xl hover:shadow-primary-default/20 transition-all duration-500 hover:scale-105">
-              <CardHeader className="pb-4 border-b border-border/50">
-                <CardTitle className="text-2xl font-heading font-bold text-primary-default flex items-center">
+            <Card className="h-full bg-slate-900/50 backdrop-blur-xl border-2 border-purple-400/20 shadow-2xl hover:shadow-purple-500/20 transition-all duration-500 hover:scale-105 group relative overflow-hidden">
+              {/* Efeito de brilho no card */}
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-pink-500/5 to-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+
+              <CardHeader className="pb-6 border-b border-slate-700/50">
+                <CardTitle className="text-2xl font-heading font-black text-purple-400 flex items-center neon-pulse">
                   <Send className="h-6 w-6 mr-3" />
-                  Envie sua Mensagem
+                  ENVIE SUA MENSAGEM
                 </CardTitle>
-                <p className="text-foreground/60 text-sm mt-2 font-sans">
+                <p className="text-slate-400 text-sm mt-2 font-mono tracking-wide">
                   Respondo todas as mensagens em até 24 horas
                 </p>
               </CardHeader>
@@ -188,9 +207,9 @@ export const Contact = () => {
                     <div className="space-y-3">
                       <Label
                         htmlFor="name"
-                        className="text-base font-heading font-semibold text-foreground"
+                        className="text-base font-heading font-bold text-white"
                       >
-                        Seu Nome *
+                        SEU NOME *
                       </Label>
                       <Input
                         id="name"
@@ -199,15 +218,15 @@ export const Contact = () => {
                         placeholder="João Silva"
                         required
                         disabled={isLoading}
-                        className="h-12 text-base font-sans transition-all duration-300 focus:scale-[1.02] focus:border-primary-default border-2 disabled:opacity-50 bg-background/50"
+                        className="h-12 text-base font-sans transition-all duration-300 focus:scale-[1.02] focus:border-blue-400 border-2 border-slate-700/50 bg-slate-800/50 backdrop-blur-sm text-white placeholder:text-slate-400 disabled:opacity-50 rounded-xl"
                       />
                     </div>
                     <div className="space-y-3">
                       <Label
                         htmlFor="email"
-                        className="text-base font-heading font-semibold text-foreground"
+                        className="text-base font-heading font-bold text-white"
                       >
-                        Seu Email *
+                        SEU EMAIL *
                       </Label>
                       <Input
                         id="email"
@@ -216,7 +235,7 @@ export const Contact = () => {
                         placeholder="contato@exemplo.com"
                         required
                         disabled={isLoading}
-                        className="h-12 text-base font-sans transition-all duration-300 focus:scale-[1.02] focus:border-primary-default border-2 disabled:opacity-50 bg-background/50"
+                        className="h-12 text-base font-sans transition-all duration-300 focus:scale-[1.02] focus:border-blue-400 border-2 border-slate-700/50 bg-slate-800/50 backdrop-blur-sm text-white placeholder:text-slate-400 disabled:opacity-50 rounded-xl"
                       />
                     </div>
                   </div>
@@ -225,9 +244,9 @@ export const Contact = () => {
                   <div className="space-y-3">
                     <Label
                       htmlFor="subject"
-                      className="text-base font-heading font-semibold text-foreground"
+                      className="text-base font-heading font-bold text-white"
                     >
-                      Assunto *
+                      ASSUNTO *
                     </Label>
                     <Input
                       id="subject"
@@ -236,7 +255,7 @@ export const Contact = () => {
                       placeholder="Proposta de Projeto / Oportunidade"
                       required
                       disabled={isLoading}
-                      className="h-12 text-base font-sans transition-all duration-300 focus:scale-[1.02] focus:border-primary-default border-2 disabled:opacity-50 bg-background/50"
+                      className="h-12 text-base font-sans transition-all duration-300 focus:scale-[1.02] focus:border-purple-400 border-2 border-slate-700/50 bg-slate-800/50 backdrop-blur-sm text-white placeholder:text-slate-400 disabled:opacity-50 rounded-xl"
                     />
                   </div>
 
@@ -244,9 +263,9 @@ export const Contact = () => {
                   <div className="space-y-3">
                     <Label
                       htmlFor="message"
-                      className="text-base font-heading font-semibold text-foreground"
+                      className="text-base font-heading font-bold text-white"
                     >
-                      Mensagem *
+                      MENSAGEM *
                     </Label>
                     <Textarea
                       id="message"
@@ -255,7 +274,7 @@ export const Contact = () => {
                       placeholder="Descreva seu projeto, ideia ou oportunidade em detalhes..."
                       required
                       disabled={isLoading}
-                      className="text-base font-sans transition-all duration-300 focus:scale-[1.02] focus:border-primary-default border-2 resize-none disabled:opacity-50 bg-background/50 min-h-[120px]"
+                      className="text-base font-sans transition-all duration-300 focus:scale-[1.02] focus:border-cyan-400 border-2 border-slate-700/50 bg-slate-800/50 backdrop-blur-sm text-white placeholder:text-slate-400 resize-none disabled:opacity-50 rounded-xl min-h-[120px]"
                     />
                   </div>
 
@@ -264,10 +283,10 @@ export const Contact = () => {
                     <MotionDiv
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="p-4 bg-destructive/10 border-2 border-destructive/20 rounded-xl flex items-center space-x-3"
+                      className="p-4 bg-red-500/10 border-2 border-red-400/30 rounded-xl flex items-center space-x-3 backdrop-blur-sm"
                     >
-                      <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0" />
-                      <p className="text-destructive text-sm font-sans font-medium">
+                      <AlertCircle className="h-5 w-5 text-red-400 flex-shrink-0" />
+                      <p className="text-red-400 text-sm font-mono font-bold tracking-wide">
                         {error}
                       </p>
                     </MotionDiv>
@@ -278,12 +297,12 @@ export const Contact = () => {
                     <MotionDiv
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="p-4 bg-green-500/10 border-2 border-green-500/20 rounded-xl flex items-center space-x-3"
+                      className="p-4 bg-green-500/10 border-2 border-green-400/30 rounded-xl flex items-center space-x-3 backdrop-blur-sm"
                     >
-                      <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                      <p className="text-green-500 text-sm font-sans font-medium">
-                        Mensagem enviada com sucesso! Entrarei em contato em
-                        breve.
+                      <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
+                      <p className="text-green-400 text-sm font-mono font-bold tracking-wide">
+                        MENSAGEM ENVIADA COM SUCESSO! ENTRAREI EM CONTATO EM
+                        BREVE.
                       </p>
                     </MotionDiv>
                   )}
@@ -292,7 +311,7 @@ export const Contact = () => {
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full h-14 text-base font-heading font-semibold bg-primary-default hover:bg-primary-default/90 text-black dark:text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 border-2 border-primary-default/20"
+                    className="w-full h-14 text-base font-mono font-bold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-xl shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:scale-105 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 border-0 pulse-glow tracking-widest"
                   >
                     <span
                       className={`flex items-center transition-all duration-300 ${
@@ -300,7 +319,7 @@ export const Contact = () => {
                       }`}
                     >
                       <Send className="mr-3 h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
-                      {isLoading ? "Enviando..." : "Enviar Mensagem"}
+                      {isLoading ? "ENVIANDO..." : "ENVIAR MENSAGEM"}
                     </span>
 
                     {/* Spinner de loading */}
@@ -311,7 +330,7 @@ export const Contact = () => {
                     )}
 
                     {/* Efeito de hover animado */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 dark:via-white/20" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-xl" />
                   </Button>
                 </form>
               </CardContent>
@@ -319,7 +338,7 @@ export const Contact = () => {
           </MotionDiv>
         </div>
 
-        {/* CTA Final */}
+        {/* CTA Final - Estilo Tech */}
         <MotionDiv
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -327,12 +346,19 @@ export const Contact = () => {
           viewport={{ once: true }}
           className="mt-16 text-center"
         >
-          <p className="text-lg text-foreground/70 max-w-2xl mx-auto font-sans">
-            Não encontrou o que procurava?{" "}
-            <span className="text-primary-default font-heading font-semibold">
-              Estou sempre disponível para uma conversa!
-            </span>
-          </p>
+          <div className="bg-slate-900/30 backdrop-blur-xl p-8 rounded-2xl border border-slate-700/50 shadow-2xl max-w-2xl mx-auto">
+            <p className="text-lg text-slate-300 font-mono tracking-wide mb-4">
+              Não encontrou o que procurava?{" "}
+              <span className="text-blue-400 font-heading font-bold neon-pulse">
+                ESTOU SEMPRE DISPONÍVEL PARA UMA CONVERSA!
+              </span>
+            </p>
+            <div className="flex justify-center space-x-4">
+              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
+              <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse delay-200" />
+              <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse delay-400" />
+            </div>
+          </div>
         </MotionDiv>
       </div>
     </section>
