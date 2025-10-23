@@ -200,7 +200,7 @@ export const Skills = () => {
       </div>
 
       {/* Elementos Decorativos - Escondidos em mobile */}
-      <div className="hidden lg:block absolute top-10 left-10 opacity-20 animate-float-slow">
+      <div className="hidden lg:block absolute top-10 left-10 opacity-60 animate-float-slow">
         <svg
           className="h-32 w-32 animate-neon-blue interactive-glow"
           fill="none"
@@ -216,7 +216,7 @@ export const Skills = () => {
         </svg>
       </div>
       <div
-        className="hidden lg:block absolute bottom-10 right-10 opacity-20 animate-float-slow"
+        className="hidden lg:block absolute bottom-10 right-10 opacity-60 animate-float-slow"
         style={{ animationDelay: "3s" }}
       >
         <svg
@@ -233,7 +233,7 @@ export const Skills = () => {
         </svg>
       </div>
       <div
-        className="hidden lg:block absolute top-20 right-20 opacity-20 animate-float-slow"
+        className="hidden lg:block absolute top-20 right-20 opacity-60 animate-float-slow"
         style={{ animationDelay: "6s" }}
       >
         <svg

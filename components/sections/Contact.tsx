@@ -143,8 +143,8 @@ export const Contact = () => {
         </div>
       </div>
 
-      {/* Elementos Decorativos */}
-      <div className="hidden lg:block absolute top-10 right-10 opacity-20 animate-float-gentle">
+      {/* Elementos Decorativos - NEON FORTE E BRILHANTE */}
+      <div className="hidden lg:block absolute top-10 right-10 opacity-60 animate-float-gentle">
         <svg
           className="h-32 w-32 animate-neon-blue interactive-glow"
           fill="none"
@@ -160,7 +160,7 @@ export const Contact = () => {
         </svg>
       </div>
       <div
-        className="hidden lg:block absolute bottom-10 left-10 opacity-20 animate-float-gentle"
+        className="hidden lg:block absolute bottom-10 left-10 opacity-60 animate-float-gentle"
         style={{ animationDelay: "3s" }}
       >
         <svg
@@ -177,7 +177,7 @@ export const Contact = () => {
         </svg>
       </div>
       <div
-        className="hidden lg:block absolute top-20 left-20 opacity-20 animate-float-gentle"
+        className="hidden lg:block absolute top-20 left-20 opacity-60 animate-float-gentle"
         style={{ animationDelay: "6s" }}
       >
         <svg
