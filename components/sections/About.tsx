@@ -78,7 +78,7 @@ export const About = () => {
   return (
     <section
       id="about"
-      className="py-20 lg:py-32 bg-slate-950 relative overflow-hidden border-t border-slate-800/50"
+      className="py-16 lg:py-32 bg-slate-950 relative overflow-hidden border-t border-slate-800/50"
     >
       {/* Background animado premium */}
       <div className="absolute inset-0">
@@ -88,12 +88,12 @@ export const About = () => {
         <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-cyan-500/5 rounded-full blur-3xl" />
       </div>
 
-      {/* Partículas animadas */}
+      {/* Partículas animadas - Reduzidas para mobile */}
       <div className="absolute inset-0">
-        {[...Array(15)].map((_, i) => (
+        {[...Array(8)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-1 h-1 bg-blue-400/30 rounded-full animate-float"
+            className="absolute w-1 h-1 bg-blue-400/20 rounded-full animate-float"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -104,105 +104,104 @@ export const About = () => {
         ))}
       </div>
 
-      {/* Elementos decorativos tech */}
-      <div className="absolute top-10 left-10 opacity-5 animate-float-slow">
+      {/* Elementos decorativos tech - Escondidos em mobile */}
+      <div className="hidden lg:block absolute top-10 left-10 opacity-5 animate-float-slow">
         <Binary className="h-32 w-32 text-blue-400" />
       </div>
       <div
-        className="absolute bottom-10 right-10 opacity-5 animate-float-slow"
+        className="hidden lg:block absolute bottom-10 right-10 opacity-5 animate-float-slow"
         style={{ animationDelay: "2s" }}
       >
         <CircuitBoard className="h-32 w-32 text-cyan-400" />
       </div>
       <div
-        className="absolute top-20 right-20 opacity-5 animate-float-slow"
+        className="hidden lg:block absolute top-20 right-20 opacity-5 animate-float-slow"
         style={{ animationDelay: "4s" }}
       >
         <Globe className="h-24 w-24 text-purple-400" />
       </div>
 
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header da Seção - Animação Especial */}
+        {/* Header da Seção - Otimizado para mobile */}
         <MotionDiv
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          viewport={{ once: true, amount: 0.3 }}
-          className="text-center mb-20"
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.2 }}
+          className="text-center mb-12 lg:mb-20"
         >
           <MotionDiv
             initial={{ scale: 0, rotate: -180 }}
             whileInView={{ scale: 1, rotate: 0 }}
-            transition={{ duration: 0.6, delay: 0.2, type: "spring" }}
+            transition={{ duration: 0.5, delay: 0.1, type: "spring" }}
             viewport={{ once: true }}
-            className="inline-flex items-center text-sm font-mono font-bold uppercase tracking-widest text-blue-400 bg-blue-400/10 px-6 py-3 rounded-full border border-blue-400/30 mb-6 relative overflow-hidden group"
+            className="inline-flex items-center text-xs lg:text-sm font-mono font-bold uppercase tracking-widest text-blue-400 bg-blue-400/10 px-4 lg:px-6 py-2 lg:py-3 rounded-full border border-blue-400/30 mb-4 lg:mb-6 relative overflow-hidden group"
           >
-            <Sparkles className="h-4 w-4 mr-3 animate-pulse" />
+            <Sparkles className="h-3 w-3 lg:h-4 lg:w-4 mr-2 lg:mr-3 animate-pulse" />
             JORNADA TECH & VISÃO
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
           </MotionDiv>
 
           <MotionDiv
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <h1 className="text-4xl font-heading font-black text-white sm:text-5xl lg:text-6xl mt-4">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-heading font-black text-white mt-2 lg:mt-4 px-4 lg:px-0">
               MAIS DO QUE CÓDIGO,{" "}
               <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent animate-gradient-x">
                 UMA VISÃO
               </span>
             </h1>
-            <p className="text-xl text-slate-300 mt-6 max-w-2xl mx-auto font-sans leading-relaxed">
+            <p className="text-base lg:text-xl text-slate-300 mt-4 lg:mt-6 max-w-2xl mx-auto font-sans leading-relaxed px-4 lg:px-0">
               Conheça a mente por trás das soluções inovadoras e a paixão que
               impulsiona cada linha de código
             </p>
           </MotionDiv>
         </MotionDiv>
 
-        {/* Stats Banner */}
+        {/* Stats Banner - Grid 2x2 em mobile */}
         <MotionDiv
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
           viewport={{ once: true }}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-20"
+          className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-12 lg:mb-20 px-4 lg:px-0"
         >
           {bioData.stats.map((stat, index) => (
             <MotionDiv
               key={stat.label}
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.1 * index }}
+              transition={{ duration: 0.4, delay: 0.05 * index }}
               viewport={{ once: true }}
-              className="text-center p-6 bg-slate-900/40 backdrop-blur-xl rounded-2xl border border-slate-700/50 hover:border-blue-400/30 transition-all duration-500 hover:scale-105 group"
+              className="text-center p-4 lg:p-6 bg-slate-900/40 backdrop-blur-xl rounded-xl lg:rounded-2xl border border-slate-700/50 hover:border-blue-400/30 transition-all duration-500 hover:scale-105 group"
             >
-              <div className="text-3xl font-heading font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">
+              <div className="text-xl lg:text-2xl xl:text-3xl font-heading font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-1 lg:mb-2">
                 {stat.number}
                 <span className="text-cyan-400">{stat.suffix}</span>
               </div>
-              <div className="text-slate-400 font-mono text-sm tracking-wide group-hover:text-slate-300 transition-colors duration-300">
+              <div className="text-slate-400 font-mono text-xs lg:text-sm tracking-wide group-hover:text-slate-300 transition-colors duration-300 leading-tight">
                 {stat.label}
               </div>
             </MotionDiv>
           ))}
         </MotionDiv>
 
-        <div className="flex flex-col lg:flex-row lg:space-x-12">
+        <div className="flex flex-col lg:flex-row lg:space-x-8 xl:space-x-12">
           {/* Coluna da Esquerda: Foto + Parágrafos */}
-          <div className="lg:w-7/12 space-y-8">
-            {/* Foto com Animação Premium */}
+          <div className="lg:w-7/12 space-y-6 lg:space-y-8">
+            {/* Foto com Animação Premium - Centralizada em mobile */}
             <MotionDiv
-              initial={{ opacity: 0, x: -50 }}
+              initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              viewport={{ once: true, amount: 0.3 }}
-              className="flex justify-center lg:justify-start"
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              viewport={{ once: true, amount: 0.2 }}
+              className="flex justify-center lg:justify-start px-4 lg:px-0"
             >
               <div className="relative group">
-                {/* Container da Foto com Efeito 3D */}
-                <div className="relative h-72 w-72 rounded-3xl overflow-hidden shadow-2xl transform perspective-1000">
+                {/* Container da Foto com Efeito 3D - Tamanho responsivo */}
+                <div className="relative h-48 w-48 sm:h-56 sm:w-56 lg:h-64 lg:w-64 xl:h-72 xl:w-72 rounded-2xl lg:rounded-3xl overflow-hidden shadow-2xl transform perspective-1000">
                   <Image
                     src="/images/avatar.webp"
                     alt="Erick Reis - Full Stack Developer & Tech Leader"
@@ -214,105 +213,90 @@ export const About = () => {
 
                   {/* Overlay gradiente animado */}
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/5 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-all duration-500" />
-
-                  {/* Brilho nos cantos */}
-                  <div className="absolute top-0 left-0 w-20 h-20 bg-blue-400/20 rounded-full blur-xl -translate-x-10 -translate-y-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="absolute bottom-0 right-0 w-20 h-20 bg-cyan-400/20 rounded-full blur-xl translate-x-10 translate-y-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200" />
                 </div>
 
-                {/* Partículas orbitais */}
-                <div className="absolute -inset-4">
-                  <div className="absolute top-2 right-2 w-3 h-3 bg-blue-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-orbit" />
-                  <div className="absolute bottom-2 left-2 w-2 h-2 bg-cyan-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-orbit delay-300" />
-                  <div className="absolute top-2 left-2 w-2 h-2 bg-purple-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-orbit delay-600" />
-                </div>
-
-                {/* Badge flutuante */}
+                {/* Badge flutuante - Posição responsiva */}
                 <MotionDiv
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 1 }}
+                  transition={{ duration: 0.5, delay: 0.8 }}
                   viewport={{ once: true }}
-                  className="absolute -bottom-4 -right-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full text-sm font-mono font-bold tracking-widest shadow-2xl border border-white/20"
+                  className="absolute -bottom-2 -right-2 lg:-bottom-4 lg:-right-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-1 lg:px-4 lg:py-2 rounded-full text-xs lg:text-sm font-mono font-bold tracking-widest shadow-2xl border border-white/20"
                 >
-                  <Code className="h-3 w-3 inline mr-2" />
+                  <Code className="h-2 w-2 lg:h-3 lg:w-3 inline mr-1 lg:mr-2" />
                   FULLSTACK
                 </MotionDiv>
               </div>
             </MotionDiv>
 
             {/* Parágrafos com Entrada em Cascata */}
-            <div className="space-y-8">
+            <div className="space-y-6 lg:space-y-8 px-4 lg:px-0">
               <MotionDiv
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.3 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
                 viewport={{ once: true }}
-                className="bg-slate-900/60 backdrop-blur-xl p-8 rounded-2xl border border-slate-700/50 shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 hover:border-blue-500/30 group relative overflow-hidden"
+                className="bg-slate-900/60 backdrop-blur-xl p-6 lg:p-8 rounded-xl lg:rounded-2xl border border-slate-700/50 shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 hover:border-blue-500/30 group relative overflow-hidden"
               >
-                <div className="absolute top-4 left-4 w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
-                <p className="text-lg text-slate-200 leading-relaxed font-sans font-light">
+                <div className="absolute top-3 left-3 lg:top-4 lg:left-4 w-1.5 h-1.5 lg:w-2 lg:h-2 bg-blue-400 rounded-full animate-pulse" />
+                <p className="text-sm lg:text-base xl:text-lg text-slate-200 leading-relaxed font-sans font-light">
                   {bioData.paragraph1}
                 </p>
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-400/3 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
               </MotionDiv>
 
               <MotionDiv
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.5 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
                 viewport={{ once: true }}
-                className="bg-slate-900/60 backdrop-blur-xl p-8 rounded-2xl border border-slate-700/50 shadow-2xl hover:shadow-purple-500/20 transition-all duration-500 hover:border-purple-500/30 group relative overflow-hidden"
+                className="bg-slate-900/60 backdrop-blur-xl p-6 lg:p-8 rounded-xl lg:rounded-2xl border border-slate-700/50 shadow-2xl hover:shadow-purple-500/20 transition-all duration-500 hover:border-purple-500/30 group relative overflow-hidden"
               >
-                <div className="absolute top-4 right-4 w-2 h-2 bg-purple-400 rounded-full animate-pulse" />
-                <p className="text-lg text-slate-200 leading-relaxed font-sans font-light">
+                <div className="absolute top-3 right-3 lg:top-4 lg:right-4 w-1.5 h-1.5 lg:w-2 lg:h-2 bg-purple-400 rounded-full animate-pulse" />
+                <p className="text-sm lg:text-base xl:text-lg text-slate-200 leading-relaxed font-sans font-light">
                   {bioData.paragraph2}
                 </p>
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-400/3 to-pink-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
               </MotionDiv>
             </div>
           </div>
 
           {/* Coluna da Direita: Especializações */}
-          <div className="lg:w-5/12 mt-12 lg:mt-0 space-y-8">
+          <div className="lg:w-5/12 mt-8 lg:mt-0 space-y-6 lg:space-y-8 px-4 lg:px-0">
             {/* Card de Paixões */}
             <MotionDiv
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
               viewport={{ once: true }}
             >
-              <Card className="bg-slate-900/60 backdrop-blur-xl border-2 border-blue-400/20 shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:scale-105 group relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
-
-                <CardHeader className="pb-6 border-b border-slate-700/50">
-                  <CardTitle className="text-2xl font-heading font-black text-blue-400 flex items-center">
-                    <Brain className="h-6 w-6 mr-3 animate-pulse" />
+              <Card className="bg-slate-900/60 backdrop-blur-xl border border-blue-400/20 lg:border-2 shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:scale-105 group relative overflow-hidden">
+                <CardHeader className="pb-4 lg:pb-6 border-b border-slate-700/50">
+                  <CardTitle className="text-xl lg:text-2xl font-heading font-black text-blue-400 flex items-center">
+                    <Brain className="h-5 w-5 lg:h-6 lg:w-6 mr-2 lg:mr-3 animate-pulse" />
                     ESPECIALIZAÇÕES
                   </CardTitle>
-                  <p className="text-slate-400 text-sm mt-2 font-sans">
+                  <p className="text-slate-400 text-xs lg:text-sm mt-1 lg:mt-2 font-sans">
                     Áreas onde minha expertise faz a diferença
                   </p>
                 </CardHeader>
 
-                <CardContent className="space-y-6 pt-6">
+                <CardContent className="space-y-4 lg:space-y-6 pt-4 lg:pt-6">
                   {bioData.passions.map((item, index) => (
                     <MotionDiv
                       key={index}
-                      initial={{ opacity: 0, x: 20 }}
+                      initial={{ opacity: 0, x: 15 }}
                       whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.5, delay: 0.1 * index }}
+                      transition={{ duration: 0.4, delay: 0.08 * index }}
                       viewport={{ once: true }}
-                      className="flex items-start space-x-4 group hover:bg-blue-500/10 p-4 rounded-xl transition-all duration-300 border border-transparent hover:border-blue-400/20 cursor-pointer"
+                      className="flex items-start space-x-3 lg:space-x-4 group hover:bg-blue-500/10 p-3 lg:p-4 rounded-lg lg:rounded-xl transition-all duration-300 border border-transparent hover:border-blue-400/20 cursor-pointer"
                     >
-                      <div className="h-12 w-12 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center group-hover:from-blue-500/30 group-hover:to-purple-500/30 transition-all duration-300 border border-blue-400/20 flex-shrink-0">
-                        <item.icon className="h-5 w-5 text-blue-400 group-hover:text-blue-300 transition-colors duration-300" />
+                      <div className="h-10 w-10 lg:h-12 lg:w-12 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center group-hover:from-blue-500/30 group-hover:to-purple-500/30 transition-all duration-300 border border-blue-400/20 flex-shrink-0">
+                        <item.icon className="h-4 w-4 lg:h-5 lg:w-5 text-blue-400 group-hover:text-blue-300 transition-colors duration-300" />
                       </div>
-                      <div className="flex-1">
-                        <p className="text-base font-sans font-semibold text-white group-hover:text-blue-300 transition-colors duration-300">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm lg:text-base font-sans font-semibold text-white group-hover:text-blue-300 transition-colors duration-300 truncate lg:whitespace-normal">
                           {item.text}
                         </p>
-                        <p className="text-sm text-slate-400 mt-1 font-sans">
+                        <p className="text-xs lg:text-sm text-slate-400 mt-1 font-sans leading-relaxed">
                           {item.description}
                         </p>
                       </div>
@@ -324,42 +308,42 @@ export const About = () => {
 
             {/* Card de Destaques */}
             <MotionDiv
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
               viewport={{ once: true }}
             >
-              <Card className="bg-slate-900/60 backdrop-blur-xl border-2 border-purple-400/20 shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 hover:scale-105 group relative overflow-hidden">
-                <CardHeader className="pb-6 border-b border-slate-700/50">
-                  <CardTitle className="text-2xl font-heading font-black text-purple-400 flex items-center">
-                    <Shield className="h-6 w-6 mr-3" />
+              <Card className="bg-slate-900/60 backdrop-blur-xl border border-purple-400/20 lg:border-2 shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 hover:scale-105 group relative overflow-hidden">
+                <CardHeader className="pb-4 lg:pb-6 border-b border-slate-700/50">
+                  <CardTitle className="text-xl lg:text-2xl font-heading font-black text-purple-400 flex items-center">
+                    <Shield className="h-5 w-5 lg:h-6 lg:w-6 mr-2 lg:mr-3" />
                     COMPROMISSO
                   </CardTitle>
-                  <p className="text-slate-400 text-sm mt-2 font-sans">
+                  <p className="text-slate-400 text-xs lg:text-sm mt-1 lg:mt-2 font-sans">
                     Meu padrão de excelência em cada projeto
                   </p>
                 </CardHeader>
-                <CardContent className="grid grid-cols-1 gap-4 pt-6">
+                <CardContent className="grid grid-cols-1 gap-3 lg:gap-4 pt-4 lg:pt-6">
                   {bioData.highlights.map((highlight, index) => (
                     <MotionDiv
                       key={index}
                       initial={{ opacity: 0, scale: 0.8 }}
                       whileInView={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.4, delay: 0.1 * index }}
+                      transition={{ duration: 0.3, delay: 0.08 * index }}
                       viewport={{ once: true }}
-                      className="flex items-center justify-between p-4 rounded-xl bg-slate-800/30 hover:bg-slate-700/40 transition-all duration-300 group/highlight"
+                      className="flex items-center justify-between p-3 lg:p-4 rounded-lg lg:rounded-xl bg-slate-800/30 hover:bg-slate-700/40 transition-all duration-300 group/highlight"
                     >
-                      <div className="flex items-center space-x-3">
+                      <div className="flex items-center space-x-2 lg:space-x-3 min-w-0 flex-1">
                         <div
-                          className={`h-10 w-10 rounded-full bg-gradient-to-r ${highlight.color} flex items-center justify-center`}
+                          className={`h-8 w-8 lg:h-10 lg:w-10 rounded-full bg-gradient-to-r ${highlight.color} flex items-center justify-center flex-shrink-0`}
                         >
-                          <highlight.icon className="h-5 w-5 text-white" />
+                          <highlight.icon className="h-3 w-3 lg:h-4 lg:w-4 text-white" />
                         </div>
-                        <span className="font-sans font-semibold text-white">
+                        <span className="font-sans font-semibold text-white text-sm lg:text-base truncate">
                           {highlight.text}
                         </span>
                       </div>
-                      <span className="font-mono font-bold text-blue-400 group-hover/highlight:scale-110 transition-transform duration-300">
+                      <span className="font-mono font-bold text-blue-400 text-sm lg:text-base group-hover/highlight:scale-110 transition-transform duration-300 flex-shrink-0 ml-2">
                         {highlight.value}
                       </span>
                     </MotionDiv>
@@ -370,34 +354,31 @@ export const About = () => {
           </div>
         </div>
 
-        {/* CTA Final - Premium */}
+        {/* CTA Final - Premium Responsivo */}
         <MotionDiv
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
           viewport={{ once: true }}
-          className="mt-20"
+          className="mt-12 lg:mt-20 px-4 lg:px-0"
         >
-          <div className="bg-gradient-to-r from-slate-900/60 to-slate-800/40 backdrop-blur-xl p-8 rounded-2xl border border-slate-700/50 shadow-2xl relative overflow-hidden">
-            {/* Background animado do CTA */}
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-cyan-500/5 opacity-0 hover:opacity-100 transition-opacity duration-500" />
-
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-8 relative z-10">
-              <div className="flex items-center space-x-6">
+          <div className="bg-gradient-to-r from-slate-900/60 to-slate-800/40 backdrop-blur-xl p-6 lg:p-8 rounded-xl lg:rounded-2xl border border-slate-700/50 shadow-2xl relative overflow-hidden">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8 relative z-10">
+              <div className="flex items-center space-x-4 lg:space-x-6 text-center lg:text-left">
                 <MotionDiv
                   initial={{ scale: 0, rotate: -180 }}
                   whileInView={{ scale: 1, rotate: 0 }}
-                  transition={{ duration: 0.6, type: "spring" }}
+                  transition={{ duration: 0.5, type: "spring" }}
                   viewport={{ once: true }}
-                  className="h-16 w-16 rounded-full bg-gradient-to-r from-blue-500/20 to-cyan-500/20 flex items-center justify-center border border-blue-400/30"
+                  className="h-12 w-12 lg:h-16 lg:w-16 rounded-full bg-gradient-to-r from-blue-500/20 to-cyan-500/20 flex items-center justify-center border border-blue-400/30 flex-shrink-0"
                 >
-                  <Rocket className="h-8 w-8 text-blue-400 animate-pulse" />
+                  <Rocket className="h-6 w-6 lg:h-8 lg:w-8 text-blue-400 animate-pulse" />
                 </MotionDiv>
                 <div>
-                  <h3 className="text-2xl font-heading font-black text-white mb-2">
+                  <h3 className="text-xl lg:text-2xl font-heading font-black text-white mb-1 lg:mb-2">
                     Pronto para o próximo nível?
                   </h3>
-                  <p className="text-slate-300 font-sans text-lg">
+                  <p className="text-slate-300 font-sans text-sm lg:text-lg">
                     Vamos transformar sua visão em realidade com tecnologia de
                     ponta
                   </p>
@@ -405,19 +386,18 @@ export const About = () => {
               </div>
 
               <MotionDiv
-                initial={{ opacity: 0, x: 20 }}
+                initial={{ opacity: 0, x: 15 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
                 viewport={{ once: true }}
               >
                 <Button
                   asChild
-                  className="group relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-heading font-bold text-lg px-10 py-6 rounded-2xl shadow-2xl hover:shadow-blue-500/40 transition-all duration-500 hover:scale-105 border-0 overflow-hidden"
+                  className="group relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-heading font-bold text-sm lg:text-lg px-6 lg:px-10 py-4 lg:py-6 rounded-xl lg:rounded-2xl shadow-2xl hover:shadow-blue-500/40 transition-all duration-500 hover:scale-105 border-0 overflow-hidden w-full lg:w-auto"
                 >
                   <a href="#contact">
-                    <Sparkles className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
+                    <Sparkles className="mr-2 lg:mr-3 h-4 w-4 lg:h-5 lg:w-5 group-hover:scale-110 transition-transform duration-300" />
                     INICIAR PROJETO
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-2xl" />
                   </a>
                 </Button>
               </MotionDiv>
