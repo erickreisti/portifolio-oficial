@@ -1,31 +1,21 @@
-// components/ThemeFlashPrevent.tsx
+// components/layout/ThemeFlashPrevent.tsx - CORRIGIDO
 "use client";
 
 import { useEffect } from "react";
 
 export function ThemeFlashPrevent() {
   useEffect(() => {
-    // Prevenção robusta de flash de tema
-    if (typeof window !== "undefined") {
-      const root = document.documentElement;
+    // Aplicação imediata do tema escuro
+    document.documentElement.classList.add("dark");
+    document.documentElement.style.backgroundColor = "#0f172a";
+    document.body.style.backgroundColor = "#0f172a";
 
-      // Remove qualquer classe de tema claro
-      root.classList.remove("light");
-      root.classList.add("dark");
-
-      // Garante que o background seja escuro
-      document.body.style.backgroundColor = "#0f172a";
+    // Remover após um tempo
+    const timer = setTimeout(() => {
       document.body.style.transition = "background-color 0.3s ease";
+    }, 1000);
 
-      // Backup: verificação contínua por 5 segundos
-      const interval = setInterval(() => {
-        if (!root.classList.contains("dark")) {
-          root.classList.add("dark");
-        }
-      }, 100);
-
-      setTimeout(() => clearInterval(interval), 5000);
-    }
+    return () => clearTimeout(timer);
   }, []);
 
   return null;

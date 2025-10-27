@@ -1,11 +1,11 @@
-import React from "react";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { Hero } from "@/components/sections/Hero";
-import { About } from "@/components/sections/About";
-import { Skills } from "@/components/sections/Skills";
-import { Projects } from "@/components/sections/Projects";
-import { Contact } from "@/components/sections/Contact";
+// app/page.tsx
+import { Header } from "@/components/layout/Header/Header";
+import { Footer } from "@/components/layout/Footer/Footer";
+import { Hero } from "@/components/sections/Hero/Hero";
+import { About } from "@/components/sections/About/About";
+import { Skills } from "@/components/sections/Skills/Skills";
+import { Projects } from "@/components/sections/Projects/Projects";
+import { Contact } from "@/components/sections/Contact/Contact";
 
 export default function HomePage() {
   return (

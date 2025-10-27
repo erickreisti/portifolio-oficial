@@ -1,0 +1,625 @@
+/* Hero.module.css */
+.heroSection {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #0f172a;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+@media (min-width: 1024px) {
+  .heroSection {
+    padding: 4rem 0;
+  }
+}
+
+.background {
+  position: absolute;
+  inset: 0;
+}
+
+.gradientBackground {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+}
+
+.lightEffect1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 50%;
+  background: rgba(59, 130, 246, 0.08);
+  border-radius: 50%;
+  filter: blur(4rem);
+  animation: pulseSlow 8s ease-in-out infinite;
+}
+
+.lightEffect2 {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 50%;
+  height: 50%;
+  background: rgba(139, 92, 246, 0.06);
+  border-radius: 50%;
+  filter: blur(4rem);
+  animation: pulseSlow 10s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.decorativeElements {
+  position: absolute;
+  inset: 0;
+}
+
+.decoration1 {
+  position: absolute;
+  top: 15%;
+  left: 10%;
+  opacity: 0.4;
+  animation: floatSlow 12s ease-in-out infinite;
+}
+
+.decoration2 {
+  position: absolute;
+  bottom: 15%;
+  right: 10%;
+  opacity: 0.3;
+  animation: floatSlow 15s ease-in-out infinite;
+  animation-delay: 3s;
+}
+
+.decorationIcon {
+  width: 4rem;
+  height: 4rem;
+  filter: drop-shadow(0 0 15px rgba(0, 102, 255, 0.6))
+    drop-shadow(0 0 30px rgba(0, 102, 255, 0.4));
+}
+
+@media (min-width: 1024px) {
+  .decorationIcon {
+    width: 6rem;
+    height: 6rem;
+  }
+}
+
+.container {
+  container-type: inline-size;
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+@media (min-width: 1024px) {
+  .header {
+    margin-bottom: 4rem;
+  }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-family: monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #60a5fa;
+  background: rgba(96, 165, 250, 0.1);
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .badge {
+    font-size: 0.875rem;
+    padding: 1rem 2rem;
+    margin-bottom: 3rem;
+  }
+}
+
+.badgeIcon {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.75rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@media (min-width: 1024px) {
+  .badgeIcon {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 1rem;
+  }
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: white;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .title {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: 3.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .title {
+    font-size: 4.5rem;
+    margin-bottom: 2rem;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+@media (min-width: 1280px) {
+  .title {
+    font-size: 5.5rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .title {
+    font-size: 6rem;
+  }
+}
+
+.titleGradient {
+  background: linear-gradient(to right, #60a5fa, #a855f7, #06b6d4);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 3s ease infinite;
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  color: #cbd5e1;
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .subtitle {
+    font-size: 1.375rem;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 3rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 640px) {
+  .statsGrid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .statsGrid {
+    margin-bottom: 4rem;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.statCard {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(2rem);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(100, 116, 139, 0.5);
+  transition: all 0.5s ease;
+  cursor: pointer;
+}
+
+@media (min-width: 1024px) {
+  .statCard {
+    padding: 2rem 1rem;
+    border-radius: 1rem;
+  }
+}
+
+.statCard:hover {
+  border-color: rgba(96, 165, 250, 0.3);
+  transform: scale(1.05);
+}
+
+.statNumber {
+  font-size: 1.5rem;
+  font-weight: 900;
+  background: linear-gradient(to right, #60a5fa, #a855f7);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+}
+
+@media (min-width: 1024px) {
+  .statNumber {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+}
+
+.statSuffix {
+  color: #06b6d4;
+}
+
+.statLabel {
+  color: #94a3b8;
+  font-family: monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  transition: color 0.3s ease;
+}
+
+.statCard:hover .statLabel {
+  color: #cbd5e1;
+}
+
+.ctaSection {
+  margin-bottom: 3rem;
+}
+
+@media (min-width: 1024px) {
+  .ctaSection {
+    margin-bottom: 4rem;
+  }
+}
+
+.ctaButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 32rem;
+  margin: 0 auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 480px) {
+  .ctaButtons {
+    flex-direction: row;
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ctaButtons {
+    gap: 2rem;
+    max-width: 36rem;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.ctaPrimary {
+  background: linear-gradient(135deg, #2563eb, #7c3aed) !important;
+  color: white !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  padding: 1.25rem 2rem !important;
+  border-radius: 0.75rem !important;
+  border: none !important;
+  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3) !important;
+  transition: all 0.5s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+  width: 100%;
+  max-width: 16rem;
+}
+
+@media (min-width: 480px) {
+  .ctaPrimary {
+    width: auto;
+    max-width: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ctaPrimary {
+    font-size: 1.125rem !important;
+    padding: 1.5rem 2.5rem !important;
+    border-radius: 1rem !important;
+  }
+}
+
+.ctaPrimary:hover {
+  background: linear-gradient(135deg, #1d4ed8, #6d28d9) !important;
+  box-shadow: 0 25px 50px rgba(59, 130, 246, 0.4) !important;
+  transform: translateY(-2px) scale(1.05) !important;
+}
+
+.ctaSecondary {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(2rem) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.4) !important;
+  color: white !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  padding: 1.25rem 2rem !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.5s ease !important;
+  width: 100%;
+  max-width: 16rem;
+}
+
+@media (min-width: 480px) {
+  .ctaSecondary {
+    width: auto;
+    max-width: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ctaSecondary {
+    font-size: 1.125rem !important;
+    padding: 1.5rem 2.5rem !important;
+    border-radius: 1rem !important;
+  }
+}
+
+.ctaSecondary:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+  transform: translateY(-2px) scale(1.05) !important;
+}
+
+.buttonIcon {
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-right: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+@media (min-width: 1024px) {
+  .buttonIcon {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 0.75rem;
+  }
+}
+
+.ctaPrimary:hover .buttonIcon,
+.ctaSecondary:hover .buttonIcon {
+  transform: scale(1.1);
+}
+
+.scrollIndicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 0;
+}
+
+@media (min-width: 1024px) {
+  .scrollIndicator {
+    padding: 3rem 0;
+  }
+}
+
+.scrollButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: none;
+  border: none;
+  color: inherit;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.scrollButton:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+.scrollContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.scrollText {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: monospace;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  transition: color 0.3s ease;
+  text-transform: uppercase;
+}
+
+.scrollButton:hover .scrollText {
+  color: white;
+}
+
+.scrollAnimation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.scrollCircle {
+  width: 3rem;
+  height: 3rem;
+  border: 2px solid rgba(96, 165, 250, 0.6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  animation: pulse 2s ease-in-out infinite;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.scrollButton:hover .scrollCircle {
+  border-color: #60a5fa;
+  background: rgba(96, 165, 250, 0.1);
+  transform: scale(1.1);
+  box-shadow: 0 0 30px rgba(96, 165, 250, 0.3);
+}
+
+.scrollArrow {
+  width: 1.125rem;
+  height: 1.125rem;
+  color: rgba(96, 165, 250, 0.8);
+  animation: bounce 2s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+.scrollButton:hover .scrollArrow {
+  color: #60a5fa;
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+.scrollLine {
+  width: 1px;
+  height: 2.5rem;
+  background: linear-gradient(to bottom, rgba(96, 165, 250, 0.8), transparent);
+  border-radius: 1px;
+  animation: lineFlow 2s ease-in-out infinite;
+}
+
+@keyframes lineFlow {
+  0% {
+    height: 2.5rem;
+    opacity: 0.6;
+  }
+  50% {
+    height: 3.5rem;
+    opacity: 1;
+  }
+  100% {
+    height: 2.5rem;
+    opacity: 0.6;
+  }
+}
+
+/* Animações */
+@keyframes floatSlow {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@keyframes pulseSlow {
+  0%,
+  100% {
+    opacity: 0.05;
+  }
+  50% {
+    opacity: 0.1;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes gradientShift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}

@@ -1,8 +1,7 @@
-// app/api/contact/route.ts
+// app/api/contact/route.ts - MELHORADO
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 
-// Função para inicializar o Resend de forma segura
 const getResendClient = () => {
   const apiKey = process.env.RESEND_API_KEY;
 
@@ -20,22 +19,28 @@ export async function POST(request: NextRequest) {
   try {
     const { name, email, message } = await request.json();
 
-    // Validação básica
-    if (!name || !email || !message) {
+    // Validação mais robusta
+    if (!name?.trim() || !email?.trim() || !message?.trim()) {
       return NextResponse.json(
         { error: "Todos os campos são obrigatórios" },
         { status: 400 }
       );
     }
 
+    // Validação de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json({ error: "Email inválido" }, { status: 400 });
+    }
+
     const resend = getResendClient();
 
-    // Se o Resend não estiver configurado, retorna sucesso simulado
+    // Modo desenvolvimento
     if (!resend) {
-      console.log("Email simulado (Resend não configurado):", {
-        name,
-        email,
-        message: message.substring(0, 100) + "...",
+      console.log("Email simulado:", {
+        name: name.trim(),
+        email: email.trim(),
+        message: message.trim().substring(0, 100) + "...",
       });
 
       return NextResponse.json(
@@ -47,19 +52,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Envia o email real se o Resend estiver configurado
+    // Envio real
     const { data, error } = await resend.emails.send({
       from: "Portfolio <onboarding@resend.dev>",
       to: ["erickreisti@gmail.com"],
-      subject: `Nova mensagem de ${name} - Portfolio`,
+      subject: `Nova mensagem de ${name.trim()} - Portfolio`,
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px;">
           <h2 style="color: #3b82f6;">Nova mensagem do portfolio</h2>
-          <p><strong>Nome:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Nome:</strong> ${name.trim()}</p>
+          <p><strong>Email:</strong> ${email.trim()}</p>
           <p><strong>Mensagem:</strong></p>
           <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-top: 10px;">
-            ${message.replace(/\n/g, "<br>")}
+            ${message.trim().replace(/\n/g, "<br>")}
           </div>
         </div>
       `,
@@ -68,7 +73,7 @@ export async function POST(request: NextRequest) {
     if (error) {
       console.error("Erro ao enviar email:", error);
       return NextResponse.json(
-        { error: "Erro ao enviar mensagem" },
+        { error: "Erro ao enviar mensagem. Tente novamente." },
         { status: 500 }
       );
     }
