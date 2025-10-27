@@ -20,36 +20,26 @@ export const Hero = () => {
         <div className={styles.lightEffect2} />
       </div>
 
-      {/* Elementos decorativos */}
+      {/* Elementos decorativos neon coloridos */}
       <div className={styles.decorativeElements}>
+        {/* SVG 1 - Azul Neon */}
         <div className={styles.decoration1}>
-          <svg
-            className={styles.decorationIcon}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={1}
-              d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-            />
-          </svg>
+          <div className={styles.codeSymbol}>&lt;/&gt;</div>
         </div>
+
+        {/* SVG 2 - Roxo Neon */}
         <div className={styles.decoration2}>
-          <svg
-            className={styles.decorationIcon}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <rect width="18" height="18" x="3" y="3" rx="2"></rect>
-            <path d="M11 9h4a2 2 0 0 0 2-2V3"></path>
-            <circle cx="9" cy="9" r="2"></circle>
-            <path d="M7 21v-4a2 2 0 0 1 2-2h4"></path>
-            <circle cx="15" cy="15" r="2"></circle>
-          </svg>
+          <div className={styles.bracketSymbol}>{`{}`}</div>
+        </div>
+
+        {/* SVG 3 - Verde Neon */}
+        <div className={styles.decoration3}>
+          <div className={styles.serverSymbol}>[]</div>
+        </div>
+
+        {/* SVG 4 - Ciano Neon */}
+        <div className={styles.decoration4}>
+          <div className={styles.binarySymbol}>01</div>
         </div>
       </div>
 
@@ -90,37 +80,6 @@ export const Hero = () => {
               de ponta e código impecável
             </p>
           </MotionDiv>
-        </MotionDiv>
-
-        {/* Stats */}
-        <MotionDiv
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          viewport={{ once: true }}
-          className={styles.statsGrid}
-        >
-          {[
-            { number: "50+", label: "Projetos Entregues", suffix: "" },
-            { number: "5", label: "Anos de Experiência", suffix: "+" },
-            { number: "100", label: "Satisfação do Cliente", suffix: "%" },
-            { number: "24/7", label: "Suporte Técnico", suffix: "" },
-          ].map((stat, index) => (
-            <MotionDiv
-              key={stat.label}
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.05 * index }}
-              viewport={{ once: true }}
-              className={styles.statCard}
-            >
-              <div className={styles.statNumber}>
-                {stat.number}
-                <span className={styles.statSuffix}>{stat.suffix}</span>
-              </div>
-              <div className={styles.statLabel}>{stat.label}</div>
-            </MotionDiv>
-          ))}
         </MotionDiv>
 
         {/* CTAs */}

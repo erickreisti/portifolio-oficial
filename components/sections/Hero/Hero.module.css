@@ -58,34 +58,110 @@
   inset: 0;
 }
 
+/* SVG 1 - Azul Neon */
 .decoration1 {
   position: absolute;
   top: 15%;
-  left: 10%;
-  opacity: 0.4;
-  animation: floatSlow 12s ease-in-out infinite;
+  left: 8%;
+  opacity: 0.9;
+  animation: floatTech 20s ease-in-out infinite;
+  filter: drop-shadow(0 0 25px #60a5fa) drop-shadow(0 0 50px #3b82f6);
 }
 
+/* SVG 2 - Roxo Neon */
 .decoration2 {
   position: absolute;
-  bottom: 15%;
+  top: 25%;
   right: 10%;
-  opacity: 0.3;
-  animation: floatSlow 15s ease-in-out infinite;
-  animation-delay: 3s;
+  opacity: 0.9;
+  animation: floatTech 25s ease-in-out infinite 3s;
+  filter: drop-shadow(0 0 25px #a855f7) drop-shadow(0 0 50px #7c3aed);
 }
 
-.decorationIcon {
-  width: 4rem;
-  height: 4rem;
-  filter: drop-shadow(0 0 15px rgba(0, 102, 255, 0.6))
-    drop-shadow(0 0 30px rgba(0, 102, 255, 0.4));
+/* SVG 3 - Verde Neon */
+.decoration3 {
+  position: absolute;
+  bottom: 25%;
+  left: 12%;
+  opacity: 0.9;
+  animation: floatTech 18s ease-in-out infinite 6s;
+  filter: drop-shadow(0 0 25px #10b981) drop-shadow(0 0 50px #059669);
+}
+
+/* SVG 4 - Ciano Neon */
+.decoration4 {
+  position: absolute;
+  bottom: 15%;
+  right: 8%;
+  opacity: 0.9;
+  animation: floatTech 22s ease-in-out infinite 9s;
+  filter: drop-shadow(0 0 25px #06b6d4) drop-shadow(0 0 50px #0891b2);
+}
+
+/* Estilos dos símbolos tech neon */
+.codeSymbol {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #60a5fa;
+  font-family: "Monaco", "Consolas", "Courier New", monospace;
+  animation: neonPulseBlue 2s ease-in-out infinite;
+  text-shadow: 0 0 20px #60a5fa, 0 0 40px #3b82f6, 0 0 60px #1d4ed8;
+}
+
+.bracketSymbol {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #a855f7;
+  font-family: "Monaco", "Consolas", "Courier New", monospace;
+  animation: neonPulsePurple 2s ease-in-out infinite;
+  text-shadow: 0 0 20px #a855f7, 0 0 40px #7c3aed, 0 0 60px #6d28d9;
+}
+
+.serverSymbol {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #10b981;
+  font-family: "Monaco", "Consolas", "Courier New", monospace;
+  animation: neonPulseGreen 2s ease-in-out infinite;
+  text-shadow: 0 0 20px #10b981, 0 0 40px #059669, 0 0 60px #047857;
+}
+
+.binarySymbol {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #06b6d4;
+  font-family: "Monaco", "Consolas", "Courier New", monospace;
+  animation: neonPulseCyan 2s ease-in-out infinite;
+  text-shadow: 0 0 20px #06b6d4, 0 0 40px #0891b2, 0 0 60px #0e7490;
+}
+
+@media (min-width: 640px) {
+  .codeSymbol,
+  .bracketSymbol {
+    font-size: 4rem;
+  }
+
+  .serverSymbol {
+    font-size: 3.5rem;
+  }
+
+  .binarySymbol {
+    font-size: 3rem;
+  }
 }
 
 @media (min-width: 1024px) {
-  .decorationIcon {
-    width: 6rem;
-    height: 6rem;
+  .codeSymbol,
+  .bracketSymbol {
+    font-size: 5rem;
+  }
+
+  .serverSymbol {
+    font-size: 4.5rem;
+  }
+
+  .binarySymbol {
+    font-size: 4rem;
   }
 }
 
@@ -236,90 +312,6 @@
     padding-left: 0;
     padding-right: 0;
   }
-}
-
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-  margin-bottom: 3rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  max-width: 48rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-@media (min-width: 640px) {
-  .statsGrid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .statsGrid {
-    margin-bottom: 4rem;
-    padding-left: 0;
-    padding-right: 0;
-  }
-}
-
-.statCard {
-  text-align: center;
-  padding: 1.5rem 1rem;
-  background: rgba(15, 23, 42, 0.4);
-  backdrop-filter: blur(2rem);
-  border-radius: 0.75rem;
-  border: 1px solid rgba(100, 116, 139, 0.5);
-  transition: all 0.5s ease;
-  cursor: pointer;
-}
-
-@media (min-width: 1024px) {
-  .statCard {
-    padding: 2rem 1rem;
-    border-radius: 1rem;
-  }
-}
-
-.statCard:hover {
-  border-color: rgba(96, 165, 250, 0.3);
-  transform: scale(1.05);
-}
-
-.statNumber {
-  font-size: 1.5rem;
-  font-weight: 900;
-  background: linear-gradient(to right, #60a5fa, #a855f7);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 0.5rem;
-}
-
-@media (min-width: 1024px) {
-  .statNumber {
-    font-size: 2rem;
-    margin-bottom: 0.75rem;
-  }
-}
-
-.statSuffix {
-  color: #06b6d4;
-}
-
-.statLabel {
-  color: #94a3b8;
-  font-family: monospace;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  transition: color 0.3s ease;
-}
-
-.statCard:hover .statLabel {
-  color: #cbd5e1;
 }
 
 .ctaSection {
@@ -573,7 +565,75 @@
   }
 }
 
-/* Animações */
+/* Novas Animações para os símbolos neon */
+@keyframes neonPulseBlue {
+  0%,
+  100% {
+    opacity: 0.9;
+    text-shadow: 0 0 20px #60a5fa, 0 0 40px #3b82f6, 0 0 60px #1d4ed8;
+  }
+  50% {
+    opacity: 1;
+    text-shadow: 0 0 30px #60a5fa, 0 0 60px #3b82f6, 0 0 90px #1d4ed8,
+      0 0 120px #1e40af;
+  }
+}
+
+@keyframes neonPulsePurple {
+  0%,
+  100% {
+    opacity: 0.9;
+    text-shadow: 0 0 20px #a855f7, 0 0 40px #7c3aed, 0 0 60px #6d28d9;
+  }
+  50% {
+    opacity: 1;
+    text-shadow: 0 0 30px #a855f7, 0 0 60px #7c3aed, 0 0 90px #6d28d9,
+      0 0 120px #5b21b6;
+  }
+}
+
+@keyframes neonPulseGreen {
+  0%,
+  100% {
+    opacity: 0.9;
+    text-shadow: 0 0 20px #10b981, 0 0 40px #059669, 0 0 60px #047857;
+  }
+  50% {
+    opacity: 1;
+    text-shadow: 0 0 30px #10b981, 0 0 60px #059669, 0 0 90px #047857,
+      0 0 120px #065f46;
+  }
+}
+
+@keyframes neonPulseCyan {
+  0%,
+  100% {
+    opacity: 0.9;
+    text-shadow: 0 0 20px #06b6d4, 0 0 40px #0891b2, 0 0 60px #0e7490;
+  }
+  50% {
+    opacity: 1;
+    text-shadow: 0 0 30px #06b6d4, 0 0 60px #0891b2, 0 0 90px #0e7490,
+      0 0 120px #155e75;
+  }
+}
+
+@keyframes floatTech {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translate(30px, -40px) rotate(90deg) scale(1.1);
+  }
+  50% {
+    transform: translate(-20px, -20px) rotate(180deg) scale(0.9);
+  }
+  75% {
+    transform: translate(-30px, 30px) rotate(270deg) scale(1.05);
+  }
+}
+
 @keyframes floatSlow {
   0%,
   100% {
