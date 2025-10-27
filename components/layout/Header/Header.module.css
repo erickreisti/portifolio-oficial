@@ -4,43 +4,102 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 50;
-  transition: all 0.5s ease;
+  z-index: 1000;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
+  overflow: hidden;
+  font-family: var(--font-poppins), sans-serif;
+}
+
+.headerBackground {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.headerGradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.95) 0%,
+    rgba(30, 27, 75, 0.9) 50%,
+    rgba(15, 23, 42, 0.95) 100%
+  );
+  transition: all 0.5s ease;
+}
+
+.headerLightEffect {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+      circle at 20% 20%,
+      rgba(59, 130, 246, 0.15) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(139, 92, 246, 0.1) 0%,
+      transparent 50%
+    );
+  filter: blur(40px);
+  animation: pulseSlow 8s ease-in-out infinite;
+  opacity: 0.3;
 }
 
 .headerTransparent {
   background: transparent;
-  padding: 1rem 0;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid transparent;
+}
+
+.headerTransparent .headerGradient {
+  opacity: 0;
+  backdrop-filter: none;
+}
+
+.headerTransparent .headerLightEffect {
+  opacity: 0.1;
 }
 
 .headerScrolled {
-  background: rgba(15, 23, 42, 0.95);
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(96, 165, 250, 0.2);
+}
+
+.headerScrolled .headerGradient {
+  opacity: 1;
   backdrop-filter: blur(2rem);
-  box-shadow: 0 25px 50px rgba(59, 130, 246, 0.1);
-  padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(100, 116, 139, 0.5);
+}
+
+.headerScrolled .headerLightEffect {
+  opacity: 0.3;
 }
 
 .container {
-  max-width: 80rem;
+  max-width: 88rem;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  position: relative;
+  z-index: 10;
 }
 
 @media (min-width: 640px) {
   .container {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 }
 
 @media (min-width: 1024px) {
   .container {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
   }
 }
 
@@ -53,45 +112,57 @@
 .logoButton {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
   background: none;
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0.75rem;
+  border-radius: 1rem;
+  position: relative;
+  overflow: hidden;
 }
 
 .logoButton:hover {
-  transform: scale(1.02);
+  transform: translateY(-2px);
+  background: rgba(96, 165, 250, 0.1);
 }
 
 .logoContainer {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
+  position: relative;
+  z-index: 10;
 }
 
 .logoWrapper {
-  height: 3rem;
-  width: 3rem;
-  border-radius: 0.75rem;
+  height: 3.5rem;
+  width: 3.5rem;
+  border-radius: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  transition: transform 0.5s ease;
-  background: rgba(255, 255, 255, 0.05);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(
+    135deg,
+    rgba(96, 165, 250, 0.2),
+    rgba(168, 85, 247, 0.1)
+  );
   border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .logoButton:hover .logoWrapper {
-  transform: scale(1.1);
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3),
+    0 0 50px rgba(96, 165, 250, 0.2);
 }
 
 .logoImage {
-  height: 2rem;
-  width: 2rem;
+  height: 2.5rem;
+  width: 2.5rem;
   object-fit: contain;
   filter: brightness(0) invert(1);
   transition: all 0.5s ease;
@@ -99,6 +170,7 @@
 
 .logoButton:hover .logoImage {
   filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(175deg);
+  transform: scale(1.1);
 }
 
 .logoText {
@@ -108,32 +180,47 @@
 }
 
 .logoName {
-  font-size: 1.125rem;
-  font-weight: 900;
+  font-size: 1.375rem;
+  font-weight: 700;
   color: white;
-  background: linear-gradient(to right, white, #dbeafe);
+  background: linear-gradient(to right, white, #dbeafe, #bfdbfe);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   line-height: 1.2;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  font-family: var(--font-poppins), sans-serif;
 }
 
 .logoTitle {
   font-size: 0.75rem;
-  font-family: monospace;
-  color: #64748b;
-  transition: color 0.3s ease;
-  letter-spacing: 0.05em;
+  font-family: var(--font-open-sans), monospace;
+  color: #94a3b8;
+  transition: all 0.3s ease;
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.125rem;
+  font-weight: 500;
+}
+
+.titleIcon {
+  width: 0.75rem;
+  height: 0.75rem;
+  color: #60a5fa;
+  animation: pulse 2s ease-in-out infinite;
 }
 
 .logoButton:hover .logoTitle {
   color: #cbd5e1;
+  text-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
 }
 
 .desktopNav {
   display: none;
   align-items: center;
-  gap: 2rem;
+  gap: 0.5rem;
 }
 
 @media (min-width: 1024px) {
@@ -144,41 +231,67 @@
 
 .navLink {
   position: relative;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.25rem;
   font-size: 0.875rem;
-  font-family: monospace;
-  font-weight: 500;
+  font-family: var(--font-open-sans), monospace;
+  font-weight: 600;
   letter-spacing: 0.1em;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background: none;
   border: none;
   cursor: pointer;
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.navText {
+  position: relative;
+  z-index: 10;
+  font-family: var(--font-open-sans), monospace;
 }
 
 .navLinkInactive {
   color: #cbd5e1;
+  background: transparent;
 }
 
 .navLinkInactive:hover {
   color: white;
   background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-1px);
 }
 
 .navLinkActive {
-  color: #60a5fa;
-  background: rgba(96, 165, 250, 0.1);
+  color: white;
+  background: linear-gradient(
+    135deg,
+    rgba(96, 165, 250, 0.2),
+    rgba(168, 85, 247, 0.1)
+  );
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .navIndicator {
   position: absolute;
-  bottom: -0.25rem;
-  left: 1rem;
-  right: 1rem;
+  bottom: 0.5rem;
+  left: 1.25rem;
+  right: 1.25rem;
   height: 0.125rem;
-  background: linear-gradient(to right, #60a5fa, #06b6d4);
+  background: linear-gradient(to right, #60a5fa, #a855f7);
   border-radius: 0.25rem;
   animation: pulse 2s ease-in-out infinite;
+}
+
+.navGlow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.1), transparent);
+  border-radius: 0.75rem;
+  animation: glowPulse 3s ease-in-out infinite;
 }
 
 .desktopActions {
@@ -194,44 +307,49 @@
 }
 
 .downloadButton {
-  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  background: linear-gradient(135deg, #2563eb, #7c3aed, #06b6d4);
+  background-size: 200% 200%;
   color: white;
-  font-family: monospace;
-  font-weight: 700;
-  font-size: 0.75rem;
-  padding: 0.625rem 1.5rem;
-  border-radius: 0.75rem;
+  font-family: var(--font-open-sans), monospace;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.875rem 2rem;
+  border-radius: 1rem;
   border: none;
-  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
-  transition: all 0.5s ease;
+  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3),
+    0 0 50px rgba(96, 165, 250, 0.2);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   text-decoration: none;
+  animation: gradientShift 3s ease infinite;
 }
 
 .downloadButton:hover {
-  background: linear-gradient(135deg, #1d4ed8, #6d28d9);
-  box-shadow: 0 25px 50px rgba(59, 130, 246, 0.4);
-  transform: scale(1.05);
+  background: linear-gradient(135deg, #1d4ed8, #6d28d9, #0891b2);
+  box-shadow: 0 25px 50px rgba(59, 130, 246, 0.4),
+    0 0 80px rgba(96, 165, 250, 0.3);
+  transform: translateY(-2px) scale(1.05);
 }
 
 .downloadIcon {
-  width: 1rem;
-  height: 1rem;
+  width: 1.125rem;
+  height: 1.125rem;
   transition: transform 0.3s ease;
 }
 
 .downloadButton:hover .downloadIcon {
-  transform: scale(1.1);
+  transform: scale(1.2) translateY(-1px);
 }
 
 .downloadText {
   position: relative;
   z-index: 10;
+  font-family: var(--font-open-sans), monospace;
 }
 
 .buttonGlow {
@@ -254,7 +372,7 @@
 .mobileActions {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 @media (min-width: 1024px) {
@@ -266,29 +384,30 @@
 .mobileDownloadButton {
   background: linear-gradient(135deg, #2563eb, #7c3aed);
   color: white;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 0.75rem;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
   border: none;
-  box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 15px 30px rgba(59, 130, 246, 0.3);
   transition: all 0.5s ease;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
+  font-family: var(--font-open-sans), monospace;
 }
 
 .mobileDownloadButton:hover {
   background: linear-gradient(135deg, #1d4ed8, #6d28d9);
-  box-shadow: 0 15px 30px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.4);
   transform: scale(1.05);
 }
 
 .mobileDownloadIcon {
-  width: 0.75rem;
-  height: 0.75rem;
+  width: 1rem;
+  height: 1rem;
   transition: transform 0.3s ease;
 }
 
@@ -297,9 +416,9 @@
 }
 
 .menuButton {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 0.5rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
   color: #cbd5e1;
   background: rgba(30, 41, 59, 0.5);
   backdrop-filter: blur(1rem);
@@ -315,11 +434,12 @@
   color: white;
   background: rgba(30, 41, 59, 0.8);
   border-color: rgba(96, 165, 250, 0.3);
+  transform: scale(1.05);
 }
 
 .menuIcon {
-  width: 1rem;
-  height: 1rem;
+  width: 1.25rem;
+  height: 1.25rem;
   transition: transform 0.3s ease;
 }
 
@@ -332,33 +452,48 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: rgba(15, 23, 42, 0.98);
+  background: transparent;
   backdrop-filter: blur(2rem);
-  border-top: 1px solid rgba(100, 116, 139, 0.5);
-  box-shadow: 0 25px 50px rgba(59, 130, 246, 0.2);
+  border-top: 1px solid rgba(100, 116, 139, 0.3);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 100px rgba(59, 130, 246, 0.1);
   animation: slideDown 0.3s ease-out;
   max-height: 80vh;
   overflow-y: auto;
+  z-index: 1001;
+}
+
+.mobileMenuBackground {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.98) 0%,
+    rgba(30, 27, 75, 0.95) 100%
+  );
+  backdrop-filter: blur(2rem);
+  z-index: -1;
 }
 
 .mobileNav {
   display: flex;
   flex-direction: column;
-  padding: 1rem;
-  gap: 0.25rem;
+  padding: 1.5rem;
+  gap: 0.5rem;
+  position: relative;
+  z-index: 10;
 }
 
 .mobileNavLink {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 1rem;
+  padding: 1rem 1.25rem;
   font-size: 0.875rem;
-  font-family: monospace;
-  font-weight: 500;
+  font-family: var(--font-open-sans), monospace;
+  font-weight: 600;
   letter-spacing: 0.1em;
-  border-radius: 0.5rem;
-  transition: all 0.2s ease;
+  border-radius: 0.75rem;
+  transition: all 0.3s ease;
   background: none;
   border: none;
   cursor: pointer;
@@ -375,17 +510,26 @@
 
 .mobileNavLinkInactive:hover {
   color: white;
-  background: rgba(30, 41, 59, 0.5);
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateX(5px);
 }
 
 .mobileNavLinkActive {
-  color: #60a5fa;
-  background: rgba(96, 165, 250, 0.15);
+  color: white;
+  background: linear-gradient(
+    135deg,
+    rgba(96, 165, 250, 0.2),
+    rgba(168, 85, 247, 0.1)
+  );
   border-left: 0.25rem solid #60a5fa;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .mobileNavText {
   flex: 1;
+  position: relative;
+  z-index: 10;
+  font-family: var(--font-open-sans), monospace;
 }
 
 .mobileNavIndicator {
@@ -394,44 +538,46 @@
   background: #60a5fa;
   border-radius: 50%;
   animation: pulse 2s ease-in-out infinite;
-  margin-left: 0.5rem;
+  margin-left: 0.75rem;
 }
 
 .mobileDownloadSection {
-  padding-top: 1rem;
-  margin-top: 0.5rem;
-  border-top: 1px solid rgba(100, 116, 139, 0.5);
+  padding-top: 1.5rem;
+  margin-top: 1rem;
+  border-top: 1px solid rgba(100, 116, 139, 0.3);
 }
 
 .mobileMenuDownloadButton {
   background: linear-gradient(135deg, #2563eb, #7c3aed);
   color: white;
-  font-family: monospace;
-  font-weight: 700;
-  font-size: 0.75rem;
-  padding: 0.875rem 1rem;
-  border-radius: 0.5rem;
+  font-family: var(--font-open-sans), monospace;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 1rem;
   border: none;
-  box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 15px 30px rgba(59, 130, 246, 0.3);
   transition: all 0.5s ease;
   width: 100%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   text-decoration: none;
+  position: relative;
+  overflow: hidden;
 }
 
 .mobileMenuDownloadButton:hover {
   background: linear-gradient(135deg, #1d4ed8, #6d28d9);
-  box-shadow: 0 15px 30px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.4);
   transform: scale(1.02);
 }
 
 .mobileMenuDownloadIcon {
-  width: 0.875rem;
-  height: 0.875rem;
+  width: 1rem;
+  height: 1rem;
   transition: transform 0.3s ease;
 }
 
@@ -442,13 +588,14 @@
 .mobileMenuDownloadText {
   position: relative;
   z-index: 10;
+  font-family: var(--font-open-sans), monospace;
 }
 
 /* Animações */
 @keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-20px);
   }
   to {
     opacity: 1;
@@ -463,5 +610,35 @@
   }
   50% {
     opacity: 0.7;
+  }
+}
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes gradientShift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes pulseSlow {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.5;
   }
 }

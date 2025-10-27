@@ -1,4 +1,4 @@
-/* Hero.module.css */
+/* components/sections/Hero/Hero.module.css */
 .heroSection {
   min-height: 100vh;
   min-height: 100dvh;
@@ -9,11 +9,12 @@
   align-items: center;
   justify-content: center;
   padding: 2rem 0;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 @media (min-width: 1024px) {
   .heroSection {
-    padding: 4rem 0;
+    padding: 6rem 0 4rem;
   }
 }
 
@@ -58,43 +59,40 @@
   inset: 0;
 }
 
-/* SVG 1 - Azul Neon */
+/* SVG com flutuação suave */
 .decoration1 {
   position: absolute;
   top: 15%;
   left: 8%;
-  opacity: 0.9;
-  animation: floatTech 20s ease-in-out infinite;
+  opacity: 0.8;
+  animation: floatSmooth 25s ease-in-out infinite;
   filter: drop-shadow(0 0 25px #60a5fa) drop-shadow(0 0 50px #3b82f6);
 }
 
-/* SVG 2 - Roxo Neon */
 .decoration2 {
   position: absolute;
   top: 25%;
   right: 10%;
-  opacity: 0.9;
-  animation: floatTech 25s ease-in-out infinite 3s;
+  opacity: 0.8;
+  animation: floatSmooth 30s ease-in-out infinite 5s;
   filter: drop-shadow(0 0 25px #a855f7) drop-shadow(0 0 50px #7c3aed);
 }
 
-/* SVG 3 - Verde Neon */
 .decoration3 {
   position: absolute;
   bottom: 25%;
   left: 12%;
-  opacity: 0.9;
-  animation: floatTech 18s ease-in-out infinite 6s;
+  opacity: 0.8;
+  animation: floatSmooth 28s ease-in-out infinite 10s;
   filter: drop-shadow(0 0 25px #10b981) drop-shadow(0 0 50px #059669);
 }
 
-/* SVG 4 - Ciano Neon */
 .decoration4 {
   position: absolute;
   bottom: 15%;
   right: 8%;
-  opacity: 0.9;
-  animation: floatTech 22s ease-in-out infinite 9s;
+  opacity: 0.8;
+  animation: floatSmooth 32s ease-in-out infinite 15s;
   filter: drop-shadow(0 0 25px #06b6d4) drop-shadow(0 0 50px #0891b2);
 }
 
@@ -103,8 +101,8 @@
   font-size: 3rem;
   font-weight: 900;
   color: #60a5fa;
-  font-family: "Monaco", "Consolas", "Courier New", monospace;
-  animation: neonPulseBlue 2s ease-in-out infinite;
+  font-family: var(--font-open-sans), monospace;
+  animation: neonPulseBlue 3s ease-in-out infinite;
   text-shadow: 0 0 20px #60a5fa, 0 0 40px #3b82f6, 0 0 60px #1d4ed8;
 }
 
@@ -112,8 +110,8 @@
   font-size: 3.5rem;
   font-weight: 900;
   color: #a855f7;
-  font-family: "Monaco", "Consolas", "Courier New", monospace;
-  animation: neonPulsePurple 2s ease-in-out infinite;
+  font-family: var(--font-open-sans), monospace;
+  animation: neonPulsePurple 3s ease-in-out infinite;
   text-shadow: 0 0 20px #a855f7, 0 0 40px #7c3aed, 0 0 60px #6d28d9;
 }
 
@@ -121,8 +119,8 @@
   font-size: 3rem;
   font-weight: 900;
   color: #10b981;
-  font-family: "Monaco", "Consolas", "Courier New", monospace;
-  animation: neonPulseGreen 2s ease-in-out infinite;
+  font-family: var(--font-open-sans), monospace;
+  animation: neonPulseGreen 3s ease-in-out infinite;
   text-shadow: 0 0 20px #10b981, 0 0 40px #059669, 0 0 60px #047857;
 }
 
@@ -130,8 +128,8 @@
   font-size: 2.5rem;
   font-weight: 900;
   color: #06b6d4;
-  font-family: "Monaco", "Consolas", "Courier New", monospace;
-  animation: neonPulseCyan 2s ease-in-out infinite;
+  font-family: var(--font-open-sans), monospace;
+  animation: neonPulseCyan 3s ease-in-out infinite;
   text-shadow: 0 0 20px #06b6d4, 0 0 40px #0891b2, 0 0 60px #0e7490;
 }
 
@@ -207,8 +205,8 @@
   display: inline-flex;
   align-items: center;
   font-size: 0.75rem;
-  font-family: monospace;
-  font-weight: 700;
+  font-family: var(--font-open-sans), monospace;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: #60a5fa;
@@ -246,12 +244,13 @@
 
 .title {
   font-size: 2.5rem;
-  font-weight: 900;
+  font-weight: 700;
   color: white;
   line-height: 1.1;
   margin-bottom: 1.5rem;
   padding-left: 1rem;
   padding-right: 1rem;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 @media (min-width: 640px) {
@@ -281,18 +280,13 @@
   }
 }
 
-@media (min-width: 1536px) {
-  .title {
-    font-size: 6rem;
-  }
-}
-
 .titleGradient {
   background: linear-gradient(to right, #60a5fa, #a855f7, #06b6d4);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: gradientShift 3s ease infinite;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 .subtitle {
@@ -304,6 +298,8 @@
   line-height: 1.6;
   padding-left: 1rem;
   padding-right: 1rem;
+  font-family: var(--font-open-sans), sans-serif;
+  font-weight: 400;
 }
 
 @media (min-width: 1024px) {
@@ -356,7 +352,7 @@
 .ctaPrimary {
   background: linear-gradient(135deg, #2563eb, #7c3aed) !important;
   color: white !important;
-  font-weight: 700 !important;
+  font-weight: 600 !important;
   font-size: 1rem !important;
   padding: 1.25rem 2rem !important;
   border-radius: 0.75rem !important;
@@ -367,6 +363,7 @@
   overflow: hidden !important;
   width: 100%;
   max-width: 16rem;
+  font-family: var(--font-open-sans), monospace !important;
 }
 
 @media (min-width: 480px) {
@@ -395,7 +392,7 @@
   backdrop-filter: blur(2rem) !important;
   border: 1.5px solid rgba(255, 255, 255, 0.4) !important;
   color: white !important;
-  font-weight: 700 !important;
+  font-weight: 600 !important;
   font-size: 1rem !important;
   padding: 1.25rem 2rem !important;
   border-radius: 0.75rem !important;
@@ -403,6 +400,7 @@
   transition: all 0.5s ease !important;
   width: 100%;
   max-width: 16rem;
+  font-family: var(--font-open-sans), monospace !important;
 }
 
 @media (min-width: 480px) {
@@ -490,7 +488,7 @@
 .scrollText {
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.8);
-  font-family: monospace;
+  font-family: var(--font-open-sans), monospace;
   font-weight: 400;
   letter-spacing: 0.3em;
   transition: color 0.3s ease;
@@ -565,82 +563,68 @@
   }
 }
 
-/* Novas Animações para os símbolos neon */
+/* Novas Animações para flutuação suave */
+@keyframes floatSmooth {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translate(15px, -20px) rotate(2deg) scale(1.05);
+  }
+  50% {
+    transform: translate(-10px, -10px) rotate(-1deg) scale(0.98);
+  }
+  75% {
+    transform: translate(-15px, 15px) rotate(1deg) scale(1.02);
+  }
+}
+
 @keyframes neonPulseBlue {
   0%,
   100% {
-    opacity: 0.9;
+    opacity: 0.8;
     text-shadow: 0 0 20px #60a5fa, 0 0 40px #3b82f6, 0 0 60px #1d4ed8;
   }
   50% {
     opacity: 1;
-    text-shadow: 0 0 30px #60a5fa, 0 0 60px #3b82f6, 0 0 90px #1d4ed8,
-      0 0 120px #1e40af;
+    text-shadow: 0 0 25px #60a5fa, 0 0 50px #3b82f6, 0 0 75px #1d4ed8;
   }
 }
 
 @keyframes neonPulsePurple {
   0%,
   100% {
-    opacity: 0.9;
+    opacity: 0.8;
     text-shadow: 0 0 20px #a855f7, 0 0 40px #7c3aed, 0 0 60px #6d28d9;
   }
   50% {
     opacity: 1;
-    text-shadow: 0 0 30px #a855f7, 0 0 60px #7c3aed, 0 0 90px #6d28d9,
-      0 0 120px #5b21b6;
+    text-shadow: 0 0 25px #a855f7, 0 0 50px #7c3aed, 0 0 75px #6d28d9;
   }
 }
 
 @keyframes neonPulseGreen {
   0%,
   100% {
-    opacity: 0.9;
+    opacity: 0.8;
     text-shadow: 0 0 20px #10b981, 0 0 40px #059669, 0 0 60px #047857;
   }
   50% {
     opacity: 1;
-    text-shadow: 0 0 30px #10b981, 0 0 60px #059669, 0 0 90px #047857,
-      0 0 120px #065f46;
+    text-shadow: 0 0 25px #10b981, 0 0 50px #059669, 0 0 75px #047857;
   }
 }
 
 @keyframes neonPulseCyan {
   0%,
   100% {
-    opacity: 0.9;
+    opacity: 0.8;
     text-shadow: 0 0 20px #06b6d4, 0 0 40px #0891b2, 0 0 60px #0e7490;
   }
   50% {
     opacity: 1;
-    text-shadow: 0 0 30px #06b6d4, 0 0 60px #0891b2, 0 0 90px #0e7490,
-      0 0 120px #155e75;
-  }
-}
-
-@keyframes floatTech {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(0deg) scale(1);
-  }
-  25% {
-    transform: translate(30px, -40px) rotate(90deg) scale(1.1);
-  }
-  50% {
-    transform: translate(-20px, -20px) rotate(180deg) scale(0.9);
-  }
-  75% {
-    transform: translate(-30px, 30px) rotate(270deg) scale(1.05);
-  }
-}
-
-@keyframes floatSlow {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-15px);
+    text-shadow: 0 0 25px #06b6d4, 0 0 50px #0891b2, 0 0 75px #0e7490;
   }
 }
 

@@ -3,7 +3,7 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Menu, X, Download } from "lucide-react";
+import { Menu, X, Download, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import styles from "./Header.module.css";
 
@@ -24,7 +24,6 @@ export const Header = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
 
-      // Atualizar seção ativa
       const sections = ["hero", "about", "skills", "projects", "contact"];
       const current = sections.find((section) => {
         const element = document.getElementById(section);
@@ -45,9 +44,14 @@ export const Header = () => {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({
+      const headerHeight = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition =
+        elementPosition + window.pageYOffset - headerHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
         behavior: "smooth",
-        block: "start",
       });
     }
     setIsOpen(false);
@@ -59,6 +63,11 @@ export const Header = () => {
         isScrolled ? styles.headerScrolled : styles.headerTransparent
       }`}
     >
+      <div className={styles.headerBackground}>
+        <div className={styles.headerGradient} />
+        <div className={styles.headerLightEffect} />
+      </div>
+
       <div className={styles.container}>
         <div className={styles.headerContent}>
           {/* Logo */}
@@ -79,7 +88,10 @@ export const Header = () => {
               </div>
               <div className={styles.logoText}>
                 <span className={styles.logoName}>Érick Reis</span>
-                <span className={styles.logoTitle}>FULLSTACK DEV</span>
+                <span className={styles.logoTitle}>
+                  <Sparkles className={styles.titleIcon} />
+                  FULLSTACK
+                </span>
               </div>
             </div>
           </button>
@@ -98,8 +110,15 @@ export const Header = () => {
                     isActive ? styles.navLinkActive : styles.navLinkInactive
                   }`}
                 >
-                  {item.name.toUpperCase()}
-                  {isActive && <div className={styles.navIndicator} />}
+                  <span className={styles.navText}>
+                    {item.name.toUpperCase()}
+                  </span>
+                  {isActive && (
+                    <>
+                      <div className={styles.navIndicator} />
+                      <div className={styles.navGlow} />
+                    </>
+                  )}
                 </button>
               );
             })}
@@ -142,6 +161,7 @@ export const Header = () => {
         {/* Mobile Menu Dropdown */}
         {isOpen && (
           <div className={styles.mobileMenu}>
+            <div className={styles.mobileMenuBackground} />
             <nav className={styles.mobileNav}>
               {navItems.map((item) => {
                 const sectionName = item.href.replace("#", "");
@@ -165,7 +185,6 @@ export const Header = () => {
                 );
               })}
 
-              {/* Botão Download no mobile menu */}
               <div className={styles.mobileDownloadSection}>
                 <Button
                   asChild
@@ -175,7 +194,7 @@ export const Header = () => {
                   <a href="/docs/curriculo-erick-reis.pdf" download>
                     <Download className={styles.mobileMenuDownloadIcon} />
                     <span className={styles.mobileMenuDownloadText}>
-                      DOWNLOAD CV COMPLETO
+                      DOWNLOAD CV
                     </span>
                   </a>
                 </Button>
