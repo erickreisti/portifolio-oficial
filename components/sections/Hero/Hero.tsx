@@ -1,4 +1,4 @@
-// components/sections/Hero/Hero.tsx - ESPAÇAMENTOS OTIMIZADOS
+// components/sections/Hero/Hero.tsx - BOTÕES COM REFLEXO E ANIMAÇÃO
 "use client";
 
 import {
@@ -9,13 +9,8 @@ import {
   Zap,
   Cpu,
   Code2,
-  Server,
-  Database,
   Globe,
   Crown,
-  Trophy,
-  Star,
-  Gem,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
@@ -133,7 +128,7 @@ export const Hero = () => {
         );
       }
 
-      // Botões
+      // Botões - ANIMAÇÃO ESPECIAL
       const validButtons = buttonsRef.current.filter(
         Boolean
       ) as HTMLDivElement[];
@@ -142,14 +137,18 @@ export const Hero = () => {
           validButtons,
           {
             opacity: 0,
-            y: 30,
+            scale: 0.5,
+            y: 40,
+            rotationY: 90,
           },
           {
             opacity: 1,
+            scale: 1,
             y: 0,
-            duration: 0.5,
-            ease: "power2.out",
-            stagger: 0.1,
+            rotationY: 0,
+            duration: 0.8,
+            ease: "back.out(2)",
+            stagger: 0.15,
           },
           "-=0.2"
         );
@@ -210,6 +209,33 @@ export const Hero = () => {
     setIsHovering(false);
     mouseX.set(0);
     mouseY.set(0);
+  };
+
+  // Efeito de hover premium nos botões
+  const handleButtonHover = (index: number) => {
+    const button = buttonsRef.current[index];
+    if (button) {
+      gsap.to(button, {
+        scale: 1.1,
+        y: -5,
+        rotationY: 10,
+        duration: 0.3,
+        ease: "back.out(2)",
+      });
+    }
+  };
+
+  const handleButtonLeave = (index: number) => {
+    const button = buttonsRef.current[index];
+    if (button) {
+      gsap.to(button, {
+        scale: 1,
+        y: 0,
+        rotationY: 0,
+        duration: 0.3,
+        ease: "power2.out",
+      });
+    }
   };
 
   const scrollToSection = (sectionId: string) => {
@@ -414,43 +440,110 @@ export const Hero = () => {
             </motion.p>
           </div>
 
-          {/* BOTÕES COM ESPAÇAMENTO IDEAL */}
+          {/* BOTÕES MEGA PREMIUM COM REFLEXO E ANIMAÇÃO */}
           <div className="w-full max-w-lg mx-auto mb-8">
             <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 items-center justify-center w-full">
-              {/* BOTÃO PRIMÁRIO */}
-              <div ref={setButtonRef(0)} className="w-full sm:w-auto">
-                <Button
-                  asChild
-                  className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 hover:from-blue-700 hover:via-purple-700 hover:to-cyan-700 text-white font-bold text-lg lg:text-xl py-5 lg:py-6 px-8 lg:px-10 rounded-xl lg:rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 border border-white/20 relative overflow-hidden group"
+              {/* BOTÃO PRIMÁRIO - COM REFLEXO E ANIMAÇÃO AVANÇADA */}
+              <div
+                ref={setButtonRef(0)}
+                className="w-full sm:w-auto"
+                onMouseEnter={() => handleButtonHover(0)}
+                onMouseLeave={() => handleButtonLeave(0)}
+              >
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 >
-                  <a
-                    href="#contact"
-                    className="flex items-center justify-center gap-3"
+                  <Button
+                    asChild
+                    className="w-full bg-gradient-to-r from-cyan-600 via-purple-600 to-pink-600 hover:from-cyan-700 hover:via-purple-700 hover:to-pink-700 text-white font-black text-lg lg:text-xl py-5 lg:py-6 px-8 lg:px-10 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 relative overflow-hidden group"
+                    onMouseDown={(e) => e.preventDefault()}
                   >
-                    <Mail className="w-5 h-5 lg:w-6 lg:h-6 group-hover:scale-110 transition-transform duration-300" />
-                    <span className="font-bold tracking-wide">
-                      INICIAR PROJETO
-                    </span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-                  </a>
-                </Button>
+                    <a
+                      href="#contact"
+                      className="flex items-center justify-center gap-3 relative z-10"
+                    >
+                      {/* EFEITO DE REFLEXO DINÂMICO */}
+                      <motion.div
+                        animate={{
+                          x: ["-100%", "100%"],
+                        }}
+                        transition={{
+                          duration: 3,
+                          repeat: Infinity,
+                          repeatDelay: 2,
+                          ease: "easeInOut",
+                        }}
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent transform -skew-x-12 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      />
+
+                      {/* EFEITO DE PULSAÇÃO CONTÍNUA */}
+                      <motion.div
+                        animate={{ scale: [1, 1.05, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="absolute inset-0 rounded-2xl border-2 border-white/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      />
+
+                      <Mail className="w-5 h-5 lg:w-6 lg:h-6 group-hover:scale-110 group-hover:rotate-12 transition-transform duration-300 relative z-10" />
+                      <span className="font-black tracking-widest drop-shadow-lg relative z-10">
+                        INICIAR PROJETO
+                      </span>
+                    </a>
+                  </Button>
+                </motion.div>
               </div>
 
-              {/* BOTÃO SECUNDÁRIO */}
-              <div ref={setButtonRef(1)} className="w-full sm:w-auto">
-                <Button
-                  asChild
-                  className="w-full bg-white/10 backdrop-blur-xl border border-white/20 text-white font-bold text-lg lg:text-xl py-5 lg:py-6 px-8 lg:px-10 rounded-xl lg:rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:bg-white/15 hover:border-white/30 relative overflow-hidden group"
+              {/* BOTÃO SECUNDÁRIO - COM REFLEXO E ANIMAÇÃO AVANÇADA */}
+              <div
+                ref={setButtonRef(1)}
+                className="w-full sm:w-auto"
+                onMouseEnter={() => handleButtonHover(1)}
+                onMouseLeave={() => handleButtonLeave(1)}
+              >
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 >
-                  <a
-                    href="/docs/curriculo-erick-reis.pdf"
-                    download
-                    className="flex items-center justify-center gap-3"
+                  <Button
+                    asChild
+                    className="w-full bg-white/15 backdrop-blur-2xl border border-white/30 text-white font-black text-lg lg:text-xl py-5 lg:py-6 px-8 lg:px-10 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:bg-white/25 hover:border-white/50 relative overflow-hidden group"
+                    onMouseDown={(e) => e.preventDefault()}
                   >
-                    <Download className="w-5 h-5 lg:w-6 lg:h-6 group-hover:scale-110 transition-transform duration-300" />
-                    <span className="font-bold tracking-wide">BAIXAR CV</span>
-                  </a>
-                </Button>
+                    <a
+                      href="/docs/curriculo-erick-reis.pdf"
+                      download
+                      className="flex items-center justify-center gap-3 relative z-10"
+                    >
+                      {/* EFEITO DE REFLEXO DINÂMICO */}
+                      <motion.div
+                        animate={{
+                          x: ["-100%", "100%"],
+                        }}
+                        transition={{
+                          duration: 4,
+                          repeat: Infinity,
+                          repeatDelay: 3,
+                          ease: "easeInOut",
+                        }}
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      />
+
+                      {/* EFEITO DE BRILHO PULSANTE */}
+                      <motion.div
+                        animate={{ opacity: [0.3, 0.6, 0.3] }}
+                        transition={{ duration: 3, repeat: Infinity }}
+                        className="absolute inset-0 bg-gradient-to-r from-cyan-400/10 to-purple-400/10 rounded-2xl"
+                      />
+
+                      <Download className="w-5 h-5 lg:w-6 lg:h-6 group-hover:scale-110 group-hover:translate-y-1 transition-transform duration-300 relative z-10" />
+                      <span className="font-black tracking-widest drop-shadow-lg relative z-10">
+                        BAIXAR CV
+                      </span>
+                    </a>
+                  </Button>
+                </motion.div>
               </div>
             </div>
           </div>
@@ -464,6 +557,7 @@ export const Hero = () => {
             className="bg-transparent border-none cursor-pointer p-3 flex flex-col items-center gap-2 group"
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.95 }}
+            onMouseDown={(e) => e.preventDefault()}
           >
             <motion.span
               className="text-cyan-400 text-sm font-mono font-semibold tracking-widest uppercase group-hover:text-cyan-300"
