@@ -1,4 +1,4 @@
-// components/layout/Footer.tsx (ATUALIZADO)
+// components/layout/Footer.tsx (BLASTER PREMIUM VERSION)
 "use client";
 
 import Link from "next/link";
@@ -14,21 +14,49 @@ import {
   Zap,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import styles from "./Footer.module.css";
+import { useReducedMotion } from "framer-motion";
 
 const XIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    fill="currentColor"
-    viewBox="0 0 24 24"
-  >
+  <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
     <path d="M13.795 10.533 20.68 2h-3.073l-5.255 6.517L7.69 2H1l7.806 10.91L1.47 22h3.074l5.705-7.07L15.31 22H22l-8.205-11.467Zm-2.38 2.95L9.97 11.464 4.36 3.627h2.31l4.528 6.317 1.443 2.02 6.018 8.409h-2.31l-4.934-6.89Z" />
   </svg>
 );
 
-const socialLinks = [
+// Configuração centralizada dos elementos flutuantes
+const FLOATING_ELEMENTS = [
+  {
+    Icon: Rocket,
+    position: "top-20 left-20",
+    color: "text-cyan-400",
+    size: "text-3xl",
+  },
+  {
+    Icon: Sparkles,
+    position: "top-32 right-24",
+    color: "text-purple-400",
+    size: "text-3xl",
+  },
+  {
+    Icon: Code2,
+    position: "bottom-40 left-24",
+    color: "text-green-400",
+    size: "text-2xl",
+  },
+  {
+    Icon: Cpu,
+    position: "bottom-32 right-20",
+    color: "text-amber-400",
+    size: "text-2xl",
+  },
+  {
+    Icon: Zap,
+    position: "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+    color: "text-blue-400",
+    size: "text-2xl",
+  },
+] as const;
+
+const SOCIAL_LINKS = [
   {
     icon: Github,
     href: "https://github.com/erickreisti",
@@ -50,247 +78,193 @@ const socialLinks = [
 ];
 
 export const Footer = () => {
+  const shouldReduceMotion = useReducedMotion();
   const currentYear = new Date().getFullYear();
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
     <footer className="relative min-h-[400px] bg-gray-950 border-t border-gray-800/50 overflow-hidden">
-      {/* Background com gradientes animados */}
-      <div className="absolute inset-0">
-        <div
-          className="absolute inset-0"
-          style={{
-            background: `
-              radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.15) 0%, transparent 60%),
-              radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 60%),
-              radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 60%),
-              radial-gradient(circle at 70% 90%, rgba(245, 158, 11, 0.08) 0%, transparent 60%),
-              linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.95) 100%)
-            `,
-          }}
-        />
+      {/* Background Otimizado */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-950 to-gray-900">
+        {/* Gradientes sutis - menos pesados */}
+        <div className="absolute top-0 left-0 w-1/3 h-1/3 bg-blue-500/5 blur-3xl rounded-full" />
+        <div className="absolute bottom-0 right-0 w-1/3 h-1/3 bg-purple-500/5 blur-3xl rounded-full" />
 
-        {/* Elementos de fundo animados */}
-        <motion.div
-          className="absolute top-1/4 left-1/6 w-72 h-72 bg-cyan-500/10 rounded-full filter blur-3xl"
-          animate={{
-            opacity: [0.1, 0.2, 0.1],
-            scale: [1, 1.2, 1],
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 right-1/5 w-64 h-64 bg-purple-500/08 rounded-full filter blur-3xl"
-          animate={{
-            opacity: [0.15, 0.25, 0.15],
-            scale: [1, 1.15, 1],
-          }}
-          transition={{
-            duration: 7,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 2,
-          }}
-        />
-      </div>
-
-      {/* Elementos Neon Flutuantes - AGORA 5 ELEMENTOS */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[Rocket, Sparkles, Code2, Cpu, Zap].map((Icon, index) => (
-          <motion.div
-            key={index}
-            className={`absolute ${styles.neonGlow} ${
-              index === 0
-                ? "top-20 left-20"
-                : index === 1
-                ? "top-32 right-24"
-                : index === 2
-                ? "bottom-40 left-24"
-                : index === 3
-                ? "bottom-32 right-20"
-                : "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-            }`}
-            animate={{
-              y: [0, -20, 0],
-              rotate: [0, 10, 0],
-            }}
-            transition={{
-              duration: 6 + index,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: index * 1.5,
-            }}
-          >
-            <Icon
-              className={`
-              ${
-                index === 0
-                  ? "text-cyan-400 text-3xl"
-                  : index === 1
-                  ? "text-purple-400 text-3xl"
-                  : index === 2
-                  ? "text-green-400 text-2xl"
-                  : index === 3
-                  ? "text-amber-400 text-2xl"
-                  : "text-blue-400 text-2xl"
+        {/* Elementos flutuantes com performance */}
+        <div className="absolute inset-0 pointer-events-none">
+          {FLOATING_ELEMENTS.map(({ Icon, position, color, size }, index) => (
+            <motion.div
+              key={index}
+              className={`absolute ${position} filter drop-shadow-lg`}
+              animate={
+                shouldReduceMotion
+                  ? {}
+                  : {
+                      y: [0, -15, 0],
+                      rotate: index % 2 === 0 ? [0, 5, 0] : [0, -5, 0],
+                      scale: [1, 1.05, 1],
+                    }
               }
-            `}
-            />
-          </motion.div>
-        ))}
+              transition={{
+                duration: 8 + index,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: index * 1.2,
+              }}
+            >
+              <Icon
+                className={`${color} ${size} opacity-60 hover:opacity-100 transition-opacity duration-300`}
+              />
+            </motion.div>
+          ))}
+        </div>
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-        {/* Conteúdo Principal */}
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-0 mb-12 lg:mb-16">
-          {/* Logo/Nome - SEM BORDA */}
-          <Link
-            href="#hero"
-            className="group flex items-center gap-3 transition-all duration-300 hover:scale-105"
-            onClick={(e) => {
-              e.preventDefault();
-              scrollToTop();
-            }}
-          >
-            <div className="flex items-center gap-3">
-              <motion.div
-                className="h-16 w-16 lg:h-20 lg:w-20 rounded-2xl flex items-center justify-center overflow-hidden group-hover:brightness-125 transition-all duration-500"
-                whileHover={{ scale: 1.1, rotate: 5 }}
-              >
-                <Image
-                  src="/images/hashblue.svg"
-                  alt="Erick Reis - Full Stack Developer"
-                  width={64}
-                  height={64}
-                  className="h-14 w-14 lg:h-16 lg:w-16 object-contain filter brightness-125 group-hover:brightness-150 transition-all duration-500"
-                />
-              </motion.div>
-              <div className="flex flex-col">
-                <span className="text-xl lg:text-2xl font-black bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent group-hover:from-blue-200 group-hover:to-cyan-200 transition-all duration-300">
-                  Érick Reis
-                </span>
-                <span className="text-xs font-mono text-gray-400 group-hover:text-gray-300 transition-colors duration-300 tracking-wider">
-                  FULLSTACK DEV
-                </span>
+      {/* Conteúdo Principal */}
+      <div className="relative z-10 container mx-auto px-4 py-16">
+        {/* Logo Area - Premium Touch */}
+        <motion.div
+          className="flex flex-col items-center mb-12"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <Link href="#hero" onClick={scrollToTop} className="group relative">
+            <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-gray-900/50 to-gray-800/30 backdrop-blur-xl border border-gray-700/30 hover:border-blue-400/50 transition-all duration-500 hover:scale-105">
+              <div className="relative">
+                <motion.div
+                  whileHover={{ rotate: 360 }}
+                  transition={{ duration: 0.8 }}
+                  className="rounded-xl overflow-hidden"
+                >
+                  <Image
+                    src="/images/hashblue.svg"
+                    alt="Erick Reis"
+                    width={60}
+                    height={60}
+                    className="brightness-125 group-hover:brightness-150 transition-all duration-500"
+                  />
+                </motion.div>
+                <div className="absolute -inset-2 bg-blue-500/10 rounded-xl blur-xl group-hover:bg-blue-500/20 transition-all duration-500" />
+              </div>
+
+              <div className="text-left">
+                <h3 className="text-2xl font-black bg-gradient-to-r from-white via-blue-100 to-cyan-100 bg-clip-text text-transparent group-hover:from-blue-200 group-hover:to-cyan-300 transition-all duration-500">
+                  ÉRICK REIS
+                </h3>
+                <p className="text-xs font-mono text-gray-400 group-hover:text-gray-300 tracking-widest bg-gray-800/50 px-2 py-1 rounded">
+                  FULLSTACK ENGINEER
+                </p>
               </div>
             </div>
           </Link>
+        </motion.div>
 
-          {/* Links Sociais */}
-          <div className="flex gap-3 lg:gap-4">
-            {socialLinks.map((link, index) => (
-              <motion.a
-                key={link.label}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={link.label}
-                className="relative h-12 w-12 lg:h-14 lg:w-14 rounded-xl bg-gray-900/60 backdrop-blur-xl border border-blue-400/30 text-gray-400 flex items-center justify-center transition-all duration-500 hover:bg-blue-400/10 hover:border-blue-400/60 hover:scale-110 hover:shadow-2xl hover:shadow-blue-400/20 group"
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <link.icon
-                  className={`w-5 h-5 lg:w-6 lg:h-6 transition-colors duration-300 ${link.color}`}
-                />
-                <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-gray-900/90 backdrop-blur-xl text-white text-xs font-mono font-bold px-2 py-1 rounded border border-gray-700/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
+        {/* Social Links - Premium Version */}
+        <div className="flex justify-center gap-4 mb-12">
+          {SOCIAL_LINKS.map((link, index) => (
+            <motion.a
+              key={link.label}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative group"
+              whileHover={{ y: -5, scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 20,
+                delay: index * 0.1,
+              }}
+            >
+              <div className="h-14 w-14 rounded-xl bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700/50 flex items-center justify-center transition-all duration-500 group-hover:from-blue-900/30 group-hover:to-cyan-900/30 group-hover:border-blue-400/50 group-hover:shadow-2xl group-hover:shadow-blue-500/20">
+                <link.icon className="w-6 h-6 text-gray-400 group-hover:text-white transition-colors duration-300" />
+              </div>
+
+              {/* Tooltip elegante */}
+              <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+                <span className="text-white text-sm font-semibold whitespace-nowrap">
                   {link.label}
-                  <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-900/90 rotate-45 border-b border-r border-gray-700/50" />
-                </div>
-              </motion.a>
-            ))}
+                </span>
+                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-900 border-b border-r border-gray-700 rotate-45" />
+              </div>
+            </motion.a>
+          ))}
+        </div>
+
+        {/* Divisor Premium */}
+        <div className="relative mb-12">
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <Sparkles className="w-6 h-6 text-blue-400 animate-pulse" />
           </div>
         </div>
 
-        {/* Divisor */}
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-blue-400/30 to-transparent mb-8 lg:mb-12" />
-
-        {/* Informações */}
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8">
-          {/* Direitos Autorais */}
+        {/* Footer Info - Layout Melhorado */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+          {/* Copyright */}
           <motion.div
-            className="order-2 lg:order-1 text-center lg:text-left"
-            initial={{ opacity: 0, x: -20 }}
+            className="text-center lg:text-left"
+            initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
           >
-            <p className="text-gray-400 text-sm font-mono font-bold tracking-wider flex flex-col lg:flex-row items-center gap-1 lg:gap-2">
-              <span>© {currentYear} ÉRICK REIS</span>
-              <span className="text-blue-400 hidden lg:inline">•</span>
-              <span>TODOS OS DIREITOS</span>
+            <p className="text-gray-400 font-mono text-sm">
+              © {currentYear} ÉRICK REIS
             </p>
+            <p className="text-gray-500 text-xs mt-1">CÓDIGO & DESIGN</p>
           </motion.div>
 
-          {/* Créditos Tech */}
+          {/* Tech Badge Central */}
           <motion.div
-            className="order-1 lg:order-2"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
+            className="flex justify-center"
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
           >
-            <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-900/40 backdrop-blur-xl border border-gray-700/50 hover:border-blue-400/30 transition-all duration-300 cursor-pointer">
-              <Rocket className="w-4 h-4 text-blue-400" />
-              <span className="text-gray-400 text-xs font-mono font-bold tracking-wider">
-                DESENVOLVIDO
+            <div className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-gradient-to-r from-gray-900/80 to-gray-800/60 backdrop-blur-xl border border-gray-700/50 hover:border-blue-500/50 transition-all duration-500 group cursor-pointer">
+              <Code2 className="w-5 h-5 text-green-400 group-hover:scale-110 transition-transform duration-300" />
+              <span className="text-gray-300 text-sm font-mono font-bold tracking-wider">
+                ENGINEERED WITH
               </span>
-              <Heart className="w-4 h-4 text-red-400 animate-pulse" />
-              <span className="text-blue-400 font-semibold text-xs bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                ÉRICK
-              </span>
+              <Heart className="w-5 h-5 text-red-400 animate-pulse" />
+              <span className="text-blue-400 font-bold text-sm">BY ÉRICK</span>
             </div>
           </motion.div>
 
-          {/* Botão Voltar ao Topo */}
-          <motion.button
-            onClick={scrollToTop}
-            className="order-3 text-gray-400 text-xs font-mono font-bold tracking-wider flex items-center gap-2 px-4 py-3 rounded-xl bg-gray-900/40 backdrop-blur-xl border border-gray-700/50 transition-all duration-300 hover:border-blue-400/30 hover:bg-blue-400/10 hover:text-gray-300 group"
-            whileHover={{ y: -2 }}
-            whileTap={{ scale: 0.95 }}
-            initial={{ opacity: 0, x: 20 }}
+          {/* Back to Top */}
+          <motion.div
+            className="text-center lg:text-right"
+            initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            viewport={{ once: true }}
           >
-            <Rocket className="w-4 h-4 transform group-hover:-translate-y-1 transition-transform duration-300" />
-            <span className="hidden sm:inline">VOLTAR AO TOPO</span>
-          </motion.button>
+            <button
+              onClick={scrollToTop}
+              className="group flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-300 mx-auto lg:ml-auto lg:mr-0"
+            >
+              <Rocket className="w-4 h-4 group-hover:-translate-y-1 transition-transform duration-300" />
+              <span className="text-sm font-mono font-bold tracking-wider">
+                BACK TO ORBIT
+              </span>
+            </button>
+          </motion.div>
         </div>
 
-        {/* Mensagem Final */}
+        {/* Assinatura Final */}
         <motion.div
-          className="mt-8 lg:mt-12 text-center"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          viewport={{ once: true }}
-        >
-          <div className="inline-flex items-center gap-2 bg-gray-900/40 backdrop-blur-xl px-6 py-3 rounded-2xl border border-gray-700/50 transition-all duration-300 hover:border-blue-400/30 hover:scale-105 group cursor-pointer">
-            <Sparkles className="w-4 h-4 lg:w-5 lg:h-5 text-blue-400 group-hover:text-cyan-400 transition-colors duration-300" />
-            <p className="text-gray-400 text-xs lg:text-sm font-mono font-bold tracking-wider group-hover:text-gray-300 transition-colors duration-300">
-              PRONTO PARA DESAFIOS! 🚀
-            </p>
-          </div>
-        </motion.div>
-
-        {/* Assinatura Tech */}
-        <motion.div
-          className="mt-6 text-center"
+          className="mt-12 text-center"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.7, delay: 0.5 }}
-          viewport={{ once: true }}
+          transition={{ delay: 0.5 }}
         >
-          <p className="text-gray-600 text-xs font-mono px-2">
-            {"</>"} COM 💙 POR ERICK REIS • NEXT.JS • TS • TAILWIND
-          </p>
+          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-gray-900/40 border border-gray-700/30">
+            <Zap className="w-4 h-4 text-yellow-400 animate-pulse" />
+            <span className="text-gray-400 text-xs font-mono font-bold tracking-widest">
+              READY FOR NEXT MISSION • {currentYear}
+            </span>
+          </div>
         </motion.div>
       </div>
     </footer>

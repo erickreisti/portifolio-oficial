@@ -1,7 +1,4 @@
-/* components/sections/Contact/Contact.module.css */
-/* Estilos complementares para o componente Contact */
-
-/* Animações customizadas */
+/* Contact.module.css - Estilos complementares */
 @keyframes gradient {
   0%,
   100% {
@@ -12,79 +9,28 @@
   }
 }
 
-.animateGradient {
+.bg-size-200 {
   background-size: 200% 200%;
+}
+
+.animate-gradient {
   animation: gradient 3s ease infinite;
 }
 
-/* Efeitos de glow para elementos neon */
-.neonGlow {
-  filter: drop-shadow(0 0 8px currentColor) drop-shadow(0 0 12px currentColor);
-}
-
-.neonGlow:hover {
-  filter: drop-shadow(0 0 12px currentColor) drop-shadow(0 0 18px currentColor)
-    brightness(1.3);
-}
-
-/* Efeitos de shimmer para inputs */
-.shimmerInput {
-  position: relative;
-  overflow: hidden;
-}
-
-.shimmerInput::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.1),
-    transparent
-  );
-  transform: skewX(-15deg);
-  transition: left 0.8s ease;
-}
-
-.shimmerInput:focus::after {
-  left: 100%;
-}
-
-/* Gradientes customizados */
-.gradientSuccess {
-  background: linear-gradient(135deg, #10b981, #059669, #047857);
-}
-
-.gradientError {
-  background: linear-gradient(135deg, #ef4444, #dc2626, #b91c1c);
-}
-
-/* Responsividade para elementos neon em mobile */
-@media (max-width: 768px) {
-  .neonElement {
-    opacity: 0.7;
-    transform: scale(0.8);
-  }
-}
-
-@media (max-width: 480px) {
-  .neonElement {
-    opacity: 0.5;
-    transform: scale(0.6);
-  }
-}
-
-/* Performance - reduz motion quando preferido */
+/* Melhorias de acessibilidade e performance */
 @media (prefers-reduced-motion: reduce) {
-  .animateGradient {
+  .animate-gradient {
     animation: none;
   }
 
-  .shimmerInput::after {
-    display: none;
+  .neon-contact {
+    animation: none !important;
   }
+}
+
+/* Estilos para focos acessíveis */
+.focus-premium:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
