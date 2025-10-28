@@ -9,15 +9,16 @@ import { Download, Mail, ArrowDown, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PremiumBackground } from "@/components/layout/PremiumBackground";
 
+// Itens de navegação em português
 const navItems = [
-  { name: "Home", href: "#hero" },
-  { name: "About", href: "#about" },
-  { name: "Skills", href: "#skills" },
-  { name: "Projects", href: "#projects" },
-  { name: "Contact", href: "#contact" },
+  { name: "Início", href: "#hero" },
+  { name: "Sobre", href: "#about" },
+  { name: "Habilidades", href: "#skills" },
+  { name: "Projetos", href: "#projects" },
+  { name: "Contato", href: "#contact" },
 ];
 
-// Sistema de Partículas Simplificado
+// Sistema de Partículas Simplificado - MAIS VISÍVEIS
 const TechParticles = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -30,7 +31,7 @@ const TechParticles = () => {
     const createParticle = () => {
       const particle = document.createElement("div");
       particle.className =
-        "absolute text-xs font-mono text-cyan-400 opacity-0 pointer-events-none";
+        "absolute text-xs font-mono text-cyan-400 opacity-30 pointer-events-none";
 
       const codeChars = ["{", "}", "<", ">", "/", ";", "=", "()", "=>"];
       particle.textContent =
@@ -43,16 +44,16 @@ const TechParticles = () => {
       particles.push(particle);
 
       gsap.to(particle, {
-        opacity: 1,
-        y: -100, // Valor numérico
-        x: Math.random() * 100 - 50, // Valor numérico
-        rotation: Math.random() * 180, // Valor numérico
+        opacity: 0.8,
+        y: -100,
+        x: Math.random() * 100 - 50,
+        rotation: Math.random() * 180,
         duration: Math.random() * 3 + 2,
         ease: "power1.out",
         onComplete: () => {
           gsap.to(particle, {
             opacity: 0,
-            duration: 0.5,
+            duration: 0.8,
             onComplete: () => {
               particle.remove();
               const index = particles.indexOf(particle);
@@ -63,7 +64,7 @@ const TechParticles = () => {
       });
     };
 
-    const interval = setInterval(createParticle, 200);
+    const interval = setInterval(createParticle, 250);
 
     return () => {
       clearInterval(interval);
@@ -154,13 +155,13 @@ const HeroText = () => {
   );
 };
 
-// Botão Melhorado - Com variantes e efeitos refinados
+// Botão Melhorado - Com variantes e efeitos refinados, foco estilizado e textos em português
 const ImprovedButton = ({
   children,
   onClick,
   href,
-  variant = "primary", // 'primary', 'secondary', 'outline'
-  size = "default", // 'default', 'sm', 'lg'
+  variant = "primary",
+  size = "default",
   className = "",
   icon,
   disabled = false,
@@ -171,9 +172,11 @@ const ImprovedButton = ({
   variant?: "primary" | "secondary" | "outline";
   size?: "default" | "sm" | "lg";
   className?: string;
-  icon?: React.ReactNode; // Ícone opcional
+  icon?: React.ReactNode;
   disabled?: boolean;
 }) => {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
   const getVariantClasses = () => {
     switch (variant) {
       case "primary":
@@ -198,16 +201,43 @@ const ImprovedButton = ({
     }
   };
 
+  const handleMouseEnter = () => {
+    if (!buttonRef.current || disabled) return;
+
+    for (let i = 0; i < 4; i++) {
+      const particle = document.createElement("div");
+      particle.className =
+        "absolute w-1 h-1 bg-cyan-400 rounded-full pointer-events-none";
+      particle.style.left = "50%";
+      particle.style.top = "50%";
+
+      buttonRef.current.appendChild(particle);
+
+      gsap.to(particle, {
+        x: Math.random() * 40 - 20,
+        y: Math.random() * 40 - 20,
+        scale: 0,
+        opacity: 0,
+        duration: 0.6,
+        ease: "power2.out",
+        onComplete: () => particle.remove(),
+      });
+    }
+  };
+
   const buttonContent = (
     <motion.button
+      ref={buttonRef}
       className={`
         relative font-bold rounded-2xl border-0 transition-all duration-300 transform hover:scale-105 active:scale-95
         flex items-center justify-center gap-3 group overflow-hidden ${getVariantClasses()} ${getSizeClasses()} ${className}
         ${disabled ? "opacity-50 cursor-not-allowed" : ""}
+        focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900
       `}
       whileHover={!disabled ? { y: -2 } : {}}
       whileTap={!disabled ? { scale: 0.95 } : {}}
       onClick={onClick}
+      onMouseEnter={handleMouseEnter}
       disabled={disabled}
     >
       {icon && <span className="flex-shrink-0">{icon}</span>}
@@ -220,7 +250,13 @@ const ImprovedButton = ({
 
   if (href) {
     return (
-      <a href={href} download={href.includes("curriculo")}>
+      <a
+        href={href}
+        download={href.includes("curriculo")}
+        className={`inline-block focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded-2xl ${
+          disabled ? "pointer-events-none" : ""
+        }`}
+      >
         {buttonContent}
       </a>
     );
@@ -229,7 +265,7 @@ const ImprovedButton = ({
   return buttonContent;
 };
 
-// Header Refinado - Integrado, com espaçamento e responsividade aprimorados, TRANSPARENTE NO TOPO
+// Header Refinado
 const RefinedHeader = ({
   isScrolled,
   activeSection,
@@ -261,13 +297,11 @@ const RefinedHeader = ({
         {/* Logo */}
         <motion.button
           onClick={() => onNavClick("hero")}
-          className="flex items-center gap-3 group"
+          className="flex items-center gap-3 group focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded-lg p-1"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
           <div className="flex items-center gap-3 p-2 rounded-xl bg-gradient-to-r from-gray-900/30 to-gray-800/20 backdrop-blur-sm border border-gray-700/20 group-hover:border-cyan-400/30 transition-all duration-300">
-            {" "}
-            {/* Ajuste de opacidade e blur quando transparente */}
             <motion.div
               whileHover={{ rotate: 360 }}
               transition={{ duration: 0.8 }}
@@ -276,7 +310,7 @@ const RefinedHeader = ({
                 src="/images/hashblue.svg"
                 alt="Erick Reis Logo"
                 width={36}
-                height={36} // Ajustado para responsividade
+                height={36}
                 className="brightness-125"
               />
             </motion.div>
@@ -293,8 +327,6 @@ const RefinedHeader = ({
 
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center gap-2">
-          {" "}
-          {/* Ajustado gap */}
           {navItems.map((item, index) => {
             const sectionName = item.href.replace("#", "");
             const isActive = activeSection === sectionName;
@@ -310,6 +342,7 @@ const RefinedHeader = ({
                       ? "text-cyan-400 bg-cyan-400/10 border-cyan-400/20"
                       : "text-gray-300 hover:text-white hover:bg-white/5 border-transparent"
                   }
+                  focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900
                 `}
                 whileHover={{ y: -1 }}
                 whileTap={{ y: 0 }}
@@ -332,7 +365,7 @@ const RefinedHeader = ({
         >
           <ImprovedButton
             href="/docs/curriculo-erick-reis.pdf"
-            variant="outline" // Mantido 'outline' para harmonizar
+            variant="outline"
             size="sm"
             icon={<Download className="w-4 h-4" />}
           >
@@ -344,7 +377,7 @@ const RefinedHeader = ({
         <div className="flex lg:hidden items-center gap-2">
           <ImprovedButton
             href="/docs/curriculo-erick-reis.pdf"
-            variant="outline" // Mantido 'outline' para harmonizar
+            variant="outline"
             size="sm"
             icon={<Download className="w-4 h-4" />}
           >
@@ -354,7 +387,7 @@ const RefinedHeader = ({
             variant="ghost"
             size="icon"
             onClick={onMobileMenuToggle}
-            className="w-10 h-10 rounded-xl text-white/80 hover:text-white bg-white/10 backdrop-blur-xl border border-white/10 hover:bg-white/20"
+            className="w-10 h-10 rounded-xl text-white/80 hover:text-white bg-white/10 backdrop-blur-xl border border-white/10 hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
           >
             {isMobileMenuOpen ? (
               <X className="w-5 h-5" />
@@ -365,7 +398,7 @@ const RefinedHeader = ({
         </div>
       </div>
 
-      {/* Mobile Menu - Refinado para melhor responsividade e espaçamento */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -376,8 +409,6 @@ const RefinedHeader = ({
             className="absolute top-full left-0 right-0 bg-gray-950/95 backdrop-blur-xl border-b border-gray-800/50 lg:hidden overflow-hidden"
           >
             <nav className="p-4 space-y-2">
-              {" "}
-              {/* Ajustado padding e gap */}
               {navItems.map((item, index) => {
                 const sectionName = item.href.replace("#", "");
                 const isActive = activeSection === sectionName;
@@ -396,6 +427,7 @@ const RefinedHeader = ({
                           ? "text-cyan-400 bg-cyan-400/10 border-cyan-400/20"
                           : "text-gray-300 hover:text-white hover:bg-white/5 border-transparent"
                       }
+                      focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900
                     `}
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
@@ -416,11 +448,11 @@ const RefinedHeader = ({
               >
                 <ImprovedButton
                   href="/docs/curriculo-erick-reis.pdf"
-                  variant="outline" // Mantido 'outline' para consistência
+                  variant="outline"
                   className="w-full justify-center"
                   icon={<Download className="w-4 h-4" />}
                 >
-                  DOWNLOAD CV
+                  BAIXAR CV
                 </ImprovedButton>
               </motion.div>
             </nav>
@@ -431,7 +463,7 @@ const RefinedHeader = ({
   );
 };
 
-// Hero Content - Integrado com Header
+// Hero Content
 const HeroContent = ({ onExploreClick }: { onExploreClick: () => void }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -439,14 +471,12 @@ const HeroContent = ({ onExploreClick }: { onExploreClick: () => void }) => {
     if (!containerRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Animação do subtítulo
       gsap.fromTo(
         ".hero-subtitle",
         { opacity: 0, y: 30 },
         { opacity: 1, y: 0, duration: 1, delay: 1.5, ease: "power2.out" }
       );
 
-      // Animação dos botões
       gsap.fromTo(
         ".hero-action-button",
         { opacity: 0, y: 40 },
@@ -464,11 +494,19 @@ const HeroContent = ({ onExploreClick }: { onExploreClick: () => void }) => {
     return () => ctx.revert();
   }, []);
 
+  const handleContactClick = () => {
+    // Navega para a seção de contato
+    const contactSection = document.getElementById("contact");
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section
       id="hero"
       ref={containerRef}
-      className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900"
+      className="relative flex flex-col items-center justify-center min-h-screen pt-20 overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900"
     >
       {/* Background Effects */}
       <PremiumBackground intensity="high" />
@@ -504,7 +542,7 @@ const HeroContent = ({ onExploreClick }: { onExploreClick: () => void }) => {
             transition={{ duration: 0.8, delay: 2 }}
           >
             <ImprovedButton
-              onClick={() => onExploreClick()}
+              onClick={handleContactClick}
               variant="primary"
               icon={<Mail className="w-5 h-5" />}
             >
@@ -520,7 +558,7 @@ const HeroContent = ({ onExploreClick }: { onExploreClick: () => void }) => {
           >
             <ImprovedButton
               href="/docs/curriculo-erick-reis.pdf"
-              variant="outline" // Usando a nova variante 'outline'
+              variant="outline"
               icon={<Download className="w-5 h-5" />}
             >
               BAIXAR CV
@@ -537,7 +575,7 @@ const HeroContent = ({ onExploreClick }: { onExploreClick: () => void }) => {
         >
           <motion.button
             onClick={onExploreClick}
-            className="flex flex-col items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors group"
+            className="flex flex-col items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors group focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded-lg p-2"
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -571,20 +609,22 @@ export const HeroSection = () => {
       const current = sections.find((section) => {
         const element = document.getElementById(section);
         if (!element) return false;
-        const scrollPadding =
-          parseInt(
-            getComputedStyle(document.documentElement).scrollPaddingTop
-          ) || 0;
+
         const rect = element.getBoundingClientRect();
-        return rect.top <= scrollPadding + 10 && rect.bottom >= 10;
+        const scrollPadding = 100; // Offset para considerar o header fixo
+
+        return rect.top <= scrollPadding && rect.bottom >= scrollPadding;
       });
-      if (current) setActiveSection(current);
+
+      if (current) {
+        setActiveSection(current);
+      }
     };
 
     window.addEventListener("scroll", handleScroll);
     window.addEventListener("scroll", handleActiveSection);
 
-    handleScroll(); // Executa uma vez ao montar
+    handleScroll();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -595,14 +635,22 @@ export const HeroSection = () => {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-      setIsMobileMenuOpen(false); // Fecha o menu mobile após navegar
+      const offset = 80; // Offset para o header fixo
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+
+      setIsMobileMenuOpen(false);
     }
   };
 
   return (
     <div className="relative">
-      <RefinedHeader // Renomeado componente
+      <RefinedHeader
         isScrolled={isScrolled}
         activeSection={activeSection}
         onNavClick={scrollToSection}
