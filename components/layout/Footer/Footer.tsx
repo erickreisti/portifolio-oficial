@@ -1,9 +1,18 @@
-// components/layout/Footer.tsx (CORRIGIDO)
+// components/layout/Footer.tsx (ATUALIZADO)
 "use client";
 
 import Link from "next/link";
 import Image from "next/image";
-import { Github, Instagram, Heart, Rocket, Sparkles } from "lucide-react";
+import {
+  Github,
+  Instagram,
+  Heart,
+  Rocket,
+  Sparkles,
+  Code2,
+  Cpu,
+  Zap,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import styles from "./Footer.module.css";
 
@@ -88,13 +97,21 @@ export const Footer = () => {
         />
       </div>
 
-      {/* Elementos Neon Flutuantes - APENAS 2 AGORA */}
+      {/* Elementos Neon Flutuantes - AGORA 5 ELEMENTOS */}
       <div className="absolute inset-0 pointer-events-none">
-        {[Rocket, Sparkles].map((Icon, index) => (
+        {[Rocket, Sparkles, Code2, Cpu, Zap].map((Icon, index) => (
           <motion.div
             key={index}
             className={`absolute ${styles.neonGlow} ${
-              index === 0 ? "top-20 left-20" : "top-32 right-24"
+              index === 0
+                ? "top-20 left-20"
+                : index === 1
+                ? "top-32 right-24"
+                : index === 2
+                ? "bottom-40 left-24"
+                : index === 3
+                ? "bottom-32 right-20"
+                : "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
             }`}
             animate={{
               y: [0, -20, 0],
@@ -104,7 +121,7 @@ export const Footer = () => {
               duration: 6 + index,
               repeat: Infinity,
               ease: "easeInOut",
-              delay: index * 2,
+              delay: index * 1.5,
             }}
           >
             <Icon
@@ -112,7 +129,13 @@ export const Footer = () => {
               ${
                 index === 0
                   ? "text-cyan-400 text-3xl"
-                  : "text-purple-400 text-3xl"
+                  : index === 1
+                  ? "text-purple-400 text-3xl"
+                  : index === 2
+                  ? "text-green-400 text-2xl"
+                  : index === 3
+                  ? "text-amber-400 text-2xl"
+                  : "text-blue-400 text-2xl"
               }
             `}
             />
@@ -123,7 +146,7 @@ export const Footer = () => {
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
         {/* Conteúdo Principal */}
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-0 mb-12 lg:mb-16">
-          {/* Logo/Nome */}
+          {/* Logo/Nome - SEM BORDA */}
           <Link
             href="#hero"
             className="group flex items-center gap-3 transition-all duration-300 hover:scale-105"
@@ -134,7 +157,7 @@ export const Footer = () => {
           >
             <div className="flex items-center gap-3">
               <motion.div
-                className="h-16 w-16 lg:h-20 lg:w-20 rounded-2xl bg-gray-900/60 backdrop-blur-xl border border-blue-400/30 flex items-center justify-center overflow-hidden group-hover:border-blue-400/60 transition-all duration-500"
+                className="h-16 w-16 lg:h-20 lg:w-20 rounded-2xl flex items-center justify-center overflow-hidden group-hover:brightness-125 transition-all duration-500"
                 whileHover={{ scale: 1.1, rotate: 5 }}
               >
                 <Image
