@@ -4,7 +4,7 @@ import { About } from "@/components/sections/About/About";
 import { Skills } from "@/components/sections/Skills/Skills";
 import { Projects } from "@/components/sections/Projects/Projects";
 import { Contact } from "@/components/sections/Contact/Contact";
-import { Footer } from "@/components/layout/Footer/Footer";
+import { Footer } from "@/components/sections/Footer/Footer";
 
 export default function HomePage() {
   return (
