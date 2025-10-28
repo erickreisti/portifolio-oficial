@@ -90,8 +90,122 @@ const TechGrid = () => {
   );
 };
 
-// Texto Principal com Animação
-const HeroText = () => {
+// Background Interativo com Mouse Move
+const InteractiveBackground = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return;
+
+      const { clientX, clientY } = e;
+      const x = (clientX / window.innerWidth) * 100;
+      const y = (clientY / window.innerHeight) * 100;
+
+      containerRef.current.style.background = `
+        radial-gradient(circle at ${x}% ${y}%, 
+          rgba(6, 182, 212, 0.15) 0%,
+          rgba(59, 130, 246, 0.1) 30%,
+          transparent 70%
+        )
+      `;
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="absolute inset-0 transition-all duration-1000 ease-out pointer-events-none"
+    />
+  );
+};
+
+// Efeito de Digitação no Subtítulo
+const TypewriterSubtitle = () => {
+  const [displayText, setDisplayText] = useState("");
+  const fullText =
+    "Transformo visões ambiciosas em soluções digitais com tecnologia de ponta";
+
+  useEffect(() => {
+    let i = 0;
+    const timer = setInterval(() => {
+      if (i < fullText.length) {
+        setDisplayText(fullText.slice(0, i + 1));
+        i++;
+      } else {
+        clearInterval(timer);
+      }
+    }, 50);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <p className="text-xl sm:text-2xl lg:text-3xl text-gray-300 font-light leading-relaxed min-h-[120px] flex items-center justify-center">
+      <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+        {displayText}
+        <span className="animate-pulse">|</span>
+      </span>
+    </p>
+  );
+};
+
+// Contador de Estatísticas em Tempo Real
+const LiveStats = () => {
+  const [projects, setProjects] = useState(0);
+  const [experience, setExperience] = useState(0);
+  const [clients, setClients] = useState(0);
+
+  useEffect(() => {
+    const animateValue = (setter: any, end: number, duration: number) => {
+      let start = 0;
+      const increment = end / (duration / 16);
+
+      const timer = setInterval(() => {
+        start += increment;
+        if (start >= end) {
+          setter(end);
+          clearInterval(timer);
+        } else {
+          setter(Math.floor(start));
+        }
+      }, 16);
+    };
+
+    animateValue(setProjects, 50, 2000);
+    animateValue(setExperience, 5, 1800);
+    animateValue(setClients, 30, 2200);
+  }, []);
+
+  return (
+    <motion.div
+      className="flex justify-center gap-8 mb-12"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 1.8 }}
+    >
+      {[
+        { value: projects, label: "Projetos", suffix: "+" },
+        { value: experience, label: "Anos Exp", suffix: "+" },
+        { value: clients, label: "Clientes", suffix: "+" },
+      ].map((stat, index) => (
+        <div key={index} className="text-center">
+          <div className="text-2xl sm:text-3xl font-black text-cyan-400">
+            {stat.value}
+            {stat.suffix}
+          </div>
+          <div className="text-sm text-gray-400 font-medium">{stat.label}</div>
+        </div>
+      ))}
+    </motion.div>
+  );
+};
+
+// Texto Principal com Animação 3D
+const AnimatedHeroText = () => {
   const textRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -101,23 +215,43 @@ const HeroText = () => {
       const chars = textRef.current?.querySelectorAll(".hero-char");
       if (!chars) return;
 
+      // Animação de entrada
       gsap.fromTo(
         chars,
         {
           y: 100,
           opacity: 0,
           rotationX: -90,
+          rotationY: -90,
         },
         {
           y: 0,
           opacity: 1,
           rotationX: 0,
+          rotationY: 0,
           duration: 1,
           stagger: 0.03,
           ease: "back.out(1.7)",
           delay: 0.5,
         }
       );
+
+      // Animação 3D no scroll
+      chars.forEach((char, index) => {
+        gsap.to(char, {
+          rotationY: 360,
+          rotationX: 360,
+          duration: 2,
+          delay: index * 0.02,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: char,
+            start: "top 80%",
+            end: "bottom 20%",
+            scrub: true,
+          },
+        });
+      });
     }, textRef);
 
     return () => ctx.revert();
@@ -143,7 +277,10 @@ const HeroText = () => {
             {line.split("").map((char, charIndex) => (
               <span
                 key={`${lineIndex}-${charIndex}`}
-                className="hero-char inline-block mx-0.5 sm:mx-1 transition-all duration-300 bg-gradient-to-b from-white to-gray-300 bg-clip-text text-transparent hover:scale-110 hover:text-cyan-300"
+                className="hero-char inline-block mx-0.5 sm:mx-1 transition-all duration-300 bg-gradient-to-b from-white to-gray-300 bg-clip-text text-transparent hover:scale-110 hover:text-cyan-300 transform-style-preserve-3d"
+                style={{
+                  transformStyle: "preserve-3d",
+                }}
               >
                 {char === " " ? "\u00A0" : char}
               </span>
@@ -155,7 +292,7 @@ const HeroText = () => {
   );
 };
 
-// Botão Melhorado - Com variantes e efeitos refinados, foco estilizado e textos em português
+// Botão Melhorado - Com efeitos dinâmicos
 const ImprovedButton = ({
   children,
   onClick,
@@ -204,25 +341,41 @@ const ImprovedButton = ({
   const handleMouseEnter = () => {
     if (!buttonRef.current || disabled) return;
 
-    for (let i = 0; i < 4; i++) {
+    // Efeito de partículas melhorado
+    for (let i = 0; i < 8; i++) {
       const particle = document.createElement("div");
-      particle.className =
-        "absolute w-1 h-1 bg-cyan-400 rounded-full pointer-events-none";
+      particle.className = `absolute w-2 h-2 rounded-full pointer-events-none ${
+        variant === "primary" ? "bg-white" : "bg-cyan-400"
+      }`;
       particle.style.left = "50%";
       particle.style.top = "50%";
 
       buttonRef.current.appendChild(particle);
 
       gsap.to(particle, {
-        x: Math.random() * 40 - 20,
-        y: Math.random() * 40 - 20,
+        x: Math.random() * 80 - 40,
+        y: Math.random() * 80 - 40,
         scale: 0,
         opacity: 0,
-        duration: 0.6,
+        duration: 1,
         ease: "power2.out",
         onComplete: () => particle.remove(),
       });
     }
+
+    // Efeito de onda
+    const wave = document.createElement("div");
+    wave.className =
+      "absolute inset-0 rounded-2xl border-2 border-cyan-400 opacity-0";
+    buttonRef.current.appendChild(wave);
+
+    gsap.to(wave, {
+      scale: 2,
+      opacity: 1,
+      duration: 0.6,
+      ease: "power2.out",
+      onComplete: () => wave.remove(),
+    });
   };
 
   const buttonContent = (
@@ -474,7 +627,7 @@ const HeroContent = ({ onExploreClick }: { onExploreClick: () => void }) => {
       gsap.fromTo(
         ".hero-subtitle",
         { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 1, delay: 1.5, ease: "power2.out" }
+        { opacity: 1, y: 0, duration: 1, delay: 2.5, ease: "power2.out" }
       );
 
       gsap.fromTo(
@@ -485,7 +638,7 @@ const HeroContent = ({ onExploreClick }: { onExploreClick: () => void }) => {
           y: 0,
           duration: 0.8,
           stagger: 0.2,
-          delay: 2,
+          delay: 3,
           ease: "back.out(1.7)",
         }
       );
@@ -495,7 +648,6 @@ const HeroContent = ({ onExploreClick }: { onExploreClick: () => void }) => {
   }, []);
 
   const handleContactClick = () => {
-    // Navega para a seção de contato
     const contactSection = document.getElementById("contact");
     if (contactSection) {
       contactSection.scrollIntoView({ behavior: "smooth" });
@@ -512,26 +664,25 @@ const HeroContent = ({ onExploreClick }: { onExploreClick: () => void }) => {
       <PremiumBackground intensity="high" />
       <TechGrid />
       <TechParticles />
+      <InteractiveBackground />
 
       {/* Conteúdo Principal */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex-grow flex flex-col justify-center">
         {/* Título */}
-        <HeroText />
+        <AnimatedHeroText />
 
-        {/* Subtítulo */}
+        {/* Subtítulo com Typewriter */}
         <motion.div
-          className="hero-subtitle max-w-3xl mx-auto mb-12"
+          className="hero-subtitle max-w-3xl mx-auto mb-8"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 1.5 }}
+          transition={{ duration: 1, delay: 2.5 }}
         >
-          <p className="text-xl sm:text-2xl lg:text-3xl text-gray-300 font-light leading-relaxed">
-            <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-              Transformo visões ambiciosas em soluções digitais com tecnologia
-              de ponta
-            </span>
-          </p>
+          <TypewriterSubtitle />
         </motion.div>
+
+        {/* Estatísticas em Tempo Real */}
+        <LiveStats />
 
         {/* Botões de Ação */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
@@ -539,7 +690,7 @@ const HeroContent = ({ onExploreClick }: { onExploreClick: () => void }) => {
             className="hero-action-button"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 2 }}
+            transition={{ duration: 0.8, delay: 3 }}
           >
             <ImprovedButton
               onClick={handleContactClick}
@@ -554,7 +705,7 @@ const HeroContent = ({ onExploreClick }: { onExploreClick: () => void }) => {
             className="hero-action-button"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 2.2 }}
+            transition={{ duration: 0.8, delay: 3.2 }}
           >
             <ImprovedButton
               href="/docs/curriculo-erick-reis.pdf"
@@ -571,7 +722,7 @@ const HeroContent = ({ onExploreClick }: { onExploreClick: () => void }) => {
           className="hero-action-button flex flex-col items-center"
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 2.4 }}
+          transition={{ duration: 0.8, delay: 3.4 }}
         >
           <motion.button
             onClick={onExploreClick}
@@ -611,7 +762,7 @@ export const HeroSection = () => {
         if (!element) return false;
 
         const rect = element.getBoundingClientRect();
-        const scrollPadding = 100; // Offset para considerar o header fixo
+        const scrollPadding = 100;
 
         return rect.top <= scrollPadding && rect.bottom >= scrollPadding;
       });
@@ -635,7 +786,7 @@ export const HeroSection = () => {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      const offset = 80; // Offset para o header fixo
+      const offset = 80;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
 
@@ -662,3 +813,17 @@ export const HeroSection = () => {
     </div>
   );
 };
+
+// Adicionar estilos CSS para transform-style
+const styles = `
+  .transform-style-preserve-3d {
+    transform-style: preserve-3d;
+  }
+`;
+
+// Injetar estilos
+if (typeof document !== "undefined") {
+  const styleSheet = document.createElement("style");
+  styleSheet.textContent = styles;
+  document.head.appendChild(styleSheet);
+}
