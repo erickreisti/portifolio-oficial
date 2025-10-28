@@ -1,4 +1,4 @@
-// components/sections/Hero/Hero.tsx - TAMANHO PERFEITO
+// components/sections/Hero/Hero.tsx - TAMANHO PERFEITO COM GRADIENTE BLASTER
 "use client";
 
 import {
@@ -40,8 +40,8 @@ export const Hero = () => {
   const mouseXSpring = useSpring(mouseX, springConfig);
   const mouseYSpring = useSpring(mouseY, springConfig);
 
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["3deg", "-3deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-3deg", "3deg"]);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["4deg", "-4deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-4deg", "4deg"]);
 
   // Detectar mobile e altura do header
   useEffect(() => {
@@ -83,7 +83,7 @@ export const Hero = () => {
           y: 80,
         },
         {
-          opacity: 0.8,
+          opacity: 0.9,
           scale: 1,
           y: 0,
           duration: 1.2,
@@ -171,8 +171,8 @@ export const Hero = () => {
       // Animações contínuas suaves
       neonElements.forEach((element, index) => {
         gsap.to(element, {
-          y: -15 - index * 2,
-          rotation: index % 2 === 0 ? 8 : -8,
+          y: -20 - index * 2,
+          rotation: index % 2 === 0 ? 10 : -10,
           duration: 4 + index,
           ease: "sine.inOut",
           repeat: -1,
@@ -238,42 +238,49 @@ export const Hero = () => {
 
   const titleWords = ["IDEIAS", "EXTRAORDINÁRIAS", "CÓDIGO", "EXCEPCIONAL"];
 
-  // Configuração dos elementos neon (menos e menores)
+  // Configuração dos elementos neon
   const neonConfigs = [
     {
       Icon: Code2,
       color: "text-cyan-400",
-      size: "text-2xl",
-      top: "20%",
-      left: "15%",
+      size: "text-3xl",
+      top: "18%",
+      left: "12%",
     },
     {
       Icon: Cpu,
       color: "text-purple-400",
-      size: "text-2xl",
-      top: "25%",
-      left: "80%",
+      size: "text-3xl",
+      top: "22%",
+      left: "82%",
     },
     {
       Icon: Zap,
       color: "text-green-400",
-      size: "text-xl",
-      top: "70%",
-      left: "20%",
+      size: "text-2xl",
+      top: "72%",
+      left: "18%",
     },
     {
       Icon: Sparkles,
       color: "text-amber-400",
+      size: "text-2xl",
+      top: "68%",
+      left: "78%",
+    },
+    {
+      Icon: Server,
+      color: "text-blue-400",
       size: "text-xl",
-      top: "65%",
-      left: "75%",
+      top: "42%",
+      left: "88%",
     },
     {
       Icon: Globe,
-      color: "text-blue-400",
-      size: "text-lg",
-      top: "45%",
-      left: "85%",
+      color: "text-indigo-400",
+      size: "text-xl",
+      top: "38%",
+      left: "8%",
     },
   ];
 
@@ -288,32 +295,37 @@ export const Hero = () => {
         marginTop: `${headerHeight}px`,
       }}
     >
-      {/* BACKGROUND SIMPLIFICADO */}
+      {/* BACKGROUND BLASTER COMPLETO */}
       <div className="absolute inset-0 overflow-hidden">
         <div
           className="absolute inset-0"
           style={{
             background: `
-              radial-gradient(circle at 15% 25%, rgba(59, 130, 246, 0.2) 0%, transparent 60%),
-              radial-gradient(circle at 85% 15%, rgba(139, 92, 246, 0.15) 0%, transparent 60%),
-              radial-gradient(circle at 45% 75%, rgba(16, 185, 129, 0.1) 0%, transparent 60%),
-              linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%)
+              radial-gradient(circle at 15% 25%, rgba(59, 130, 246, 0.3) 0%, transparent 60%),
+              radial-gradient(circle at 85% 15%, rgba(139, 92, 246, 0.25) 0%, transparent 60%),
+              radial-gradient(circle at 45% 75%, rgba(16, 185, 129, 0.2) 0%, transparent 60%),
+              radial-gradient(circle at 75% 85%, rgba(245, 158, 11, 0.15) 0%, transparent 60%),
+              radial-gradient(circle at 25% 45%, rgba(239, 68, 68, 0.15) 0%, transparent 60%),
+              radial-gradient(circle at 60% 30%, rgba(168, 85, 247, 0.2) 0%, transparent 60%),
+              linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.95) 100%)
             `,
           }}
         />
 
-        {/* ELEMENTOS ORB PEQUENOS */}
+        {/* ELEMENTOS ORB BLASTER */}
         <motion.div
-          className="absolute top-1/4 left-1/6 w-48 h-48 bg-cyan-500/10 rounded-full filter blur-3xl"
+          className="absolute top-1/4 left-1/6 w-64 h-64 bg-cyan-500/15 rounded-full filter blur-3xl"
           animate={{
-            opacity: [0.1, 0.15, 0.1],
+            opacity: [0.1, 0.2, 0.1],
+            scale: [1, 1.2, 1],
           }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute bottom-1/3 right-1/5 w-40 h-40 bg-purple-500/08 rounded-full filter blur-3xl"
+          className="absolute bottom-1/3 right-1/5 w-56 h-56 bg-purple-500/12 rounded-full filter blur-3xl"
           animate={{
-            opacity: [0.1, 0.12, 0.1],
+            opacity: [0.15, 0.25, 0.15],
+            scale: [1, 1.15, 1],
           }}
           transition={{
             duration: 7,
@@ -322,41 +334,56 @@ export const Hero = () => {
             delay: 2,
           }}
         />
+        <motion.div
+          className="absolute top-1/2 left-1/3 w-48 h-48 bg-emerald-500/10 rounded-full filter blur-3xl"
+          animate={{
+            opacity: [0.1, 0.18, 0.1],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 9,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1,
+          }}
+        />
       </div>
 
-      {/* ELEMENTOS NEON REDUZIDOS */}
+      {/* ELEMENTOS NEON BLASTER */}
       <div className="absolute inset-0 pointer-events-none">
         {neonConfigs.map(({ Icon, color, size, top, left }, index) => (
           <motion.div
             key={index}
             ref={setNeonElementRef(index)}
-            className={`absolute ${color} ${size} opacity-70`}
+            className={`absolute ${color} ${size} opacity-80 filter drop-shadow-lg`}
             style={{ top, left }}
             animate={{
-              y: [0, -10, 0],
+              y: [0, -15, 0],
+              rotate: [0, index % 2 === 0 ? 8 : -8, 0],
             }}
             transition={{
-              duration: 4 + index,
+              duration: 5 + index,
               repeat: Infinity,
               ease: "easeInOut",
+              delay: index * 0.5,
             }}
           >
-            <Icon className="w-full h-full drop-shadow-lg" />
+            <Icon className="w-full h-full" />
           </motion.div>
         ))}
       </div>
 
-      {/* CONTEÚDO PRINCIPAL COMPACTO */}
-      <div className="relative z-10 w-full h-full flex flex-col items-center justify-center px-4 sm:px-6">
-        {/* CONTEÚDO CENTRAL - ESPAÇAMENTOS COMPACTOS */}
-        <div className="flex flex-col items-center justify-center w-full max-w-4xl mx-auto">
-          {/* TÍTULO COMPACTO */}
+      {/* CONTEÚDO PRINCIPAL BLASTER */}
+      <div className="relative z-10 w-full h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
+        {/* CONTEÚDO CENTRAL - TÍTULOS E BOTÕES AUMENTADOS */}
+        <div className="flex flex-col items-center justify-center w-full max-w-5xl mx-auto">
+          {/* TÍTULO BLASTER AUMENTADO */}
           <div
             ref={titleRef}
             onMouseMove={handleMouseMove}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            className="text-center mb-6 w-full"
+            className="text-center mb-8 w-full"
           >
             <motion.h1
               style={{
@@ -364,15 +391,15 @@ export const Hero = () => {
                 rotateY: isHovering && !isMobile ? rotateY : 0,
                 transformStyle: "preserve-3d",
               }}
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-tight cursor-default"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-7xl font-black text-white mb-6 leading-tight cursor-default transform-gpu"
             >
               {titleWords.map((word, wordIndex) => (
-                <span key={wordIndex} className="block mb-1">
+                <span key={wordIndex} className="block mb-2">
                   {word.split("").map((letter, letterIndex) => (
                     <span
                       key={`${wordIndex}-${letterIndex}`}
                       ref={setTitleLetterRef(wordIndex, letterIndex)}
-                      className="inline-block mx-0.5 hover:scale-110 hover:text-cyan-300 transition-transform duration-200"
+                      className="inline-block mx-0.5 lg:mx-1 hover:scale-110 hover:text-cyan-300 transition-transform duration-200 hover:drop-shadow-[0_0_15px_rgba(34,211,238,0.6)]"
                     >
                       {letter === " " ? "\u00A0" : letter}
                     </span>
@@ -382,51 +409,54 @@ export const Hero = () => {
             </motion.h1>
           </div>
 
-          {/* SUBTÍTULO COMPACTO */}
-          <div className="w-full max-w-2xl mx-auto mb-8">
+          {/* SUBTÍTULO BLASTER AUMENTADO */}
+          <div className="w-full max-w-3xl mx-auto mb-10">
             <motion.p
               ref={subtitleRef}
-              className="text-base sm:text-lg md:text-xl text-gray-300 text-center leading-relaxed"
+              className="text-xl sm:text-2xl lg:text-3xl text-gray-300 text-center leading-relaxed font-light"
             >
-              <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent bg-size-200 animate-gradient font-medium">
                 Transformo visões ambiciosas em soluções digitais com tecnologia
                 de ponta e código impecável
               </span>
             </motion.p>
           </div>
 
-          {/* BOTÕES COMPACTOS */}
-          <div className="w-full max-w-md mx-auto mb-8">
-            <div className="flex flex-col sm:flex-row gap-3 items-center justify-center w-full">
-              {/* BOTÃO PRIMÁRIO */}
+          {/* BOTÕES BLASTER AUMENTADOS */}
+          <div className="w-full max-w-lg mx-auto mb-8">
+            <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 items-center justify-center w-full">
+              {/* BOTÃO PRIMÁRIO BLASTER */}
               <div ref={setButtonRef(0)} className="w-full sm:w-auto">
                 <Button
                   asChild
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold text-base py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-white/20"
+                  className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 hover:from-blue-700 hover:via-purple-700 hover:to-cyan-700 text-white font-bold text-lg lg:text-xl py-5 lg:py-6 px-8 lg:px-10 rounded-xl lg:rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 border border-white/20 relative overflow-hidden group"
                 >
                   <a
                     href="#contact"
-                    className="flex items-center justify-center gap-2"
+                    className="flex items-center justify-center gap-3"
                   >
-                    <Mail className="w-5 h-5" />
-                    <span>INICIAR PROJETO</span>
+                    <Mail className="w-5 h-5 lg:w-6 lg:h-6 group-hover:scale-110 transition-transform duration-300" />
+                    <span className="font-bold tracking-wide">
+                      INICIAR PROJETO
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                   </a>
                 </Button>
               </div>
 
-              {/* BOTÃO SECUNDÁRIO */}
+              {/* BOTÃO SECUNDÁRIO BLASTER */}
               <div ref={setButtonRef(1)} className="w-full sm:w-auto">
                 <Button
                   asChild
-                  className="w-full bg-white/10 backdrop-blur-lg border border-white/20 text-white font-semibold text-base py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 hover:bg-white/15"
+                  className="w-full bg-white/10 backdrop-blur-xl border border-white/20 text-white font-bold text-lg lg:text-xl py-5 lg:py-6 px-8 lg:px-10 rounded-xl lg:rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:bg-white/15 hover:border-white/30 relative overflow-hidden group"
                 >
                   <a
                     href="/docs/curriculo-erick-reis.pdf"
                     download
-                    className="flex items-center justify-center gap-2"
+                    className="flex items-center justify-center gap-3"
                   >
-                    <Download className="w-5 h-5" />
-                    <span>BAIXAR CV</span>
+                    <Download className="w-5 h-5 lg:w-6 lg:h-6 group-hover:scale-110 transition-transform duration-300" />
+                    <span className="font-bold tracking-wide">BAIXAR CV</span>
                   </a>
                 </Button>
               </div>
@@ -434,37 +464,37 @@ export const Hero = () => {
           </div>
         </div>
 
-        {/* SCROLL INDICATOR PEQUENO */}
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+        {/* SCROLL INDICATOR BLASTER */}
+        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
           <motion.button
             ref={scrollIndicatorRef}
             onClick={() => scrollToSection("about")}
-            className="bg-transparent border-none cursor-pointer p-2 flex flex-col items-center gap-1 group"
+            className="bg-transparent border-none cursor-pointer p-3 flex flex-col items-center gap-2 group"
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.95 }}
           >
             <motion.span
-              className="text-cyan-400 text-xs font-mono uppercase"
+              className="text-cyan-400 text-sm font-mono font-semibold tracking-widest uppercase group-hover:text-cyan-300"
               animate={{
-                opacity: [0.6, 1, 0.6],
+                opacity: [0.7, 1, 0.7],
               }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              Explorar
+              Explorar Mais
             </motion.span>
 
             <motion.div
               animate={{
-                y: [0, 5, 0],
+                y: [0, 8, 0],
               }}
               transition={{
                 duration: 1.5,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="w-8 h-8 rounded-full flex items-center justify-center border border-cyan-400/30 bg-cyan-400/10 group-hover:border-cyan-400/50"
+              className="w-10 h-10 rounded-full flex items-center justify-center border border-cyan-400/30 bg-cyan-400/10 backdrop-blur-xl group-hover:border-cyan-400/50 group-hover:bg-cyan-400/20 transition-all duration-300"
             >
-              <ArrowDown className="w-3 h-3 text-cyan-400" />
+              <ArrowDown className="w-4 h-4 text-cyan-400 group-hover:text-cyan-300" />
             </motion.div>
           </motion.button>
         </div>
