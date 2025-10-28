@@ -1,4 +1,4 @@
-// components/sections/Hero/Hero.tsx - TAMANHO PERFEITO COM GRADIENTE BLASTER
+// components/sections/Hero/Hero.tsx - ESPAÇAMENTOS OTIMIZADOS
 "use client";
 
 import {
@@ -12,6 +12,10 @@ import {
   Server,
   Database,
   Globe,
+  Crown,
+  Trophy,
+  Star,
+  Gem,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
@@ -24,6 +28,7 @@ export const Hero = () => {
   const [isHovering, setIsHovering] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(80);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // Refs para animação GSAP
   const titleLettersRef = useRef<(HTMLSpanElement | null)[]>([]);
@@ -54,8 +59,8 @@ export const Hero = () => {
     checkMobile();
     updateHeaderHeight();
 
-    // Aguardar o header renderizar
     setTimeout(updateHeaderHeight, 100);
+    setTimeout(() => setIsLoaded(true), 300);
 
     window.addEventListener("resize", checkMobile);
     window.addEventListener("resize", updateHeaderHeight);
@@ -68,7 +73,7 @@ export const Hero = () => {
 
   // Animação de entrada OTIMIZADA
   useEffect(() => {
-    if (!heroRef.current) return;
+    if (!heroRef.current || !isLoaded) return;
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline();
@@ -171,8 +176,8 @@ export const Hero = () => {
       // Animações contínuas suaves
       neonElements.forEach((element, index) => {
         gsap.to(element, {
-          y: -20 - index * 2,
-          rotation: index % 2 === 0 ? 10 : -10,
+          y: -15 - index * 2,
+          rotation: index % 2 === 0 ? 8 : -8,
           duration: 4 + index,
           ease: "sine.inOut",
           repeat: -1,
@@ -183,7 +188,7 @@ export const Hero = () => {
     }, heroRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [isLoaded]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!titleRef.current || isMobile) return;
@@ -241,46 +246,46 @@ export const Hero = () => {
   // Configuração dos elementos neon
   const neonConfigs = [
     {
+      Icon: Crown,
+      color: "text-yellow-400",
+      size: "text-2xl",
+      top: "15%",
+      left: "10%",
+    },
+    {
       Icon: Code2,
       color: "text-cyan-400",
       size: "text-3xl",
-      top: "18%",
-      left: "12%",
+      top: "20%",
+      left: "85%",
     },
     {
       Icon: Cpu,
       color: "text-purple-400",
-      size: "text-3xl",
-      top: "22%",
-      left: "82%",
+      size: "text-2xl",
+      top: "70%",
+      left: "15%",
     },
     {
       Icon: Zap,
       color: "text-green-400",
       size: "text-2xl",
-      top: "72%",
-      left: "18%",
+      top: "65%",
+      left: "80%",
     },
     {
       Icon: Sparkles,
       color: "text-amber-400",
-      size: "text-2xl",
-      top: "68%",
-      left: "78%",
-    },
-    {
-      Icon: Server,
-      color: "text-blue-400",
       size: "text-xl",
-      top: "42%",
-      left: "88%",
+      top: "35%",
+      left: "5%",
     },
     {
       Icon: Globe,
-      color: "text-indigo-400",
+      color: "text-blue-400",
       size: "text-xl",
-      top: "38%",
-      left: "8%",
+      top: "40%",
+      left: "90%",
     },
   ];
 
@@ -295,7 +300,7 @@ export const Hero = () => {
         marginTop: `${headerHeight}px`,
       }}
     >
-      {/* BACKGROUND BLASTER COMPLETO */}
+      {/* BACKGROUND MEGA PREMIUM */}
       <div className="absolute inset-0 overflow-hidden">
         <div
           className="absolute inset-0"
@@ -312,7 +317,7 @@ export const Hero = () => {
           }}
         />
 
-        {/* ELEMENTOS ORB BLASTER */}
+        {/* ELEMENTOS ORB */}
         <motion.div
           className="absolute top-1/4 left-1/6 w-64 h-64 bg-cyan-500/15 rounded-full filter blur-3xl"
           animate={{
@@ -334,22 +339,9 @@ export const Hero = () => {
             delay: 2,
           }}
         />
-        <motion.div
-          className="absolute top-1/2 left-1/3 w-48 h-48 bg-emerald-500/10 rounded-full filter blur-3xl"
-          animate={{
-            opacity: [0.1, 0.18, 0.1],
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            duration: 9,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-        />
       </div>
 
-      {/* ELEMENTOS NEON BLASTER */}
+      {/* ELEMENTOS NEON */}
       <div className="absolute inset-0 pointer-events-none">
         {neonConfigs.map(({ Icon, color, size, top, left }, index) => (
           <motion.div
@@ -373,17 +365,17 @@ export const Hero = () => {
         ))}
       </div>
 
-      {/* CONTEÚDO PRINCIPAL BLASTER */}
+      {/* CONTEÚDO PRINCIPAL COM ESPAÇAMENTOS OTIMIZADOS */}
       <div className="relative z-10 w-full h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
-        {/* CONTEÚDO CENTRAL - TÍTULOS E BOTÕES AUMENTADOS */}
+        {/* CONTEÚDO CENTRAL - ESPAÇAMENTOS PERFEITOS */}
         <div className="flex flex-col items-center justify-center w-full max-w-5xl mx-auto">
-          {/* TÍTULO BLASTER AUMENTADO */}
+          {/* TÍTULO COM ESPAÇAMENTO OTIMIZADO */}
           <div
             ref={titleRef}
             onMouseMove={handleMouseMove}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            className="text-center mb-8 w-full"
+            className="text-center mb-6 lg:mb-8 w-full"
           >
             <motion.h1
               style={{
@@ -391,10 +383,10 @@ export const Hero = () => {
                 rotateY: isHovering && !isMobile ? rotateY : 0,
                 transformStyle: "preserve-3d",
               }}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-7xl font-black text-white mb-6 leading-tight cursor-default transform-gpu"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white mb-4 lg:mb-6 leading-tight cursor-default transform-gpu"
             >
               {titleWords.map((word, wordIndex) => (
-                <span key={wordIndex} className="block mb-2">
+                <span key={wordIndex} className="block mb-2 lg:mb-3">
                   {word.split("").map((letter, letterIndex) => (
                     <span
                       key={`${wordIndex}-${letterIndex}`}
@@ -409,8 +401,8 @@ export const Hero = () => {
             </motion.h1>
           </div>
 
-          {/* SUBTÍTULO BLASTER AUMENTADO */}
-          <div className="w-full max-w-3xl mx-auto mb-10">
+          {/* SUBTÍTULO COM ESPAÇAMENTO PERFEITO */}
+          <div className="w-full max-w-3xl mx-auto mb-8 lg:mb-10">
             <motion.p
               ref={subtitleRef}
               className="text-xl sm:text-2xl lg:text-3xl text-gray-300 text-center leading-relaxed font-light"
@@ -422,10 +414,10 @@ export const Hero = () => {
             </motion.p>
           </div>
 
-          {/* BOTÕES BLASTER AUMENTADOS */}
+          {/* BOTÕES COM ESPAÇAMENTO IDEAL */}
           <div className="w-full max-w-lg mx-auto mb-8">
             <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 items-center justify-center w-full">
-              {/* BOTÃO PRIMÁRIO BLASTER */}
+              {/* BOTÃO PRIMÁRIO */}
               <div ref={setButtonRef(0)} className="w-full sm:w-auto">
                 <Button
                   asChild
@@ -444,7 +436,7 @@ export const Hero = () => {
                 </Button>
               </div>
 
-              {/* BOTÃO SECUNDÁRIO BLASTER */}
+              {/* BOTÃO SECUNDÁRIO */}
               <div ref={setButtonRef(1)} className="w-full sm:w-auto">
                 <Button
                   asChild
@@ -464,8 +456,8 @@ export const Hero = () => {
           </div>
         </div>
 
-        {/* SCROLL INDICATOR BLASTER */}
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
+        {/* SCROLL INDICATOR POSICIONADO PERFEITAMENTE */}
+        <div className="absolute bottom-6 lg:bottom-8 left-1/2 transform -translate-x-1/2">
           <motion.button
             ref={scrollIndicatorRef}
             onClick={() => scrollToSection("about")}
@@ -499,6 +491,23 @@ export const Hero = () => {
           </motion.button>
         </div>
       </div>
+
+      {/* LOADING SIMPLES */}
+      {!isLoaded && (
+        <div className="absolute inset-0 z-50 bg-gray-950 flex items-center justify-center">
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="flex flex-col items-center gap-4"
+          >
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              className="w-12 h-12 border-4 border-cyan-400 border-t-transparent rounded-full"
+            />
+          </motion.div>
+        </div>
+      )}
     </section>
   );
 };
