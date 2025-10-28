@@ -44,9 +44,9 @@ const TechParticles = () => {
 
       gsap.to(particle, {
         opacity: 1,
-        y: -100,
-        x: Math.random() * 100 - 50,
-        rotation: Math.random() * 180,
+        y: -100, // Valor numérico
+        x: Math.random() * 100 - 50, // Valor numérico
+        rotation: Math.random() * 180, // Valor numérico
         duration: Math.random() * 3 + 2,
         ease: "power1.out",
         onComplete: () => {
@@ -154,32 +154,67 @@ const HeroText = () => {
   );
 };
 
-// Botão Principal
-const PrimaryButton = ({
+// Botão Melhorado - Com variantes e efeitos refinados
+const ImprovedButton = ({
   children,
   onClick,
   href,
+  variant = "primary", // 'primary', 'secondary', 'outline'
+  size = "default", // 'default', 'sm', 'lg'
   className = "",
+  icon,
+  disabled = false,
 }: {
   children: React.ReactNode;
   onClick?: () => void;
   href?: string;
+  variant?: "primary" | "secondary" | "outline";
+  size?: "default" | "sm" | "lg";
   className?: string;
+  icon?: React.ReactNode; // Ícone opcional
+  disabled?: boolean;
 }) => {
+  const getVariantClasses = () => {
+    switch (variant) {
+      case "primary":
+        return "bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white shadow-2xl hover:shadow-cyan-500/25";
+      case "secondary":
+        return "bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:border-white/30 shadow-2xl";
+      case "outline":
+        return "bg-transparent border border-cyan-400/50 text-cyan-400 hover:bg-cyan-400/10 hover:border-cyan-400/80 shadow-lg hover:shadow-cyan-500/25";
+      default:
+        return "bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white shadow-2xl hover:shadow-cyan-500/25";
+    }
+  };
+
+  const getSizeClasses = () => {
+    switch (size) {
+      case "sm":
+        return "py-2 px-4 text-sm";
+      case "lg":
+        return "py-4 px-8 text-lg";
+      default:
+        return "py-3 px-6";
+    }
+  };
+
   const buttonContent = (
     <motion.button
       className={`
-        relative bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 
-        text-white font-bold py-4 px-8 rounded-2xl shadow-2xl hover:shadow-cyan-500/25 
-        border-0 transition-all duration-300 transform hover:scale-105 active:scale-95
-        flex items-center gap-3 group overflow-hidden ${className}
+        relative font-bold rounded-2xl border-0 transition-all duration-300 transform hover:scale-105 active:scale-95
+        flex items-center justify-center gap-3 group overflow-hidden ${getVariantClasses()} ${getSizeClasses()} ${className}
+        ${disabled ? "opacity-50 cursor-not-allowed" : ""}
       `}
-      whileHover={{ y: -2 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={!disabled ? { y: -2 } : {}}
+      whileTap={!disabled ? { scale: 0.95 } : {}}
       onClick={onClick}
+      disabled={disabled}
     >
+      {icon && <span className="flex-shrink-0">{icon}</span>}
       <span className="relative z-10">{children}</span>
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+      {variant === "primary" && (
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+      )}
     </motion.button>
   );
 
@@ -194,47 +229,8 @@ const PrimaryButton = ({
   return buttonContent;
 };
 
-// Botão Secundário
-const SecondaryButton = ({
-  children,
-  onClick,
-  href,
-  className = "",
-}: {
-  children: React.ReactNode;
-  onClick?: () => void;
-  href?: string;
-  className?: string;
-}) => {
-  const buttonContent = (
-    <motion.button
-      className={`
-        bg-white/10 backdrop-blur-xl border border-white/20 text-white 
-        hover:bg-white/20 hover:border-white/30 font-bold py-4 px-8 rounded-2xl 
-        shadow-2xl transition-all duration-300 transform hover:scale-105 active:scale-95
-        flex items-center gap-3 ${className}
-      `}
-      whileHover={{ y: -2 }}
-      whileTap={{ scale: 0.95 }}
-      onClick={onClick}
-    >
-      {children}
-    </motion.button>
-  );
-
-  if (href) {
-    return (
-      <a href={href} download={href.includes("curriculo")}>
-        {buttonContent}
-      </a>
-    );
-  }
-
-  return buttonContent;
-};
-
-// Header Corrigido
-const Header = ({
+// Header Refinado - Integrado, com espaçamento e responsividade aprimorados
+const RefinedHeader = ({
   isScrolled,
   activeSection,
   onNavClick,
@@ -252,11 +248,14 @@ const Header = ({
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "h-16 bg-gray-950/95 backdrop-blur-xl border-b border-gray-800/50 shadow-xl"
-          : "h-20 bg-transparent"
-      }`}
+      className={`
+        fixed top-0 left-0 right-0 z-50 transition-all duration-500 w-full
+        ${
+          isScrolled
+            ? "h-16 bg-gray-950/90 backdrop-blur-xl border-b border-gray-800/50 shadow-xl"
+            : "h-20 bg-transparent"
+        }
+      `}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
         {/* Logo */}
@@ -274,13 +273,13 @@ const Header = ({
               <Image
                 src="/images/hashblue.svg"
                 alt="Erick Reis Logo"
-                width={40}
-                height={40}
+                width={36}
+                height={36} // Ajustado para responsividade
                 className="brightness-125"
               />
             </motion.div>
             <div className="text-left hidden sm:block">
-              <h3 className="text-lg font-black bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+              <h3 className="text-base sm:text-lg font-black bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                 ÉRICK REIS
               </h3>
               <p className="text-xs font-mono text-gray-400 tracking-widest">
@@ -291,7 +290,9 @@ const Header = ({
         </motion.button>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-1">
+        <nav className="hidden lg:flex items-center gap-2">
+          {" "}
+          {/* Ajustado gap */}
           {navItems.map((item, index) => {
             const sectionName = item.href.replace("#", "");
             const isActive = activeSection === sectionName;
@@ -300,11 +301,14 @@ const Header = ({
               <motion.button
                 key={item.name}
                 onClick={() => onNavClick(sectionName)}
-                className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 border ${
-                  isActive
-                    ? "text-cyan-400 bg-cyan-400/10 border-cyan-400/20"
-                    : "text-gray-300 hover:text-white hover:bg-white/5 border-transparent"
-                }`}
+                className={`
+                  px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 border
+                  ${
+                    isActive
+                      ? "text-cyan-400 bg-cyan-400/10 border-cyan-400/20"
+                      : "text-gray-300 hover:text-white hover:bg-white/5 border-transparent"
+                  }
+                `}
                 whileHover={{ y: -1 }}
                 whileTap={{ y: 0 }}
                 initial={{ opacity: 0, y: -20 }}
@@ -324,24 +328,26 @@ const Header = ({
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <PrimaryButton
+          <ImprovedButton
             href="/docs/curriculo-erick-reis.pdf"
-            className="text-sm py-2 px-4"
+            variant="outline" // Alterado para 'outline' para harmonizar com o fundo escuro
+            size="sm"
+            icon={<Download className="w-4 h-4" />}
           >
-            <Download className="w-4 h-4" />
             CV
-          </PrimaryButton>
+          </ImprovedButton>
         </motion.div>
 
         {/* Mobile Menu Button */}
         <div className="flex lg:hidden items-center gap-2">
-          <PrimaryButton
+          <ImprovedButton
             href="/docs/curriculo-erick-reis.pdf"
-            className="text-sm p-2"
+            variant="outline" // Alterado para 'outline' para harmonizar com o fundo escuro
+            size="sm"
+            icon={<Download className="w-4 h-4" />}
           >
-            <Download className="w-4 h-4" />
-          </PrimaryButton>
-
+            CV
+          </ImprovedButton>
           <Button
             variant="ghost"
             size="icon"
@@ -357,7 +363,7 @@ const Header = ({
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - Refinado para melhor responsividade e espaçamento */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -368,6 +374,8 @@ const Header = ({
             className="absolute top-full left-0 right-0 bg-gray-950/95 backdrop-blur-xl border-b border-gray-800/50 lg:hidden overflow-hidden"
           >
             <nav className="p-4 space-y-2">
+              {" "}
+              {/* Ajustado padding e gap */}
               {navItems.map((item, index) => {
                 const sectionName = item.href.replace("#", "");
                 const isActive = activeSection === sectionName;
@@ -379,11 +387,14 @@ const Header = ({
                       onNavClick(sectionName);
                       onMobileMenuToggle();
                     }}
-                    className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg transition-all duration-300 border ${
-                      isActive
-                        ? "text-cyan-400 bg-cyan-400/10 border-cyan-400/20"
-                        : "text-gray-300 hover:text-white hover:bg-white/5 border-transparent"
-                    }`}
+                    className={`
+                      w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg transition-all duration-300 border
+                      ${
+                        isActive
+                          ? "text-cyan-400 bg-cyan-400/10 border-cyan-400/20"
+                          : "text-gray-300 hover:text-white hover:bg-white/5 border-transparent"
+                      }
+                    `}
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: index * 0.1 }}
@@ -395,20 +406,20 @@ const Header = ({
                   </motion.button>
                 );
               })}
-
               <motion.div
                 className="pt-4 border-t border-gray-700/50"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
               >
-                <PrimaryButton
+                <ImprovedButton
                   href="/docs/curriculo-erick-reis.pdf"
-                  className="w-full justify-center text-sm py-3"
+                  variant="outline" // Mantido 'outline' para consistência
+                  className="w-full justify-center"
+                  icon={<Download className="w-4 h-4" />}
                 >
-                  <Download className="w-4 h-4" />
                   DOWNLOAD CV
-                </PrimaryButton>
+                </ImprovedButton>
               </motion.div>
             </nav>
           </motion.div>
@@ -418,14 +429,8 @@ const Header = ({
   );
 };
 
-// Hero Content Corrigido
-const HeroContent = ({
-  headerHeight,
-  onExploreClick,
-}: {
-  headerHeight: number;
-  onExploreClick: () => void;
-}) => {
+// Hero Content - Integrado com Header
+const HeroContent = ({ onExploreClick }: { onExploreClick: () => void }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -461,11 +466,7 @@ const HeroContent = ({
     <section
       id="hero"
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900"
-      style={{
-        paddingTop: `${headerHeight}px`,
-        minHeight: `calc(100vh - ${headerHeight}px)`,
-      }}
+      className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900"
     >
       {/* Background Effects */}
       <PremiumBackground intensity="high" />
@@ -473,7 +474,7 @@ const HeroContent = ({
       <TechParticles />
 
       {/* Conteúdo Principal */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex-grow flex flex-col justify-center">
         {/* Título */}
         <HeroText />
 
@@ -500,10 +501,13 @@ const HeroContent = ({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 2 }}
           >
-            <PrimaryButton onClick={() => onExploreClick()}>
-              <Mail className="w-5 h-5" />
+            <ImprovedButton
+              onClick={() => onExploreClick()}
+              variant="primary"
+              icon={<Mail className="w-5 h-5" />}
+            >
               INICIAR PROJETO
-            </PrimaryButton>
+            </ImprovedButton>
           </motion.div>
 
           <motion.div
@@ -512,16 +516,19 @@ const HeroContent = ({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 2.2 }}
           >
-            <SecondaryButton href="/docs/curriculo-erick-reis.pdf">
-              <Download className="w-5 h-5" />
+            <ImprovedButton
+              href="/docs/curriculo-erick-reis.pdf"
+              variant="outline" // Usando a nova variante 'outline'
+              icon={<Download className="w-5 h-5" />}
+            >
               BAIXAR CV
-            </SecondaryButton>
+            </ImprovedButton>
           </motion.div>
         </div>
 
-        {/* Scroll Indicator */}
+        {/* Scroll Indicator Centralizado */}
         <motion.div
-          className="hero-action-button"
+          className="hero-action-button flex flex-col items-center"
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 2.4 }}
@@ -551,7 +558,6 @@ export const HeroSection = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [headerHeight, setHeaderHeight] = useState(80);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -563,44 +569,38 @@ export const HeroSection = () => {
       const current = sections.find((section) => {
         const element = document.getElementById(section);
         if (!element) return false;
+        const scrollPadding =
+          parseInt(
+            getComputedStyle(document.documentElement).scrollPaddingTop
+          ) || 0;
         const rect = element.getBoundingClientRect();
-        return rect.top <= 100 && rect.bottom >= 100;
+        return rect.top <= scrollPadding + 10 && rect.bottom >= 10;
       });
       if (current) setActiveSection(current);
     };
 
-    const updateHeaderHeight = () => {
-      const header = document.querySelector("header");
-      if (header) setHeaderHeight(header.clientHeight);
-    };
-
     window.addEventListener("scroll", handleScroll);
     window.addEventListener("scroll", handleActiveSection);
-    window.addEventListener("resize", updateHeaderHeight);
 
-    // Initial calls
-    updateHeaderHeight();
-    handleScroll();
+    handleScroll(); // Executa uma vez ao montar
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("scroll", handleActiveSection);
-      window.removeEventListener("resize", updateHeaderHeight);
     };
   }, []);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      const offsetTop = element.offsetTop - headerHeight;
-      window.scrollTo({ top: offsetTop, behavior: "smooth" });
-      setIsMobileMenuOpen(false);
+      element.scrollIntoView({ behavior: "smooth" });
+      setIsMobileMenuOpen(false); // Fecha o menu mobile após navegar
     }
   };
 
   return (
     <div className="relative">
-      <Header
+      <RefinedHeader // Renomeado componente
         isScrolled={isScrolled}
         activeSection={activeSection}
         onNavClick={scrollToSection}
@@ -608,10 +608,7 @@ export const HeroSection = () => {
         onMobileMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
       />
 
-      <HeroContent
-        headerHeight={headerHeight}
-        onExploreClick={() => scrollToSection("about")}
-      />
+      <HeroContent onExploreClick={() => scrollToSection("about")} />
     </div>
   );
 };
