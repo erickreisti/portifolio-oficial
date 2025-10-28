@@ -38,7 +38,6 @@
   --radius: 0.75rem;
 }
 
-/* CORREÇÃO CRÍTICA: Fundo garantido */
 html {
   background: #0f172a !important;
   color-scheme: dark;
@@ -48,12 +47,11 @@ html {
   scroll-padding-top: 80px;
 }
 
-/* CORREÇÃO CRÍTICA: Body totalmente escuro */
 body {
   background: #0f172a !important;
   color: white;
-  margin: 0;
-  padding: 0;
+  margin: 0 !important;
+  padding: 0 !important;
   min-height: 100vh;
   overflow-x: hidden;
   width: 100%;
@@ -62,6 +60,26 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeSpeed;
+}
+
+header {
+  background: rgba(15, 23, 42, 0.98) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  contain: layout style paint;
+}
+
+/* Garante que o header cubra toda a largura */
+header > div {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Remove qualquer espaço extra do container do header */
+header .mx-auto {
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 /* ===== TYPOGRAPHY ===== */
@@ -197,6 +215,23 @@ h6 {
   }
 }
 
+/* ===== CORREÇÕES ESPECÍFICAS PARA HEADER ===== */
+/* Remove qualquer gap ou linha branca */
+.fixed {
+  transform: translateZ(0);
+}
+
+/* Garante que sections tenham background consistente */
+section {
+  background: #0f172a;
+  position: relative;
+}
+
+/* Override para garantir que não haja transparência indesejada */
+.bg-transparent {
+  background: transparent !important;
+}
+
 /* ===== PERFORMANCE OPTIMIZATIONS ===== */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -300,6 +335,15 @@ h6 {
 
   .neon-glow-combined {
     filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.6));
+  }
+
+  /* Correção mobile para header */
+  header {
+    background: rgba(15, 23, 42, 0.98) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    contain: layout style paint;
   }
 }
 
@@ -447,4 +491,23 @@ h6 {
     opacity: 1;
     transform: scale(1);
   }
+}
+
+/* ===== CORREÇÃO FINAL: GARANTIR HEADER SEM FALHAS ===== */
+/* Force header background */
+header:not(.bg-transparent) {
+  background: rgba(15, 23, 42, 0.98) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+}
+
+/* Remove qualquer borda ou linha que possa aparecer */
+header::before,
+header::after {
+  display: none !important;
+}
+
+/* Garante que o conteúdo do header não cause overflow */
+header > * {
+  max-width: 100% !important;
 }
