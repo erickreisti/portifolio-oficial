@@ -1,3 +1,4 @@
+// components/sections/Hero/Hero.tsx
 "use client";
 
 import {
@@ -65,7 +66,7 @@ export const Hero = () => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Animação de entrada
+  // Animação de entrada BLASTER PREMIUM
   useEffect(() => {
     if (!heroRef.current) return;
 
@@ -101,7 +102,7 @@ export const Hero = () => {
         "+=0.3"
       );
 
-      // Título
+      // Título com efeito BLASTER
       const titleLetters = titleLettersRef.current.filter(Boolean);
       tl.fromTo(
         titleLetters,
@@ -109,14 +110,16 @@ export const Hero = () => {
           opacity: 0,
           y: 80,
           scale: 1.2,
+          rotationX: 90,
         },
         {
           opacity: 1,
           y: 0,
           scale: 1,
-          duration: 0.6,
-          ease: "power3.out",
-          stagger: 0.03,
+          rotationX: 0,
+          duration: 0.8,
+          ease: "back.out(1.7)",
+          stagger: 0.02,
         },
         "-=0.5"
       );
@@ -128,10 +131,12 @@ export const Hero = () => {
           {
             opacity: 0,
             y: 30,
+            scale: 0.9,
           },
           {
             opacity: 1,
             y: 0,
+            scale: 1,
             duration: 0.8,
             ease: "power2.out",
           },
@@ -139,7 +144,7 @@ export const Hero = () => {
         );
       }
 
-      // Botões
+      // Botões com efeito premium
       const validButtons = buttonsRef.current.filter(
         Boolean
       ) as HTMLDivElement[];
@@ -150,14 +155,16 @@ export const Hero = () => {
             opacity: 0,
             scale: 0.8,
             y: 40,
+            rotationY: 90,
           },
           {
             opacity: 1,
             scale: 1,
             y: 0,
-            duration: 0.6,
+            rotationY: 0,
+            duration: 0.7,
             ease: "back.out(1.7)",
-            stagger: 0.1,
+            stagger: 0.15,
           },
           "-=0.2"
         );
@@ -170,39 +177,44 @@ export const Hero = () => {
           {
             opacity: 0,
             y: 20,
+            scale: 0.8,
           },
           {
             opacity: 1,
             y: 0,
-            duration: 0.5,
+            scale: 1,
+            duration: 0.6,
             ease: "power2.out",
           },
           "-=0.1"
         );
       }
 
-      // Animações contínuas dos elementos neon
+      // Animações contínuas BLASTER dos elementos neon
       const floatTl = gsap.timeline({ repeat: -1, yoyo: true });
       neonElements.forEach((element, index) => {
         floatTl.to(
           element,
           {
-            y: -20 - index * 5,
-            rotation: index % 2 === 0 ? 10 : -10,
-            duration: 3 + index,
+            y: -25 - index * 5,
+            rotation: index % 2 === 0 ? 15 : -15,
+            duration: 4 + index * 0.5,
             ease: "sine.inOut",
           },
-          index * 0.3
+          index * 0.2
         );
       });
 
-      // Pulsação neon
+      // Pulsação neon BLASTER
       const pulseTl = gsap.timeline({ repeat: -1, yoyo: true });
       pulseTl.to(`.${styles.neonElement}`, {
-        filter: "drop-shadow(0 0 15px currentColor) brightness(1.3)",
-        duration: 2,
+        filter: "drop-shadow(0 0 20px currentColor) brightness(1.4)",
+        duration: 2.5,
         ease: "sine.inOut",
-        stagger: 0.5,
+        stagger: {
+          each: 0.3,
+          from: "random",
+        },
       });
     }, heroRef);
 
@@ -235,9 +247,10 @@ export const Hero = () => {
     const button = buttonsRef.current[index];
     if (button) {
       gsap.to(button, {
-        scale: 1.05,
-        y: -2,
-        duration: 0.2,
+        scale: 1.08,
+        y: -4,
+        rotationY: 5,
+        duration: 0.3,
         ease: "power2.out",
       });
     }
@@ -249,7 +262,8 @@ export const Hero = () => {
       gsap.to(button, {
         scale: 1,
         y: 0,
-        duration: 0.2,
+        rotationY: 0,
+        duration: 0.3,
         ease: "power2.out",
       });
     }
@@ -291,43 +305,44 @@ export const Hero = () => {
     <section
       id="hero"
       ref={heroRef}
-      className={styles.heroSection}
+      className="relative bg-gray-950 overflow-hidden flex items-center justify-center min-h-screen w-full"
       style={{
         height: `calc(100vh - ${headerHeight}px)`,
         minHeight: `calc(100vh - ${headerHeight}px)`,
         marginTop: `${headerHeight}px`,
       }}
     >
-      {/* Background Divertido com Gradientes Animados */}
-      <div className={styles.backgroundContainer}>
+      {/* Background BLASTER PREMIUM */}
+      <div className="absolute inset-0 overflow-hidden">
         <motion.div
           className={styles.heroBg}
           style={{
             background: `
-              radial-gradient(circle at 15% 25%, rgba(59, 130, 246, 0.25) 0%, transparent 60%),
-              radial-gradient(circle at 85% 15%, rgba(139, 92, 246, 0.2) 0%, transparent 60%),
-              radial-gradient(circle at 45% 75%, rgba(16, 185, 129, 0.15) 0%, transparent 60%),
-              radial-gradient(circle at 75% 85%, rgba(245, 158, 11, 0.1) 0%, transparent 60%),
-              radial-gradient(circle at 25% 45%, rgba(239, 68, 68, 0.1) 0%, transparent 60%),
+              radial-gradient(circle at 15% 25%, rgba(59, 130, 246, 0.3) 0%, transparent 60%),
+              radial-gradient(circle at 85% 15%, rgba(139, 92, 246, 0.25) 0%, transparent 60%),
+              radial-gradient(circle at 45% 75%, rgba(16, 185, 129, 0.2) 0%, transparent 60%),
+              radial-gradient(circle at 75% 85%, rgba(245, 158, 11, 0.15) 0%, transparent 60%),
+              radial-gradient(circle at 25% 45%, rgba(239, 68, 68, 0.15) 0%, transparent 60%),
+              radial-gradient(circle at 60% 30%, rgba(168, 85, 247, 0.2) 0%, transparent 60%),
               linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.95) 100%)
             `,
           }}
         />
 
-        {/* Elementos de fundo animados */}
+        {/* Elementos de fundo animados BLASTER */}
         <motion.div
-          className={styles.animatedOrb1}
+          className="absolute top-1/4 left-1/6 w-72 h-72 bg-cyan-500/15 rounded-full filter blur-3xl"
           animate={{
-            opacity: [0.1, 0.2, 0.1],
-            scale: [1, 1.2, 1],
+            opacity: [0.1, 0.25, 0.1],
+            scale: [1, 1.3, 1],
           }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className={styles.animatedOrb2}
+          className="absolute bottom-1/4 right-1/5 w-64 h-64 bg-purple-500/12 rounded-full filter blur-3xl"
           animate={{
-            opacity: [0.15, 0.25, 0.15],
-            scale: [1, 1.15, 1],
+            opacity: [0.15, 0.3, 0.15],
+            scale: [1, 1.2, 1],
           }}
           transition={{
             duration: 7,
@@ -337,10 +352,10 @@ export const Hero = () => {
           }}
         />
         <motion.div
-          className={styles.animatedOrb3}
+          className="absolute top-1/3 right-1/4 w-56 h-56 bg-emerald-500/10 rounded-full filter blur-3xl"
           animate={{
-            opacity: [0.1, 0.18, 0.1],
-            scale: [1, 1.1, 1],
+            opacity: [0.1, 0.2, 0.1],
+            scale: [1, 1.15, 1],
           }}
           transition={{
             duration: 9,
@@ -351,48 +366,42 @@ export const Hero = () => {
         />
       </div>
 
-      {/* Elementos Neon Flutuantes */}
-      <div className={styles.neonContainer}>
-        <motion.div ref={setNeonElementRef(0)} className={styles.neonElement}>
-          <Code2 className={styles.neonIcon} />
-        </motion.div>
-
-        <motion.div ref={setNeonElementRef(1)} className={styles.neonElement}>
-          <Cpu className={styles.neonIcon} />
-        </motion.div>
-
-        <motion.div ref={setNeonElementRef(2)} className={styles.neonElement}>
-          <Zap className={styles.neonIcon} />
-        </motion.div>
-
-        <motion.div ref={setNeonElementRef(3)} className={styles.neonElement}>
-          <Sparkles className={styles.neonIcon} />
-        </motion.div>
-
-        <motion.div ref={setNeonElementRef(4)} className={styles.neonElement}>
-          <Server className={styles.neonIcon} />
-        </motion.div>
-
-        <motion.div ref={setNeonElementRef(5)} className={styles.neonElement}>
-          <Database className={styles.neonIcon} />
-        </motion.div>
-
-        <motion.div ref={setNeonElementRef(6)} className={styles.neonElement}>
-          <Globe className={styles.neonIcon} />
-        </motion.div>
+      {/* Elementos Neon Flutuantes BLASTER */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[
+          { Icon: Code2, color: "text-cyan-400", size: "text-3xl" },
+          { Icon: Cpu, color: "text-purple-400", size: "text-3xl" },
+          { Icon: Zap, color: "text-green-400", size: "text-2xl" },
+          { Icon: Sparkles, color: "text-amber-400", size: "text-2xl" },
+          { Icon: Server, color: "text-blue-400", size: "text-xl" },
+          { Icon: Database, color: "text-emerald-400", size: "text-xl" },
+          { Icon: Globe, color: "text-indigo-400", size: "text-2xl" },
+        ].map(({ Icon, color, size }, index) => (
+          <motion.div
+            key={index}
+            ref={setNeonElementRef(index)}
+            className={`absolute ${styles.neonElement} ${color} ${size}`}
+            style={{
+              top: `${[20, 25, 60, 65, 40, 45, 50][index]}%`,
+              left: `${[15, 80, 20, 75, 85, 10, 50][index]}%`,
+            }}
+          >
+            <Icon className={`${styles.neonIcon} w-full h-full`} />
+          </motion.div>
+        ))}
       </div>
 
-      {/* Conteúdo Principal */}
-      <div className={styles.contentContainer}>
-        {/* Conteúdo Central - Espaçamentos Ajustados */}
-        <div className={styles.mainContent}>
-          {/* Título Principal */}
+      {/* Conteúdo Principal BLASTER PREMIUM */}
+      <div className="relative z-10 w-full h-full flex flex-col items-center justify-between px-4 sm:px-6 lg:px-8">
+        {/* Conteúdo Central */}
+        <div className="flex flex-col items-center justify-center w-full max-w-7xl mx-auto flex-1 py-12 lg:py-16">
+          {/* Título Principal BLASTER */}
           <div
-            className={styles.titleContainer}
             ref={titleRef}
             onMouseMove={handleMouseMove}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
+            className="text-center mb-8 lg:mb-12 w-full"
           >
             <motion.h1
               style={{
@@ -400,15 +409,15 @@ export const Hero = () => {
                 rotateY: isHovering && !isMobile ? rotateY : 0,
                 transformStyle: "preserve-3d",
               }}
-              className={styles.mainTitle}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white mb-4 lg:mb-6 leading-tight lg:leading-none cursor-default transform-gpu"
             >
               {titleWords.map((word, wordIndex) => (
-                <span key={wordIndex} className={styles.titleLine}>
+                <span key={wordIndex} className="block mb-2 lg:mb-3">
                   {word.split("").map((letter, letterIndex) => (
                     <span
                       key={`${wordIndex}-${letterIndex}`}
                       ref={setTitleLetterRef(wordIndex, letterIndex)}
-                      className={styles.titleLetter}
+                      className="inline-block mx-0.5 lg:mx-1 hover:scale-110 hover:text-cyan-300 transition-transform duration-200"
                     >
                       {letter === " " ? "\u00A0" : letter}
                     </span>
@@ -418,58 +427,64 @@ export const Hero = () => {
             </motion.h1>
           </div>
 
-          {/* Subtítulo */}
-          <div className={styles.subtitleContainer}>
-            <motion.p ref={subtitleRef} className={styles.subtitle}>
-              <span className={styles.gradientText}>
+          {/* Subtítulo BLASTER */}
+          <div className="w-full max-w-4xl mx-auto mb-8 lg:mb-12 px-4">
+            <motion.p
+              ref={subtitleRef}
+              className="text-lg sm:text-xl lg:text-2xl text-gray-300 text-center leading-relaxed font-light"
+            >
+              <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent bg-size-200 animate-gradient">
                 Transformo visões ambiciosas em soluções digitais com tecnologia
                 de ponta e código impecável
               </span>
             </motion.p>
           </div>
 
-          {/* Botões CTA */}
-          <div className={styles.buttonsContainer}>
-            <div className={styles.buttonsWrapper}>
+          {/* Botões CTA BLASTER PREMIUM */}
+          <div className="w-full max-w-md lg:max-w-lg mx-auto mb-8">
+            <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 items-center justify-center w-full px-4">
               <div
                 ref={setButtonRef(0)}
-                className={styles.buttonWrapper}
+                className="w-full sm:w-auto"
                 onMouseEnter={() => handleButtonHover(0)}
                 onMouseLeave={() => handleButtonLeave(0)}
               >
                 <Button
                   asChild
-                  className={`${styles.heroPrimaryButton} ${styles.buttonGlowEffect}`}
+                  className="w-full bg-gradient-to-br from-blue-600 via-purple-600 to-cyan-600 hover:from-blue-700 hover:via-purple-700 hover:to-cyan-700 text-white font-bold text-lg lg:text-xl py-6 lg:py-7 px-8 lg:px-10 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 border border-white/20 relative overflow-hidden group"
                 >
                   <a
                     href="#contact"
-                    className={styles.buttonLink}
+                    className="flex items-center justify-center gap-3"
                     onMouseDown={(e) => e.preventDefault()}
                   >
-                    <Mail className={styles.buttonIcon} />
-                    <span className={styles.buttonText}>INICIAR PROJETO</span>
+                    <Mail className="w-6 h-6 lg:w-7 lg:h-7 group-hover:scale-110 transition-transform duration-300" />
+                    <span className="font-bold tracking-wide">
+                      INICIAR PROJETO
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                   </a>
                 </Button>
               </div>
 
               <div
                 ref={setButtonRef(1)}
-                className={styles.buttonWrapper}
+                className="w-full sm:w-auto"
                 onMouseEnter={() => handleButtonHover(1)}
                 onMouseLeave={() => handleButtonLeave(1)}
               >
                 <Button
                   asChild
-                  className={`${styles.heroSecondaryButton} ${styles.buttonGlowEffect}`}
+                  className="w-full bg-white/10 backdrop-blur-xl border border-white/20 text-white font-bold text-lg lg:text-xl py-6 lg:py-7 px-8 lg:px-10 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 hover:bg-white/15 hover:border-white/30 relative overflow-hidden group"
                 >
                   <a
                     href="/docs/curriculo-erick-reis.pdf"
                     download
-                    className={styles.buttonLink}
+                    className="flex items-center justify-center gap-3"
                     onMouseDown={(e) => e.preventDefault()}
                   >
-                    <Download className={styles.buttonIcon} />
-                    <span className={styles.buttonText}>BAIXAR CV</span>
+                    <Download className="w-6 h-6 lg:w-7 lg:h-7 group-hover:scale-110 transition-transform duration-300" />
+                    <span className="font-bold tracking-wide">BAIXAR CV</span>
                   </a>
                 </Button>
               </div>
@@ -477,18 +492,18 @@ export const Hero = () => {
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className={styles.scrollContainer}>
+        {/* Scroll Indicator BLASTER */}
+        <div className="w-full flex justify-center items-center pb-6 lg:pb-8">
           <motion.button
             ref={scrollIndicatorRef}
             onClick={() => scrollToSection("about")}
-            className={styles.scrollIndicator}
+            className="bg-transparent border-none rounded-full transition-all duration-400 hover:bg-white/5 cursor-pointer p-4 flex flex-col items-center gap-3 group"
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.95 }}
             onMouseDown={(e) => e.preventDefault()}
           >
             <motion.span
-              className={styles.scrollText}
+              className="text-cyan-400 text-xs font-mono font-semibold tracking-widest uppercase group-hover:text-cyan-300"
               animate={{
                 opacity: [0.7, 1, 0.7],
               }}
@@ -499,16 +514,16 @@ export const Hero = () => {
 
             <motion.div
               animate={{
-                y: [0, 8, 0],
+                y: [0, 10, 0],
               }}
               transition={{
                 duration: 1.5,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className={styles.scrollArrow}
+              className="w-12 h-12 rounded-full flex items-center justify-center border border-cyan-400/30 bg-cyan-400/10 backdrop-blur-xl group-hover:border-cyan-400/60 group-hover:bg-cyan-400/20 transition-all duration-300"
             >
-              <ArrowDown className={styles.scrollIcon} />
+              <ArrowDown className="w-5 h-5 text-cyan-400 group-hover:text-cyan-300 transition-colors duration-300" />
             </motion.div>
           </motion.button>
         </div>
