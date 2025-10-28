@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import {
   Code2,
   Cpu,
@@ -16,6 +17,7 @@ import {
   Globe,
   Cloud,
 } from "lucide-react";
+import { PremiumBackground } from "@/components/layout/PremiumBackground";
 
 export const TechLoading = () => {
   const [progress, setProgress] = useState(0);
@@ -45,7 +47,7 @@ export const TechLoading = () => {
           setTimeout(() => setIsComplete(true), 800);
           return 100;
         }
-        return prev + Math.random() * 4 + 2; // Progressão mais suave
+        return prev + Math.random() * 4 + 2;
       });
     }, 100);
 
@@ -65,54 +67,57 @@ export const TechLoading = () => {
 
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 z-50 overflow-hidden">
-      {/* Background Premium igual à HeroSection */}
-      <div className="absolute inset-0">
-        {/* Grid Tecnológico */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_99%,rgba(6,182,212,0.1)_100%)] bg-[length:100px_100px]" />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_99%,rgba(6,182,212,0.1)_100%)] bg-[length:100px_100px]" />
-        </div>
+      {/* Background Premium idêntico à HeroSection */}
+      <PremiumBackground intensity="high" />
 
-        {/* Partículas de Código */}
-        <div className="absolute inset-0">
-          {[...Array(12)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute text-cyan-400 text-xs font-mono opacity-60 animate-float"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-                animationDuration: `${Math.random() * 8 + 4}s`,
-              }}
-            >
-              {
-                [
-                  "{ }",
-                  "< />",
-                  "=>",
-                  "async",
-                  "await",
-                  "const",
-                  "export",
-                  "return",
-                  "function",
-                  "import",
-                  "type",
-                  "interface",
-                ][i]
-              }
-            </div>
-          ))}
-        </div>
-
-        {/* Elementos Flutuantes Neon */}
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-32 h-32 border border-cyan-400/30 rounded-full animate-pulse" />
-          <div className="absolute bottom-1/3 right-1/3 w-24 h-24 border border-cyan-400/20 rounded-full animate-ping" />
-          <Globe className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 text-cyan-400/20 animate-spin-slow" />
-        </div>
+      {/* Grid Tecnológico idêntico */}
+      <div className="absolute inset-0 pointer-events-none opacity-10">
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_99%,rgba(6,182,212,0.1)_100%)] bg-[length:100px_100px]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_99%,rgba(6,182,212,0.1)_100%)] bg-[length:100px_100px]" />
       </div>
+
+      {/* Partículas de Código */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[...Array(12)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute text-cyan-400 text-xs font-mono opacity-60 animate-float"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 3}s`,
+              animationDuration: `${Math.random() * 8 + 4}s`,
+            }}
+          >
+            {
+              [
+                "{ }",
+                "< />",
+                "=>",
+                "async",
+                "await",
+                "const",
+                "export",
+                "return",
+                "function",
+                "import",
+                "type",
+                "interface",
+              ][i]
+            }
+          </div>
+        ))}
+      </div>
+
+      {/* Elementos Flutuantes Neon */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-32 h-32 border border-cyan-400/30 rounded-full animate-pulse" />
+        <div className="absolute bottom-1/3 right-1/3 w-24 h-24 border border-cyan-400/20 rounded-full animate-ping" />
+        <Globe className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 text-cyan-400/20 animate-spin-slow" />
+      </div>
+
+      {/* Efeitos de Partículas em Tempo Real */}
+      <ParticleEffects progress={progress} />
 
       <div className="flex items-center justify-center min-h-screen p-6">
         <div className="max-w-2xl w-full space-y-8">
@@ -286,9 +291,6 @@ export const TechLoading = () => {
           </div>
         </div>
       </div>
-
-      {/* Efeitos de Partículas em Tempo Real */}
-      <ParticleEffects progress={progress} />
     </div>
   );
 };
@@ -313,13 +315,6 @@ const ParticleEffects = ({ progress }: { progress: number }) => {
       ))}
     </div>
   );
-};
-
-// Componente de Motion para animações (simplificado)
-const motion = {
-  h1: ({ children, className, initial, animate, transition }: any) => (
-    <h1 className={className}>{children}</h1>
-  ),
 };
 
 // Estilos CSS embutidos
