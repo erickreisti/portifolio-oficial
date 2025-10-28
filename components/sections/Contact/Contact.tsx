@@ -36,43 +36,31 @@ const NEON_ELEMENTS_CONFIG = [
   {
     Icon: Send,
     position: "top-32 right-24",
-    color: "text-purple-400",
+    color: "text-cyan-400",
     size: "text-3xl",
   },
   {
     Icon: Mail,
     position: "bottom-40 left-24",
-    color: "text-green-400",
+    color: "text-cyan-400",
     size: "text-2xl",
   },
   {
     Icon: MapPin,
     position: "bottom-32 right-20",
-    color: "text-amber-400",
+    color: "text-cyan-400",
     size: "text-2xl",
   },
   {
     Icon: Phone,
     position: "top-40 right-16",
-    color: "text-blue-400",
+    color: "text-cyan-400",
     size: "text-xl",
   },
   {
     Icon: Rocket,
     position: "bottom-48 left-16",
-    color: "text-emerald-400",
-    size: "text-xl",
-  },
-  {
-    Icon: Code2,
-    position: "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-    color: "text-indigo-400",
-    size: "text-2xl",
-  },
-  {
-    Icon: Cloud,
-    position: "top-1/3 left-1/4",
-    color: "text-rose-400",
+    color: "text-cyan-400",
     size: "text-xl",
   },
 ] as const;
@@ -83,17 +71,15 @@ const CONTACT_INFO = [
     title: "EMAIL PRINCIPAL",
     content: "erickreisti@gmail.com",
     description: "Resposta em até 24 horas",
-    color: "blue",
-    gradient: "from-blue-400/20 to-cyan-400/20",
-    border: "border-blue-400/30",
+    gradient: "from-cyan-500/20 to-blue-500/20",
+    border: "border-cyan-400/30",
   },
   {
     icon: MapPin,
     title: "LOCALIZAÇÃO",
     content: "Rio de Janeiro, Brasil",
     description: "Disponível para projetos globais",
-    color: "cyan",
-    gradient: "from-cyan-400/20 to-blue-400/20",
+    gradient: "from-cyan-500/20 to-blue-500/20",
     border: "border-cyan-400/30",
   },
   {
@@ -101,9 +87,8 @@ const CONTACT_INFO = [
     title: "DISPONIBILIDADE",
     content: "Flexível & Comprometido",
     description: "Projetos de qualquer escala",
-    color: "purple",
-    gradient: "from-purple-400/20 to-pink-400/20",
-    border: "border-purple-400/30",
+    gradient: "from-cyan-500/20 to-blue-500/20",
+    border: "border-cyan-400/30",
   },
 ];
 
@@ -145,7 +130,6 @@ const ContactNeonElement = ({
         }
       );
 
-      // Animação flutuante contínua
       gsap.to(elementRef.current, {
         y: -15,
         rotation: 5,
@@ -161,8 +145,11 @@ const ContactNeonElement = ({
   }, [isInView, delay]);
 
   return (
-    <div ref={elementRef} className={`absolute ${position}`}>
-      <Icon className={`${color} text-2xl animate-pulse`} />
+    <div
+      ref={elementRef}
+      className={`absolute ${position} pointer-events-none`}
+    >
+      <Icon className={`${color} text-2xl opacity-70`} />
     </div>
   );
 };
@@ -177,19 +164,17 @@ export const Contact = () => {
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
   const shouldReduceMotion = useReducedMotion();
 
-  // GSAP Animations para seção principal
+  // GSAP Animations
   useEffect(() => {
     if (!isInView || shouldReduceMotion) return;
 
     const ctx = gsap.context(() => {
-      // Animação de entrada da seção
       gsap.fromTo(
         sectionRef.current,
         { opacity: 0 },
         { opacity: 1, duration: 1, ease: "power2.out" }
       );
 
-      // Timeline principal
       const tl = gsap.timeline();
 
       tl.fromTo(
@@ -209,23 +194,11 @@ export const Contact = () => {
           { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" },
           "-=0.2"
         );
-
-      // Animação pulsante para elementos interativos
-      gsap.to(".contact-interactive", {
-        y: -3,
-        boxShadow: "0 20px 40px rgba(59, 130, 246, 0.2)",
-        duration: 2,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-        stagger: 0.1,
-      });
     }, sectionRef);
 
     return () => ctx.revert();
   }, [isInView, shouldReduceMotion]);
 
-  // Validação otimizada
   const validateForm = useCallback((formData: FormData) => {
     const errors: Record<string, string> = {};
     const email = formData.get("email") as string;
@@ -253,7 +226,6 @@ export const Contact = () => {
     return Object.keys(errors).length === 0;
   }, []);
 
-  // Submit handler otimizado
   const handleSubmit = useCallback(
     async (formData: FormData) => {
       if (!validateForm(formData)) return;
@@ -301,10 +273,9 @@ export const Contact = () => {
     [validateForm]
   );
 
-  // Memoized elements para performance
   const neonElements = useMemo(
     () =>
-      NEON_ELEMENTS_CONFIG.map(({ Icon, position, color, size }, index) => (
+      NEON_ELEMENTS_CONFIG.map(({ Icon, position, color }, index) => (
         <ContactNeonElement
           key={index}
           Icon={Icon}
@@ -325,12 +296,12 @@ export const Contact = () => {
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: index * 0.1 }}
           viewport={{ once: true }}
-          className="flex items-start gap-4 p-4 rounded-xl border border-gray-700/50 hover:border-blue-400/30 transition-all duration-300 group cursor-pointer contact-interactive"
+          className="flex items-start gap-4 p-4 rounded-xl border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-300 group cursor-pointer"
         >
           <div
-            className={`w-12 h-12 rounded-full bg-gradient-to-br ${info.gradient} flex items-center justify-center border ${info.border} group-hover:scale-110 transition-transform duration-300`}
+            className={`w-12 h-12 rounded-full bg-gradient-to-br ${info.gradient} flex items-center justify-center border ${info.border} group-hover:border-cyan-400/50 transition-all duration-300`}
           >
-            <info.icon className={`w-6 h-6 text-${info.color}-400`} />
+            <info.icon className="w-6 h-6 text-cyan-400" />
           </div>
           <div className="flex-1">
             <p className="text-sm font-bold text-white mb-1">{info.title}</p>
@@ -346,62 +317,56 @@ export const Contact = () => {
     <section
       id="contact"
       ref={sectionRef}
-      className="relative min-h-screen bg-gray-950 overflow-hidden border-t border-gray-800/50"
+      className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 overflow-hidden"
     >
       <PremiumBackground intensity="medium">
-        {/* Elementos Neon - Renderização Otimizada */}
         <div className="absolute inset-0 pointer-events-none">
           {neonElements}
         </div>
       </PremiumBackground>
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-        {/* Header Premium */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+        {/* Header Harmonizado */}
         <motion.div
-          className="text-center mb-16 lg:mb-24 contact-header"
-          initial={{ opacity: 0, y: 30 }}
+          className="text-center mb-16 lg:mb-20 contact-header"
+          initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           viewport={{ once: true, amount: 0.2 }}
         >
           <motion.div
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.1, type: "spring" }}
+            initial={{ scale: 0, rotate: -180 }}
+            whileInView={{ scale: 1, rotate: 0 }}
+            transition={{ duration: 0.6, delay: 0.1, type: "spring" }}
             viewport={{ once: true }}
-            className="inline-flex items-center text-blue-400 bg-blue-500/10 border border-blue-400/30 px-4 py-2 rounded-full text-sm lg:text-base font-mono font-bold mb-6 lg:mb-8 contact-interactive"
+            className="inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-400/10 px-6 py-3 rounded-full border border-cyan-400/30 backdrop-blur-2xl mb-6 relative overflow-hidden group"
           >
-            <MessageCircle className="w-4 h-4 lg:w-5 lg:h-5 mr-2" />
+            <MessageCircle className="w-4 h-4 mr-3 animate-pulse" />
             CONEXÃO TECH
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-600" />
           </motion.div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-black text-white mb-4 lg:mb-6"
           >
-            VAMOS CRIAR{" "}
-            <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent bg-size-200 animate-gradient">
-              JUNTOS
-            </span>
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            viewport={{ once: true }}
-            className="text-lg lg:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed"
-          >
-            Pronto para transformar sua visão em realidade? Vamos conversar
-            sobre seu projeto e criar algo extraordinário
-          </motion.p>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
+              VAMOS CRIAR{" "}
+              <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                JUNTOS
+              </span>
+            </h1>
+            <p className="text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              Pronto para transformar sua visão em realidade? Vamos conversar
+              sobre seu projeto e criar algo extraordinário
+            </p>
+          </motion.div>
         </motion.div>
 
         {/* Grid Principal */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-16 lg:mb-24 contact-content">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16 lg:mb-20 contact-content">
           {/* Informações de Contato */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -409,9 +374,9 @@ export const Contact = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true, amount: 0.2 }}
           >
-            <Card className="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 shadow-2xl hover:shadow-blue-500/10 hover:border-blue-400/30 transition-all duration-500 group h-full contact-interactive">
-              <CardHeader className="pb-6 border-b border-gray-700/50">
-                <CardTitle className="text-xl lg:text-2xl font-black text-blue-400 flex items-center">
+            <Card className="bg-gray-900/60 backdrop-blur-xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 hover:shadow-cyan-400/20 hover:border-cyan-400/50 transition-all duration-500 group h-full">
+              <CardHeader className="pb-4 border-b border-cyan-400/20">
+                <CardTitle className="text-xl lg:text-2xl font-black text-cyan-400 flex items-center">
                   <Cpu className="w-6 h-6 mr-3" />
                   CONECTE-SE
                 </CardTitle>
@@ -424,9 +389,9 @@ export const Contact = () => {
               <CardContent className="pt-6 space-y-6">
                 {contactInfoElements}
 
-                <div className="pt-6 border-t border-gray-700/50">
+                <div className="pt-6 border-t border-cyan-400/20">
                   <p className="text-sm text-gray-400 flex items-start gap-2">
-                    <Sparkles className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+                    <Sparkles className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0" />
                     Vamos transformar suas ideias em soluções digitais
                     extraordinárias com tecnologia de ponta e criatividade.
                   </p>
@@ -442,9 +407,9 @@ export const Contact = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             viewport={{ once: true, amount: 0.2 }}
           >
-            <Card className="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 shadow-2xl hover:shadow-purple-500/10 hover:border-purple-400/30 transition-all duration-500 group h-full contact-interactive">
-              <CardHeader className="pb-6 border-b border-gray-700/50">
-                <CardTitle className="text-xl lg:text-2xl font-black text-purple-400 flex items-center">
+            <Card className="bg-gray-900/60 backdrop-blur-xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 hover:shadow-cyan-400/20 hover:border-cyan-400/50 transition-all duration-500 group h-full">
+              <CardHeader className="pb-4 border-b border-cyan-400/20">
+                <CardTitle className="text-xl lg:text-2xl font-black text-cyan-400 flex items-center">
                   <Send className="w-6 h-6 mr-3" />
                   MENSAGEM RÁPIDA
                 </CardTitle>
@@ -456,7 +421,6 @@ export const Contact = () => {
 
               <CardContent className="pt-6">
                 <form action={handleSubmit} className="space-y-6">
-                  {/* Campos do Formulário */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label
@@ -472,7 +436,7 @@ export const Contact = () => {
                         placeholder="Como prefere ser chamado?"
                         required
                         disabled={isLoading}
-                        className="bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-blue-400 focus:ring-blue-400 transition-all duration-300 hover:border-gray-600"
+                        className="bg-gray-800/50 border-cyan-500/20 text-white placeholder-gray-500 focus:border-cyan-400 focus:ring-cyan-400 transition-all duration-300"
                       />
                       {formErrors.name && (
                         <motion.p
@@ -500,7 +464,7 @@ export const Contact = () => {
                         placeholder="seu.melhor@email.com"
                         required
                         disabled={isLoading}
-                        className="bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-blue-400 focus:ring-blue-400 transition-all duration-300 hover:border-gray-600"
+                        className="bg-gray-800/50 border-cyan-500/20 text-white placeholder-gray-500 focus:border-cyan-400 focus:ring-cyan-400 transition-all duration-300"
                       />
                       {formErrors.email && (
                         <motion.p
@@ -529,7 +493,7 @@ export const Contact = () => {
                       placeholder="Ex: Site Institucional, App Mobile, Sistema Web..."
                       required
                       disabled={isLoading}
-                      className="bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-blue-400 focus:ring-blue-400 transition-all duration-300 hover:border-gray-600"
+                      className="bg-gray-800/50 border-cyan-500/20 text-white placeholder-gray-500 focus:border-cyan-400 focus:ring-cyan-400 transition-all duration-300"
                     />
                     {formErrors.subject && (
                       <motion.p
@@ -557,7 +521,7 @@ export const Contact = () => {
                       placeholder="Descreva sua visão, objetivos, tecnologias preferidas, prazo estimado e qualquer detalhe relevante..."
                       required
                       disabled={isLoading}
-                      className="bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-blue-400 focus:ring-blue-400 resize-none transition-all duration-300 hover:border-gray-600 min-h-[120px]"
+                      className="bg-gray-800/50 border-cyan-500/20 text-white placeholder-gray-500 focus:border-cyan-400 focus:ring-cyan-400 resize-none transition-all duration-300 min-h-[120px]"
                     />
                     {formErrors.message && (
                       <motion.p
@@ -571,7 +535,6 @@ export const Contact = () => {
                     )}
                   </div>
 
-                  {/* Estados de Feedback */}
                   {error && (
                     <motion.div
                       initial={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -607,7 +570,6 @@ export const Contact = () => {
                     </motion.div>
                   )}
 
-                  {/* Botão de Submit */}
                   <motion.div
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -615,9 +577,9 @@ export const Contact = () => {
                     <Button
                       type="submit"
                       disabled={isLoading}
-                      className="w-full bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 hover:from-blue-600 hover:via-purple-600 hover:to-cyan-600 text-white font-bold py-4 rounded-xl shadow-2xl hover:shadow-3xl transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none group relative overflow-hidden contact-interactive"
+                      className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold py-4 rounded-xl shadow-2xl shadow-cyan-400/30 hover:shadow-cyan-400/50 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden"
                     >
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
 
                       {!isLoading ? (
                         <span className="flex items-center justify-center gap-2 relative z-10">
@@ -646,54 +608,37 @@ export const Contact = () => {
           transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
         >
-          <div className="bg-gradient-to-r from-gray-900/60 to-gray-800/40 backdrop-blur-xl p-8 lg:p-12 rounded-3xl border border-gray-700/50 shadow-2xl relative overflow-hidden contact-interactive">
-            <div className="relative z-10">
-              <motion.h3
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-2xl lg:text-3xl font-black text-white mb-4"
-              >
-                Pronto para o próximo nível? 🚀
-              </motion.h3>
-
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="text-lg lg:text-xl text-gray-300 mb-6 max-w-3xl mx-auto"
-              >
-                Sua visão + minha expertise = Resultados extraordinários. Vamos
-                conversar?
-              </motion.p>
-
+          <div className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-2xl p-8 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 relative overflow-hidden group">
+            <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-8 relative z-10">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="flex flex-wrap justify-center gap-4 lg:gap-6"
+                initial={{ scale: 0, rotate: -180 }}
+                whileInView={{ scale: 1, rotate: 0 }}
+                transition={{ duration: 0.6, type: "spring" }}
+                viewport={{ once: true }}
+                className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/30 shadow-xl shadow-cyan-400/30 group-hover:border-cyan-400/50"
+                whileHover={{ rotate: 360 }}
               >
-                {[
-                  { text: "Resposta Rápida", color: "#60a5fa" },
-                  { text: "Orçamento Sem Compromisso", color: "#a855f7" },
-                  { text: "Consultoria Gratuita", color: "#22d3ee" },
-                ].map((item, index) => (
-                  <motion.div
-                    key={item.text}
-                    initial={{ opacity: 0, scale: 0 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-800/30 backdrop-blur-sm border border-gray-700/50"
-                  >
-                    <div
-                      className="w-2 h-2 rounded-full animate-pulse"
-                      style={{ backgroundColor: item.color }}
-                    />
-                    <span className="text-sm text-gray-300 font-mono">
-                      {item.text}
-                    </span>
-                  </motion.div>
-                ))}
+                <Rocket className="w-6 h-6 text-cyan-400" />
+              </motion.div>
+              <div className="text-center lg:text-left flex-1">
+                <h3 className="text-xl lg:text-2xl font-black text-white mb-2">
+                  Pronto para o próximo nível?
+                </h3>
+                <p className="text-gray-300 text-base lg:text-lg">
+                  Sua visão + minha expertise = Resultados extraordinários
+                </p>
+              </div>
+              <motion.div
+                initial={{ opacity: 0, x: 20, scale: 0.9 }}
+                whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.8 }}
+                viewport={{ once: true }}
+                className="w-full lg:w-auto"
+              >
+                <Button className="w-full lg:w-auto bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl border-none shadow-2xl shadow-cyan-400/30 transition-all duration-500 hover:shadow-cyan-400/50 hover:scale-105 relative overflow-hidden focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900">
+                  <Sparkles className="w-4 h-4 mr-2 transition-transform duration-300" />
+                  INICIAR CONVERSA
+                </Button>
               </motion.div>
             </div>
           </div>

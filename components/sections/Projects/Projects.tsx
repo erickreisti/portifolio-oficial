@@ -56,11 +56,11 @@ const TagsModal = ({
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.8 }}
-        className="bg-gray-900/95 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden"
+        className="bg-gray-900/95 backdrop-blur-xl border border-cyan-500/20 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden"
       >
-        <div className="flex items-center justify-between p-6 border-b border-gray-700/50">
+        <div className="flex items-center justify-between p-6 border-b border-cyan-400/20">
           <div className="flex items-center gap-3">
-            <Tag className="w-5 h-5 text-blue-400" />
+            <Tag className="w-5 h-5 text-cyan-400" />
             <h3 className="text-xl font-bold text-white">
               Tecnologias Utilizadas
             </h3>
@@ -75,7 +75,7 @@ const TagsModal = ({
           </Button>
         </div>
 
-        <div className="p-6 border-b border-gray-700/50">
+        <div className="p-6 border-b border-cyan-400/20">
           <h4 className="text-lg font-bold text-white mb-2">{project.title}</h4>
           <p className="text-gray-300 text-sm">{project.description}</p>
         </div>
@@ -92,7 +92,7 @@ const TagsModal = ({
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.2, delay: index * 0.05 }}
               >
-                <Badge className="bg-blue-500/10 text-blue-400 border-blue-400/30 font-mono text-xs font-bold">
+                <Badge className="bg-cyan-500/10 text-cyan-400 border-cyan-400/30 font-mono text-xs font-bold">
                   {tag}
                 </Badge>
               </motion.div>
@@ -100,10 +100,10 @@ const TagsModal = ({
           </div>
         </div>
 
-        <div className="flex gap-3 p-6 border-t border-gray-700/50">
+        <div className="flex gap-3 p-6 border-t border-cyan-400/20">
           <Button
             asChild
-            className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+            className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white"
           >
             <a
               href={project.githubUrl}
@@ -117,7 +117,7 @@ const TagsModal = ({
           {project.liveUrl && (
             <Button
               asChild
-              className="flex-1 bg-gray-800/50 border border-blue-400/30 text-blue-400 hover:bg-blue-500/10"
+              className="flex-1 bg-gray-800/50 border border-cyan-400/30 text-cyan-400 hover:bg-cyan-500/10"
             >
               <a
                 href={project.liveUrl}
@@ -156,9 +156,9 @@ const ProjectCard: React.FC<{
         viewport={{ once: true, amount: 0.2 }}
         className="h-full"
       >
-        <Card className="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 shadow-2xl hover:shadow-3xl hover:border-blue-400/30 transition-all duration-500 group h-full flex flex-col overflow-hidden hover:scale-105">
+        <Card className="bg-gray-900/60 backdrop-blur-xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 hover:shadow-cyan-400/20 hover:border-cyan-400/50 transition-all duration-500 group h-full flex flex-col overflow-hidden hover:scale-105">
           {/* Header com Imagem */}
-          <div className="h-32 lg:h-48 w-full bg-gradient-to-br from-blue-500/15 to-purple-500/10 relative overflow-hidden border-b border-gray-700/50">
+          <div className="h-32 lg:h-48 w-full bg-gradient-to-br from-cyan-500/15 to-blue-500/10 relative overflow-hidden border-b border-cyan-400/20">
             <div className="absolute inset-0">
               <Image
                 src={project.image}
@@ -167,7 +167,7 @@ const ProjectCard: React.FC<{
                 className="object-cover transition-transform duration-500 group-hover:scale-110"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/10" />
+              <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-blue-500/10" />
             </div>
             <div className="relative z-10 h-full flex flex-col items-center justify-center text-center p-4">
               <motion.div
@@ -175,9 +175,9 @@ const ProjectCard: React.FC<{
                 transition={{ type: "spring", stiffness: 300 }}
                 className="mb-2"
               >
-                <Cpu className="w-8 h-8 lg:w-12 lg:h-12 text-blue-400 filter drop-shadow-[0_0_8px_#60a5fa]" />
+                <Cpu className="w-8 h-8 lg:w-12 lg:h-12 text-cyan-400" />
               </motion.div>
-              <span className="text-white font-bold text-sm lg:text-base bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <span className="text-white font-bold text-sm lg:text-base bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
                 {project.title}
               </span>
             </div>
@@ -188,7 +188,7 @@ const ProjectCard: React.FC<{
               <span className="flex-1 truncate mr-2">{project.title}</span>
               <motion.div
                 whileHover={{ scale: 1.1, rotate: 15 }}
-                className="text-blue-400"
+                className="text-cyan-400"
               >
                 <Rocket className="w-4 h-4 lg:w-5 lg:h-5" />
               </motion.div>
@@ -208,7 +208,7 @@ const ProjectCard: React.FC<{
                   transition={{ duration: 0.2, delay: tagIndex * 0.05 }}
                   viewport={{ once: true }}
                 >
-                  <Badge className="bg-blue-500/10 text-blue-400 border-blue-400/30 font-mono text-xs font-bold hover:bg-blue-500/20 hover:scale-105 transition-all duration-300">
+                  <Badge className="bg-cyan-500/10 text-cyan-400 border-cyan-400/30 font-mono text-xs font-bold hover:bg-cyan-500/20 hover:scale-105 transition-all duration-300">
                     {tag}
                   </Badge>
                 </motion.div>
@@ -222,22 +222,22 @@ const ProjectCard: React.FC<{
                   viewport={{ once: true }}
                 >
                   <Badge
-                    className="bg-purple-500/10 text-purple-400 border-purple-400/30 font-mono text-xs font-bold hover:bg-purple-500/20 hover:scale-105 transition-all duration-300 cursor-pointer relative overflow-hidden"
+                    className="bg-cyan-500/10 text-cyan-400 border-cyan-400/30 font-mono text-xs font-bold hover:bg-cyan-500/20 hover:scale-105 transition-all duration-300 cursor-pointer relative overflow-hidden"
                     onClick={() => setIsModalOpen(true)}
                   >
                     +{project.tags.length - 3}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-400/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
                   </Badge>
                 </motion.div>
               )}
             </div>
           </CardContent>
 
-          <CardFooter className="pt-4 border-t border-gray-700/50 mt-auto">
+          <CardFooter className="pt-4 border-t border-cyan-400/20 mt-auto">
             <div className="flex gap-2 w-full">
               <Button
                 asChild
-                className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold text-xs lg:text-sm py-2 rounded-lg shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105"
+                className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold text-xs lg:text-sm py-2 rounded-lg shadow-xl shadow-cyan-400/30 hover:shadow-cyan-400/50 transition-all duration-500 hover:scale-105"
               >
                 <NextLink href={project.githubUrl} target="_blank">
                   <Github className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
@@ -247,7 +247,7 @@ const ProjectCard: React.FC<{
               {project.liveUrl && (
                 <Button
                   asChild
-                  className="flex-1 bg-gray-800/50 backdrop-blur-sm border border-blue-400/30 text-blue-400 hover:bg-blue-500/10 hover:border-blue-400/60 font-bold text-xs lg:text-sm py-2 rounded-lg transition-all duration-500 hover:scale-105"
+                  className="flex-1 bg-gray-800/50 backdrop-blur-sm border border-cyan-400/30 text-cyan-400 hover:bg-cyan-500/10 hover:border-cyan-400/60 font-bold text-xs lg:text-sm py-2 rounded-lg transition-all duration-500 hover:scale-105"
                 >
                   <NextLink href={project.liveUrl} target="_blank">
                     <ExternalLink className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
@@ -271,7 +271,7 @@ const ProjectCard: React.FC<{
   );
 };
 
-// Componente Neon Element para Projects REFATORADO
+// Componente Neon Element para Projects
 const ProjectsNeonElement = ({
   Icon,
   position,
@@ -309,7 +309,6 @@ const ProjectsNeonElement = ({
         }
       );
 
-      // Animação flutuante contínua
       gsap.to(elementRef.current, {
         y: -15,
         rotation: 5,
@@ -325,8 +324,11 @@ const ProjectsNeonElement = ({
   }, [isInView, delay]);
 
   return (
-    <div ref={elementRef} className={`absolute ${position}`}>
-      <Icon className={`${color} text-2xl animate-pulse`} />
+    <div
+      ref={elementRef}
+      className={`absolute ${position} pointer-events-none`}
+    >
+      <Icon className={`${color} text-2xl opacity-70`} />
     </div>
   );
 };
@@ -346,48 +348,36 @@ export const Projects = () => {
     {
       Icon: Code,
       position: "top-32 right-24",
-      color: "text-purple-400",
+      color: "text-cyan-400",
       delay: 1,
     },
     {
       Icon: Globe,
       position: "bottom-40 left-24",
-      color: "text-green-400",
+      color: "text-cyan-400",
       delay: 2,
     },
     {
       Icon: Database,
       position: "bottom-32 right-20",
-      color: "text-amber-400",
+      color: "text-cyan-400",
       delay: 3,
     },
     {
       Icon: Server,
       position: "top-40 right-16",
-      color: "text-blue-400",
+      color: "text-cyan-400",
       delay: 4,
     },
     {
       Icon: Smartphone,
       position: "bottom-48 left-16",
-      color: "text-emerald-400",
+      color: "text-cyan-400",
       delay: 5,
-    },
-    {
-      Icon: Cloud,
-      position: "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2",
-      color: "text-indigo-400",
-      delay: 6,
-    },
-    {
-      Icon: Zap,
-      position: "top-1/3 left-1/4",
-      color: "text-rose-400",
-      delay: 7,
     },
   ];
 
-  // GSAP Animations para seção principal
+  // GSAP Animations
   useEffect(() => {
     if (!isInView || !sectionRef.current) return;
 
@@ -423,16 +413,6 @@ export const Projects = () => {
           { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" },
           "-=0.2"
         );
-
-      gsap.to(".projects-interactive", {
-        y: -3,
-        boxShadow: "0 20px 40px rgba(59, 130, 246, 0.2)",
-        duration: 2,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-        stagger: 0.1,
-      });
     }, sectionRef);
 
     return () => ctx.revert();
@@ -442,7 +422,7 @@ export const Projects = () => {
     <section
       id="projects"
       ref={sectionRef}
-      className="relative min-h-screen bg-gray-950 overflow-hidden border-t border-gray-800/50"
+      className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 overflow-hidden"
     >
       <PremiumBackground intensity="medium">
         {/* Elementos Neon Flutuantes */}
@@ -453,39 +433,40 @@ export const Projects = () => {
         </div>
       </PremiumBackground>
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-        {/* Header */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+        {/* Header Harmonizado */}
         <motion.div
-          className="text-center mb-16 lg:mb-24 projects-header"
-          initial={{ opacity: 0, y: 30 }}
+          className="text-center mb-16 lg:mb-20 projects-header"
+          initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           viewport={{ once: true, amount: 0.2 }}
         >
           <motion.div
             initial={{ scale: 0, rotate: -180 }}
             whileInView={{ scale: 1, rotate: 0 }}
-            transition={{ duration: 0.5, delay: 0.1, type: "spring" }}
+            transition={{ duration: 0.6, delay: 0.1, type: "spring" }}
             viewport={{ once: true }}
-            className="inline-flex items-center text-blue-400 bg-blue-500/10 border border-blue-400/30 px-4 py-2 rounded-full text-sm lg:text-base font-mono font-bold mb-6 lg:mb-8 projects-interactive"
+            className="inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-400/10 px-6 py-3 rounded-full border border-cyan-400/30 backdrop-blur-2xl mb-6 relative overflow-hidden group"
           >
-            <Sparkles className="w-4 h-4 lg:w-5 lg:h-5 mr-2 animate-pulse" />
+            <Sparkles className="w-4 h-4 mr-3 animate-pulse" />
             PORTFÓLIO PREMIUM
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-600" />
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <h1 className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-black text-white mb-4 lg:mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
               PROJETOS{" "}
-              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent bg-size-200 animate-gradient">
+              <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
                 DE IMPACTO
               </span>
             </h1>
-            <p className="text-lg lg:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
               Soluções inovadoras desenvolvidas com tecnologias de ponta,
               arquitetura escalável e foco em performance excepcional
             </p>
@@ -493,7 +474,7 @@ export const Projects = () => {
         </motion.div>
 
         {/* Grid de Projetos */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16 lg:mb-24 projects-grid">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16 lg:mb-20 projects-grid">
           {projects.map((project, index) => (
             <ProjectCard key={project.id} project={project} index={index} />
           ))}
@@ -501,7 +482,7 @@ export const Projects = () => {
 
         {/* Stats */}
         <motion.div
-          className="mb-16 lg:mb-24 projects-stats"
+          className="mb-16 lg:mb-20 projects-stats"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
@@ -514,7 +495,7 @@ export const Projects = () => {
                 title: "Projetos",
                 subtitle: "Entregues com Excelência",
                 icon: Rocket,
-                color: "from-blue-400 to-cyan-400",
+                color: "from-cyan-400 to-blue-400",
               },
               {
                 number: `${Math.round(
@@ -524,21 +505,21 @@ export const Projects = () => {
                 title: "Online",
                 subtitle: "Projetos em Produção",
                 icon: Eye,
-                color: "from-purple-400 to-pink-400",
+                color: "from-cyan-400 to-blue-400",
               },
               {
                 number: "24/7",
                 title: "Disponível",
                 subtitle: "Para Novos Desafios",
                 icon: Star,
-                color: "from-amber-400 to-orange-400",
+                color: "from-cyan-400 to-blue-400",
               },
               {
                 number: "5+",
                 title: "Anos Exp",
                 subtitle: "Experiência Comprovada",
                 icon: Code,
-                color: "from-green-400 to-emerald-400",
+                color: "from-cyan-400 to-blue-400",
               },
             ].map((stat, index) => (
               <motion.div
@@ -547,22 +528,18 @@ export const Projects = () => {
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4, delay: 0.05 * index }}
                 viewport={{ once: true }}
-                className="text-center p-6 bg-gray-900/40 backdrop-blur-lg rounded-2xl border border-gray-700/50 hover:border-blue-400/30 transition-all duration-500 cursor-pointer hover:scale-105 projects-interactive"
+                className="text-center p-6 bg-gray-900/40 backdrop-blur-lg rounded-2xl border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-500 cursor-pointer group"
               >
-                <div
-                  className={`w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-gradient-to-br ${stat.color} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}
-                >
-                  <stat.icon className="w-8 h-8 lg:w-10 lg:h-10 text-white" />
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center mx-auto mb-4 border border-cyan-400/30 group-hover:border-cyan-400/50 transition-all duration-300">
+                  <stat.icon className="w-8 h-8 text-cyan-400" />
                 </div>
-                <div className="text-2xl lg:text-3xl xl:text-4xl font-black text-white mb-2 group-hover:scale-105 transition-transform duration-300">
+                <div className="text-2xl lg:text-3xl font-black bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-2">
                   {stat.number}
                 </div>
-                <div className="text-lg lg:text-xl font-bold text-white mb-1">
+                <div className="text-lg font-bold text-white mb-1">
                   {stat.title}
                 </div>
-                <div className="text-sm lg:text-base text-gray-400">
-                  {stat.subtitle}
-                </div>
+                <div className="text-sm text-gray-400">{stat.subtitle}</div>
               </motion.div>
             ))}
           </div>
@@ -576,33 +553,33 @@ export const Projects = () => {
           transition={{ duration: 0.6, delay: 0.6 }}
           viewport={{ once: true }}
         >
-          <div className="bg-gradient-to-r from-gray-900/60 to-gray-800/40 backdrop-blur-xl p-8 lg:p-12 rounded-3xl border border-gray-700/50 shadow-2xl relative overflow-hidden projects-interactive">
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 relative z-10">
+          <div className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-2xl p-8 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 relative overflow-hidden group">
+            <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-8 relative z-10">
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
                 whileInView={{ scale: 1, rotate: 0 }}
-                transition={{ duration: 0.5, type: "spring" }}
+                transition={{ duration: 0.6, type: "spring" }}
                 viewport={{ once: true }}
-                className="w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-gradient-to-br from-blue-400/20 to-cyan-400/20 flex items-center justify-center border border-blue-400/30 flex-shrink-0"
+                className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/30 shadow-xl shadow-cyan-400/30 group-hover:border-cyan-400/50"
+                whileHover={{ rotate: 360 }}
               >
-                <Rocket className="w-8 h-8 lg:w-10 lg:h-10 text-blue-400 animate-pulse" />
+                <Rocket className="w-6 h-6 text-cyan-400" />
               </motion.div>
-
-              <div className="flex-1 text-center lg:text-left">
-                <h3 className="text-2xl lg:text-3xl font-black text-white mb-3">
+              <div className="text-center lg:text-left flex-1">
+                <h3 className="text-xl lg:text-2xl font-black text-white mb-2">
                   Próximo projeto incrível?
                 </h3>
-                <p className="text-lg lg:text-xl text-gray-300">
+                <p className="text-gray-300 text-base lg:text-lg">
                   Vamos transformar sua visão em realidade com tecnologia de
                   ponta
                 </p>
               </div>
-
               <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
+                initial={{ opacity: 0, x: 20, scale: 0.9 }}
+                whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.8 }}
                 viewport={{ once: true }}
+                className="w-full lg:w-auto"
               >
                 <Button
                   onClick={() =>
@@ -610,9 +587,9 @@ export const Projects = () => {
                       .getElementById("contact")
                       ?.scrollIntoView({ behavior: "smooth" })
                   }
-                  className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold text-lg px-8 lg:px-12 py-4 lg:py-5 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 flex items-center justify-center projects-interactive"
+                  className="w-full lg:w-auto bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl border-none shadow-2xl shadow-cyan-400/30 transition-all duration-500 hover:shadow-cyan-400/50 hover:scale-105 relative overflow-hidden focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
                 >
-                  <Sparkles className="w-5 h-5 lg:w-6 lg:h-6 mr-3" />
+                  <Sparkles className="w-4 h-4 mr-2 transition-transform duration-300" />
                   INICIAR PROJETO
                 </Button>
               </motion.div>
