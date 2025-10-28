@@ -37,6 +37,265 @@ const navItems = [
   { name: "Contact", href: "#contact" },
 ];
 
+// Sistema de Partículas de Código Refatorado
+const TechParticles = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const particlesContainer = containerRef.current;
+    let animationFrame: number;
+
+    const createParticle = () => {
+      const particle = document.createElement("div");
+      particle.className =
+        "absolute text-xs font-mono opacity-0 pointer-events-none";
+
+      const colors = [
+        "text-cyan-400",
+        "text-blue-400",
+        "text-purple-400",
+        "text-emerald-400",
+      ];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      particle.classList.add(color);
+
+      const codeChars = [
+        "{",
+        "}",
+        "<",
+        ">",
+        "/",
+        ";",
+        "=",
+        "()",
+        "=>",
+        "const",
+        "function",
+      ];
+      particle.textContent =
+        codeChars[Math.floor(Math.random() * codeChars.length)];
+
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.top = `${Math.random() * 100}%`;
+      particle.style.fontSize = `${Math.random() * 12 + 10}px`;
+
+      particlesContainer.appendChild(particle);
+
+      const duration = Math.random() * 4 + 3;
+      const delay = Math.random() * 2;
+
+      gsap.to(particle, {
+        opacity: 1,
+        duration: 0.5,
+        delay: delay,
+        ease: "power1.out",
+      });
+
+      gsap.to(particle, {
+        y: `-=${Math.random() * 200 + 100}`,
+        x: `+=${Math.random() * 100 - 50}`,
+        rotation: Math.random() * 360,
+        duration: duration,
+        ease: "power1.inOut",
+        onComplete: () => {
+          gsap.to(particle, {
+            opacity: 0,
+            duration: 0.8,
+            onComplete: () => particle.remove(),
+          });
+        },
+      });
+    };
+
+    const animate = () => {
+      if (Math.random() > 0.7) {
+        createParticle();
+      }
+      animationFrame = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      cancelAnimationFrame(animationFrame);
+      particlesContainer.innerHTML = "";
+    };
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="absolute inset-0 pointer-events-none overflow-hidden"
+    />
+  );
+};
+
+// Grid Tecnológico Refatorado
+const TechGrid = () => {
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!gridRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.to(".grid-line", {
+        backgroundPosition: "100% 100%",
+        duration: 40,
+        repeat: -1,
+        ease: "none",
+      });
+
+      gsap.to(".grid-dot", {
+        scale: 0,
+        opacity: 0,
+        duration: 3,
+        stagger: {
+          each: 0.2,
+          repeat: -1,
+          yoyo: true,
+          from: "random",
+        },
+        ease: "sine.inOut",
+      });
+    }, gridRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <div
+      ref={gridRef}
+      className="absolute inset-0 pointer-events-none opacity-20"
+    >
+      <div className="grid-line absolute inset-0 bg-[linear-gradient(90deg,transparent_99%,rgba(6,182,212,0.1)_100%)] bg-[length:50px_50px]" />
+      <div className="grid-line absolute inset-0 bg-[linear-gradient(180deg,transparent_99%,rgba(6,182,212,0.1)_100%)] bg-[length:50px_50px]" />
+
+      {Array.from({ length: 25 }).map((_, i) => (
+        <div
+          key={i}
+          className="grid-dot absolute w-1 h-1 bg-cyan-400 rounded-full"
+          style={{
+            left: `${(i % 5) * 25}%`,
+            top: `${Math.floor(i / 5) * 25}%`,
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+// Texto Holográfico Refatorado
+const HolographicText = ({ words }: { words: string[] }) => {
+  const textRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!textRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const chars = gsap.utils.toArray(".hologram-char");
+
+      gsap.fromTo(
+        chars,
+        {
+          y: 100,
+          opacity: 0,
+          rotationX: -90,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          rotationX: 0,
+          duration: 1.2,
+          stagger: {
+            each: 0.02,
+            from: "center",
+          },
+          ease: "back.out(1.7)",
+          delay: 0.3,
+        }
+      );
+    }, textRef);
+
+    return () => ctx.revert();
+  }, [words]);
+
+  return (
+    <div ref={textRef} className="text-center w-full mb-8">
+      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white leading-tight">
+        {words.map((word, wordIndex) => (
+          <span key={wordIndex} className="block mb-2 sm:mb-4">
+            {word.split("").map((letter, letterIndex) => (
+              <span
+                key={`${wordIndex}-${letterIndex}`}
+                className="hologram-char inline-block mx-1 sm:mx-2 transition-all duration-300 bg-gradient-to-b from-white via-cyan-100 to-blue-100 bg-clip-text text-transparent hover:scale-110 hover:text-cyan-300"
+                style={{ transformStyle: "preserve-3d" }}
+              >
+                {letter === " " ? "\u00A0" : letter}
+              </span>
+            ))}
+          </span>
+        ))}
+      </h1>
+    </div>
+  );
+};
+
+// Botões Refatorados - Simples e Funcionais
+const ActionButton = ({
+  children,
+  variant = "primary",
+  href,
+  onClick,
+  className = "",
+}: {
+  children: React.ReactNode;
+  variant?: "primary" | "secondary";
+  href?: string;
+  onClick?: () => void;
+  className?: string;
+}) => {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const baseClasses =
+    "relative overflow-hidden font-bold text-lg py-4 px-8 rounded-2xl border-0 group transition-all duration-300 transform hover:scale-105 active:scale-95";
+
+  const variants = {
+    primary:
+      "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-2xl hover:shadow-cyan-500/25",
+    secondary:
+      "bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:border-white/30 shadow-2xl",
+  };
+
+  const content = (
+    <motion.button
+      ref={buttonRef}
+      className={`${baseClasses} ${variants[variant]} ${className}`}
+      whileHover={{ y: -2 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={onClick}
+    >
+      <span className="relative z-10 flex items-center gap-3">{children}</span>
+
+      {/* Efeito de brilho para botão primário */}
+      {variant === "primary" && (
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+      )}
+    </motion.button>
+  );
+
+  if (href) {
+    return (
+      <a href={href} download={href.includes("curriculo")}>
+        {content}
+      </a>
+    );
+  }
+
+  return content;
+};
+
 const Header = ({
   isScrolled,
   activeSection,
@@ -50,259 +309,198 @@ const Header = ({
   isMobileMenuOpen: boolean;
   onMobileMenuToggle: () => void;
 }) => {
+  const headerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!headerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.from(".nav-item", {
+        y: -30,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out",
+        delay: 0.2,
+      });
+    }, headerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <motion.header
+      ref={headerRef}
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 w-full font-poppins ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 w-full ${
         isScrolled
-          ? "h-16 py-3 bg-gray-950/95 backdrop-blur-xl border-b border-gray-800/80 shadow-2xl"
-          : "h-20 py-4 bg-transparent"
+          ? "h-16 bg-gray-950/95 backdrop-blur-xl border-b border-gray-800/80 shadow-2xl"
+          : "h-20 bg-transparent"
       }`}
-      style={{
-        background: isScrolled ? "rgba(15, 23, 42, 0.95)" : "transparent",
-        backdropFilter: isScrolled ? "blur(20px) saturate(180%)" : "none",
-        WebkitBackdropFilter: isScrolled ? "blur(20px) saturate(180%)" : "none",
-        borderBottom: isScrolled
-          ? "1px solid rgba(255, 255, 255, 0.08)"
-          : "none",
-      }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-50 h-full flex items-center">
-        <div className="flex items-center justify-between w-full h-full">
-          {/* Logo */}
-          <motion.button
-            onClick={() => onNavClick("hero")}
-            className="flex items-center gap-3 bg-transparent border-none cursor-pointer transition-all duration-500 p-2 rounded-xl outline-none group hover:bg-white/5"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <div className="flex items-center gap-4 p-2 rounded-2xl bg-gradient-to-r from-gray-900/50 to-gray-800/30 backdrop-blur-xl border border-gray-700/30 hover:border-cyan-400/50 transition-all duration-500 hover:scale-105">
-              <div className="relative">
-                <motion.div
-                  whileHover={{ rotate: 360 }}
-                  transition={{ duration: 0.8 }}
-                  className="rounded-xl overflow-hidden"
-                >
-                  <Image
-                    src="/images/hashblue.svg"
-                    alt="Erick Reis Logo"
-                    width={48}
-                    height={48}
-                    className="brightness-125 group-hover:brightness-150 transition-all duration-500"
-                  />
-                </motion.div>
-                <div className="absolute -inset-2 bg-cyan-400/10 rounded-xl blur-xl group-hover:bg-cyan-400/20 transition-all duration-500" />
-              </div>
-
-              <div className="text-left hidden sm:block">
-                <h3 className="text-lg font-black bg-gradient-to-r from-white via-blue-100 to-cyan-100 bg-clip-text text-transparent group-hover:from-blue-200 group-hover:to-cyan-300 transition-all duration-500">
-                  ÉRICK REIS
-                </h3>
-                <p className="text-xs font-mono text-gray-400 group-hover:text-gray-300 tracking-widest bg-gray-800/50 px-2 py-1 rounded mt-1">
-                  FULLSTACK ENGINEER
-                </p>
-              </div>
-            </div>
-          </motion.button>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-1">
-            {navItems.map((item, index) => {
-              const sectionName = item.href.replace("#", "");
-              const isActive = activeSection === sectionName;
-
-              return (
-                <motion.button
-                  key={item.name}
-                  initial={{ y: -20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.1 + index * 0.1, duration: 0.4 }}
-                  onClick={() => onNavClick(sectionName)}
-                  className={`relative px-5 py-2.5 text-sm font-mono font-bold tracking-widest transition-all duration-300 rounded-xl cursor-pointer outline-none backdrop-blur-lg border ${
-                    isActive
-                      ? "text-white bg-white/10 border-white/20 shadow-lg shadow-cyan-400/10"
-                      : "text-white/80 hover:text-white hover:bg-white/5 border-transparent hover:border-white/10"
-                  }`}
-                  whileHover={{ y: -1, scale: 1.02 }}
-                  whileTap={{ y: 0 }}
-                >
-                  <span className="relative z-10">
-                    {item.name.toUpperCase()}
-                  </span>
-                  {isActive && (
-                    <motion.div
-                      className="absolute bottom-1 left-4 right-4 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full"
-                      layoutId="navIndicator"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ type: "spring", stiffness: 400 }}
-                    />
-                  )}
-                </motion.button>
-              );
-            })}
-          </nav>
-
-          {/* Desktop Actions */}
-          <motion.div
-            className="hidden lg:flex items-center gap-3"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <Button
-              asChild
-              className="bg-gradient-to-r from-cyan-400 to-purple-400 hover:from-cyan-400/90 hover:to-purple-400/90 text-white font-bold text-sm px-6 py-2.5 rounded-xl border-0 shadow-2xl hover:shadow-cyan-400/25 transition-all duration-500 hover:scale-105 relative overflow-hidden group"
-            >
-              <a
-                href="/docs/curriculo-erick-reis.pdf"
-                download
-                className="flex items-center gap-2"
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
+        {/* Logo */}
+        <motion.button
+          onClick={() => onNavClick("hero")}
+          className="flex items-center gap-3 group nav-item"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <div className="flex items-center gap-3 p-2 rounded-xl bg-gradient-to-r from-gray-900/50 to-gray-800/30 backdrop-blur-xl border border-gray-700/30 group-hover:border-cyan-400/50 transition-all duration-500">
+            <div className="relative">
+              <motion.div
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.8 }}
               >
-                <Download className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
-                <span className="font-bold">DOWNLOAD CV</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-              </a>
-            </Button>
-          </motion.div>
+                <Image
+                  src="/images/hashblue.svg"
+                  alt="Erick Reis Logo"
+                  width={40}
+                  height={40}
+                  className="brightness-125 group-hover:brightness-150 transition-all duration-500"
+                />
+              </motion.div>
+            </div>
 
-          {/* Mobile Menu Button */}
-          <div className="flex lg:hidden items-center gap-2">
-            <Button
-              asChild
-              size="sm"
-              className="bg-gradient-to-r from-cyan-400 to-purple-400 hover:from-cyan-400/90 hover:to-purple-400/90 text-white p-2.5 rounded-xl border-0 shadow-xl hover:shadow-cyan-400/20 transition-all duration-300 hover:scale-105"
-            >
-              <a href="/docs/curriculo-erick-reis.pdf" download>
-                <Download className="w-4 h-4" />
-              </a>
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onMobileMenuToggle}
-              className="w-10 h-10 rounded-xl text-white/80 hover:text-white bg-white/10 backdrop-blur-xl border border-white/10 hover:bg-white/20 transition-all duration-300 hover:scale-105 outline-none"
-            >
-              {isMobileMenuOpen ? (
-                <X className="w-5 h-5" />
-              ) : (
-                <Menu className="w-5 h-5" />
-              )}
-            </Button>
+            <div className="text-left hidden sm:block">
+              <h3 className="text-lg font-black bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                ÉRICK REIS
+              </h3>
+              <p className="text-xs font-mono text-gray-400 tracking-widest">
+                FULLSTACK ENGINEER
+              </p>
+            </div>
           </div>
+        </motion.button>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden lg:flex items-center gap-2">
+          {navItems.map((item, index) => {
+            const sectionName = item.href.replace("#", "");
+            const isActive = activeSection === sectionName;
+
+            return (
+              <motion.button
+                key={item.name}
+                onClick={() => onNavClick(sectionName)}
+                className={`nav-item px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
+                  isActive
+                    ? "text-cyan-400 bg-cyan-400/10 border border-cyan-400/20"
+                    : "text-gray-300 hover:text-white hover:bg-white/5 border border-transparent"
+                }`}
+                whileHover={{ y: -1 }}
+                whileTap={{ y: 0 }}
+              >
+                {item.name}
+              </motion.button>
+            );
+          })}
+        </nav>
+
+        {/* Desktop CTA */}
+        <motion.div
+          className="hidden lg:flex items-center gap-3 nav-item"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          <ActionButton
+            href="/docs/curriculo-erick-reis.pdf"
+            variant="primary"
+            className="text-sm py-2 px-6"
+          >
+            <Download className="w-4 h-4" />
+            DOWNLOAD CV
+          </ActionButton>
+        </motion.div>
+
+        {/* Mobile Menu Button */}
+        <div className="flex lg:hidden items-center gap-2">
+          <ActionButton
+            href="/docs/curriculo-erick-reis.pdf"
+            variant="primary"
+            className="text-sm p-2"
+          >
+            <Download className="w-4 h-4" />
+          </ActionButton>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onMobileMenuToggle}
+            className="w-10 h-10 rounded-xl text-white/80 hover:text-white bg-white/10 backdrop-blur-xl border border-white/10 hover:bg-white/20"
+          >
+            {isMobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
+          </Button>
         </div>
-
-        {/* Mobile Menu Dropdown */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="absolute top-full left-0 right-0 backdrop-blur-xl bg-gray-950/95 border-b border-white/5 shadow-2xl shadow-cyan-400/10 overflow-hidden lg:hidden"
-            >
-              <nav className="flex flex-col p-4 gap-2 relative z-10 bg-gray-900/95 rounded-b-2xl">
-                {navItems.map((item, index) => {
-                  const sectionName = item.href.replace("#", "");
-                  const isActive = activeSection === sectionName;
-
-                  return (
-                    <motion.button
-                      key={item.name}
-                      initial={{ x: -20, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ delay: index * 0.1 }}
-                      onClick={() => {
-                        onNavClick(sectionName);
-                        onMobileMenuToggle();
-                      }}
-                      className={`flex items-center justify-between px-4 py-3 text-sm font-mono font-bold tracking-wider rounded-xl transition-all duration-300 cursor-pointer text-left outline-none border ${
-                        isActive
-                          ? "text-white bg-white/10 border-white/20 shadow-lg"
-                          : "text-white/80 hover:text-white hover:bg-white/5 border-gray-700/50 hover:border-white/20"
-                      }`}
-                      whileHover={{ x: 3 }}
-                      whileTap={{ x: 0 }}
-                    >
-                      <span>{item.name.toUpperCase()}</span>
-                      {isActive && (
-                        <motion.div
-                          className="w-2 h-2 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full"
-                          animate={{ scale: [1, 1.2, 1] }}
-                          transition={{ duration: 2, repeat: Infinity }}
-                        />
-                      )}
-                    </motion.button>
-                  );
-                })}
-
-                <motion.div
-                  className="pt-4 mt-2 border-t border-gray-700/50"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                >
-                  <Button
-                    asChild
-                    className="w-full bg-gradient-to-r from-cyan-400 to-purple-400 hover:from-cyan-400/90 hover:to-purple-400/90 text-white font-bold py-3 rounded-xl border-0 shadow-xl hover:shadow-cyan-400/20 transition-all duration-300 hover:scale-105"
-                    onClick={onMobileMenuToggle}
-                  >
-                    <a
-                      href="/docs/curriculo-erick-reis.pdf"
-                      download
-                      className="flex items-center justify-center gap-2"
-                    >
-                      <Download className="w-4 h-4" />
-                      <span>DOWNLOAD CV</span>
-                    </a>
-                  </Button>
-                </motion.div>
-              </nav>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="absolute top-full left-0 right-0 backdrop-blur-xl bg-gray-950/95 border-b border-white/5 lg:hidden"
+          >
+            <nav className="flex flex-col p-4 gap-2">
+              {navItems.map((item, index) => {
+                const sectionName = item.href.replace("#", "");
+                const isActive = activeSection === sectionName;
+
+                return (
+                  <motion.button
+                    key={item.name}
+                    onClick={() => {
+                      onNavClick(sectionName);
+                      onMobileMenuToggle();
+                    }}
+                    className={`flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg transition-all duration-300 ${
+                      isActive
+                        ? "text-cyan-400 bg-cyan-400/10 border border-cyan-400/20"
+                        : "text-gray-300 hover:text-white hover:bg-white/5 border border-transparent"
+                    }`}
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    {item.name}
+                    {isActive && (
+                      <div className="w-2 h-2 bg-cyan-400 rounded-full" />
+                    )}
+                  </motion.button>
+                );
+              })}
+
+              <motion.div
+                className="pt-4 border-t border-gray-700/50"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                <ActionButton
+                  href="/docs/curriculo-erick-reis.pdf"
+                  variant="primary"
+                  className="w-full justify-center"
+                >
+                  <Download className="w-4 h-4" />
+                  DOWNLOAD CV
+                </ActionButton>
+              </motion.div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
 };
-
-// Componente de Partícula Otimizada
-const FloatingParticle = ({
-  Icon,
-  position,
-  color,
-  delay = 0,
-  size = "text-2xl",
-}: {
-  Icon: any;
-  position: string;
-  color: string;
-  delay?: number;
-  size?: string;
-}) => (
-  <motion.div
-    className={`absolute ${position} ${size}`}
-    initial={{ opacity: 0, scale: 0, y: 100 }}
-    animate={{
-      opacity: [0.7, 1, 0.7],
-      scale: [1, 1.1, 1],
-      y: [0, -25, 0],
-      rotate: [0, 5, 0],
-    }}
-    transition={{
-      duration: 8,
-      repeat: Infinity,
-      ease: "easeInOut",
-      delay: delay,
-    }}
-  >
-    <Icon className={`${color} drop-shadow-[0_0_10px_currentColor]`} />
-  </motion.div>
-);
 
 const HeroContent = ({
   headerHeight,
@@ -312,257 +510,119 @@ const HeroContent = ({
   onExploreClick: () => void;
 }) => {
   const heroRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-  const [isHovering, setIsHovering] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  // Motion values para efeito 3D
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const mouseXSpring = useSpring(mouseX, { damping: 25, stiffness: 200 });
-  const mouseYSpring = useSpring(mouseY, { damping: 25, stiffness: 200 });
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["3deg", "-3deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-3deg", "3deg"]);
-
-  // Configurações das partículas - CORES CORRIGIDAS
-  const particlesConfig = [
-    {
-      Icon: Crown,
-      position: "top-[15%] left-[10%]",
-      color: "text-amber-400",
-      delay: 0,
-      size: "text-2xl",
-    },
-    {
-      Icon: Code2,
-      position: "top-[20%] right-[15%]",
-      color: "text-cyan-400",
-      delay: 1,
-      size: "text-3xl",
-    },
-    {
-      Icon: Cpu,
-      position: "bottom-[40%] left-[15%]",
-      color: "text-purple-400",
-      delay: 2,
-      size: "text-2xl",
-    },
-    {
-      Icon: Zap,
-      position: "bottom-[30%] right-[20%]",
-      color: "text-green-400",
-      delay: 3,
-      size: "text-2xl",
-    },
-    {
-      Icon: Sparkles,
-      position: "top-[35%] left-[5%]",
-      color: "text-amber-400",
-      delay: 4,
-      size: "text-xl",
-    },
-    {
-      Icon: Globe,
-      position: "top-[40%] right-[10%]",
-      color: "text-blue-400",
-      delay: 5,
-      size: "text-xl",
-    },
-    {
-      Icon: Brain,
-      position: "bottom-[20%] right-[10%]",
-      color: "text-pink-400",
-      delay: 6,
-      size: "text-2xl",
-    },
-    {
-      Icon: Rocket,
-      position: "bottom-[25%] left-[20%]",
-      color: "text-amber-400",
-      delay: 7,
-      size: "text-xl",
-    },
-  ];
-
-  const titleWords = ["IDEIAS", "EXTRAORDINÁRIAS", "CÓDIGO", "EXCEPCIONAL"];
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    if (!heroRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline();
+
+      // Animação do subtítulo
+      tl.fromTo(
+        ".hero-subtitle",
+        {
+          opacity: 0,
+          y: 50,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          delay: 1,
+          ease: "power2.out",
+        }
+      );
+
+      // Animação dos botões
+      tl.fromTo(
+        ".hero-button",
+        {
+          opacity: 0,
+          y: 30,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.2,
+          ease: "back.out(1.7)",
+        },
+        "-=0.3"
+      );
+    }, heroRef);
+
+    return () => ctx.revert();
   }, []);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!titleRef.current || isMobile) return;
-    const rect = titleRef.current.getBoundingClientRect();
-    mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
-    mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
-  };
+  const titleWords = ["IDEIAS", "EXTRAORDINÁRIAS", "CÓDIGO", "EXCEPCIONAL"];
 
   return (
     <section
       id="hero"
       ref={heroRef}
-      className="relative overflow-hidden flex items-center justify-center w-full"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900"
       style={{
-        height: `calc(100vh - ${headerHeight}px)`,
-        minHeight: `calc(100vh - ${headerHeight}px)`,
-        marginTop: `${headerHeight}px`,
+        paddingTop: `${headerHeight}px`,
+        marginTop: `-${headerHeight}px`,
       }}
     >
-      {/* Background Premium */}
+      {/* Background Effects */}
       <PremiumBackground intensity="high" />
-
-      {/* Partículas Flutuantes - CORES CORRIGIDAS */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {particlesConfig.map((particle, index) => (
-          <FloatingParticle key={index} {...particle} />
-        ))}
-      </div>
+      <TechGrid />
+      <TechParticles />
 
       {/* Conteúdo Principal */}
-      <div className="relative z-10 w-full h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center justify-center w-full max-w-6xl mx-auto">
-          {/* Título Principal */}
-          <div
-            ref={titleRef}
-            onMouseMove={handleMouseMove}
-            onMouseEnter={() => !isMobile && setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
-            className="text-center w-full mb-4 sm:mb-6 lg:mb-8"
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        {/* Título */}
+        <HolographicText words={titleWords} />
+
+        {/* Subtítulo */}
+        <div className="hero-subtitle max-w-3xl mx-auto mb-12">
+          <p className="text-xl sm:text-2xl lg:text-3xl text-gray-300 font-light leading-relaxed">
+            <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+              Transformo visões ambiciosas em soluções digitais com tecnologia
+              de ponta
+            </span>
+          </p>
+        </div>
+
+        {/* Botões de Ação */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+          <ActionButton
+            onClick={() => onExploreClick()}
+            variant="primary"
+            className="hero-button"
           >
-            <motion.h1
-              style={{
-                rotateX: isHovering && !isMobile ? rotateX : 0,
-                rotateY: isHovering && !isMobile ? rotateY : 0,
-                transformStyle: "preserve-3d",
-              }}
-              className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-7xl 2xl:text-8xl font-black text-white leading-tight cursor-default transform-gpu"
-            >
-              {titleWords.map((word, wordIndex) => (
-                <span
-                  key={wordIndex}
-                  className={`block ${
-                    wordIndex === 0
-                      ? "mb-1 sm:mb-2 lg:mb-3"
-                      : wordIndex === 1
-                      ? "mb-1 sm:mb-2 lg:mb-3"
-                      : wordIndex === 2
-                      ? "mb-1 sm:mb-2 lg:mb-3"
-                      : "mb-0"
-                  }`}
-                >
-                  {word.split("").map((letter, letterIndex) => (
-                    <motion.span
-                      key={`${wordIndex}-${letterIndex}`}
-                      className="inline-block mx-0.5 sm:mx-1 lg:mx-1.5 hover:scale-110 hover:text-cyan-400 transition-all duration-300 hover:drop-shadow-[0_0_20px_rgba(6,182,212,0.8)] bg-gradient-to-b from-white to-gray-300 bg-clip-text text-transparent"
-                      whileHover={{ scale: 1.1 }}
-                      transition={{ type: "spring", stiffness: 400 }}
-                    >
-                      {letter === " " ? "\u00A0" : letter}
-                    </motion.span>
-                  ))}
-                </span>
-              ))}
-            </motion.h1>
-          </div>
+            <Mail className="w-5 h-5" />
+            INICIAR PROJETO
+          </ActionButton>
 
-          {/* Subtítulo */}
-          <div className="w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto mb-6 sm:mb-8 lg:mb-10">
-            <motion.p
-              className="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-gray-300 text-center leading-relaxed sm:leading-loose font-light px-2 sm:px-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
-              <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent bg-size-200 animate-gradient font-medium">
-                Transformo visões ambiciosas em soluções digitais com tecnologia
-                de ponta e código impecável
-              </span>
-            </motion.p>
-          </div>
-
-          {/* Botões de Ação */}
-          <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg mx-auto mb-6 sm:mb-8 lg:mb-10">
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 lg:gap-6 items-center justify-center w-full">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                className="w-full sm:w-auto flex-1 sm:flex-none"
-              >
-                <Button
-                  asChild
-                  className="w-full bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 hover:from-cyan-400/90 hover:via-purple-400/90 hover:to-pink-400/90 text-white font-black text-base sm:text-lg lg:text-xl py-4 sm:py-5 lg:py-6 px-6 sm:px-8 lg:px-10 rounded-2xl shadow-2xl hover:shadow-cyan-400/30 transition-all duration-500 relative overflow-hidden group border-0"
-                >
-                  <a
-                    href="#contact"
-                    className="flex items-center justify-center gap-2 sm:gap-3 relative z-10"
-                  >
-                    <Mail className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 group-hover:scale-110 group-hover:rotate-12 transition-transform duration-300" />
-                    <span className="font-black tracking-widest text-sm sm:text-base drop-shadow-lg">
-                      INICIAR PROJETO
-                    </span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-                  </a>
-                </Button>
-              </motion.div>
-
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                className="w-full sm:w-auto flex-1 sm:flex-none"
-              >
-                <Button
-                  asChild
-                  className="w-full bg-white/15 backdrop-blur-2xl border border-white/30 text-white font-black text-base sm:text-lg lg:text-xl py-4 sm:py-5 lg:py-6 px-6 sm:px-8 lg:px-10 rounded-2xl shadow-2xl hover:shadow-white/20 transition-all duration-500 hover:bg-white/25 hover:border-white/50 relative overflow-hidden group"
-                >
-                  <a
-                    href="/docs/curriculo-erick-reis.pdf"
-                    download
-                    className="flex items-center justify-center gap-2 sm:gap-3 relative z-10"
-                  >
-                    <Download className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 group-hover:scale-110 group-hover:translate-y-1 transition-transform duration-300" />
-                    <span className="font-black tracking-widest text-sm sm:text-base drop-shadow-lg">
-                      BAIXAR CV
-                    </span>
-                  </a>
-                </Button>
-              </motion.div>
-            </div>
-          </div>
+          <ActionButton
+            href="/docs/curriculo-erick-reis.pdf"
+            variant="secondary"
+            className="hero-button"
+          >
+            <Download className="w-5 h-5" />
+            BAIXAR CV
+          </ActionButton>
         </div>
 
         {/* Scroll Indicator */}
-        <div className="absolute bottom-4 sm:bottom-6 lg:bottom-8 left-1/2 transform -translate-x-1/2">
-          <motion.button
-            onClick={onExploreClick}
-            className="bg-transparent border-none cursor-pointer p-2 sm:p-3 flex flex-col items-center gap-1 sm:gap-2 group"
-            whileHover={{ y: -2 }}
-            whileTap={{ scale: 0.95 }}
+        <motion.button
+          onClick={onExploreClick}
+          className="hero-button flex flex-col items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors"
+          whileHover={{ y: -2 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <span className="text-sm font-medium">Explorar Mais</span>
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="w-10 h-10 rounded-full border border-cyan-400/30 flex items-center justify-center hover:border-cyan-400/50 transition-colors"
           >
-            <motion.span
-              className="text-cyan-400 text-xs sm:text-sm font-mono font-semibold tracking-widest uppercase group-hover:text-cyan-400/80"
-              animate={{ opacity: [0.7, 1, 0.7] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              Explorar Mais
-            </motion.span>
-            <motion.div
-              animate={{ y: [0, 6, 0] }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center border border-cyan-400/30 bg-cyan-400/10 backdrop-blur-xl group-hover:border-cyan-400/50 group-hover:bg-cyan-400/20 transition-all duration-300"
-            >
-              <ArrowDown className="w-3 h-3 sm:w-4 sm:h-4 text-cyan-400 group-hover:text-cyan-400/80" />
-            </motion.div>
-          </motion.button>
-        </div>
+            <ArrowDown className="w-4 h-4" />
+          </motion.div>
+        </motion.button>
       </div>
     </section>
   );
@@ -576,18 +636,14 @@ export const HeroSection = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 30);
+      setIsScrolled(window.scrollY > 50);
     };
 
     const handleActiveSection = () => {
       const sections = ["hero", "about", "skills", "projects", "contact"];
       const current = sections.find((section) => {
         const element = document.getElementById(section);
-        return (
-          element &&
-          element.getBoundingClientRect().top <= 100 &&
-          element.getBoundingClientRect().bottom >= 100
-        );
+        return element && element.getBoundingClientRect().top <= 100;
       });
       if (current) setActiveSection(current);
     };
@@ -614,8 +670,7 @@ export const HeroSection = () => {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      const offsetPosition =
-        element.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+      const offsetPosition = element.offsetTop - headerHeight;
       window.scrollTo({ top: offsetPosition, behavior: "smooth" });
     }
   };

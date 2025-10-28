@@ -645,7 +645,7 @@ export const About = () => {
                       }}
                       className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent bg-size-200"
                     >
-                      INICIAR PROJETO
+                      INICIAR PROJEATO
                     </motion.span>
                   </a>
                 </Button>
