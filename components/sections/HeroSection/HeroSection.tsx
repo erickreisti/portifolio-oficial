@@ -229,7 +229,7 @@ const ImprovedButton = ({
   return buttonContent;
 };
 
-// Header Refinado - Integrado, com espaçamento e responsividade aprimorados
+// Header Refinado - Integrado, com espaçamento e responsividade aprimorados, TRANSPARENTE NO TOPO
 const RefinedHeader = ({
   isScrolled,
   activeSection,
@@ -252,7 +252,7 @@ const RefinedHeader = ({
         fixed top-0 left-0 right-0 z-50 transition-all duration-500 w-full
         ${
           isScrolled
-            ? "h-16 bg-gray-950/90 backdrop-blur-xl border-b border-gray-800/50 shadow-xl"
+            ? "h-16 bg-gray-950/95 backdrop-blur-xl border-b border-gray-800/50 shadow-xl"
             : "h-20 bg-transparent"
         }
       `}
@@ -265,7 +265,9 @@ const RefinedHeader = ({
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          <div className="flex items-center gap-3 p-2 rounded-xl bg-gradient-to-r from-gray-900/50 to-gray-800/30 backdrop-blur-xl border border-gray-700/30 group-hover:border-cyan-400/50 transition-all duration-300">
+          <div className="flex items-center gap-3 p-2 rounded-xl bg-gradient-to-r from-gray-900/30 to-gray-800/20 backdrop-blur-sm border border-gray-700/20 group-hover:border-cyan-400/30 transition-all duration-300">
+            {" "}
+            {/* Ajuste de opacidade e blur quando transparente */}
             <motion.div
               whileHover={{ rotate: 360 }}
               transition={{ duration: 0.8 }}
@@ -330,7 +332,7 @@ const RefinedHeader = ({
         >
           <ImprovedButton
             href="/docs/curriculo-erick-reis.pdf"
-            variant="outline" // Alterado para 'outline' para harmonizar com o fundo escuro
+            variant="outline" // Mantido 'outline' para harmonizar
             size="sm"
             icon={<Download className="w-4 h-4" />}
           >
@@ -342,7 +344,7 @@ const RefinedHeader = ({
         <div className="flex lg:hidden items-center gap-2">
           <ImprovedButton
             href="/docs/curriculo-erick-reis.pdf"
-            variant="outline" // Alterado para 'outline' para harmonizar com o fundo escuro
+            variant="outline" // Mantido 'outline' para harmonizar
             size="sm"
             icon={<Download className="w-4 h-4" />}
           >
