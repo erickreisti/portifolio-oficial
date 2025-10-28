@@ -6,6 +6,7 @@ const config = {
     "./components/**/*.{ts,tsx,js,jsx}",
     "./app/**/*.{ts,tsx,js,jsx}",
     "./src/**/*.{ts,tsx,js,jsx}",
+    "./lib/**/*.{ts,tsx,js,jsx}",
   ],
   theme: {
     container: {
@@ -18,25 +19,11 @@ const config = {
     extend: {
       fontFamily: {
         sans: ["var(--font-open-sans)", "system-ui", "sans-serif"],
-        heading: ["var(--font-poppins)", "system-ui", "sans-serif"],
+        poppins: ["var(--font-poppins)", "system-ui", "sans-serif"],
         mono: ["'Fira Code'", "'JetBrains Mono'", "monospace"],
       },
       colors: {
-        // CINZAS DO RAINBOWIT
-        gray: {
-          50: "#f9fafb",
-          100: "#f3f4f6",
-          200: "#e5e7eb",
-          300: "#d1d5db",
-          400: "#9ca3af",
-          500: "#6b7280",
-          600: "#4b5563",
-          700: "#374151",
-          800: "#1f2937",
-          900: "#111827",
-        },
-
-        // CORES HSL DO SHADCN/UI
+        // Cores do design system
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -51,6 +38,10 @@ const config = {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
         },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
@@ -59,20 +50,16 @@ const config = {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
         },
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
 
-        // CORES TECNOLÓGICAS ADICIONAIS
+        // Cores tech personalizadas
         tech: {
           blue: "#3b82f6",
           green: "#10b981",
@@ -80,17 +67,16 @@ const config = {
           cyan: "#06b6d4",
           orange: "#f59e0b",
           pink: "#ec4899",
+          indigo: "#6366f1",
         },
       },
       borderRadius: {
-        lg: `var(--radius)`,
-        md: `calc(var(--radius) - 2px)`,
-        sm: `calc(var(--radius) - 4px)`,
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
-
-      // KEYFRAMES COMPLETAS - TODAS AS ANIMAÇÕES
       keyframes: {
-        // Animações do Shadcn/UI
+        // Animações base
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -100,191 +86,89 @@ const config = {
           to: { height: "0" },
         },
 
-        // Animações Intergalácticas (mantidas para compatibilidade)
-        twinkle: {
-          "0%, 100%": { opacity: 0.2 },
-          "50%": { opacity: 1 },
+        // Animações premium
+        "fade-in": {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "fade-up": {
+          "0%": { opacity: "0", transform: "translateY(30px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "slide-up": {
+          "0%": { transform: "translateY(100%)" },
+          "100%": { transform: "translateY(0)" },
+        },
+        "slide-down": {
+          "0%": { transform: "translateY(-100%)" },
+          "100%": { transform: "translateY(0)" },
+        },
+        "scale-in": {
+          "0%": { transform: "scale(0.9)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+        "pulse-soft": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.7" },
         },
         float: {
-          "0%, 100%": { transform: "translateY(0) rotate(0deg)" },
-          "33%": { transform: "translateY(-20px) rotate(5deg)" },
-          "66%": { transform: "translateY(10px) rotate(-5deg)" },
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-20px)" },
         },
-        "float-tech": {
-          "0%, 100%": { transform: "translate(0, 0) scale(1)" },
-          "25%": { transform: "translate(10px, -15px) scale(1.1)" },
-          "50%": { transform: "translate(-5px, 10px) scale(0.9)" },
-          "75%": { transform: "translate(-15px, -5px) scale(1.05)" },
+        "float-3d": {
+          "0%, 100%": { transform: "translate3d(0, 0, 0) rotate(0deg)" },
+          "33%": { transform: "translate3d(10px, -15px, 10px) rotate(5deg)" },
+          "66%": { transform: "translate3d(-5px, 10px, -5px) rotate(-3deg)" },
         },
-        "bounce-subtle": {
-          "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-10px)" },
-        },
-
-        // NOVAS ANIMAÇÕES TECNOLÓGICAS
         shimmer: {
           "0%": { transform: "translateX(-100%)" },
           "100%": { transform: "translateX(100%)" },
         },
-        fadeIn: {
-          "0%": { opacity: 0 },
-          "100%": { opacity: 1 },
+        gradient: {
+          "0%, 100%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
         },
-        fadeOut: {
-          "0%": { opacity: 1 },
-          "100%": { opacity: 0 },
-        },
-        slideUp: {
-          "0%": { transform: "translateY(100%)", opacity: 0 },
-          "100%": { transform: "translateY(0)", opacity: 1 },
-        },
-        slideDown: {
-          "0%": { transform: "translateY(-100%)", opacity: 0 },
-          "100%": { transform: "translateY(0)", opacity: 1 },
-        },
-        "pulse-soft": {
-          "0%, 100%": { opacity: 1 },
-          "50%": { opacity: 0.7 },
-        },
-        "ping-slow": {
-          "75%, 100%": {
-            transform: "scale(1.5)",
-            opacity: "0",
-          },
-        },
-        "bounce-gentle": {
+        "neon-pulse": {
           "0%, 100%": {
-            transform: "translateY(0)",
+            "text-shadow": "0 0 5px currentColor, 0 0 10px currentColor",
           },
           "50%": {
-            transform: "translateY(-8px)",
+            "text-shadow":
+              "0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor",
           },
         },
-        "spin-reverse": {
-          "0%": { transform: "rotate(0deg)" },
-          "100%": { transform: "rotate(-360deg)" },
-        },
-        typing: {
-          "0%": { width: "0" },
-          "100%": { width: "100%" },
-        },
-        blink: {
-          "0%, 100%": { opacity: 1 },
-          "50%": { opacity: 0 },
-        },
-        glow: {
-          "0%, 100%": {
-            boxShadow: "0 0 5px rgba(59, 130, 246, 0.5)",
-          },
-          "50%": {
-            boxShadow:
-              "0 0 20px rgba(59, 130, 246, 0.8), 0 0 30px rgba(59, 130, 246, 0.6)",
-          },
-        },
-        "matrix-rain": {
-          "0%": {
-            transform: "translateY(-100%)",
-            opacity: 0,
-          },
-          "5%": {
-            opacity: 1,
-          },
-          "90%": {
-            opacity: 1,
-          },
-          "100%": {
-            transform: "translateY(100vh)",
-            opacity: 0,
-          },
-        },
-        "circuit-flow": {
-          "0%": {
-            strokeDashoffset: 1000,
-            opacity: 0,
-          },
-          "50%": {
-            opacity: 1,
-          },
-          "100%": {
-            strokeDashoffset: 0,
-            opacity: 0,
-          },
-        },
-        "hacker-text": {
-          "0%": {
-            content: "'INITIALIZING_SYSTEMS'",
-          },
-          "25%": {
-            content: "'COMPILING_CODE'",
-          },
-          "50%": {
-            content: "'OPTIMIZING_PERFORMANCE'",
-          },
-          "75%": {
-            content: "'LAUNCHING_APPLICATION'",
-          },
-          "100%": {
-            content: "'SYSTEM_READY'",
-          },
-        },
-
-        // Animações de spin em velocidades diferentes
-        "spin-slow": {
-          from: { transform: "rotate(0deg)" },
-          to: { transform: "rotate(360deg)" },
-        },
-        "spin-medium": {
-          from: { transform: "rotate(0deg)" },
-          to: { transform: "rotate(360deg)" },
-        },
-        "spin-fast": {
-          from: { transform: "rotate(0deg)" },
-          to: { transform: "rotate(360deg)" },
+        "text-shine": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "100%": { backgroundPosition: "100% 50%" },
         },
       },
-
-      // ANIMAÇÕES COMPLETAS
       animation: {
-        // Shadcn/UI
+        // Animações base
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
 
-        // Intergaláctico (mantidas)
-        twinkle: "twinkle 3s ease-in-out infinite",
-        "float-slow": "float 8s ease-in-out infinite",
-        "float-medium": "float 6s ease-in-out infinite",
-        "float-fast": "float 4s ease-in-out infinite",
-        "float-tech": "float-tech 5s ease-in-out infinite",
-        "bounce-subtle": "bounce-subtle 2s ease-in-out infinite",
-
-        // Tecnológicas
-        shimmer: "shimmer 2s linear infinite",
-        fadeIn: "fadeIn 0.5s ease-out forwards",
-        fadeOut: "fadeOut 0.5s ease-out forwards",
-        slideUp: "slideUp 0.6s ease-out forwards",
-        slideDown: "slideDown 0.6s ease-out forwards",
+        // Animações premium
+        "fade-in": "fade-in 0.6s ease-out",
+        "fade-up": "fade-up 0.8s ease-out",
+        "slide-up": "slide-up 0.6s ease-out",
+        "slide-down": "slide-down 0.6s ease-out",
+        "scale-in": "scale-in 0.5s ease-out",
         "pulse-soft": "pulse-soft 2s ease-in-out infinite",
-        "ping-slow": "ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite",
-        "bounce-gentle": "bounce-gentle 1.5s ease-in-out infinite",
-        "spin-reverse": "spin-reverse 3s linear infinite",
-        typing: "typing 3s steps(40, end)",
-        blink: "blink 1s step-end infinite",
-        glow: "glow 2s ease-in-out infinite",
-        "matrix-rain": "matrix-rain 3s linear infinite",
-        "circuit-flow": "circuit-flow 4s ease-in-out infinite",
-        "hacker-text": "hacker-text 8s steps(5, end) infinite",
-
-        // Spins
-        "spin-slow": "spin-slow 8s linear infinite",
-        "spin-medium": "spin-medium 6s linear infinite",
-        "spin-fast": "spin-fast 4s linear infinite",
-        ping: "ping 1s cubic-bezier(0, 0, 0.2, 1) infinite",
-
-        // Float para elementos de código
         float: "float 6s ease-in-out infinite",
-      },
+        "float-3d": "float-3d 8s ease-in-out infinite",
+        shimmer: "shimmer 2s linear infinite",
+        gradient: "gradient 3s ease infinite",
+        "neon-pulse": "neon-pulse 2s ease-in-out infinite",
+        "text-shine": "text-shine 2s ease-in-out infinite alternate",
 
-      // NOVOS UTILITIES
+        // Animações com delays
+        "fade-in-delay": "fade-in 0.6s ease-out 0.3s both",
+        "fade-up-delay": "fade-up 0.8s ease-out 0.5s both",
+      },
+      backgroundSize: {
+        200: "200% 200%",
+        300: "300% 300%",
+      },
       backdropBlur: {
         xs: "2px",
       },
@@ -300,52 +184,9 @@ const config = {
         90: "90",
         100: "100",
       },
-      transitionProperty: {
-        height: "height",
-        spacing: "margin, padding",
-      },
-      backgroundImage: {
-        "grid-pattern":
-          "linear-gradient(rgba(59,130,246,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.1)_1px,transparent_1px)",
-        "circuit-pattern":
-          "radial-gradient(circle at 1px 1px, rgba(59,130,246,0.15) 1px, transparent 0)",
-        "binary-pattern":
-          "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(59,130,246,0.05) 2px, rgba(59,130,246,0.05) 4px)",
-      },
-      backgroundSize: {
-        "grid-16": "16px 16px",
-        "grid-32": "32px 32px",
-        "grid-64": "64px 64px",
-        "circuit-20": "20px 20px",
-      },
     },
   },
-  plugins: [
-    require("tailwindcss-animate"),
-    // Plugin customizado para animações de texto de hacker
-    function ({ addUtilities }) {
-      const newUtilities = {
-        ".text-hacker": {
-          "font-family": "'Fira Code', 'JetBrains Mono', monospace",
-          "text-shadow": "0 0 5px #10b981, 0 0 10px #10b981",
-        },
-        ".terminal-text": {
-          "font-family": "'Fira Code', 'JetBrains Mono', monospace",
-          background: "linear-gradient(90deg, #3b82f6, #8b5cf6)",
-          "background-clip": "text",
-          "-webkit-background-clip": "text",
-          "-webkit-text-fill-color": "transparent",
-        },
-        ".code-typing": {
-          overflow: "hidden",
-          "border-right": "2px solid #3b82f6",
-          "white-space": "nowrap",
-          animation: "typing 3.5s steps(40, end), blink 1s step-end infinite",
-        },
-      };
-      addUtilities(newUtilities, ["responsive", "hover"]);
-    },
-  ],
+  plugins: [require("tailwindcss-animate")],
 };
 
 module.exports = config;

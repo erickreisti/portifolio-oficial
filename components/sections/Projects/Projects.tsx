@@ -35,6 +35,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import styles from "./Projects.module.css";
+import { projects } from "@/lib/project-data";
+import type { Project } from "@/lib/project-data";
 
 // Componente Modal para tags
 const TagsModal = ({
@@ -42,7 +44,7 @@ const TagsModal = ({
   isOpen,
   onClose,
 }: {
-  project: any;
+  project: Project;
   isOpen: boolean;
   onClose: () => void;
 }) => {
@@ -125,130 +127,9 @@ const TagsModal = ({
   );
 };
 
-// Dados dos projetos
-const projects = [
-  {
-    id: 1,
-    title: "CodeCraft Academy",
-    description:
-      "Plataforma de cursos fullstack moderna com dashboard integrado e sistema de pagamentos completo.",
-    image: "/images/website1.webp",
-    githubUrl: "https://github.com/erickreisti/codecraft-academy",
-    liveUrl: "https://codecraft-academy-three.vercel.app/",
-    tags: [
-      "Next.js 14",
-      "TypeScript",
-      "Tailwind CSS",
-      "Prisma",
-      "PostgreSQL",
-      "Stripe",
-      "NextAuth",
-      "React",
-      "Shadcn/ui",
-      "Zod",
-      "Resend",
-    ],
-  },
-  {
-    id: 2,
-    title: "Wine for Life",
-    description:
-      "Site institucional para vinícola com design elegante que transmite tradição e sofisticação.",
-    image: "/images/website2.webp",
-    githubUrl: "https://github.com/erickreisti/wine-for-life",
-    liveUrl: "https://erickreisti.github.io/wine-for-life/",
-    tags: [
-      "HTML5",
-      "CSS3",
-      "JavaScript",
-      "SASS",
-      "Responsive Design",
-      "GitHub Pages",
-      "UI/UX Design",
-      "Cross-browser",
-    ],
-  },
-  {
-    id: 3,
-    title: "Bio Fitness",
-    description:
-      "Landing page otimizada para conversão no segmento wellness com design clean e estratégico.",
-    image: "/images/website3.webp",
-    githubUrl: "https://github.com/erickreisti/biofitness",
-    liveUrl: "https://erickreisti.github.io/biofitness/",
-    tags: [
-      "HTML5",
-      "CSS3",
-      "JavaScript",
-      "Responsive Design",
-      "Landing Page",
-      "SEO",
-      "GitHub Pages",
-      "Performance",
-    ],
-  },
-  {
-    id: 4,
-    title: "Petcare Petshop",
-    description:
-      "Site completo para petshop com serviços de grooming, veterinário e cuidados especiais.",
-    image: "/images/website4.webp",
-    githubUrl: "https://github.com/erickreisti/petcare-petshop",
-    liveUrl: "https://erickreisti.github.io/petcare-petshop/",
-    tags: [
-      "HTML5",
-      "CSS3",
-      "JavaScript",
-      "Bootstrap",
-      "jQuery",
-      "Responsive",
-      "GitHub Pages",
-      "Mobile First",
-    ],
-  },
-  {
-    id: 5,
-    title: "Copa do Mundo 2022",
-    description:
-      "Site conceitual temático da Seleção Brasileira com design patriótico e navegação imersiva.",
-    image: "/images/website5.webp",
-    githubUrl: "https://github.com/erickreisti/world-cup-2022",
-    liveUrl: null,
-    tags: [
-      "HTML5",
-      "CSS3",
-      "JavaScript",
-      "GSAP",
-      "Animations",
-      "Concept Design",
-      "Sports Theme",
-      "Interactive",
-    ],
-  },
-  {
-    id: 6,
-    title: "Boi de Ouro",
-    description:
-      "Landing page premium para churrascaria com cardápio digital e sistema de pedidos online.",
-    image: "/images/website6.webp",
-    githubUrl: "https://github.com/erickreisti/projectboi",
-    liveUrl: "https://erickreisti.github.io/projectboi/",
-    tags: [
-      "HTML5",
-      "CSS3",
-      "JavaScript",
-      "PHP",
-      "MySQL",
-      "Responsive",
-      "E-commerce",
-      "Restaurant",
-    ],
-  },
-];
-
 // Componente de Card de Projeto
 const ProjectCard: React.FC<{
-  project: (typeof projects)[0];
+  project: Project;
   index: number;
 }> = ({ project, index }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -276,6 +157,7 @@ const ProjectCard: React.FC<{
                 alt={project.title}
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-110"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/10" />
             </div>
@@ -440,6 +322,58 @@ export const Projects = () => {
     neonElementsRef.current[index] = el;
   };
 
+  // Configuração dos elementos neon
+  const neonElementsConfig = [
+    {
+      Icon: Rocket,
+      position: "top-20 left-20",
+      color: "text-cyan-400",
+      size: "text-3xl",
+    },
+    {
+      Icon: Code,
+      position: "top-32 right-24",
+      color: "text-purple-400",
+      size: "text-3xl",
+    },
+    {
+      Icon: Globe,
+      position: "bottom-40 left-24",
+      color: "text-green-400",
+      size: "text-2xl",
+    },
+    {
+      Icon: Database,
+      position: "bottom-32 right-20",
+      color: "text-amber-400",
+      size: "text-2xl",
+    },
+    {
+      Icon: Server,
+      position: "top-40 right-16",
+      color: "text-blue-400",
+      size: "text-xl",
+    },
+    {
+      Icon: Smartphone,
+      position: "bottom-48 left-16",
+      color: "text-emerald-400",
+      size: "text-xl",
+    },
+    {
+      Icon: Cloud,
+      position: "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2",
+      color: "text-indigo-400",
+      size: "text-2xl",
+    },
+    {
+      Icon: Zap,
+      position: "top-1/3 left-1/4",
+      color: "text-rose-400",
+      size: "text-xl",
+    },
+  ];
+
   return (
     <section
       id="projects"
@@ -487,53 +421,15 @@ export const Projects = () => {
 
       {/* Elementos Neon Flutuantes */}
       <div className="absolute inset-0 pointer-events-none">
-        {[Rocket, Code, Globe, Database, Server, Smartphone, Cloud, Zap].map(
-          (Icon, index) => (
-            <motion.div
-              key={index}
-              ref={setNeonElementRef(index)}
-              className={`absolute ${styles.neonGlow} neon-projects ${
-                index === 0
-                  ? "top-20 left-20"
-                  : index === 1
-                  ? "top-32 right-24"
-                  : index === 2
-                  ? "bottom-40 left-24"
-                  : index === 3
-                  ? "bottom-32 right-20"
-                  : index === 4
-                  ? "top-40 right-16"
-                  : index === 5
-                  ? "bottom-48 left-16"
-                  : index === 6
-                  ? "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                  : "top-1/3 left-1/4"
-              }`}
-            >
-              <Icon
-                className={`
-              ${
-                index === 0
-                  ? "text-cyan-400 text-3xl"
-                  : index === 1
-                  ? "text-purple-400 text-3xl"
-                  : index === 2
-                  ? "text-green-400 text-2xl"
-                  : index === 3
-                  ? "text-amber-400 text-2xl"
-                  : index === 4
-                  ? "text-blue-400 text-xl"
-                  : index === 5
-                  ? "text-emerald-400 text-xl"
-                  : index === 6
-                  ? "text-indigo-400 text-2xl"
-                  : "text-rose-400 text-xl"
-              }
-            `}
-              />
-            </motion.div>
-          )
-        )}
+        {neonElementsConfig.map(({ Icon, position, color, size }, index) => (
+          <motion.div
+            key={index}
+            ref={setNeonElementRef(index)}
+            className={`absolute ${styles.neonGlow} neon-projects ${position}`}
+          >
+            <Icon className={`${color} ${size}`} />
+          </motion.div>
+        ))}
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
@@ -564,9 +460,7 @@ export const Projects = () => {
           >
             <h1 className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-black text-white mb-4 lg:mb-6">
               PROJETOS{" "}
-              <span
-                className={`bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent ${styles.animateGradient}`}
-              >
+              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent bg-size-200 animate-gradient">
                 DE IMPACTO
               </span>
             </h1>
@@ -584,7 +478,7 @@ export const Projects = () => {
           ))}
         </div>
 
-        {/* Stats */}
+        {/* Stats - Agora dinâmico baseado nos projetos */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -597,28 +491,31 @@ export const Projects = () => {
               {
                 number: projects.length,
                 title: "Projetos",
-                subtitle: "Sucesso Garantido",
+                subtitle: "Entregues com Excelência",
                 icon: Rocket,
                 color: "from-blue-400 to-cyan-400",
               },
               {
-                number: "100%",
-                title: "Qualidade",
-                subtitle: "Padrões Excelência",
-                icon: Star,
+                number: `${Math.round(
+                  (projects.filter((p) => p.liveUrl).length / projects.length) *
+                    100
+                )}%`,
+                title: "Online",
+                subtitle: "Projetos em Produção",
+                icon: Eye,
                 color: "from-purple-400 to-pink-400",
               },
               {
                 number: "24/7",
-                title: "Suporte",
-                subtitle: "Disponibilidade",
-                icon: Eye,
+                title: "Disponível",
+                subtitle: "Para Novos Desafios",
+                icon: Star,
                 color: "from-amber-400 to-orange-400",
               },
               {
                 number: "5+",
                 title: "Anos Exp",
-                subtitle: "Experiência",
+                subtitle: "Experiência Comprovada",
                 icon: Code,
                 color: "from-green-400 to-emerald-400",
               },
@@ -686,7 +583,7 @@ export const Projects = () => {
                 transition={{ duration: 0.5, delay: 0.3 }}
                 viewport={{ once: true }}
               >
-                <button
+                <Button
                   onClick={() =>
                     document
                       .getElementById("contact")
@@ -696,7 +593,7 @@ export const Projects = () => {
                 >
                   <Sparkles className="w-5 h-5 lg:w-6 lg:h-6 mr-3" />
                   INICIAR PROJETO
-                </button>
+                </Button>
               </motion.div>
             </div>
           </div>
