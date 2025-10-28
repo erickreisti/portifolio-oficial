@@ -1,4 +1,4 @@
-// components/sections/Contact/Contact.tsx (BLASTER PREMIUM ABSOLUTO COMPLETO)
+// components/sections/Contact/Contact.tsx
 "use client";
 
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
@@ -106,28 +106,33 @@ const CONTACT_INFO = [
   },
 ];
 
-export const Contact = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+// Componente Neon Element para Contact
+const ContactNeonElement = ({
+  Icon,
+  position,
+  color,
+  delay = 0,
+}: {
+  Icon: any;
+  position: string;
+  color: string;
+  delay?: number;
+}) => {
+  const elementRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(elementRef, { once: true, amount: 0.3 });
 
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const neonElementsRef = useRef<(HTMLDivElement | null)[]>([]);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
-  const shouldReduceMotion = useReducedMotion();
-
-  // Animação otimizada com cleanup
   useEffect(() => {
-    if (!isInView || shouldReduceMotion) return;
+    if (!isInView || !elementRef.current) return;
 
     const ctx = gsap.context(() => {
-      const neonElements = neonElementsRef.current.filter(Boolean);
-
-      // Entrada inicial
       gsap.fromTo(
-        neonElements,
-        { opacity: 0, scale: 0, y: 100, rotation: -180 },
+        elementRef.current,
+        {
+          opacity: 0,
+          scale: 0,
+          y: 100,
+          rotation: -180,
+        },
         {
           opacity: 1,
           scale: 1,
@@ -135,45 +140,89 @@ export const Contact = () => {
           rotation: 0,
           duration: 1.5,
           ease: "back.out(1.7)",
-          stagger: 0.15,
+          delay: delay * 0.2,
         }
       );
 
-      // Animações flutuantes com controle
-      neonElements.forEach((element, index) => {
-        if (!element) return;
-
-        gsap.to(element, {
-          y: -15 - index * 3,
-          rotation: index % 2 === 0 ? 8 : -8,
-          duration: 4 + index,
-          ease: "sine.inOut",
-          repeat: -1,
-          yoyo: true,
-          delay: index * 0.5,
-        });
-      });
-
-      // Pulsação suave
-      gsap.to(".neon-contact", {
-        filter: "drop-shadow(0 0 12px currentColor) brightness(1.2)",
-        duration: 3,
+      // Animação flutuante contínua
+      gsap.to(elementRef.current, {
+        y: -15,
+        rotation: 5,
+        duration: 4,
         ease: "sine.inOut",
         repeat: -1,
         yoyo: true,
-        stagger: 0.8,
+        delay: delay * 0.3,
+      });
+    });
+
+    return () => ctx.revert();
+  }, [isInView, delay]);
+
+  return (
+    <div ref={elementRef} className={`absolute ${position}`}>
+      <Icon className={`${color} text-2xl animate-pulse`} />
+    </div>
+  );
+};
+
+export const Contact = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
+  const shouldReduceMotion = useReducedMotion();
+
+  // GSAP Animations para seção principal
+  useEffect(() => {
+    if (!isInView || shouldReduceMotion) return;
+
+    const ctx = gsap.context(() => {
+      // Animação de entrada da seção
+      gsap.fromTo(
+        sectionRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 1, ease: "power2.out" }
+      );
+
+      // Timeline principal
+      const tl = gsap.timeline();
+
+      tl.fromTo(
+        ".contact-header",
+        { opacity: 0, y: 50 },
+        { opacity: 1, y: 0, duration: 0.8, ease: "back.out(1.7)" }
+      )
+        .fromTo(
+          ".contact-content",
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: "power3.out" },
+          "-=0.3"
+        )
+        .fromTo(
+          ".contact-cta",
+          { opacity: 0, scale: 0.9 },
+          { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" },
+          "-=0.2"
+        );
+
+      // Animação pulsante para elementos interativos
+      gsap.to(".contact-interactive", {
+        y: -3,
+        boxShadow: "0 20px 40px rgba(59, 130, 246, 0.2)",
+        duration: 2,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+        stagger: 0.1,
       });
     }, sectionRef);
 
     return () => ctx.revert();
   }, [isInView, shouldReduceMotion]);
-
-  const setNeonElementRef = useCallback(
-    (index: number) => (el: HTMLDivElement | null) => {
-      neonElementsRef.current[index] = el;
-    },
-    []
-  );
 
   // Validação otimizada
   const validateForm = useCallback((formData: FormData) => {
@@ -255,20 +304,15 @@ export const Contact = () => {
   const neonElements = useMemo(
     () =>
       NEON_ELEMENTS_CONFIG.map(({ Icon, position, color, size }, index) => (
-        <motion.div
+        <ContactNeonElement
           key={index}
-          ref={setNeonElementRef(index)}
-          className={`absolute ${position} filter drop-shadow-lg neon-contact`}
-          initial={shouldReduceMotion ? false : { opacity: 0, scale: 0 }}
-          animate={shouldReduceMotion ? {} : { opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: index * 0.1 }}
-        >
-          <Icon
-            className={`${color} ${size} opacity-70 hover:opacity-100 transition-opacity duration-300`}
-          />
-        </motion.div>
+          Icon={Icon}
+          position={position}
+          color={color}
+          delay={index}
+        />
       )),
-    [setNeonElementRef, shouldReduceMotion]
+    []
   );
 
   const contactInfoElements = useMemo(
@@ -280,7 +324,7 @@ export const Contact = () => {
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: index * 0.1 }}
           viewport={{ once: true }}
-          className="flex items-start gap-4 p-4 rounded-xl border border-gray-700/50 hover:border-blue-400/30 transition-all duration-300 group cursor-pointer"
+          className="flex items-start gap-4 p-4 rounded-xl border border-gray-700/50 hover:border-blue-400/30 transition-all duration-300 group cursor-pointer contact-interactive"
         >
           <div
             className={`w-12 h-12 rounded-full bg-gradient-to-br ${info.gradient} flex items-center justify-center border ${info.border} group-hover:scale-110 transition-transform duration-300`}
@@ -316,18 +360,18 @@ export const Contact = () => {
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
         {/* Header Premium */}
         <motion.div
+          className="text-center mb-16 lg:mb-24 contact-header"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true, amount: 0.2 }}
-          className="text-center mb-16 lg:mb-24"
         >
           <motion.div
             initial={{ scale: 0 }}
             whileInView={{ scale: 1 }}
             transition={{ duration: 0.5, delay: 0.1, type: "spring" }}
             viewport={{ once: true }}
-            className="inline-flex items-center text-blue-400 bg-blue-500/10 border border-blue-400/30 px-4 py-2 rounded-full text-sm lg:text-base font-mono font-bold mb-6 lg:mb-8"
+            className="inline-flex items-center text-blue-400 bg-blue-500/10 border border-blue-400/30 px-4 py-2 rounded-full text-sm lg:text-base font-mono font-bold mb-6 lg:mb-8 contact-interactive"
           >
             <MessageCircle className="w-4 h-4 lg:w-5 lg:h-5 mr-2" />
             CONEXÃO TECH
@@ -359,7 +403,7 @@ export const Contact = () => {
         </motion.div>
 
         {/* Grid Principal */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-16 lg:mb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-16 lg:mb-24 contact-content">
           {/* Informações de Contato */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -367,7 +411,7 @@ export const Contact = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true, amount: 0.2 }}
           >
-            <Card className="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 shadow-2xl hover:shadow-blue-500/10 hover:border-blue-400/30 transition-all duration-500 group h-full">
+            <Card className="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 shadow-2xl hover:shadow-blue-500/10 hover:border-blue-400/30 transition-all duration-500 group h-full contact-interactive">
               <CardHeader className="pb-6 border-b border-gray-700/50">
                 <CardTitle className="text-xl lg:text-2xl font-black text-blue-400 flex items-center">
                   <Cpu className="w-6 h-6 mr-3" />
@@ -400,7 +444,7 @@ export const Contact = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             viewport={{ once: true, amount: 0.2 }}
           >
-            <Card className="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 shadow-2xl hover:shadow-purple-500/10 hover:border-purple-400/30 transition-all duration-500 group h-full">
+            <Card className="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 shadow-2xl hover:shadow-purple-500/10 hover:border-purple-400/30 transition-all duration-500 group h-full contact-interactive">
               <CardHeader className="pb-6 border-b border-gray-700/50">
                 <CardTitle className="text-xl lg:text-2xl font-black text-purple-400 flex items-center">
                   <Send className="w-6 h-6 mr-3" />
@@ -414,7 +458,7 @@ export const Contact = () => {
 
               <CardContent className="pt-6">
                 <form action={handleSubmit} className="space-y-6">
-                  {/* Campos do Formulário - BLASTER PREMIUM */}
+                  {/* Campos do Formulário */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label
@@ -529,7 +573,7 @@ export const Contact = () => {
                     )}
                   </div>
 
-                  {/* Estados de Feedback - Premium */}
+                  {/* Estados de Feedback */}
                   {error && (
                     <motion.div
                       initial={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -565,7 +609,7 @@ export const Contact = () => {
                     </motion.div>
                   )}
 
-                  {/* Botão de Submit Premium */}
+                  {/* Botão de Submit */}
                   <motion.div
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -573,9 +617,8 @@ export const Contact = () => {
                     <Button
                       type="submit"
                       disabled={isLoading}
-                      className="w-full bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 hover:from-blue-600 hover:via-purple-600 hover:to-cyan-600 text-white font-bold py-4 rounded-xl shadow-2xl hover:shadow-3xl transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none group relative overflow-hidden"
+                      className="w-full bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 hover:from-blue-600 hover:via-purple-600 hover:to-cyan-600 text-white font-bold py-4 rounded-xl shadow-2xl hover:shadow-3xl transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none group relative overflow-hidden contact-interactive"
                     >
-                      {/* Efeito de brilho no hover */}
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
 
                       {!isLoading ? (
@@ -597,18 +640,15 @@ export const Contact = () => {
           </motion.div>
         </div>
 
-        {/* CTA Final Premium */}
+        {/* CTA Final */}
         <motion.div
+          className="text-center contact-cta"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
-          className="text-center"
         >
-          <div className="bg-gradient-to-r from-gray-900/60 to-gray-800/40 backdrop-blur-xl p-8 lg:p-12 rounded-3xl border border-gray-700/50 shadow-2xl relative overflow-hidden">
-            {/* Efeito de gradiente animado no fundo */}
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-cyan-500/5 animate-pulse" />
-
+          <div className="bg-gradient-to-r from-gray-900/60 to-gray-800/40 backdrop-blur-xl p-8 lg:p-12 rounded-3xl border border-gray-700/50 shadow-2xl relative overflow-hidden contact-interactive">
             <div className="relative z-10">
               <motion.h3
                 initial={{ opacity: 0, y: 20 }}

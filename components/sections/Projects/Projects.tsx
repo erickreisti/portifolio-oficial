@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import NextLink from "next/link";
 import {
@@ -34,7 +34,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
-import styles from "./Projects.module.css";
 import { projects } from "@/lib/project-data";
 import type { Project } from "@/lib/project-data";
 
@@ -51,40 +50,40 @@ const TagsModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className={styles.modalOverlay}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.8 }}
-        className={styles.modalContent}
+        className="bg-gray-900/95 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden"
       >
-        <div className={styles.modalHeader}>
-          <div className={styles.modalTitleContainer}>
-            <Tag className={styles.modalTitleIcon} />
-            <h3 className={styles.modalTitle}>Tecnologias Utilizadas</h3>
+        <div className="flex items-center justify-between p-6 border-b border-gray-700/50">
+          <div className="flex items-center gap-3">
+            <Tag className="w-5 h-5 text-blue-400" />
+            <h3 className="text-xl font-bold text-white">
+              Tecnologias Utilizadas
+            </h3>
           </div>
           <Button
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className={styles.modalCloseButton}
+            className="w-8 h-8 rounded-lg hover:bg-gray-800/50"
           >
-            <X className={styles.modalCloseIcon} />
+            <X className="w-4 h-4" />
           </Button>
         </div>
 
-        <div className={styles.modalProjectInfo}>
-          <h4 className={styles.modalProjectTitle}>{project.title}</h4>
-          <p className={styles.modalProjectDescription}>
-            {project.description}
-          </p>
+        <div className="p-6 border-b border-gray-700/50">
+          <h4 className="text-lg font-bold text-white mb-2">{project.title}</h4>
+          <p className="text-gray-300 text-sm">{project.description}</p>
         </div>
 
-        <div className={styles.modalTagsSection}>
-          <p className={styles.modalTagsTitle}>
+        <div className="p-6">
+          <p className="text-sm font-mono font-bold text-gray-400 mb-4">
             STACK COMPLETA ({project.tags.length} tecnologias):
           </p>
-          <div className={styles.modalTagsContainer}>
+          <div className="flex flex-wrap gap-2">
             {project.tags.map((tag: string, index: number) => (
               <motion.div
                 key={tag}
@@ -92,31 +91,39 @@ const TagsModal = ({
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.2, delay: index * 0.05 }}
               >
-                <Badge className={styles.modalTag}>{tag}</Badge>
+                <Badge className="bg-blue-500/10 text-blue-400 border-blue-400/30 font-mono text-xs font-bold">
+                  {tag}
+                </Badge>
               </motion.div>
             ))}
           </div>
         </div>
 
-        <div className={styles.modalActions}>
-          <Button asChild className={styles.modalButtonPrimary}>
+        <div className="flex gap-3 p-6 border-t border-gray-700/50">
+          <Button
+            asChild
+            className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+          >
             <a
               href={project.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
             >
-              <ExternalLink className={styles.modalButtonIcon} />
+              <ExternalLink className="w-4 h-4 mr-2" />
               VER CÓDIGO
             </a>
           </Button>
           {project.liveUrl && (
-            <Button asChild className={styles.modalButtonSecondary}>
+            <Button
+              asChild
+              className="flex-1 bg-gray-800/50 border border-blue-400/30 text-blue-400 hover:bg-blue-500/10"
+            >
               <a
                 href={project.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <ExternalLink className={styles.modalButtonIcon} />
+                <ExternalLink className="w-4 h-4 mr-2" />
                 VER DEMO
               </a>
             </Button>
@@ -252,28 +259,38 @@ const ProjectCard: React.FC<{
         </Card>
       </motion.div>
 
-      <TagsModal
-        project={project}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      <AnimatePresence>
+        <TagsModal
+          project={project}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      </AnimatePresence>
     </>
   );
 };
 
-export const Projects = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const neonElementsRef = useRef<(HTMLDivElement | null)[]>([]);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
+// Componente Neon Element para Projects
+const ProjectsNeonElement = ({
+  Icon,
+  position,
+  color,
+  delay = 0,
+}: {
+  Icon: any;
+  position: string;
+  color: string;
+  delay?: number;
+}) => {
+  const elementRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(elementRef, { once: true, amount: 0.3 });
 
   useEffect(() => {
-    if (!isInView) return;
+    if (!isInView || !elementRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Animação dos elementos neon
-      const neonElements = neonElementsRef.current.filter(Boolean);
       gsap.fromTo(
-        neonElements,
+        elementRef.current,
         {
           opacity: 0,
           scale: 0,
@@ -287,92 +304,147 @@ export const Projects = () => {
           rotation: 0,
           duration: 1.5,
           ease: "back.out(1.7)",
-          stagger: 0.15,
+          delay: delay * 0.2,
         }
       );
 
-      // Animações flutuantes contínuas
-      neonElements.forEach((element, index) => {
-        gsap.to(element, {
-          y: -20 - index * 5,
-          rotation: index % 2 === 0 ? 10 : -10,
-          duration: 3 + index,
-          ease: "sine.inOut",
-          repeat: -1,
-          yoyo: true,
-          delay: index * 0.3,
-        });
-      });
-
-      // Pulsação neon
-      gsap.to(".neon-projects", {
-        filter: "drop-shadow(0 0 15px currentColor) brightness(1.3)",
-        duration: 2,
+      // Animação flutuante contínua
+      gsap.to(elementRef.current, {
+        y: -20,
+        rotation: 5,
+        duration: 4,
         ease: "sine.inOut",
         repeat: -1,
         yoyo: true,
-        stagger: 0.5,
+        delay: delay * 0.3,
       });
-    }, sectionRef);
+    });
 
     return () => ctx.revert();
-  }, [isInView]);
+  }, [isInView, delay]);
 
-  const setNeonElementRef = (index: number) => (el: HTMLDivElement | null) => {
-    neonElementsRef.current[index] = el;
-  };
+  return (
+    <div ref={elementRef} className={`absolute ${position}`}>
+      <Icon className={`${color} text-2xl animate-pulse`} />
+    </div>
+  );
+};
 
-  // Configuração dos elementos neon
-  const neonElementsConfig = [
+export const Projects = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
+
+  // Neon Elements Configuration
+  const neonElements = [
     {
       Icon: Rocket,
       position: "top-20 left-20",
       color: "text-cyan-400",
-      size: "text-3xl",
+      delay: 0,
     },
     {
       Icon: Code,
       position: "top-32 right-24",
       color: "text-purple-400",
-      size: "text-3xl",
+      delay: 1,
     },
     {
       Icon: Globe,
       position: "bottom-40 left-24",
       color: "text-green-400",
-      size: "text-2xl",
+      delay: 2,
     },
     {
       Icon: Database,
       position: "bottom-32 right-20",
       color: "text-amber-400",
-      size: "text-2xl",
+      delay: 3,
     },
     {
       Icon: Server,
       position: "top-40 right-16",
       color: "text-blue-400",
-      size: "text-xl",
+      delay: 4,
     },
     {
       Icon: Smartphone,
       position: "bottom-48 left-16",
       color: "text-emerald-400",
-      size: "text-xl",
+      delay: 5,
     },
     {
       Icon: Cloud,
       position: "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2",
       color: "text-indigo-400",
-      size: "text-2xl",
+      delay: 6,
     },
     {
       Icon: Zap,
       position: "top-1/3 left-1/4",
       color: "text-rose-400",
-      size: "text-xl",
+      delay: 7,
     },
   ];
+
+  // GSAP Animations para seção principal
+  useEffect(() => {
+    if (!isInView || !sectionRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // Animação de entrada da seção
+      gsap.fromTo(
+        sectionRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 1, ease: "power2.out" }
+      );
+
+      // Timeline principal
+      const tl = gsap.timeline();
+
+      tl.fromTo(
+        ".projects-header",
+        { opacity: 0, y: 50 },
+        { opacity: 1, y: 0, duration: 0.8, ease: "back.out(1.7)" }
+      )
+        .fromTo(
+          ".projects-grid",
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: "power3.out" },
+          "-=0.3"
+        )
+        .fromTo(
+          ".projects-stats",
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            stagger: 0.05,
+            ease: "power2.out",
+          },
+          "-=0.2"
+        )
+        .fromTo(
+          ".projects-cta",
+          { opacity: 0, scale: 0.9 },
+          { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" },
+          "-=0.2"
+        );
+
+      // Animação pulsante para elementos interativos
+      gsap.to(".projects-interactive", {
+        y: -3,
+        boxShadow: "0 20px 40px rgba(59, 130, 246, 0.2)",
+        duration: 2,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+        stagger: 0.1,
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [isInView]);
 
   return (
     <section
@@ -421,32 +493,26 @@ export const Projects = () => {
 
       {/* Elementos Neon Flutuantes */}
       <div className="absolute inset-0 pointer-events-none">
-        {neonElementsConfig.map(({ Icon, position, color, size }, index) => (
-          <motion.div
-            key={index}
-            ref={setNeonElementRef(index)}
-            className={`absolute ${styles.neonGlow} neon-projects ${position}`}
-          >
-            <Icon className={`${color} ${size}`} />
-          </motion.div>
+        {neonElements.map((element, index) => (
+          <ProjectsNeonElement key={index} {...element} />
         ))}
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
         {/* Header */}
         <motion.div
+          className="text-center mb-16 lg:mb-24 projects-header"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
           viewport={{ once: true, amount: 0.2 }}
-          className="text-center mb-16 lg:mb-24"
         >
           <motion.div
             initial={{ scale: 0, rotate: -180 }}
             whileInView={{ scale: 1, rotate: 0 }}
             transition={{ duration: 0.5, delay: 0.1, type: "spring" }}
             viewport={{ once: true }}
-            className="inline-flex items-center text-blue-400 bg-blue-500/10 border border-blue-400/30 px-4 py-2 rounded-full text-sm lg:text-base font-mono font-bold mb-6 lg:mb-8"
+            className="inline-flex items-center text-blue-400 bg-blue-500/10 border border-blue-400/30 px-4 py-2 rounded-full text-sm lg:text-base font-mono font-bold mb-6 lg:mb-8 projects-interactive"
           >
             <Sparkles className="w-4 h-4 lg:w-5 lg:h-5 mr-2 animate-pulse" />
             PORTFÓLIO PREMIUM
@@ -472,19 +538,19 @@ export const Projects = () => {
         </motion.div>
 
         {/* Grid de Projetos */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16 lg:mb-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16 lg:mb-24 projects-grid">
           {projects.map((project, index) => (
             <ProjectCard key={project.id} project={project} index={index} />
           ))}
         </div>
 
-        {/* Stats - Agora dinâmico baseado nos projetos */}
+        {/* Stats */}
         <motion.div
+          className="mb-16 lg:mb-24 projects-stats"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
-          className="mb-16 lg:mb-24"
         >
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
             {[
@@ -526,7 +592,7 @@ export const Projects = () => {
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4, delay: 0.05 * index }}
                 viewport={{ once: true }}
-                className="text-center p-6 bg-gray-900/40 backdrop-blur-lg rounded-2xl border border-gray-700/50 hover:border-blue-400/30 transition-all duration-500 cursor-pointer hover:scale-105"
+                className="text-center p-6 bg-gray-900/40 backdrop-blur-lg rounded-2xl border border-gray-700/50 hover:border-blue-400/30 transition-all duration-500 cursor-pointer hover:scale-105 projects-interactive"
               >
                 <div
                   className={`w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-gradient-to-br ${stat.color} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}
@@ -549,13 +615,13 @@ export const Projects = () => {
 
         {/* CTA */}
         <motion.div
+          className="text-center projects-cta"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
           viewport={{ once: true }}
-          className="text-center"
         >
-          <div className="bg-gradient-to-r from-gray-900/60 to-gray-800/40 backdrop-blur-xl p-8 lg:p-12 rounded-3xl border border-gray-700/50 shadow-2xl relative overflow-hidden">
+          <div className="bg-gradient-to-r from-gray-900/60 to-gray-800/40 backdrop-blur-xl p-8 lg:p-12 rounded-3xl border border-gray-700/50 shadow-2xl relative overflow-hidden projects-interactive">
             <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 relative z-10">
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
@@ -578,7 +644,7 @@ export const Projects = () => {
               </div>
 
               <motion.div
-                initial={{ opacity: 0, x: 15 }}
+                initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
                 viewport={{ once: true }}
@@ -589,7 +655,7 @@ export const Projects = () => {
                       .getElementById("contact")
                       ?.scrollIntoView({ behavior: "smooth" })
                   }
-                  className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold text-lg px-8 lg:px-12 py-4 lg:py-5 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 flex items-center justify-center"
+                  className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold text-lg px-8 lg:px-12 py-4 lg:py-5 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 flex items-center justify-center projects-interactive"
                 >
                   <Sparkles className="w-5 h-5 lg:w-6 lg:h-6 mr-3" />
                   INICIAR PROJETO
