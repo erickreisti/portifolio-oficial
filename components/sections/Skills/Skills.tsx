@@ -18,9 +18,14 @@ import {
   Cpu,
   Globe,
   Terminal,
+  Target,
+  Award,
+  Clock,
+  Heart,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { PremiumBackground } from "@/components/layout/PremiumBackground";
 
 const skillsData = [
@@ -28,30 +33,30 @@ const skillsData = [
     category: "FRONTEND & MOBILE",
     icon: Smartphone,
     description: "Experiências digitais imersivas e responsivas",
-    color: "from-blue-400 to-cyan-400",
+    color: "from-cyan-400 to-blue-400",
     skills: [
       {
         name: "Next.js 14+",
         level: 96,
-        color: "bg-gradient-to-r from-blue-400 to-cyan-400",
+        color: "bg-gradient-to-r from-cyan-400 to-blue-400",
         description: "SSR, App Router, Server Actions",
       },
       {
         name: "TypeScript",
         level: 94,
-        color: "bg-gradient-to-r from-cyan-400 to-purple-400",
+        color: "bg-gradient-to-r from-cyan-400 to-blue-400",
         description: "Type Safety & Advanced Patterns",
       },
       {
         name: "React",
         level: 92,
-        color: "bg-gradient-to-r from-blue-400 to-green-400",
+        color: "bg-gradient-to-r from-cyan-400 to-blue-400",
         description: "Hooks, Context & Performance",
       },
       {
         name: "Tailwind CSS",
         level: 98,
-        color: "bg-gradient-to-r from-green-400 to-cyan-400",
+        color: "bg-gradient-to-r from-cyan-400 to-blue-400",
         description: "Utility-first & Design Systems",
       },
     ],
@@ -60,30 +65,30 @@ const skillsData = [
     category: "BACKEND & DATABASE",
     icon: Server,
     description: "APIs robustas e arquiteturas escaláveis",
-    color: "from-purple-400 to-pink-400",
+    color: "from-cyan-400 to-blue-400",
     skills: [
       {
         name: "Node.js & Express",
         level: 92,
-        color: "bg-gradient-to-r from-green-400 to-emerald-400",
+        color: "bg-gradient-to-r from-cyan-400 to-blue-400",
         description: "REST & GraphQL APIs",
       },
       {
         name: "Prisma & ORM",
         level: 85,
-        color: "bg-gradient-to-r from-amber-400 to-orange-400",
+        color: "bg-gradient-to-r from-cyan-400 to-blue-400",
         description: "Data Modeling & Migrations",
       },
       {
         name: "PostgreSQL",
         level: 88,
-        color: "bg-gradient-to-r from-blue-400 to-indigo-400",
+        color: "bg-gradient-to-r from-cyan-400 to-blue-400",
         description: "Complex Queries & Optimization",
       },
       {
         name: "Supabase & MongoDB",
         level: 82,
-        color: "bg-gradient-to-r from-green-400 to-emerald-400",
+        color: "bg-gradient-to-r from-cyan-400 to-blue-400",
         description: "Realtime & NoSQL Databases",
       },
     ],
@@ -92,37 +97,37 @@ const skillsData = [
     category: "CLOUD & DEVOPS",
     icon: Cloud,
     description: "Infraestrutura moderna e CI/CD",
-    color: "from-orange-400 to-red-400",
+    color: "from-cyan-400 to-blue-400",
     skills: [
       {
         name: "AWS & Vercel",
         level: 84,
-        color: "bg-gradient-to-r from-orange-400 to-red-400",
+        color: "bg-gradient-to-r from-cyan-400 to-blue-400",
         description: "Serverless & Edge Computing",
       },
       {
         name: "Docker & Kubernetes",
         level: 78,
-        color: "bg-gradient-to-r from-blue-400 to-cyan-400",
+        color: "bg-gradient-to-r from-cyan-400 to-blue-400",
         description: "Containerization & Orchestration",
       },
       {
         name: "CI/CD Pipelines",
         level: 87,
-        color: "bg-gradient-to-r from-purple-400 to-pink-400",
+        color: "bg-gradient-to-r from-cyan-400 to-blue-400",
         description: "GitHub Actions & Automation",
       },
       {
         name: "Git & GitHub",
         level: 96,
-        color: "bg-gradient-to-r from-gray-400 to-slate-400",
+        color: "bg-gradient-to-r from-cyan-400 to-blue-400",
         description: "Advanced Git Workflows",
       },
     ],
   },
 ];
 
-// Componente Neon Element Corrigido para Skills
+// Componente Neon Element Harmonizado
 const SkillsNeonElement = ({
   Icon,
   position,
@@ -141,7 +146,6 @@ const SkillsNeonElement = ({
 
     const element = elementRef.current;
 
-    // Animação de entrada
     const enterAnimation = gsap.fromTo(
       element,
       {
@@ -161,7 +165,6 @@ const SkillsNeonElement = ({
       }
     );
 
-    // Animação flutuante contínua
     const floatAnimation = gsap.to(element, {
       y: -15,
       rotation: 5,
@@ -188,17 +191,15 @@ const SkillsNeonElement = ({
   );
 };
 
-// Componente Skill Bar Premium
+// Componente Skill Bar Harmonizado
 const SkillBar = ({
   name,
   level,
-  color,
   description,
   index,
 }: {
   name: string;
   level: number;
-  color: string;
   description: string;
   index: number;
 }) => {
@@ -224,23 +225,23 @@ const SkillBar = ({
     >
       <div className="flex justify-between items-start gap-2">
         <div className="flex-1 min-w-0">
-          <span className="block text-sm lg:text-base font-semibold text-white group-hover:text-blue-400 transition-colors duration-300 mb-1">
+          <span className="block text-sm lg:text-base font-semibold text-white group-hover:text-cyan-400 transition-colors duration-300 mb-1">
             {name}
           </span>
           <span className="block text-xs lg:text-sm text-gray-400 leading-relaxed">
             {description}
           </span>
         </div>
-        <Badge className="bg-blue-400/10 text-blue-400 border-blue-400/30 font-mono font-bold px-2 py-1 text-xs lg:text-sm group-hover:scale-110 transition-transform duration-300">
+        <Badge className="bg-cyan-400/10 text-cyan-400 border-cyan-400/30 font-mono font-bold px-2 py-1 text-xs lg:text-sm group-hover:scale-110 transition-transform duration-300">
           {level}%
         </Badge>
       </div>
 
-      <div className="h-2 lg:h-3 w-full bg-gray-800/50 rounded-full overflow-hidden border border-gray-700/50 shadow-inner backdrop-blur-sm">
+      <div className="h-2 lg:h-3 w-full bg-gray-800/50 rounded-full overflow-hidden border border-cyan-500/20 shadow-inner backdrop-blur-sm">
         <motion.div
           ref={barRef}
           initial={{ width: 0 }}
-          className={`h-full rounded-full ${color} relative overflow-hidden`}
+          className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-blue-400 relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
         </motion.div>
@@ -249,7 +250,7 @@ const SkillBar = ({
   );
 };
 
-// Componente Skill Card Premium
+// Componente Skill Card Harmonizado
 const SkillCard = ({ group, index }: { group: any; index: number }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.3 });
@@ -285,17 +286,17 @@ const SkillCard = ({ group, index }: { group: any; index: number }) => {
       whileHover={{ y: -5, scale: 1.02 }}
       transition={{ type: "spring", stiffness: 300 }}
     >
-      <Card className="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 shadow-2xl hover:shadow-3xl hover:border-blue-400/30 transition-all duration-500 group h-full">
-        <CardHeader className="pb-6 border-b border-gray-700/50">
+      <Card className="bg-gray-900/60 backdrop-blur-xl border border-cyan-500/20 shadow-2xl hover:shadow-cyan-400/20 hover:border-cyan-400/50 transition-all duration-500 group h-full">
+        <CardHeader className="pb-4 border-b border-cyan-400/20">
           <div className="flex items-center gap-4 mb-3">
             <motion.div
-              className={`w-12 h-12 rounded-full bg-gradient-to-br ${group.color} flex items-center justify-center border border-gray-600/50 group-hover:scale-110 transition-transform duration-300`}
+              className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/30 group-hover:border-cyan-400/50 transition-all duration-300"
               whileHover={{ scale: 1.1, rotate: 360 }}
               transition={{ duration: 0.5 }}
             >
-              <group.icon className="w-6 h-6 text-white" />
+              <group.icon className="w-6 h-6 text-cyan-400" />
             </motion.div>
-            <CardTitle className="text-xl lg:text-2xl font-black text-blue-400">
+            <CardTitle className="text-xl lg:text-2xl font-black text-cyan-400">
               {group.category}
             </CardTitle>
           </div>
@@ -322,7 +323,7 @@ const SkillCard = ({ group, index }: { group: any; index: number }) => {
   );
 };
 
-// Componente Stat Card para Skills
+// Componente Stat Card Harmonizado
 const SkillsStatCard = ({ stat, index }: { stat: any; index: number }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.3 });
@@ -355,22 +356,18 @@ const SkillsStatCard = ({ stat, index }: { stat: any; index: number }) => {
   return (
     <motion.div
       ref={cardRef}
-      className="text-center p-6 bg-gray-900/40 backdrop-blur-lg rounded-2xl border border-gray-700/50 hover:border-blue-400/30 transition-all duration-500 cursor-pointer hover:scale-105"
+      className="text-center p-6 bg-gray-900/40 backdrop-blur-lg rounded-2xl border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-500 cursor-pointer group"
       whileHover={{ y: -5, scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
-      <div
-        className={`w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-gradient-to-br ${stat.color} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}
-      >
-        <stat.icon className="w-8 h-8 lg:w-10 lg:h-10 text-white" />
+      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center mx-auto mb-4 border border-cyan-400/30 group-hover:border-cyan-400/50 transition-all duration-300">
+        <stat.icon className="w-8 h-8 text-cyan-400" />
       </div>
-      <div className="text-2xl lg:text-3xl xl:text-4xl font-black text-white mb-2 group-hover:scale-105 transition-transform duration-300">
+      <div className="text-2xl lg:text-3xl font-black bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-2">
         {stat.number}
       </div>
-      <div className="text-lg lg:text-xl font-bold text-white mb-1">
-        {stat.title}
-      </div>
-      <div className="text-sm lg:text-base text-gray-400">{stat.subtitle}</div>
+      <div className="text-lg font-bold text-white mb-1">{stat.title}</div>
+      <div className="text-sm text-gray-400">{stat.subtitle}</div>
     </motion.div>
   );
 };
@@ -379,30 +376,30 @@ export const Skills = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
-  // Neon Elements Configuration - POSIÇÕES CORRIGIDAS
+  // Neon Elements Configuration - CORES HARMONIZADAS
   const neonElements = [
     {
       Icon: Code2,
       position: "top-20 left-10",
-      color: "text-blue-400",
+      color: "text-cyan-400",
       delay: 0,
     },
     {
       Icon: Cpu,
       position: "top-10 right-15",
-      color: "text-purple-400",
+      color: "text-cyan-400",
       delay: 1,
     },
     {
       Icon: Zap,
       position: "bottom-40 left-15",
-      color: "text-green-400",
+      color: "text-cyan-400",
       delay: 2,
     },
     {
       Icon: Sparkles,
       position: "bottom-20 right-10",
-      color: "text-amber-400",
+      color: "text-cyan-400",
       delay: 3,
     },
     {
@@ -414,68 +411,54 @@ export const Skills = () => {
     {
       Icon: Database,
       position: "bottom-40 left-5",
-      color: "text-emerald-400",
+      color: "text-cyan-400",
       delay: 5,
-    },
-    {
-      Icon: Globe,
-      position: "top-60 left-20",
-      color: "text-indigo-400",
-      delay: 6,
-    },
-    {
-      Icon: Terminal,
-      position: "bottom-20 left-25",
-      color: "text-pink-400",
-      delay: 7,
     },
   ];
 
-  // Stats Data
+  // Stats Data Harmonizada
   const statsData = [
     {
       number: "20+",
       title: "Tecnologias",
       subtitle: "Stack Completa",
-      icon: Brain,
-      color: "from-blue-400 to-cyan-400",
+      icon: Target,
+      color: "from-cyan-400 to-blue-400",
     },
     {
       number: "92%",
       title: "Proficiência",
       subtitle: "Média de Domínio",
-      icon: Zap,
-      color: "from-purple-400 to-pink-400",
+      icon: Award,
+      color: "from-cyan-400 to-blue-400",
     },
     {
       number: "5+",
       title: "Anos Exp",
       subtitle: "Experiência Comprovada",
-      icon: Rocket,
-      color: "from-amber-400 to-orange-400",
+      icon: Clock,
+      color: "from-cyan-400 to-blue-400",
     },
     {
       number: "100%",
       title: "Qualidade",
       subtitle: "Padrão de Excelência",
-      icon: Sparkles,
-      color: "from-green-400 to-emerald-400",
+      icon: Heart,
+      color: "from-cyan-400 to-blue-400",
     },
   ];
 
-  // GSAP Animations para seção principal
+  // GSAP Animations
   useEffect(() => {
     if (!isInView || !sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Animação de entrada da seção
       gsap.fromTo(
         sectionRef.current,
         { opacity: 0 },
         { opacity: 1, duration: 1, ease: "power2.out" }
       );
 
-      // Timeline principal
       const tl = gsap.timeline();
 
       tl.fromTo(
@@ -516,21 +499,21 @@ export const Skills = () => {
     <section
       id="skills"
       ref={sectionRef}
-      className="relative min-h-screen bg-gray-950 overflow-hidden flex items-center py-24 lg:py-32 border-t border-gray-800/50"
+      className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 overflow-hidden flex items-center py-20 lg:py-28"
     >
       <PremiumBackground intensity="medium" />
 
-      {/* Elementos Neon Premium - CORRIGIDOS */}
+      {/* Elementos Neon Harmonizados */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {neonElements.map((element, index) => (
           <SkillsNeonElement key={index} {...element} />
         ))}
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        {/* Header Harmonizado */}
         <motion.div
-          className="text-center mb-16 lg:mb-24 skills-header"
+          className="text-center mb-16 lg:mb-20 skills-header"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
@@ -541,10 +524,11 @@ export const Skills = () => {
             whileInView={{ scale: 1, rotate: 0 }}
             transition={{ duration: 0.5, delay: 0.1, type: "spring" }}
             viewport={{ once: true }}
-            className="inline-flex items-center text-blue-400 bg-blue-400/10 border border-blue-400/30 px-4 py-2 rounded-full text-sm lg:text-base font-mono font-bold mb-6 lg:mb-8"
+            className="inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-400/10 px-6 py-3 rounded-full border border-cyan-400/30 backdrop-blur-2xl mb-6 relative overflow-hidden group"
           >
-            <Zap className="w-4 h-4 lg:w-5 lg:h-5 mr-2 animate-pulse" />
+            <Zap className="w-4 h-4 mr-3 animate-pulse" />
             DOMÍNIO TECNOLÓGICO
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-600" />
           </motion.div>
 
           <motion.div
@@ -553,29 +537,29 @@ export const Skills = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <h1 className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-black text-white mb-4 lg:mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
               EXPERTISE EM{" "}
-              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent bg-size-200 animate-gradient">
+              <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
                 FULL STACK
               </span>
             </h1>
-            <p className="text-lg lg:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
               Domínio completo do ecossistema moderno de desenvolvimento, desde
               interfaces imersivas até infraestrutura escalável
             </p>
           </motion.div>
         </motion.div>
 
-        {/* Grid de Skills */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 mb-16 lg:mb-24 skills-grid">
+        {/* Grid de Skills Harmonizado */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 mb-16 lg:mb-20 skills-grid">
           {skillsData.map((group, index) => (
             <SkillCard key={group.category} group={group} index={index} />
           ))}
         </div>
 
-        {/* Stats */}
+        {/* Stats Harmonizado */}
         <motion.div
-          className="mb-16 lg:mb-24 skills-stats"
+          className="mb-16 lg:mb-20 skills-stats"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
@@ -588,7 +572,7 @@ export const Skills = () => {
           </div>
         </motion.div>
 
-        {/* CTA */}
+        {/* CTA Harmonizado */}
         <motion.div
           className="text-center skills-cta"
           initial={{ opacity: 0, y: 30 }}
@@ -596,46 +580,42 @@ export const Skills = () => {
           transition={{ duration: 0.6, delay: 0.6 }}
           viewport={{ once: true }}
         >
-          <div className="bg-gradient-to-r from-gray-900/60 to-gray-800/40 backdrop-blur-xl p-8 lg:p-12 rounded-3xl border border-gray-700/50 shadow-2xl relative overflow-hidden">
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 relative z-10">
+          <div className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-2xl p-8 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 relative overflow-hidden group">
+            <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-8 relative z-10">
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
                 whileInView={{ scale: 1, rotate: 0 }}
-                transition={{ duration: 0.5, type: "spring" }}
+                transition={{ duration: 0.6, type: "spring" }}
                 viewport={{ once: true }}
-                className="w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-gradient-to-br from-blue-400/20 to-cyan-400/20 flex items-center justify-center border border-blue-400/30 flex-shrink-0"
+                className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/30 shadow-xl shadow-cyan-400/30 group-hover:border-cyan-400/50"
+                whileHover={{ rotate: 360 }}
               >
-                <GitBranch className="w-8 h-8 lg:w-10 lg:h-10 text-blue-400 animate-pulse" />
+                <GitBranch className="w-6 h-6 text-cyan-400" />
               </motion.div>
-
-              <div className="flex-1 text-center lg:text-left">
-                <h3 className="text-2xl lg:text-3xl font-black text-white mb-3">
+              <div className="text-center lg:text-left flex-1">
+                <h3 className="text-xl lg:text-2xl font-black text-white mb-2">
                   Pronto para elevar seu projeto?
                 </h3>
-                <p className="text-lg lg:text-xl text-gray-300">
+                <p className="text-gray-300 text-base lg:text-lg">
                   Vamos aplicar essa expertise técnica no seu próximo desafio
                 </p>
               </div>
-
               <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
+                initial={{ opacity: 0, x: 20, scale: 0.9 }}
+                whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.8 }}
                 viewport={{ once: true }}
+                className="w-full lg:w-auto"
               >
-                <motion.button
-                  onClick={() =>
-                    document
-                      .getElementById("contact")
-                      ?.scrollIntoView({ behavior: "smooth" })
-                  }
-                  className="bg-gradient-to-r from-blue-400 to-purple-400 hover:from-blue-400/90 hover:to-purple-400/90 text-white font-bold text-lg px-8 lg:px-12 py-4 lg:py-5 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 flex items-center justify-center"
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Sparkles className="w-5 h-5 lg:w-6 lg:h-6 mr-3" />
-                  INICIAR COLABORAÇÃO
-                </motion.button>
+                <Button asChild className="w-full lg:w-auto">
+                  <a
+                    href="#contact"
+                    className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl border-none shadow-2xl shadow-cyan-400/30 transition-all duration-500 hover:shadow-cyan-400/50 hover:scale-105 relative overflow-hidden focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
+                  >
+                    <Sparkles className="w-4 h-4 mr-2 transition-transform duration-300" />
+                    INICIAR COLABORAÇÃO
+                  </a>
+                </Button>
               </motion.div>
             </div>
           </div>
