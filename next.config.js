@@ -9,6 +9,7 @@ const nextConfig = {
   images: {
     domains: ["localhost"],
     unoptimized: process.env.NODE_ENV === "development",
+    formats: ["image/avif", "image/webp"], // ✅ ADICIONADO
   },
   typescript: {
     ignoreBuildErrors: false,
@@ -17,6 +18,7 @@ const nextConfig = {
     ignoreDuringBuilds: false,
   },
   poweredByHeader: false,
+  compress: true, // ✅ ADICIONADO
 };
 
 module.exports = nextConfig;

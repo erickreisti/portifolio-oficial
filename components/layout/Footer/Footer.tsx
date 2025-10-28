@@ -1,3 +1,4 @@
+// components/layout/Footer.tsx (CORRIGIDO)
 "use client";
 
 import Link from "next/link";
@@ -47,24 +48,39 @@ export const Footer = () => {
   };
 
   return (
-    <footer className="relative bg-slate-900 border-t border-slate-600/50 py-12 lg:py-20 overflow-hidden">
-      {/* Background */}
+    <footer className="relative min-h-[400px] bg-gray-950 border-t border-gray-800/50 overflow-hidden">
+      {/* Background com gradientes animados */}
       <div className="absolute inset-0">
-        <div className={styles.heroBg} />
-        <motion.div
-          className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-blue-400/10 rounded-full blur-3xl"
-          animate={{
-            opacity: [0.05, 0.1, 0.05],
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `
+              radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.15) 0%, transparent 60%),
+              radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 60%),
+              radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 60%),
+              radial-gradient(circle at 70% 90%, rgba(245, 158, 11, 0.08) 0%, transparent 60%),
+              linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.95) 100%)
+            `,
           }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        />
+
+        {/* Elementos de fundo animados */}
+        <motion.div
+          className="absolute top-1/4 left-1/6 w-72 h-72 bg-cyan-500/10 rounded-full filter blur-3xl"
+          animate={{
+            opacity: [0.1, 0.2, 0.1],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute top-0 right-0 w-1/2 h-1/2 bg-purple-400/10 rounded-full blur-3xl"
+          className="absolute bottom-1/4 right-1/5 w-64 h-64 bg-purple-500/08 rounded-full filter blur-3xl"
           animate={{
-            opacity: [0.08, 0.12, 0.08],
+            opacity: [0.15, 0.25, 0.15],
+            scale: [1, 1.15, 1],
           }}
           transition={{
-            duration: 8,
+            duration: 7,
             repeat: Infinity,
             ease: "easeInOut",
             delay: 2,
@@ -72,64 +88,39 @@ export const Footer = () => {
         />
       </div>
 
-      {/* Elementos decorativos */}
+      {/* Elementos Neon Flutuantes - APENAS 2 AGORA */}
       <div className="absolute inset-0 pointer-events-none">
-        <motion.div
-          className="absolute top-8 left-8 opacity-60"
-          animate={{
-            y: [0, -10, 0],
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={`w-12 h-12 lg:w-16 lg:h-16 text-cyan-400 ${styles.neonGlow}`}
-            aria-hidden="true"
+        {[Rocket, Sparkles].map((Icon, index) => (
+          <motion.div
+            key={index}
+            className={`absolute ${styles.neonGlow} ${
+              index === 0 ? "top-20 left-20" : "top-32 right-24"
+            }`}
+            animate={{
+              y: [0, -20, 0],
+              rotate: [0, 10, 0],
+            }}
+            transition={{
+              duration: 6 + index,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: index * 2,
+            }}
           >
-            <rect width="18" height="18" x="3" y="3" rx="2"></rect>
-            <path d="M11 9h4a2 2 0 0 0 2-2V3"></path>
-            <circle cx="9" cy="9" r="2"></circle>
-            <path d="M7 21v-4a2 2 0 0 1 2-2h4"></path>
-            <circle cx="15" cy="15" r="2"></circle>
-          </svg>
-        </motion.div>
-        <motion.div
-          className="absolute bottom-8 right-8 opacity-60"
-          animate={{
-            y: [0, 10, 0],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 3,
-          }}
-        >
-          <svg
-            className={`w-12 h-12 lg:w-16 lg:h-16 text-cyan-400 ${styles.neonGlow}`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+            <Icon
+              className={`
+              ${
+                index === 0
+                  ? "text-cyan-400 text-3xl"
+                  : "text-purple-400 text-3xl"
+              }
+            `}
             />
-          </svg>
-        </motion.div>
+          </motion.div>
+        ))}
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
         {/* Conteúdo Principal */}
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-0 mb-12 lg:mb-16">
           {/* Logo/Nome */}
@@ -143,7 +134,7 @@ export const Footer = () => {
           >
             <div className="flex items-center gap-3">
               <motion.div
-                className="h-16 w-16 lg:h-20 lg:w-20 rounded-2xl bg-slate-800/50 backdrop-blur-2xl border border-blue-400/20 flex items-center justify-center overflow-hidden group-hover:border-blue-400/40 transition-all duration-500"
+                className="h-16 w-16 lg:h-20 lg:w-20 rounded-2xl bg-gray-900/60 backdrop-blur-xl border border-blue-400/30 flex items-center justify-center overflow-hidden group-hover:border-blue-400/60 transition-all duration-500"
                 whileHover={{ scale: 1.1, rotate: 5 }}
               >
                 <Image
@@ -158,7 +149,7 @@ export const Footer = () => {
                 <span className="text-xl lg:text-2xl font-black bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent group-hover:from-blue-200 group-hover:to-cyan-200 transition-all duration-300">
                   Érick Reis
                 </span>
-                <span className="text-xs font-mono text-slate-500 group-hover:text-slate-300 transition-colors duration-300 tracking-wider">
+                <span className="text-xs font-mono text-gray-400 group-hover:text-gray-300 transition-colors duration-300 tracking-wider">
                   FULLSTACK DEV
                 </span>
               </div>
@@ -174,7 +165,7 @@ export const Footer = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={link.label}
-                className="relative h-12 w-12 lg:h-14 lg:w-14 rounded-xl bg-slate-900/60 backdrop-blur-2xl border border-blue-400/20 text-slate-400 flex items-center justify-center transition-all duration-500 hover:bg-blue-400/10 hover:border-blue-400/40 hover:scale-110 hover:shadow-2xl hover:shadow-blue-400/20 group"
+                className="relative h-12 w-12 lg:h-14 lg:w-14 rounded-xl bg-gray-900/60 backdrop-blur-xl border border-blue-400/30 text-gray-400 flex items-center justify-center transition-all duration-500 hover:bg-blue-400/10 hover:border-blue-400/60 hover:scale-110 hover:shadow-2xl hover:shadow-blue-400/20 group"
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 initial={{ opacity: 0, y: 20 }}
@@ -185,9 +176,9 @@ export const Footer = () => {
                 <link.icon
                   className={`w-5 h-5 lg:w-6 lg:h-6 transition-colors duration-300 ${link.color}`}
                 />
-                <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-slate-900/90 backdrop-blur-xl text-white text-xs font-mono font-bold px-2 py-1 rounded border border-slate-600/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
+                <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-gray-900/90 backdrop-blur-xl text-white text-xs font-mono font-bold px-2 py-1 rounded border border-gray-700/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
                   {link.label}
-                  <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-slate-900/90 rotate-45 border-b border-r border-slate-600/50" />
+                  <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-900/90 rotate-45 border-b border-r border-gray-700/50" />
                 </div>
               </motion.a>
             ))}
@@ -195,7 +186,7 @@ export const Footer = () => {
         </div>
 
         {/* Divisor */}
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-blue-400/20 to-transparent mb-8 lg:mb-12" />
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-blue-400/30 to-transparent mb-8 lg:mb-12" />
 
         {/* Informações */}
         <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8">
@@ -207,7 +198,7 @@ export const Footer = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <p className="text-slate-500 text-sm font-mono font-bold tracking-wider flex flex-col lg:flex-row items-center gap-1 lg:gap-2">
+            <p className="text-gray-400 text-sm font-mono font-bold tracking-wider flex flex-col lg:flex-row items-center gap-1 lg:gap-2">
               <span>© {currentYear} ÉRICK REIS</span>
               <span className="text-blue-400 hidden lg:inline">•</span>
               <span>TODOS OS DIREITOS</span>
@@ -222,9 +213,9 @@ export const Footer = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900/40 backdrop-blur-xl border border-slate-600/50">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-900/40 backdrop-blur-xl border border-gray-700/50 hover:border-blue-400/30 transition-all duration-300 cursor-pointer">
               <Rocket className="w-4 h-4 text-blue-400" />
-              <span className="text-slate-500 text-xs font-mono font-bold tracking-wider">
+              <span className="text-gray-400 text-xs font-mono font-bold tracking-wider">
                 DESENVOLVIDO
               </span>
               <Heart className="w-4 h-4 text-red-400 animate-pulse" />
@@ -237,7 +228,7 @@ export const Footer = () => {
           {/* Botão Voltar ao Topo */}
           <motion.button
             onClick={scrollToTop}
-            className="order-3 text-slate-500 text-xs font-mono font-bold tracking-wider flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-900/40 backdrop-blur-xl border border-slate-600/50 transition-all duration-300 hover:border-blue-400/30 hover:bg-blue-400/10 hover:text-slate-300 group"
+            className="order-3 text-gray-400 text-xs font-mono font-bold tracking-wider flex items-center gap-2 px-4 py-3 rounded-xl bg-gray-900/40 backdrop-blur-xl border border-gray-700/50 transition-all duration-300 hover:border-blue-400/30 hover:bg-blue-400/10 hover:text-gray-300 group"
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.95 }}
             initial={{ opacity: 0, x: 20 }}
@@ -258,9 +249,9 @@ export const Footer = () => {
           transition={{ duration: 0.7, delay: 0.3 }}
           viewport={{ once: true }}
         >
-          <div className="inline-flex items-center gap-2 bg-slate-900/40 backdrop-blur-2xl px-6 py-3 rounded-2xl border border-slate-600/50 transition-all duration-300 hover:border-blue-400/30 hover:scale-105 group cursor-pointer">
+          <div className="inline-flex items-center gap-2 bg-gray-900/40 backdrop-blur-xl px-6 py-3 rounded-2xl border border-gray-700/50 transition-all duration-300 hover:border-blue-400/30 hover:scale-105 group cursor-pointer">
             <Sparkles className="w-4 h-4 lg:w-5 lg:h-5 text-blue-400 group-hover:text-cyan-400 transition-colors duration-300" />
-            <p className="text-slate-500 text-xs lg:text-sm font-mono font-bold tracking-wider group-hover:text-slate-300 transition-colors duration-300">
+            <p className="text-gray-400 text-xs lg:text-sm font-mono font-bold tracking-wider group-hover:text-gray-300 transition-colors duration-300">
               PRONTO PARA DESAFIOS! 🚀
             </p>
           </div>
@@ -274,7 +265,7 @@ export const Footer = () => {
           transition={{ duration: 0.7, delay: 0.5 }}
           viewport={{ once: true }}
         >
-          <p className="text-slate-600 text-xs font-mono px-2">
+          <p className="text-gray-600 text-xs font-mono px-2">
             {"</>"} COM 💙 POR ERICK REIS • NEXT.JS • TS • TAILWIND
           </p>
         </motion.div>
