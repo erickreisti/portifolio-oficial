@@ -71,7 +71,7 @@ export default function RootLayout({
       </head>
       <body
         className={cn(
-          "min-h-screen bg-slate-900 text-white font-sans antialiased",
+          "min-h-screen bg-transparent text-white font-sans antialiased overflow-x-hidden", // ADD: overflow-x-hidden
           poppins.variable,
           openSans.variable
         )}

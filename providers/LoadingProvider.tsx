@@ -2,7 +2,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
-import { IntergalacticLoading } from "@/components/layout/IntergalacticLoading";
+import { TechLoading } from "@/components/layout/TechLoading";
 
 interface LoadingContextType {
   isLoading: boolean;
@@ -34,11 +34,11 @@ export const LoadingProvider = ({
 
   return (
     <LoadingContext.Provider value={{ isLoading, setIsLoading }}>
-      {isLoading && <IntergalacticLoading />}
+      {isLoading && <TechLoading />}
 
       <div
-        className={`min-h-screen bg-slate-950 transition-opacity duration-500 ${
-          isLoading ? "opacity-0" : "opacity-100"
+        className={`min-h-screen bg-gradient-to-br from-gray-900 to-gray-950 transition-all duration-700 ${
+          isLoading ? "opacity-0 scale-95" : "opacity-100 scale-100"
         }`}
       >
         {children}

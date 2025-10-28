@@ -24,8 +24,9 @@ html {
   scroll-padding-top: 80px;
 }
 
+/* CORREÇÃO CRÍTICA: Body totalmente transparente */
 body {
-  background: #0f172a;
+  background: transparent !important;
   color: white;
   margin: 0;
   padding: 0;

@@ -110,10 +110,11 @@ export const Header = () => {
         isScrolled ? styles.headerScrolled : styles.headerTransparent
       }`}
     >
+      {/* Background que se integra com o Hero */}
       <div className={styles.headerBackground}>
         <div className={styles.headerGradient} />
         <div className={styles.headerLightEffect} />
-        {/* ELEMENTOS ORB ADICIONADOS */}
+        {/* Elementos Orb idênticos ao Hero */}
         <div className={styles.headerOrb1} />
         <div className={styles.headerOrb2} />
         <div className={styles.headerOrb3} />

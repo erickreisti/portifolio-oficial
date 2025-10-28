@@ -6,6 +6,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Garantir que ocupe toda a altura da viewport */
+  min-height: 100vh;
+  width: 100%;
 }
 
 .backgroundContainer {
@@ -14,9 +17,40 @@
   overflow: hidden;
 }
 
+/* CORREÇÃO: Adicionar background ao heroBg */
 .heroBg {
   position: absolute;
   inset: 0;
+  background: radial-gradient(
+      circle at 15% 25%,
+      rgba(59, 130, 246, 0.25) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 85% 15%,
+      rgba(139, 92, 246, 0.2) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 45% 75%,
+      rgba(16, 185, 129, 0.15) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 75% 85%,
+      rgba(245, 158, 11, 0.1) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 25% 45%,
+      rgba(239, 68, 68, 0.1) 0%,
+      transparent 60%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(15, 23, 42, 0.98) 0%,
+      rgba(30, 41, 59, 0.95) 100%
+    );
 }
 
 /* ===== ELEMENTOS DE FUNDO ANIMADOS ===== */
