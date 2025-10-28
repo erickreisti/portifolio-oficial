@@ -34,25 +34,21 @@ const bioData = {
       icon: Brain,
       text: "Arquitetura de Sistemas & Clean Code",
       description: "DDD, Clean Architecture e princípios SOLID",
-      color: "from-blue-400 to-cyan-400",
     },
     {
       icon: Zap,
       text: "Performance & Otimização Web",
       description: "Lighthouse 90%+, Core Web Vitals otimizados",
-      color: "from-purple-400 to-pink-400",
     },
     {
       icon: Users,
       text: "Visão Holística de Sistemas",
       description: "Do backend à experiência do usuário final",
-      color: "from-green-400 to-emerald-400",
     },
     {
       icon: Rocket,
       text: "Soluções Escaláveis",
       description: "Arquitetura preparada para crescimento",
-      color: "from-orange-400 to-red-400",
     },
   ],
   highlights: [
@@ -60,25 +56,21 @@ const bioData = {
       icon: Zap,
       text: "Performance",
       value: "95%+ Lighthouse",
-      color: "from-blue-400 to-cyan-400",
     },
     {
       icon: Code2,
       text: "Arquitetura Limpa",
       value: "Código Sólido",
-      color: "from-purple-400 to-pink-400",
     },
     {
       icon: Shield,
       text: "Segurança",
       value: "Desde a Concepção",
-      color: "from-green-400 to-emerald-400",
     },
     {
       icon: Cpu,
       text: "Tecnologia",
       value: "Stack Moderna",
-      color: "from-orange-400 to-red-400",
     },
   ],
   stats: [
@@ -101,7 +93,7 @@ export const About = () => {
   const highlightItemsRef = useRef<(HTMLDivElement | null)[]>([]);
   const neonElementsRef = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Motion values para efeito 3D parallax - IGUAL AO HERO
+  // Motion values para efeito 3D parallax
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -112,7 +104,7 @@ export const About = () => {
   const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["2deg", "-2deg"]);
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-2deg", "2deg"]);
 
-  // Detectar mobile - IGUAL AO HERO
+  // Detectar mobile
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
     checkMobile();
@@ -120,7 +112,7 @@ export const About = () => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Animação de entrada GSAP - ESTILO HERO
+  // Animação de entrada GSAP
   useEffect(() => {
     if (!aboutRef.current) return;
 
@@ -136,7 +128,7 @@ export const About = () => {
         { opacity: 1, scale: 1, duration: 1.5 }
       );
 
-      // Neon elements entrance - ESTILO HERO
+      // Neon elements entrance
       const neonElements = neonElementsRef.current.filter(Boolean);
       tl.fromTo(
         neonElements,
@@ -197,7 +189,7 @@ export const About = () => {
         );
       }
 
-      // Continuous floating animations - ESTILO HERO
+      // Continuous floating animations
       const floatTl = gsap.timeline({ repeat: -1, yoyo: true });
       neonElements.forEach((element, index) => {
         floatTl.to(
@@ -238,7 +230,7 @@ export const About = () => {
     mouseY.set(0);
   };
 
-  // Funções helper para refs - ESTILO HERO
+  // Funções helper para refs
   const setStatRef = (index: number) => (el: HTMLDivElement | null) => {
     statsRef.current[index] = el;
   };
@@ -265,7 +257,7 @@ export const About = () => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Background com gradientes animados - ESTILO HERO */}
+      {/* Background com gradientes animados */}
       <div className={styles.backgroundContainer}>
         <div className={styles.heroBg} />
         <motion.div
@@ -304,7 +296,7 @@ export const About = () => {
         />
       </div>
 
-      {/* Elementos Neon Flutuantes - ESTILO HERO */}
+      {/* Elementos Neon Flutuantes */}
       <div className={styles.neonContainer}>
         <motion.div ref={setNeonElementRef(0)} className={styles.neonElement}>
           <Code2 className={styles.neonIcon} />
@@ -546,7 +538,7 @@ export const About = () => {
                       whileTap={{ scale: 0.98 }}
                     >
                       <motion.div
-                        className={`${styles.passionIcon} ${item.color}`}
+                        className={styles.passionIcon}
                         whileHover={{ scale: 1.1, rotate: 5 }}
                       >
                         <item.icon className={styles.passionIconInner} />
@@ -600,7 +592,7 @@ export const About = () => {
                     >
                       <div className={styles.highlightLeft}>
                         <motion.div
-                          className={`${styles.highlightIcon} ${highlight.color}`}
+                          className={styles.highlightIcon}
                           whileHover={{ scale: 1.1, rotate: 360 }}
                           transition={{ duration: 0.5 }}
                         >
