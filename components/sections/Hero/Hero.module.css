@@ -1,405 +1,354 @@
-/* components/sections/Hero/Hero.module.css */
-
-/* ===== POSICIONAMENTO DOS ELEMENTOS DECORATIVOS ===== */
-.decoration1 {
-  position: absolute;
-  top: 15%;
-  left: 5%;
-  opacity: 0.8;
-  z-index: 10;
+/* ===== CONTAINER PRINCIPAL ===== */
+.heroSection {
+  background: #0f172a;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.decoration2 {
-  position: absolute;
-  top: 12%;
-  right: 7%;
-  opacity: 0.8;
-  z-index: 10;
-}
-
-.decoration3 {
-  position: absolute;
-  bottom: 20%;
-  left: 7%;
-  opacity: 0.8;
-  z-index: 10;
-}
-
-.decoration4 {
-  position: absolute;
-  bottom: 15%;
-  right: 5%;
-  opacity: 0.8;
-  z-index: 10;
-}
-
-/* ===== ANIMAÇÕES ===== */
-@keyframes floatSmooth {
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  33% {
-    transform: translateY(-12px) rotate(3deg);
-  }
-  66% {
-    transform: translateY(6px) rotate(-3deg);
-  }
-}
-
-@keyframes pulseSubtle {
-  0%,
-  100% {
-    opacity: 0.7;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.9;
-    transform: scale(1.02);
-  }
-}
-
-@keyframes gradientShift {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-@keyframes buttonShimmer {
-  0% {
-    transform: translateX(-100%) skewX(-12deg);
-  }
-  100% {
-    transform: translateX(200%) skewX(-12deg);
-  }
-}
-
-@keyframes floatOrb {
-  0%,
-  100% {
-    transform: translateY(0px) scale(1);
-    opacity: 0.1;
-  }
-  33% {
-    transform: translateY(-30px) scale(1.1);
-    opacity: 0.2;
-  }
-  66% {
-    transform: translateY(15px) scale(0.9);
-    opacity: 0.15;
-  }
-}
-
-@keyframes bounceSubtle {
-  0%,
-  20%,
-  50%,
-  80%,
-  100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-8px);
-  }
-  60% {
-    transform: translateY(-4px);
-  }
-}
-
-@keyframes rotateSlow {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes glowPulse {
-  0%,
-  100% {
-    box-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(96, 165, 250, 0.6);
-  }
-}
-
-@keyframes textGlow {
-  0%,
-  100% {
-    text-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
-  }
-  50% {
-    text-shadow: 0 0 30px rgba(96, 165, 250, 0.8),
-      0 0 40px rgba(96, 165, 250, 0.4);
-  }
-}
-
-@keyframes backgroundPan {
-  from {
-    background-position: 0% center;
-  }
-  to {
-    background-position: -200% center;
-  }
-}
-
-@keyframes floatSlow {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-@keyframes pulseSlow {
-  0%,
-  100% {
-    opacity: 0.05;
-  }
-  50% {
-    opacity: 0.1;
-  }
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-
-@keyframes ripple {
-  0% {
-    transform: scale(0);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(4);
-    opacity: 0;
-  }
-}
-
-@keyframes scrollBounce {
-  0%,
-  20%,
-  50%,
-  80%,
-  100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-10px);
-  }
-  60% {
-    transform: translateY(-5px);
-  }
-}
-
-@keyframes magneticPull {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.02);
-  }
-}
-
-/* ===== CLASSES DE ANIMAÇÃO ===== */
-.float-element {
-  animation: floatSmooth 6s ease-in-out infinite;
-}
-
-.pulse-element {
-  animation: pulseSubtle 4s ease-in-out infinite;
-}
-
-.gradient-shift {
-  background-size: 200% 200%;
-  animation: gradientShift 3s ease infinite;
-}
-
-.bounce-subtle {
-  animation: bounceSubtle 2s ease-in-out infinite;
-}
-
-.rotate-slow {
-  animation: rotateSlow 20s linear infinite;
-}
-
-.glow-pulse {
-  animation: glowPulse 3s ease-in-out infinite;
-}
-
-.text-glow {
-  animation: textGlow 4s ease-in-out infinite;
-}
-
-.background-pan {
-  animation: backgroundPan 8s linear infinite;
-}
-
-.scroll-bounce {
-  animation: scrollBounce 2s ease-in-out infinite;
-}
-
-.magnetic-pull {
-  animation: magneticPull 4s ease-in-out infinite;
-}
-
-.button-shimmer {
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  transform: skewX(-12deg);
-  transition: transform 0.75s ease;
-}
-
-.button-shimmer-light {
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.15),
-    transparent
-  );
-  transform: skewX(-12deg);
-  transition: transform 0.75s ease;
-}
-
-/* ===== UTILITÁRIOS ===== */
-.perspective-1000 {
-  perspective: 1000px;
-}
-
-.backface-hidden {
-  backface-visibility: hidden;
-}
-
-.transform-gpu {
-  transform: translateZ(0);
-}
-
-.hover-scale {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.hover-scale:hover {
-  transform: scale(1.05);
-  z-index: 10;
-}
-
-/* ===== FUNDO ANIMADO MELHORADO ===== */
-.heroBackground {
+.backgroundContainer {
   position: absolute;
   inset: 0;
   overflow: hidden;
 }
 
-.gradientOverlay {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-      circle at 20% 30%,
-      rgba(59, 130, 246, 0.4) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      circle at 80% 20%,
-      rgba(139, 92, 246, 0.3) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      circle at 40% 70%,
-      rgba(15, 23, 42, 0.95) 0%,
-      transparent 100%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(15, 23, 42, 0.9) 0%,
-      rgba(30, 41, 59, 0.8) 25%,
-      rgba(30, 27, 75, 0.7) 50%,
-      rgba(15, 23, 42, 0.9) 100%
-    );
-  background-size: 200% 200%;
-  animation: gradientShift 8s ease infinite;
-}
-
-.animatedOrbs {
+.heroBg {
   position: absolute;
   inset: 0;
 }
 
-.orb {
+/* ===== ELEMENTOS DE FUNDO ANIMADOS ===== */
+.animatedOrb1 {
   position: absolute;
-  border-radius: 50%;
-  filter: blur(60px);
-  animation: floatOrb 12s ease-in-out infinite;
-}
-
-.orb1 {
-  background: linear-gradient(
-    135deg,
-    rgba(59, 130, 246, 0.15),
-    rgba(96, 165, 250, 0.1)
-  );
-  width: 400px;
-  height: 400px;
   top: 10%;
   left: 5%;
-  animation-delay: 0s;
+  width: 18rem;
+  height: 18rem;
+  background: rgba(6, 182, 212, 0.1);
+  border-radius: 50%;
+  filter: blur(3rem);
 }
 
-.orb2 {
-  background: linear-gradient(
-    135deg,
-    rgba(139, 92, 246, 0.12),
-    rgba(168, 85, 247, 0.08)
-  );
-  width: 350px;
-  height: 350px;
+.animatedOrb2 {
+  position: absolute;
   bottom: 15%;
-  right: 8%;
-  animation-delay: 4s;
+  right: 10%;
+  width: 16rem;
+  height: 16rem;
+  background: rgba(139, 92, 246, 0.08);
+  border-radius: 50%;
+  filter: blur(3rem);
 }
 
-.orb3 {
-  background: linear-gradient(
-    135deg,
-    rgba(6, 182, 212, 0.1),
-    rgba(34, 211, 238, 0.05)
-  );
-  width: 300px;
-  height: 300px;
-  top: 60%;
-  left: 70%;
-  animation-delay: 2s;
+.animatedOrb3 {
+  position: absolute;
+  top: 33.33%;
+  right: 25%;
+  width: 14rem;
+  height: 14rem;
+  background: rgba(16, 185, 129, 0.06);
+  border-radius: 50%;
+  filter: blur(3rem);
 }
 
-/* ===== BOTÕES PRIMÁRIOS AUMENTADOS ===== */
+/* ===== CONTAINER NEON ===== */
+.neonContainer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.neonElement {
+  position: absolute;
+  opacity: 0.9;
+}
+
+.neonElement:nth-child(1) {
+  top: 20%;
+  left: 15%;
+}
+
+.neonElement:nth-child(2) {
+  top: 25%;
+  right: 20%;
+}
+
+.neonElement:nth-child(3) {
+  bottom: 33.33%;
+  left: 20%;
+}
+
+.neonElement:nth-child(4) {
+  bottom: 25%;
+  right: 15%;
+}
+
+.neonElement:nth-child(5) {
+  top: 40%;
+  right: 10%;
+}
+
+.neonElement:nth-child(6) {
+  bottom: 40%;
+  left: 10%;
+}
+
+.neonElement:nth-child(7) {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.neonIcon {
+  filter: drop-shadow(0 0 8px currentColor) drop-shadow(0 0 12px currentColor);
+}
+
+.neonElement:nth-child(1) .neonIcon {
+  font-size: 1.875rem;
+  color: rgba(6, 182, 212, 0.9);
+}
+
+.neonElement:nth-child(2) .neonIcon {
+  font-size: 1.875rem;
+  color: rgba(139, 92, 246, 0.9);
+}
+
+.neonElement:nth-child(3) .neonIcon {
+  font-size: 1.5rem;
+  color: rgba(16, 185, 129, 0.9);
+}
+
+.neonElement:nth-child(4) .neonIcon {
+  font-size: 1.5rem;
+  color: rgba(245, 158, 11, 0.9);
+}
+
+.neonElement:nth-child(5) .neonIcon {
+  font-size: 1.25rem;
+  color: rgba(59, 130, 246, 0.9);
+}
+
+.neonElement:nth-child(6) .neonIcon {
+  font-size: 1.25rem;
+  color: rgba(34, 197, 94, 0.9);
+}
+
+.neonElement:nth-child(7) .neonIcon {
+  font-size: 1.5rem;
+  color: rgba(99, 102, 241, 0.9);
+}
+
+/* ===== CONTEÚDO PRINCIPAL ===== */
+.contentContainer {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .contentContainer {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .contentContainer {
+    padding: 0 2rem;
+  }
+}
+
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 80rem;
+  margin: 0 auto;
+  flex: 1;
+  padding: 3rem 0;
+}
+
+@media (min-width: 1024px) {
+  .mainContent {
+    padding: 4rem 0;
+  }
+}
+
+/* ===== TÍTULO PRINCIPAL ===== */
+.titleContainer {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .titleContainer {
+    margin-bottom: 3.5rem;
+  }
+}
+
+.mainTitle {
+  font-size: 2.25rem;
+  font-weight: 900;
+  color: white;
+  line-height: 1.25;
+  margin-bottom: 1.5rem;
+  font-family: var(--font-poppins), system-ui, sans-serif;
+  cursor: default;
+  transform: translateZ(0);
+  letter-spacing: -0.025em;
+}
+
+@media (min-width: 475px) {
+  .mainTitle {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 640px) {
+  .mainTitle {
+    font-size: 3.75rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .mainTitle {
+    font-size: 4.5rem;
+    line-height: 1;
+    margin-bottom: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mainTitle {
+    font-size: 5rem;
+    margin-bottom: 2.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .mainTitle {
+    font-size: 7rem;
+  }
+}
+
+.titleLine {
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+@media (min-width: 1024px) {
+  .titleLine {
+    margin-bottom: 1rem;
+  }
+}
+
+.titleLetter {
+  display: inline-block;
+  margin: 0 0.125rem;
+}
+
+@media (min-width: 1024px) {
+  .titleLetter {
+    margin: 0 0.25rem;
+  }
+}
+
+/* ===== SUBTÍTULO ===== */
+.subtitleContainer {
+  width: 100%;
+  max-width: 42rem;
+  margin: 0 auto 2.5rem;
+  padding: 0 1rem;
+}
+
+@media (min-width: 1024px) {
+  .subtitleContainer {
+    max-width: 48rem;
+    margin-bottom: 3rem;
+  }
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  color: #e2e8f0;
+  line-height: 1.75;
+  font-weight: 300;
+  font-family: var(--font-open-sans), system-ui, sans-serif;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .subtitle {
+    font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .subtitle {
+    font-size: 1.5rem;
+    line-height: 1.75;
+  }
+}
+
+.gradientText {
+  background: linear-gradient(to right, #67e8f9, #93c5fd, #c4b5fd);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ===== BOTÕES CTA ===== */
+.buttonsContainer {
+  width: 100%;
+  max-width: 28rem;
+  margin: 0 auto 2rem;
+}
+
+@media (min-width: 1024px) {
+  .buttonsContainer {
+    max-width: 36rem;
+    margin-bottom: 2.5rem;
+  }
+}
+
+.buttonsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .buttonsWrapper {
+    flex-direction: row;
+    gap: 1.5rem;
+  }
+}
+
+.buttonWrapper {
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .buttonWrapper {
+    width: auto;
+  }
+}
+
+/* ===== BOTÕES ESTILIZADOS ===== */
 .heroPrimaryButton {
   background: linear-gradient(135deg, #2563eb, #7c3aed, #06b6d4);
   background-size: 200% 200%;
@@ -412,7 +361,6 @@
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
-  animation: gradientShift 3s ease infinite;
   outline: none !important;
   font-size: 1.125rem;
   padding: 1.25rem 2.5rem;
@@ -421,6 +369,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .heroPrimaryButton {
+    width: auto;
+  }
 }
 
 .heroPrimaryButton:hover {
@@ -428,10 +383,8 @@
   box-shadow: 0 30px 60px rgba(59, 130, 246, 0.5),
     0 0 80px rgba(96, 165, 250, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
   transform: translateY(-3px) scale(1.05);
-  animation: magneticPull 2s ease-in-out infinite;
 }
 
-/* ===== BOTÕES SECUNDÁRIOS AUMENTADOS ===== */
 .heroSecondaryButton {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(20px);
@@ -452,6 +405,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .heroSecondaryButton {
+    width: auto;
+  }
 }
 
 .heroSecondaryButton:hover {
@@ -460,10 +420,8 @@
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   transform: translateY(-3px) scale(1.05);
-  animation: magneticPull 2s ease-in-out infinite;
 }
 
-/* ===== EFEITO DE BRILHO NOS BOTÕES ===== */
 .buttonGlowEffect {
   position: relative;
   overflow: hidden;
@@ -490,37 +448,53 @@
   left: 100%;
 }
 
-/* Efeito de brilho específico para botão primário */
-.heroPrimaryButton::before {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.6),
-    transparent
-  );
+.buttonLink {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Efeito de brilho específico para botão secundário */
-.heroSecondaryButton::before {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
+.buttonIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.75rem;
+  transition: transform 0.3s ease;
 }
 
-/* Efeito de ripple nos botões */
-.rippleEffect {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.6);
-  transform: scale(0);
-  animation: ripple 0.6s linear;
-  pointer-events: none;
+@media (min-width: 640px) {
+  .buttonIcon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
 }
 
-/* ===== SCROLL INDICATOR MELHORADO ===== */
+.buttonGlowEffect:hover .buttonIcon {
+  transform: scale(1.1);
+}
+
+.buttonText {
+  white-space: nowrap;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* ===== SCROLL INDICATOR ===== */
+.scrollContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .scrollContainer {
+    padding-bottom: 2rem;
+  }
+}
+
 .scrollIndicator {
   background: transparent;
   border: none;
@@ -528,374 +502,114 @@
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   outline: none !important;
   cursor: pointer;
-  padding: 1.5rem;
+  padding: 1rem;
   position: relative;
   overflow: visible;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .scrollIndicator:hover {
   background: rgba(255, 255, 255, 0.05);
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
-}
-
-.scrollIndicator:active {
   transform: translateY(-2px);
-  transition: transform 0.1s ease;
-}
-
-.scrollArrow {
-  border: 2px solid rgba(96, 165, 250, 0.4);
-  background: rgba(96, 165, 250, 0.1);
-  backdrop-filter: blur(20px);
-  border-radius: 50%;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  width: 64px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.scrollIndicator:hover .scrollArrow {
-  border-color: rgba(96, 165, 250, 0.8);
-  background: rgba(96, 165, 250, 0.2);
-  box-shadow: 0 0 30px rgba(96, 165, 250, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  animation: scrollBounce 1.5s ease-in-out infinite;
 }
 
 .scrollText {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
+  color: #67e8f9;
   font-family: monospace;
   font-weight: 600;
   letter-spacing: 0.1em;
-  color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 1rem;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
+  text-transform: uppercase;
 }
 
-.scrollIndicator:hover .scrollText {
-  color: #60a5fa;
-  text-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
-}
-
-/* ===== ESTILOS PARA O TEXTO 3D ===== */
-.text3d {
-  transform-style: preserve-3d;
-  perspective: 1000px;
-}
-
-.letter3d {
-  display: inline-block;
-  transform-style: preserve-3d;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* ===== GRADIENTE DE TEXTO ===== */
-.gradientText {
-  background: linear-gradient(135deg, #ffffff 0%, #dbeafe 50%, #bfdbfe 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-size: 200% 200%;
-  animation: gradientShift 3s ease infinite;
-}
-
-/* ===== ANIMAÇÕES DE PARTÍCULAS DECORATIVAS ===== */
-.floatingOrb {
-  position: absolute;
+.scrollArrow {
+  width: 3rem;
+  height: 3rem;
   border-radius: 50%;
-  filter: blur(40px);
-  animation: floatOrb 8s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  background: rgba(6, 182, 212, 0.1);
+  backdrop-filter: blur(20px);
 }
 
-.floatingOrb:nth-child(1) {
-  background: rgba(59, 130, 246, 0.1);
-  width: 300px;
-  height: 300px;
-  top: 20%;
-  left: 10%;
-  animation-delay: 0s;
+.scrollIndicator:hover .scrollArrow {
+  border-color: rgba(6, 182, 212, 0.8);
+  background: rgba(6, 182, 212, 0.2);
 }
 
-.floatingOrb:nth-child(2) {
-  background: rgba(139, 92, 246, 0.08);
-  width: 250px;
-  height: 250px;
-  bottom: 20%;
-  right: 15%;
-  animation-delay: 2s;
+.scrollIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: rgba(6, 182, 212, 0.9);
+  transition: color 0.3s ease;
+}
+
+.scrollIndicator:hover .scrollIcon {
+  color: #67e8f9;
 }
 
 /* ===== RESPONSIVIDADE ===== */
-@media (max-width: 1024px) {
-  .decoration1,
-  .decoration2,
-  .decoration3,
-  .decoration4 {
-    opacity: 0.6;
+@media (max-width: 768px) {
+  .neonElement {
+    opacity: 0.7;
   }
 
-  .decoration1 {
-    top: 12%;
-    left: 3%;
+  .neonElement:nth-child(5),
+  .neonElement:nth-child(6),
+  .neonElement:nth-child(7) {
+    display: none;
   }
+}
 
-  .decoration2 {
-    top: 10%;
-    right: 5%;
-  }
-
-  .decoration3 {
-    bottom: 18%;
-    left: 5%;
-  }
-
-  .decoration4 {
-    bottom: 12%;
-    right: 3%;
+@media (max-width: 480px) {
+  .neonElement {
+    opacity: 0.5;
   }
 
   .heroPrimaryButton,
   .heroSecondaryButton {
     font-size: 1rem;
-    padding: 1.125rem 2rem;
+    padding: 1rem 2rem;
     min-height: 56px;
   }
 
   .scrollArrow {
-    width: 56px;
-    height: 56px;
+    width: 2.5rem;
+    height: 2.5rem;
   }
 }
 
-@media (max-width: 768px) {
-  .decoration1,
-  .decoration2,
-  .decoration3,
-  .decoration4 {
-    opacity: 0.4;
+/* ===== ANIMAÇÕES ===== */
+@keyframes gradientShift {
+  0%,
+  100% {
+    background-position: 0% 50%;
   }
-
-  .decoration1 {
-    top: 10%;
-    left: 2%;
-  }
-
-  .decoration2 {
-    top: 8%;
-    right: 3%;
-  }
-
-  .decoration3 {
-    bottom: 15%;
-    left: 3%;
-  }
-
-  .decoration4 {
-    bottom: 10%;
-    right: 2%;
-  }
-
-  .heroPrimaryButton,
-  .heroSecondaryButton {
-    font-size: 0.9rem;
-    padding: 1rem 1.75rem;
-    min-height: 52px;
-  }
-
-  .scrollIndicator {
-    padding: 1.25rem;
-  }
-
-  .scrollArrow {
-    width: 52px;
-    height: 52px;
+  50% {
+    background-position: 100% 50%;
   }
 }
 
-@media (max-width: 480px) {
-  .decoration1,
-  .decoration2,
-  .decoration3,
-  .decoration4 {
-    opacity: 0.3;
-    display: none;
-  }
-
-  .heroPrimaryButton,
-  .heroSecondaryButton {
-    font-size: 0.85rem;
-    padding: 0.875rem 1.5rem;
-    min-height: 48px;
-  }
-
-  .scrollIndicator {
-    padding: 1rem;
-  }
-
-  .scrollArrow {
-    width: 48px;
-    height: 48px;
-  }
+.heroPrimaryButton {
+  animation: gradientShift 3s ease infinite;
 }
 
-/* ===== PERFORMANCE OPTIMIZATIONS ===== */
+/* ===== PERFORMANCE ===== */
 @media (prefers-reduced-motion: reduce) {
-  .float-element,
-  .pulse-element,
-  .gradient-shift,
-  .gradientText,
-  .heroPrimaryButton,
-  .floatingOrb,
-  .bounce-subtle,
-  .rotate-slow,
-  .glow-pulse,
-  .text-glow,
-  .background-pan,
-  .scroll-bounce,
-  .magnetic-pull {
-    animation: none;
-  }
-
-  .hover-scale {
-    transition: none;
-  }
-
-  .hover-scale:hover {
-    transform: none;
-  }
-
-  .button-shimmer,
-  .button-shimmer-light,
-  .buttonGlowEffect::before {
-    display: none;
-  }
-
-  .letter3d {
-    transition: none;
-  }
-}
-
-/* ===== REMOVER OUTLINE E FOCUS VISUAL ===== */
-.heroPrimaryButton:focus,
-.heroSecondaryButton:focus,
-.scrollIndicator:focus {
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-/* ===== MELHORIAS DE ACESSIBILIDADE ===== */
-@media (prefers-contrast: high) {
   .heroPrimaryButton {
-    background: #2563eb;
     animation: none;
   }
 
-  .heroSecondaryButton {
-    background: #1e293b;
-    border-color: #475569;
-  }
-
-  .gradientText {
-    background: #ffffff;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  .neonElement,
+  .animatedOrb1,
+  .animatedOrb2,
+  .animatedOrb3 {
     animation: none;
   }
-}
-
-/* ===== SUPPORT FOR DARK MODE ===== */
-@media (prefers-color-scheme: dark) {
-  .heroBackground {
-    background: #0f172a;
-  }
-}
-
-/* ===== SMOOTH TRANSITIONS ===== */
-.heroPrimaryButton,
-.heroSecondaryButton,
-.scrollIndicator,
-.letter3d {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* ===== IMPROVE TOUCH TARGETS FOR MOBILE ===== */
-@media (max-width: 768px) {
-  .heroPrimaryButton,
-  .heroSecondaryButton {
-    min-height: 44px;
-    min-width: 44px;
-  }
-
-  .scrollIndicator {
-    min-height: 44px;
-    min-width: 44px;
-  }
-}
-
-/* ===== PRINT STYLES ===== */
-@media print {
-  .heroPrimaryButton,
-  .heroSecondaryButton,
-  .scrollIndicator,
-  .decoration1,
-  .decoration2,
-  .decoration3,
-  .decoration4 {
-    display: none;
-  }
-
-  .gradientText {
-    background: #000000;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: none;
-  }
-}
-
-/* ===== CUSTOM SCROLLBAR FOR HERO SECTION ===== */
-.heroSection::-webkit-scrollbar {
-  width: 6px;
-}
-
-.heroSection::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.5);
-}
-
-.heroSection::-webkit-scrollbar-thumb {
-  background: rgba(96, 165, 250, 0.3);
-  border-radius: 3px;
-}
-
-.heroSection::-webkit-scrollbar-thumb:hover {
-  background: rgba(96, 165, 250, 0.5);
-}
-
-/* ===== LOADING STATES ===== */
-.heroPrimaryButton:disabled,
-.heroSecondaryButton:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none !important;
-}
-
-.heroPrimaryButton:disabled:hover,
-.heroSecondaryButton:disabled:hover {
-  transform: none !important;
-  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3),
-    0 0 50px rgba(96, 165, 250, 0.2);
-}
-
-/* ===== FOCUS VISIBLE FOR KEYBOARD NAVIGATION ===== */
-.heroPrimaryButton:focus-visible,
-.heroSecondaryButton:focus-visible,
-.scrollIndicator:focus-visible {
-  outline: 2px solid #60a5fa;
-  outline-offset: 2px;
 }
