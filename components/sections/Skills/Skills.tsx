@@ -122,7 +122,7 @@ const skillsData = [
   },
 ];
 
-// Componente Neon Element para Skills
+// Componente Neon Element Corrigido para Skills
 const SkillsNeonElement = ({
   Icon,
   position,
@@ -135,49 +135,55 @@ const SkillsNeonElement = ({
   delay?: number;
 }) => {
   const elementRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(elementRef, { once: true, amount: 0.3 });
 
   useEffect(() => {
-    if (!isInView || !elementRef.current) return;
+    if (!elementRef.current) return;
 
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        elementRef.current,
-        {
-          opacity: 0,
-          scale: 0,
-          y: 100,
-          rotation: -180,
-        },
-        {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          rotation: 0,
-          duration: 1.5,
-          ease: "back.out(1.7)",
-          delay: delay * 0.2,
-        }
-      );
+    const element = elementRef.current;
 
-      // Animação flutuante contínua
-      gsap.to(elementRef.current, {
-        y: -15,
-        rotation: 5,
-        duration: 4,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-        delay: delay * 0.3,
-      });
+    // Animação de entrada
+    const enterAnimation = gsap.fromTo(
+      element,
+      {
+        opacity: 0,
+        scale: 0,
+        y: 100,
+        rotation: -180,
+      },
+      {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        rotation: 0,
+        duration: 1.5,
+        ease: "back.out(1.7)",
+        delay: delay * 0.2,
+      }
+    );
+
+    // Animação flutuante contínua
+    const floatAnimation = gsap.to(element, {
+      y: -15,
+      rotation: 5,
+      duration: 4,
+      ease: "sine.inOut",
+      repeat: -1,
+      yoyo: true,
+      delay: delay * 0.3,
     });
 
-    return () => ctx.revert();
-  }, [isInView, delay]);
+    return () => {
+      enterAnimation.kill();
+      floatAnimation.kill();
+    };
+  }, [delay]);
 
   return (
-    <div ref={elementRef} className={`absolute ${position}`}>
-      <Icon className={`${color} text-2xl animate-pulse`} />
+    <div
+      ref={elementRef}
+      className={`absolute ${position} pointer-events-none`}
+    >
+      <Icon className={`${color} text-2xl opacity-70`} />
     </div>
   );
 };
@@ -212,7 +218,7 @@ const SkillBar = ({
 
   return (
     <motion.div
-      className="group cursor-pointer space-y-3 skills-interactive"
+      className="group cursor-pointer space-y-3"
       whileHover={{ x: 5 }}
       transition={{ type: "spring", stiffness: 300 }}
     >
@@ -279,7 +285,7 @@ const SkillCard = ({ group, index }: { group: any; index: number }) => {
       whileHover={{ y: -5, scale: 1.02 }}
       transition={{ type: "spring", stiffness: 300 }}
     >
-      <Card className="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 shadow-2xl hover:shadow-3xl hover:border-blue-400/30 transition-all duration-500 group h-full skills-interactive">
+      <Card className="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 shadow-2xl hover:shadow-3xl hover:border-blue-400/30 transition-all duration-500 group h-full">
         <CardHeader className="pb-6 border-b border-gray-700/50">
           <div className="flex items-center gap-4 mb-3">
             <motion.div
@@ -349,7 +355,7 @@ const SkillsStatCard = ({ stat, index }: { stat: any; index: number }) => {
   return (
     <motion.div
       ref={cardRef}
-      className="text-center p-6 bg-gray-900/40 backdrop-blur-lg rounded-2xl border border-gray-700/50 hover:border-blue-400/30 transition-all duration-500 cursor-pointer hover:scale-105 skills-interactive"
+      className="text-center p-6 bg-gray-900/40 backdrop-blur-lg rounded-2xl border border-gray-700/50 hover:border-blue-400/30 transition-all duration-500 cursor-pointer hover:scale-105"
       whileHover={{ y: -5, scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
@@ -373,53 +379,53 @@ export const Skills = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
-  // Neon Elements Configuration
+  // Neon Elements Configuration - POSIÇÕES CORRIGIDAS
   const neonElements = [
     {
       Icon: Code2,
-      position: "top-20 left-12%",
+      position: "top-20 left-10",
       color: "text-blue-400",
       delay: 0,
     },
     {
       Icon: Cpu,
-      position: "top-15 right-18%",
+      position: "top-10 right-15",
       color: "text-purple-400",
       delay: 1,
     },
     {
       Icon: Zap,
-      position: "bottom-40 left-18%",
+      position: "bottom-40 left-15",
       color: "text-green-400",
       delay: 2,
     },
     {
       Icon: Sparkles,
-      position: "bottom-30 right-12%",
+      position: "bottom-20 right-10",
       color: "text-amber-400",
       delay: 3,
     },
     {
       Icon: Server,
-      position: "top-40 right-8%",
+      position: "top-40 right-5",
       color: "text-cyan-400",
       delay: 4,
     },
     {
       Icon: Database,
-      position: "bottom-48 left-8%",
+      position: "bottom-40 left-5",
       color: "text-emerald-400",
       delay: 5,
     },
     {
       Icon: Globe,
-      position: "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2",
+      position: "top-60 left-20",
       color: "text-indigo-400",
       delay: 6,
     },
     {
       Icon: Terminal,
-      position: "top-1/3 left-1/4",
+      position: "bottom-20 left-25",
       color: "text-pink-400",
       delay: 7,
     },
@@ -501,17 +507,6 @@ export const Skills = () => {
           { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" },
           "-=0.2"
         );
-
-      // Animação pulsante para elementos interativos
-      gsap.to(".skills-interactive", {
-        y: -3,
-        boxShadow: "0 20px 40px rgba(59, 130, 246, 0.2)",
-        duration: 2,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-        stagger: 0.1,
-      });
     }, sectionRef);
 
     return () => ctx.revert();
@@ -525,8 +520,8 @@ export const Skills = () => {
     >
       <PremiumBackground intensity="medium" />
 
-      {/* Elementos Neon Premium */}
-      <div className="absolute inset-0 pointer-events-none">
+      {/* Elementos Neon Premium - CORRIGIDOS */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {neonElements.map((element, index) => (
           <SkillsNeonElement key={index} {...element} />
         ))}
@@ -546,7 +541,7 @@ export const Skills = () => {
             whileInView={{ scale: 1, rotate: 0 }}
             transition={{ duration: 0.5, delay: 0.1, type: "spring" }}
             viewport={{ once: true }}
-            className="inline-flex items-center text-blue-400 bg-blue-400/10 border border-blue-400/30 px-4 py-2 rounded-full text-sm lg:text-base font-mono font-bold mb-6 lg:mb-8 skills-interactive"
+            className="inline-flex items-center text-blue-400 bg-blue-400/10 border border-blue-400/30 px-4 py-2 rounded-full text-sm lg:text-base font-mono font-bold mb-6 lg:mb-8"
           >
             <Zap className="w-4 h-4 lg:w-5 lg:h-5 mr-2 animate-pulse" />
             DOMÍNIO TECNOLÓGICO
@@ -601,7 +596,7 @@ export const Skills = () => {
           transition={{ duration: 0.6, delay: 0.6 }}
           viewport={{ once: true }}
         >
-          <div className="bg-gradient-to-r from-gray-900/60 to-gray-800/40 backdrop-blur-xl p-8 lg:p-12 rounded-3xl border border-gray-700/50 shadow-2xl relative overflow-hidden skills-interactive">
+          <div className="bg-gradient-to-r from-gray-900/60 to-gray-800/40 backdrop-blur-xl p-8 lg:p-12 rounded-3xl border border-gray-700/50 shadow-2xl relative overflow-hidden">
             <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 relative z-10">
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
@@ -634,7 +629,7 @@ export const Skills = () => {
                       .getElementById("contact")
                       ?.scrollIntoView({ behavior: "smooth" })
                   }
-                  className="bg-gradient-to-r from-blue-400 to-purple-400 hover:from-blue-400/90 hover:to-purple-400/90 text-white font-bold text-lg px-8 lg:px-12 py-4 lg:py-5 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 flex items-center justify-center skills-interactive"
+                  className="bg-gradient-to-r from-blue-400 to-purple-400 hover:from-blue-400/90 hover:to-purple-400/90 text-white font-bold text-lg px-8 lg:px-12 py-4 lg:py-5 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 flex items-center justify-center"
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                 >

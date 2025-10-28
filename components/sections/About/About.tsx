@@ -19,7 +19,6 @@ import {
   Server,
   Database,
   Layers,
-  Heart,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -82,7 +81,7 @@ const bioData = {
   ],
 };
 
-// Componente Neon Element Premium
+// Componente Neon Element Corrigido
 const NeonElement = ({
   Icon,
   position,
@@ -95,49 +94,55 @@ const NeonElement = ({
   delay?: number;
 }) => {
   const elementRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(elementRef, { once: true, amount: 0.3 });
 
   useEffect(() => {
-    if (!isInView || !elementRef.current) return;
+    if (!elementRef.current) return;
 
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        elementRef.current,
-        {
-          opacity: 0,
-          scale: 0,
-          y: 100,
-          rotation: -180,
-        },
-        {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          rotation: 0,
-          duration: 1.5,
-          ease: "back.out(1.7)",
-          delay: delay * 0.2,
-        }
-      );
+    const element = elementRef.current;
 
-      // Animação flutuante contínua
-      gsap.to(elementRef.current, {
-        y: -20,
-        rotation: 5,
-        duration: 4,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-        delay: delay * 0.3,
-      });
+    // Animação de entrada
+    const enterAnimation = gsap.fromTo(
+      element,
+      {
+        opacity: 0,
+        scale: 0,
+        y: 100,
+        rotation: -180,
+      },
+      {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        rotation: 0,
+        duration: 1.5,
+        ease: "back.out(1.7)",
+        delay: delay * 0.2,
+      }
+    );
+
+    // Animação flutuante contínua
+    const floatAnimation = gsap.to(element, {
+      y: -20,
+      rotation: 5,
+      duration: 4,
+      ease: "sine.inOut",
+      repeat: -1,
+      yoyo: true,
+      delay: delay * 0.3,
     });
 
-    return () => ctx.revert();
-  }, [isInView, delay]);
+    return () => {
+      enterAnimation.kill();
+      floatAnimation.kill();
+    };
+  }, [delay]);
 
   return (
-    <div ref={elementRef} className={`absolute ${position}`}>
-      <Icon className={`${color} text-2xl animate-pulse`} />
+    <div
+      ref={elementRef}
+      className={`absolute ${position} pointer-events-none`}
+    >
+      <Icon className={`${color} text-2xl opacity-70`} />
     </div>
   );
 };
@@ -254,41 +259,41 @@ export const About = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
-  // Neon Elements Configuration
+  // Neon Elements Configuration - POSIÇÕES CORRIGIDAS
   const neonElements = [
     {
       Icon: Code2,
-      position: "top-20 left-12%",
+      position: "top-20 left-10",
       color: "text-blue-400",
       delay: 0,
     },
     {
       Icon: Cpu,
-      position: "top-15 right-18%",
+      position: "top-10 right-15",
       color: "text-purple-400",
       delay: 1,
     },
     {
       Icon: Database,
-      position: "bottom-30 left-18%",
+      position: "bottom-40 left-15",
       color: "text-green-400",
       delay: 2,
     },
     {
       Icon: Server,
-      position: "bottom-20 right-12%",
+      position: "bottom-20 right-10",
       color: "text-amber-400",
       delay: 3,
     },
     {
       Icon: Globe,
-      position: "top-45 right-8%",
+      position: "top-40 right-5",
       color: "text-cyan-400",
       delay: 4,
     },
     {
       Icon: Layers,
-      position: "bottom-45 left-8%",
+      position: "bottom-40 left-5",
       color: "text-pink-400",
       delay: 5,
     },
@@ -332,17 +337,6 @@ export const About = () => {
           { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" },
           "-=0.4"
         );
-
-      // Pulsação para elementos interativos
-      gsap.to(".about-interactive", {
-        y: -5,
-        boxShadow: "0 25px 50px rgba(59, 130, 246, 0.3)",
-        duration: 1,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-        stagger: 0.2,
-      });
     }, sectionRef);
 
     return () => ctx.revert();
@@ -356,8 +350,8 @@ export const About = () => {
     >
       <PremiumBackground intensity="medium" />
 
-      {/* Elementos Neon Premium */}
-      <div className="absolute inset-0 pointer-events-none">
+      {/* Elementos Neon Premium - CORRIGIDOS */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {neonElements.map((element, index) => (
           <NeonElement key={index} {...element} />
         ))}
@@ -377,7 +371,7 @@ export const About = () => {
             whileInView={{ scale: 1, rotate: 0 }}
             transition={{ duration: 0.6, delay: 0.1, type: "spring" }}
             viewport={{ once: true }}
-            className="inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider text-blue-400 bg-blue-400/10 px-6 py-3 rounded-full border border-blue-400/30 backdrop-blur-2xl mb-6 relative overflow-hidden group about-interactive"
+            className="inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider text-blue-400 bg-blue-400/10 px-6 py-3 rounded-full border border-blue-400/30 backdrop-blur-2xl mb-6 relative overflow-hidden group"
           >
             <Sparkles className="w-4 h-4 mr-3 animate-pulse" />
             JORNADA TECH & VISÃO
@@ -422,7 +416,7 @@ export const About = () => {
               className="flex justify-center relative"
             >
               <motion.div
-                className="relative h-64 w-64 sm:h-72 sm:w-72 lg:h-80 lg:w-80 rounded-2xl overflow-hidden shadow-2xl shadow-blue-400/30 about-interactive"
+                className="relative h-64 w-64 sm:h-72 sm:w-72 lg:h-80 lg:w-80 rounded-2xl overflow-hidden shadow-2xl shadow-blue-400/30"
                 whileHover={{ scale: 1.05, rotateY: 5 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -447,7 +441,7 @@ export const About = () => {
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.5, delay: 0.8 }}
                 viewport={{ once: true }}
-                className="absolute -bottom-3 -right-3 bg-gradient-to-br from-blue-400 to-purple-400 text-white px-6 py-3 rounded-full font-mono font-bold text-sm tracking-wider shadow-2xl shadow-blue-400/40 border border-white/20 backdrop-blur-2xl about-interactive"
+                className="absolute -bottom-3 -right-3 bg-gradient-to-br from-blue-400 to-purple-400 text-white px-6 py-3 rounded-full font-mono font-bold text-sm tracking-wider shadow-2xl shadow-blue-400/40 border border-white/20 backdrop-blur-2xl"
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 whileTap={{ scale: 0.9 }}
               >
@@ -463,7 +457,7 @@ export const About = () => {
                 whileInView={{ opacity: 1, y: 0, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 viewport={{ once: true }}
-                className="bg-slate-900/60 backdrop-blur-2xl p-8 rounded-2xl border border-slate-600/30 shadow-2xl shadow-blue-400/10 transition-all duration-400 relative overflow-hidden hover:border-blue-400/50 hover:shadow-blue-400/20 about-interactive"
+                className="bg-slate-900/60 backdrop-blur-2xl p-8 rounded-2xl border border-slate-600/30 shadow-2xl shadow-blue-400/10 transition-all duration-400 relative overflow-hidden hover:border-blue-400/50 hover:shadow-blue-400/20"
                 whileHover={{ y: -5 }}
               >
                 <motion.div
@@ -486,7 +480,7 @@ export const About = () => {
                 whileInView={{ opacity: 1, y: 0, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
                 viewport={{ once: true }}
-                className="bg-slate-900/60 backdrop-blur-2xl p-8 rounded-2xl border border-slate-600/30 shadow-2xl shadow-blue-400/10 transition-all duration-400 relative overflow-hidden hover:border-blue-400/50 hover:shadow-blue-400/20 about-interactive"
+                className="bg-slate-900/60 backdrop-blur-2xl p-8 rounded-2xl border border-slate-600/30 shadow-2xl shadow-blue-400/10 transition-all duration-400 relative overflow-hidden hover:border-blue-400/50 hover:shadow-blue-400/20"
                 whileHover={{ y: -5 }}
               >
                 <motion.div
@@ -515,7 +509,7 @@ export const About = () => {
               transition={{ duration: 0.7, delay: 0.3 }}
               viewport={{ once: true }}
             >
-              <Card className="bg-slate-900/60 backdrop-blur-2xl border-blue-400/20 shadow-2xl shadow-blue-400/10 transition-all duration-400 hover:shadow-blue-400/20 about-interactive">
+              <Card className="bg-slate-900/60 backdrop-blur-2xl border-blue-400/20 shadow-2xl shadow-blue-400/10 transition-all duration-400 hover:shadow-blue-400/20">
                 <CardHeader className="pb-6 border-b border-slate-600/30 relative z-10">
                   <CardTitle className="text-2xl font-black text-blue-400 flex items-center mb-2">
                     <Brain className="w-6 h-6 mr-3" />
@@ -541,7 +535,7 @@ export const About = () => {
               transition={{ duration: 0.7, delay: 0.5 }}
               viewport={{ once: true }}
             >
-              <Card className="bg-slate-900/60 backdrop-blur-2xl border-purple-400/20 shadow-2xl shadow-purple-400/10 transition-all duration-400 hover:shadow-purple-400/20 about-interactive">
+              <Card className="bg-slate-900/60 backdrop-blur-2xl border-purple-400/20 shadow-2xl shadow-purple-400/10 transition-all duration-400 hover:shadow-purple-400/20">
                 <CardHeader className="pb-6 border-b border-slate-600/30 relative z-10">
                   <CardTitle className="text-2xl font-black text-purple-400 flex items-center mb-2">
                     <Shield className="w-6 h-6 mr-3" />
@@ -555,7 +549,7 @@ export const About = () => {
                   {bioData.highlights.map((highlight, index) => (
                     <motion.div
                       key={index}
-                      className="flex items-center justify-between p-4 rounded-xl bg-slate-800/30 transition-all duration-300 cursor-pointer relative overflow-hidden hover:bg-slate-800/50 about-interactive"
+                      className="flex items-center justify-between p-4 rounded-xl bg-slate-800/30 transition-all duration-300 cursor-pointer relative overflow-hidden hover:bg-slate-800/50"
                       whileHover={{ scale: 1.02, y: -2 }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -606,7 +600,7 @@ export const About = () => {
           className="mt-16 lg:mt-24"
         >
           <motion.div
-            className="bg-gradient-to-br from-slate-900/60 to-slate-800/40 backdrop-blur-2xl p-8 rounded-2xl border border-slate-600/30 shadow-2xl shadow-blue-400/10 relative overflow-hidden about-interactive"
+            className="bg-gradient-to-br from-slate-900/60 to-slate-800/40 backdrop-blur-2xl p-8 rounded-2xl border border-slate-600/30 shadow-2xl shadow-blue-400/10 relative overflow-hidden"
             whileHover={{ y: -5 }}
           >
             <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12 relative z-10">
