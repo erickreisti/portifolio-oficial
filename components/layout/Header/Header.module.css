@@ -10,7 +10,7 @@
   width: 100%;
   overflow: hidden;
   font-family: var(--font-poppins), sans-serif;
-  height: 80px; /* Altura fixa consistente */
+  height: 80px;
 }
 
 .headerBackground {
@@ -70,7 +70,7 @@
 .headerScrolled {
   padding: 1rem 0;
   border-bottom: 1px solid rgba(96, 165, 250, 0.2);
-  height: 70px; /* Leve redução quando scrolled */
+  height: 70px;
 }
 
 .headerScrolled .headerGradient {
@@ -90,7 +90,7 @@
   padding-right: 1.5rem;
   position: relative;
   z-index: 10;
-  height: 100%; /* Garantir que o container ocupe toda a altura do header */
+  height: 100%;
   display: flex;
   align-items: center;
 }
@@ -114,9 +114,10 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 100%; /* Garantir alinhamento vertical */
+  height: 100%;
 }
 
+/* Logo Styles */
 .logoButton {
   display: flex;
   align-items: center;
@@ -129,6 +130,7 @@
   border-radius: 1rem;
   position: relative;
   overflow: hidden;
+  outline: none !important;
 }
 
 .logoButton:hover {
@@ -225,6 +227,7 @@
   text-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
 }
 
+/* Desktop Navigation */
 .desktopNav {
   display: none;
   align-items: center;
@@ -250,6 +253,7 @@
   cursor: pointer;
   border-radius: 0.75rem;
   overflow: hidden;
+  outline: none !important;
 }
 
 .navText {
@@ -302,6 +306,7 @@
   animation: glowPulse 3s ease-in-out infinite;
 }
 
+/* Desktop Actions */
 .desktopActions {
   display: none;
   align-items: center;
@@ -335,6 +340,7 @@
   gap: 0.75rem;
   text-decoration: none;
   animation: gradientShift 3s ease infinite;
+  outline: none !important;
 }
 
 .downloadButton:hover {
@@ -377,6 +383,7 @@
   transform: translateX(100%);
 }
 
+/* Mobile Actions */
 .mobileActions {
   display: flex;
   align-items: center;
@@ -405,6 +412,7 @@
   justify-content: center;
   text-decoration: none;
   font-family: var(--font-open-sans), monospace;
+  outline: none !important;
 }
 
 .mobileDownloadButton:hover {
@@ -436,6 +444,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  outline: none !important;
 }
 
 .menuButton:hover {
@@ -455,6 +464,7 @@
   transform: scale(1.1);
 }
 
+/* Mobile Menu */
 .mobileMenu {
   position: absolute;
   top: 100%;
@@ -464,7 +474,6 @@
   backdrop-filter: blur(2rem);
   border-top: 1px solid rgba(100, 116, 139, 0.3);
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 100px rgba(59, 130, 246, 0.1);
-  animation: slideDown 0.3s ease-out;
   max-height: 80vh;
   overflow-y: auto;
   z-index: 1001;
@@ -508,6 +517,7 @@
   position: relative;
   overflow: hidden;
   text-align: left;
+  outline: none !important;
 }
 
 .mobileNavLinkInactive {
@@ -575,6 +585,7 @@
   text-decoration: none;
   position: relative;
   overflow: hidden;
+  outline: none !important;
 }
 
 .mobileMenuDownloadButton:hover {
@@ -649,4 +660,23 @@
   50% {
     opacity: 0.5;
   }
+}
+
+/* Focus styles removidos para evitar bordas azuis */
+.logoButton:focus,
+.navLink:focus,
+.downloadButton:focus,
+.mobileDownloadButton:focus,
+.menuButton:focus,
+.mobileNavLink:focus,
+.mobileMenuDownloadButton:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove outline global para todos os botões dentro do header */
+.header button:focus,
+.header a:focus {
+  outline: none !important;
+  box-shadow: none !important;
 }

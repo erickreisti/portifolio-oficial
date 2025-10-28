@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Poppins, Open_Sans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
@@ -30,7 +30,28 @@ export const metadata: Metadata = {
     "Arquiteto de Sistemas",
   ],
   authors: [{ name: "Erick Reis" }],
-  viewport: "width=device-width, initial-scale=1",
+  robots: "index, follow",
+  openGraph: {
+    title: "Erick Reis | Desenvolvedor FullStack & Arquiteto de Sistemas",
+    description:
+      "Desenvolvedor FullStack especializado em Next.js, React, TypeScript e arquitetura de sistemas escaláveis",
+    type: "website",
+    locale: "pt_BR",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Erick Reis | Desenvolvedor FullStack",
+    description:
+      "Desenvolvedor FullStack especializado em Next.js, React e TypeScript",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: "#0f172a",
 };
 
 export default function RootLayout({
@@ -41,7 +62,6 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning className="dark">
       <head>
-        <meta name="theme-color" content="#0f172a" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
