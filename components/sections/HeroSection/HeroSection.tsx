@@ -2,30 +2,10 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import {
-  motion,
-  useMotionValue,
-  useSpring,
-  useTransform,
-  AnimatePresence,
-} from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import Image from "next/image";
-import {
-  Download,
-  Mail,
-  ArrowDown,
-  Sparkles,
-  Zap,
-  Cpu,
-  Code2,
-  Globe,
-  Crown,
-  Menu,
-  X,
-  Brain,
-  Rocket,
-} from "lucide-react";
+import { Download, Mail, ArrowDown, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PremiumBackground } from "@/components/layout/PremiumBackground";
 
@@ -37,7 +17,7 @@ const navItems = [
   { name: "Contact", href: "#contact" },
 ];
 
-// Sistema de Partículas de Código Refatorado
+// Sistema de Partículas Simplificado
 const TechParticles = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -45,82 +25,49 @@ const TechParticles = () => {
     if (!containerRef.current) return;
 
     const particlesContainer = containerRef.current;
-    let animationFrame: number;
+    const particles: HTMLDivElement[] = [];
 
     const createParticle = () => {
       const particle = document.createElement("div");
       particle.className =
-        "absolute text-xs font-mono opacity-0 pointer-events-none";
+        "absolute text-xs font-mono text-cyan-400 opacity-0 pointer-events-none";
 
-      const colors = [
-        "text-cyan-400",
-        "text-blue-400",
-        "text-purple-400",
-        "text-emerald-400",
-      ];
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      particle.classList.add(color);
-
-      const codeChars = [
-        "{",
-        "}",
-        "<",
-        ">",
-        "/",
-        ";",
-        "=",
-        "()",
-        "=>",
-        "const",
-        "function",
-      ];
+      const codeChars = ["{", "}", "<", ">", "/", ";", "=", "()", "=>"];
       particle.textContent =
         codeChars[Math.floor(Math.random() * codeChars.length)];
 
       particle.style.left = `${Math.random() * 100}%`;
       particle.style.top = `${Math.random() * 100}%`;
-      particle.style.fontSize = `${Math.random() * 12 + 10}px`;
 
       particlesContainer.appendChild(particle);
-
-      const duration = Math.random() * 4 + 3;
-      const delay = Math.random() * 2;
+      particles.push(particle);
 
       gsap.to(particle, {
         opacity: 1,
-        duration: 0.5,
-        delay: delay,
+        y: -100,
+        x: Math.random() * 100 - 50,
+        rotation: Math.random() * 180,
+        duration: Math.random() * 3 + 2,
         ease: "power1.out",
-      });
-
-      gsap.to(particle, {
-        y: `-=${Math.random() * 200 + 100}`,
-        x: `+=${Math.random() * 100 - 50}`,
-        rotation: Math.random() * 360,
-        duration: duration,
-        ease: "power1.inOut",
         onComplete: () => {
           gsap.to(particle, {
             opacity: 0,
-            duration: 0.8,
-            onComplete: () => particle.remove(),
+            duration: 0.5,
+            onComplete: () => {
+              particle.remove();
+              const index = particles.indexOf(particle);
+              if (index > -1) particles.splice(index, 1);
+            },
           });
         },
       });
     };
 
-    const animate = () => {
-      if (Math.random() > 0.7) {
-        createParticle();
-      }
-      animationFrame = requestAnimationFrame(animate);
-    };
-
-    animate();
+    const interval = setInterval(createParticle, 200);
 
     return () => {
-      cancelAnimationFrame(animationFrame);
-      particlesContainer.innerHTML = "";
+      clearInterval(interval);
+      particles.forEach((particle) => particle.remove());
     };
   }, []);
 
@@ -132,69 +79,26 @@ const TechParticles = () => {
   );
 };
 
-// Grid Tecnológico Refatorado
+// Grid Tecnológico Simplificado
 const TechGrid = () => {
-  const gridRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!gridRef.current) return;
-
-    const ctx = gsap.context(() => {
-      gsap.to(".grid-line", {
-        backgroundPosition: "100% 100%",
-        duration: 40,
-        repeat: -1,
-        ease: "none",
-      });
-
-      gsap.to(".grid-dot", {
-        scale: 0,
-        opacity: 0,
-        duration: 3,
-        stagger: {
-          each: 0.2,
-          repeat: -1,
-          yoyo: true,
-          from: "random",
-        },
-        ease: "sine.inOut",
-      });
-    }, gridRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <div
-      ref={gridRef}
-      className="absolute inset-0 pointer-events-none opacity-20"
-    >
-      <div className="grid-line absolute inset-0 bg-[linear-gradient(90deg,transparent_99%,rgba(6,182,212,0.1)_100%)] bg-[length:50px_50px]" />
-      <div className="grid-line absolute inset-0 bg-[linear-gradient(180deg,transparent_99%,rgba(6,182,212,0.1)_100%)] bg-[length:50px_50px]" />
-
-      {Array.from({ length: 25 }).map((_, i) => (
-        <div
-          key={i}
-          className="grid-dot absolute w-1 h-1 bg-cyan-400 rounded-full"
-          style={{
-            left: `${(i % 5) * 25}%`,
-            top: `${Math.floor(i / 5) * 25}%`,
-          }}
-        />
-      ))}
+    <div className="absolute inset-0 pointer-events-none opacity-10">
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_99%,rgba(6,182,212,0.1)_100%)] bg-[length:100px_100px]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_99%,rgba(6,182,212,0.1)_100%)] bg-[length:100px_100px]" />
     </div>
   );
 };
 
-// Texto Holográfico Refatorado
-const HolographicText = ({ words }: { words: string[] }) => {
+// Texto Principal com Animação
+const HeroText = () => {
   const textRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!textRef.current) return;
 
     const ctx = gsap.context(() => {
-      const chars = gsap.utils.toArray(".hologram-char");
+      const chars = textRef.current?.querySelectorAll(".hero-char");
+      if (!chars) return;
 
       gsap.fromTo(
         chars,
@@ -207,95 +111,129 @@ const HolographicText = ({ words }: { words: string[] }) => {
           y: 0,
           opacity: 1,
           rotationX: 0,
-          duration: 1.2,
-          stagger: {
-            each: 0.02,
-            from: "center",
-          },
+          duration: 1,
+          stagger: 0.03,
           ease: "back.out(1.7)",
-          delay: 0.3,
+          delay: 0.5,
         }
       );
     }, textRef);
 
     return () => ctx.revert();
-  }, [words]);
+  }, []);
+
+  const titleLines = [
+    "IDEIAS EXTRAORDINÁRIAS",
+    "CÓDIGO EXCEPCIONAL",
+    "RESULTADOS REAIS",
+  ];
 
   return (
     <div ref={textRef} className="text-center w-full mb-8">
-      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white leading-tight">
-        {words.map((word, wordIndex) => (
-          <span key={wordIndex} className="block mb-2 sm:mb-4">
-            {word.split("").map((letter, letterIndex) => (
+      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white leading-tight">
+        {titleLines.map((line, lineIndex) => (
+          <motion.div
+            key={lineIndex}
+            className="overflow-hidden mb-2 sm:mb-4"
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3 + lineIndex * 0.2 }}
+          >
+            {line.split("").map((char, charIndex) => (
               <span
-                key={`${wordIndex}-${letterIndex}`}
-                className="hologram-char inline-block mx-1 sm:mx-2 transition-all duration-300 bg-gradient-to-b from-white via-cyan-100 to-blue-100 bg-clip-text text-transparent hover:scale-110 hover:text-cyan-300"
-                style={{ transformStyle: "preserve-3d" }}
+                key={`${lineIndex}-${charIndex}`}
+                className="hero-char inline-block mx-0.5 sm:mx-1 transition-all duration-300 bg-gradient-to-b from-white to-gray-300 bg-clip-text text-transparent hover:scale-110 hover:text-cyan-300"
               >
-                {letter === " " ? "\u00A0" : letter}
+                {char === " " ? "\u00A0" : char}
               </span>
             ))}
-          </span>
+          </motion.div>
         ))}
       </h1>
     </div>
   );
 };
 
-// Botões Refatorados - Simples e Funcionais
-const ActionButton = ({
+// Botão Principal
+const PrimaryButton = ({
   children,
-  variant = "primary",
-  href,
   onClick,
+  href,
   className = "",
 }: {
   children: React.ReactNode;
-  variant?: "primary" | "secondary";
-  href?: string;
   onClick?: () => void;
+  href?: string;
   className?: string;
 }) => {
-  const buttonRef = useRef<HTMLButtonElement>(null);
-
-  const baseClasses =
-    "relative overflow-hidden font-bold text-lg py-4 px-8 rounded-2xl border-0 group transition-all duration-300 transform hover:scale-105 active:scale-95";
-
-  const variants = {
-    primary:
-      "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-2xl hover:shadow-cyan-500/25",
-    secondary:
-      "bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:border-white/30 shadow-2xl",
-  };
-
-  const content = (
+  const buttonContent = (
     <motion.button
-      ref={buttonRef}
-      className={`${baseClasses} ${variants[variant]} ${className}`}
+      className={`
+        relative bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 
+        text-white font-bold py-4 px-8 rounded-2xl shadow-2xl hover:shadow-cyan-500/25 
+        border-0 transition-all duration-300 transform hover:scale-105 active:scale-95
+        flex items-center gap-3 group overflow-hidden ${className}
+      `}
       whileHover={{ y: -2 }}
       whileTap={{ scale: 0.95 }}
       onClick={onClick}
     >
-      <span className="relative z-10 flex items-center gap-3">{children}</span>
-
-      {/* Efeito de brilho para botão primário */}
-      {variant === "primary" && (
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-      )}
+      <span className="relative z-10">{children}</span>
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
     </motion.button>
   );
 
   if (href) {
     return (
       <a href={href} download={href.includes("curriculo")}>
-        {content}
+        {buttonContent}
       </a>
     );
   }
 
-  return content;
+  return buttonContent;
 };
 
+// Botão Secundário
+const SecondaryButton = ({
+  children,
+  onClick,
+  href,
+  className = "",
+}: {
+  children: React.ReactNode;
+  onClick?: () => void;
+  href?: string;
+  className?: string;
+}) => {
+  const buttonContent = (
+    <motion.button
+      className={`
+        bg-white/10 backdrop-blur-xl border border-white/20 text-white 
+        hover:bg-white/20 hover:border-white/30 font-bold py-4 px-8 rounded-2xl 
+        shadow-2xl transition-all duration-300 transform hover:scale-105 active:scale-95
+        flex items-center gap-3 ${className}
+      `}
+      whileHover={{ y: -2 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={onClick}
+    >
+      {children}
+    </motion.button>
+  );
+
+  if (href) {
+    return (
+      <a href={href} download={href.includes("curriculo")}>
+        {buttonContent}
+      </a>
+    );
+  }
+
+  return buttonContent;
+};
+
+// Header Corrigido
 const Header = ({
   isScrolled,
   activeSection,
@@ -309,34 +247,14 @@ const Header = ({
   isMobileMenuOpen: boolean;
   onMobileMenuToggle: () => void;
 }) => {
-  const headerRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    if (!headerRef.current) return;
-
-    const ctx = gsap.context(() => {
-      gsap.from(".nav-item", {
-        y: -30,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: "power3.out",
-        delay: 0.2,
-      });
-    }, headerRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
     <motion.header
-      ref={headerRef}
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 w-full ${
+      transition={{ duration: 0.6 }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "h-16 bg-gray-950/95 backdrop-blur-xl border-b border-gray-800/80 shadow-2xl"
+          ? "h-16 bg-gray-950/95 backdrop-blur-xl border-b border-gray-800/50 shadow-xl"
           : "h-20 bg-transparent"
       }`}
     >
@@ -344,26 +262,23 @@ const Header = ({
         {/* Logo */}
         <motion.button
           onClick={() => onNavClick("hero")}
-          className="flex items-center gap-3 group nav-item"
+          className="flex items-center gap-3 group"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          <div className="flex items-center gap-3 p-2 rounded-xl bg-gradient-to-r from-gray-900/50 to-gray-800/30 backdrop-blur-xl border border-gray-700/30 group-hover:border-cyan-400/50 transition-all duration-500">
-            <div className="relative">
-              <motion.div
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.8 }}
-              >
-                <Image
-                  src="/images/hashblue.svg"
-                  alt="Erick Reis Logo"
-                  width={40}
-                  height={40}
-                  className="brightness-125 group-hover:brightness-150 transition-all duration-500"
-                />
-              </motion.div>
-            </div>
-
+          <div className="flex items-center gap-3 p-2 rounded-xl bg-gradient-to-r from-gray-900/50 to-gray-800/30 backdrop-blur-xl border border-gray-700/30 group-hover:border-cyan-400/50 transition-all duration-300">
+            <motion.div
+              whileHover={{ rotate: 360 }}
+              transition={{ duration: 0.8 }}
+            >
+              <Image
+                src="/images/hashblue.svg"
+                alt="Erick Reis Logo"
+                width={40}
+                height={40}
+                className="brightness-125"
+              />
+            </motion.div>
             <div className="text-left hidden sm:block">
               <h3 className="text-lg font-black bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                 ÉRICK REIS
@@ -376,7 +291,7 @@ const Header = ({
         </motion.button>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-2">
+        <nav className="hidden lg:flex items-center gap-1">
           {navItems.map((item, index) => {
             const sectionName = item.href.replace("#", "");
             const isActive = activeSection === sectionName;
@@ -385,13 +300,16 @@ const Header = ({
               <motion.button
                 key={item.name}
                 onClick={() => onNavClick(sectionName)}
-                className={`nav-item px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 border ${
                   isActive
-                    ? "text-cyan-400 bg-cyan-400/10 border border-cyan-400/20"
-                    : "text-gray-300 hover:text-white hover:bg-white/5 border border-transparent"
+                    ? "text-cyan-400 bg-cyan-400/10 border-cyan-400/20"
+                    : "text-gray-300 hover:text-white hover:bg-white/5 border-transparent"
                 }`}
                 whileHover={{ y: -1 }}
                 whileTap={{ y: 0 }}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 + index * 0.1 }}
               >
                 {item.name}
               </motion.button>
@@ -401,30 +319,28 @@ const Header = ({
 
         {/* Desktop CTA */}
         <motion.div
-          className="hidden lg:flex items-center gap-3 nav-item"
+          className="hidden lg:flex items-center gap-3"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <ActionButton
+          <PrimaryButton
             href="/docs/curriculo-erick-reis.pdf"
-            variant="primary"
-            className="text-sm py-2 px-6"
+            className="text-sm py-2 px-4"
           >
             <Download className="w-4 h-4" />
-            DOWNLOAD CV
-          </ActionButton>
+            CV
+          </PrimaryButton>
         </motion.div>
 
         {/* Mobile Menu Button */}
         <div className="flex lg:hidden items-center gap-2">
-          <ActionButton
+          <PrimaryButton
             href="/docs/curriculo-erick-reis.pdf"
-            variant="primary"
             className="text-sm p-2"
           >
             <Download className="w-4 h-4" />
-          </ActionButton>
+          </PrimaryButton>
 
           <Button
             variant="ghost"
@@ -448,9 +364,10 @@ const Header = ({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="absolute top-full left-0 right-0 backdrop-blur-xl bg-gray-950/95 border-b border-white/5 lg:hidden"
+            transition={{ duration: 0.3 }}
+            className="absolute top-full left-0 right-0 bg-gray-950/95 backdrop-blur-xl border-b border-gray-800/50 lg:hidden overflow-hidden"
           >
-            <nav className="flex flex-col p-4 gap-2">
+            <nav className="p-4 space-y-2">
               {navItems.map((item, index) => {
                 const sectionName = item.href.replace("#", "");
                 const isActive = activeSection === sectionName;
@@ -462,10 +379,10 @@ const Header = ({
                       onNavClick(sectionName);
                       onMobileMenuToggle();
                     }}
-                    className={`flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg transition-all duration-300 ${
+                    className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg transition-all duration-300 border ${
                       isActive
-                        ? "text-cyan-400 bg-cyan-400/10 border border-cyan-400/20"
-                        : "text-gray-300 hover:text-white hover:bg-white/5 border border-transparent"
+                        ? "text-cyan-400 bg-cyan-400/10 border-cyan-400/20"
+                        : "text-gray-300 hover:text-white hover:bg-white/5 border-transparent"
                     }`}
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
@@ -485,14 +402,13 @@ const Header = ({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
               >
-                <ActionButton
+                <PrimaryButton
                   href="/docs/curriculo-erick-reis.pdf"
-                  variant="primary"
-                  className="w-full justify-center"
+                  className="w-full justify-center text-sm py-3"
                 >
                   <Download className="w-4 h-4" />
                   DOWNLOAD CV
-                </ActionButton>
+                </PrimaryButton>
               </motion.div>
             </nav>
           </motion.div>
@@ -502,6 +418,7 @@ const Header = ({
   );
 };
 
+// Hero Content Corrigido
 const HeroContent = ({
   headerHeight,
   onExploreClick,
@@ -509,61 +426,45 @@ const HeroContent = ({
   headerHeight: number;
   onExploreClick: () => void;
 }) => {
-  const heroRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!heroRef.current) return;
+    if (!containerRef.current) return;
 
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline();
-
       // Animação do subtítulo
-      tl.fromTo(
+      gsap.fromTo(
         ".hero-subtitle",
-        {
-          opacity: 0,
-          y: 50,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          delay: 1,
-          ease: "power2.out",
-        }
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 1, delay: 1.5, ease: "power2.out" }
       );
 
       // Animação dos botões
-      tl.fromTo(
-        ".hero-button",
-        {
-          opacity: 0,
-          y: 30,
-        },
+      gsap.fromTo(
+        ".hero-action-button",
+        { opacity: 0, y: 40 },
         {
           opacity: 1,
           y: 0,
           duration: 0.8,
           stagger: 0.2,
+          delay: 2,
           ease: "back.out(1.7)",
-        },
-        "-=0.3"
+        }
       );
-    }, heroRef);
+    }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
-  const titleWords = ["IDEIAS", "EXTRAORDINÁRIAS", "CÓDIGO", "EXCEPCIONAL"];
-
   return (
     <section
       id="hero"
-      ref={heroRef}
+      ref={containerRef}
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900"
       style={{
         paddingTop: `${headerHeight}px`,
-        marginTop: `-${headerHeight}px`,
+        minHeight: `calc(100vh - ${headerHeight}px)`,
       }}
     >
       {/* Background Effects */}
@@ -574,55 +475,73 @@ const HeroContent = ({
       {/* Conteúdo Principal */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Título */}
-        <HolographicText words={titleWords} />
+        <HeroText />
 
         {/* Subtítulo */}
-        <div className="hero-subtitle max-w-3xl mx-auto mb-12">
+        <motion.div
+          className="hero-subtitle max-w-3xl mx-auto mb-12"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 1.5 }}
+        >
           <p className="text-xl sm:text-2xl lg:text-3xl text-gray-300 font-light leading-relaxed">
             <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
               Transformo visões ambiciosas em soluções digitais com tecnologia
               de ponta
             </span>
           </p>
-        </div>
+        </motion.div>
 
         {/* Botões de Ação */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
-          <ActionButton
-            onClick={() => onExploreClick()}
-            variant="primary"
-            className="hero-button"
+          <motion.div
+            className="hero-action-button"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 2 }}
           >
-            <Mail className="w-5 h-5" />
-            INICIAR PROJETO
-          </ActionButton>
+            <PrimaryButton onClick={() => onExploreClick()}>
+              <Mail className="w-5 h-5" />
+              INICIAR PROJETO
+            </PrimaryButton>
+          </motion.div>
 
-          <ActionButton
-            href="/docs/curriculo-erick-reis.pdf"
-            variant="secondary"
-            className="hero-button"
+          <motion.div
+            className="hero-action-button"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 2.2 }}
           >
-            <Download className="w-5 h-5" />
-            BAIXAR CV
-          </ActionButton>
+            <SecondaryButton href="/docs/curriculo-erick-reis.pdf">
+              <Download className="w-5 h-5" />
+              BAIXAR CV
+            </SecondaryButton>
+          </motion.div>
         </div>
 
         {/* Scroll Indicator */}
-        <motion.button
-          onClick={onExploreClick}
-          className="hero-button flex flex-col items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors"
-          whileHover={{ y: -2 }}
-          whileTap={{ scale: 0.95 }}
+        <motion.div
+          className="hero-action-button"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 2.4 }}
         >
-          <span className="text-sm font-medium">Explorar Mais</span>
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-10 h-10 rounded-full border border-cyan-400/30 flex items-center justify-center hover:border-cyan-400/50 transition-colors"
+          <motion.button
+            onClick={onExploreClick}
+            className="flex flex-col items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors group"
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <ArrowDown className="w-4 h-4" />
-          </motion.div>
-        </motion.button>
+            <span className="text-sm font-medium">Explorar Mais</span>
+            <motion.div
+              animate={{ y: [0, 8, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="w-10 h-10 rounded-full border border-cyan-400/30 flex items-center justify-center group-hover:border-cyan-400/50 transition-colors"
+            >
+              <ArrowDown className="w-4 h-4" />
+            </motion.div>
+          </motion.button>
+        </motion.div>
       </div>
     </section>
   );
@@ -643,22 +562,25 @@ export const HeroSection = () => {
       const sections = ["hero", "about", "skills", "projects", "contact"];
       const current = sections.find((section) => {
         const element = document.getElementById(section);
-        return element && element.getBoundingClientRect().top <= 100;
+        if (!element) return false;
+        const rect = element.getBoundingClientRect();
+        return rect.top <= 100 && rect.bottom >= 100;
       });
       if (current) setActiveSection(current);
     };
 
     const updateHeaderHeight = () => {
       const header = document.querySelector("header");
-      if (header) setHeaderHeight(header.offsetHeight);
+      if (header) setHeaderHeight(header.clientHeight);
     };
 
     window.addEventListener("scroll", handleScroll);
     window.addEventListener("scroll", handleActiveSection);
     window.addEventListener("resize", updateHeaderHeight);
 
+    // Initial calls
     updateHeaderHeight();
-    setTimeout(updateHeaderHeight, 100);
+    handleScroll();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -670,8 +592,9 @@ export const HeroSection = () => {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      const offsetPosition = element.offsetTop - headerHeight;
-      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+      const offsetTop = element.offsetTop - headerHeight;
+      window.scrollTo({ top: offsetTop, behavior: "smooth" });
+      setIsMobileMenuOpen(false);
     }
   };
 
