@@ -1,4 +1,4 @@
-// components/sections/Hero/Hero.tsx
+// components/sections/Hero/Hero.tsx - TAMANHO PERFEITO
 "use client";
 
 import {
@@ -17,7 +17,6 @@ import { Button } from "@/components/ui/button";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import styles from "./Hero.module.css";
 
 export const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -41,8 +40,8 @@ export const Hero = () => {
   const mouseXSpring = useSpring(mouseX, springConfig);
   const mouseYSpring = useSpring(mouseY, springConfig);
 
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["5deg", "-5deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-5deg", "5deg"]);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["3deg", "-3deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-3deg", "3deg"]);
 
   // Detectar mobile e altura do header
   useEffect(() => {
@@ -55,30 +54,24 @@ export const Hero = () => {
     checkMobile();
     updateHeaderHeight();
 
-    const header = document.querySelector("header");
-    if (header) {
-      const observer = new ResizeObserver(updateHeaderHeight);
-      observer.observe(header);
-      return () => observer.disconnect();
-    }
+    // Aguardar o header renderizar
+    setTimeout(updateHeaderHeight, 100);
 
     window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    window.addEventListener("resize", updateHeaderHeight);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+      window.removeEventListener("resize", updateHeaderHeight);
+    };
   }, []);
 
-  // Animação de entrada BLASTER PREMIUM
+  // Animação de entrada OTIMIZADA
   useEffect(() => {
     if (!heroRef.current) return;
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline();
-
-      // Background com gradiente animado
-      tl.fromTo(
-        `.${styles.heroBg}`,
-        { opacity: 0 },
-        { opacity: 1, duration: 1.2, ease: "power2.out" }
-      );
 
       // Elementos neon flutuantes
       const neonElements = neonElementsRef.current.filter(Boolean);
@@ -87,39 +80,32 @@ export const Hero = () => {
         {
           opacity: 0,
           scale: 0,
-          y: 100,
-          rotation: -180,
+          y: 80,
         },
         {
-          opacity: 1,
+          opacity: 0.8,
           scale: 1,
           y: 0,
-          rotation: 0,
-          duration: 1.5,
+          duration: 1.2,
           ease: "back.out(1.7)",
-          stagger: 0.15,
-        },
-        "+=0.3"
+          stagger: 0.1,
+        }
       );
 
-      // Título com efeito BLASTER
+      // Título
       const titleLetters = titleLettersRef.current.filter(Boolean);
       tl.fromTo(
         titleLetters,
         {
           opacity: 0,
-          y: 80,
-          scale: 1.2,
-          rotationX: 90,
+          y: 60,
         },
         {
           opacity: 1,
           y: 0,
-          scale: 1,
-          rotationX: 0,
           duration: 0.8,
-          ease: "back.out(1.7)",
-          stagger: 0.02,
+          ease: "power3.out",
+          stagger: 0.03,
         },
         "-=0.5"
       );
@@ -130,21 +116,19 @@ export const Hero = () => {
           subtitleRef.current,
           {
             opacity: 0,
-            y: 30,
-            scale: 0.9,
+            y: 20,
           },
           {
             opacity: 1,
             y: 0,
-            scale: 1,
-            duration: 0.8,
+            duration: 0.6,
             ease: "power2.out",
           },
           "-=0.3"
         );
       }
 
-      // Botões com efeito premium
+      // Botões
       const validButtons = buttonsRef.current.filter(
         Boolean
       ) as HTMLDivElement[];
@@ -153,18 +137,14 @@ export const Hero = () => {
           validButtons,
           {
             opacity: 0,
-            scale: 0.8,
-            y: 40,
-            rotationY: 90,
+            y: 30,
           },
           {
             opacity: 1,
-            scale: 1,
             y: 0,
-            rotationY: 0,
-            duration: 0.7,
-            ease: "back.out(1.7)",
-            stagger: 0.15,
+            duration: 0.5,
+            ease: "power2.out",
+            stagger: 0.1,
           },
           "-=0.2"
         );
@@ -176,45 +156,29 @@ export const Hero = () => {
           scrollIndicatorRef.current,
           {
             opacity: 0,
-            y: 20,
-            scale: 0.8,
+            y: 10,
           },
           {
             opacity: 1,
             y: 0,
-            scale: 1,
-            duration: 0.6,
+            duration: 0.4,
             ease: "power2.out",
           },
           "-=0.1"
         );
       }
 
-      // Animações contínuas BLASTER dos elementos neon
-      const floatTl = gsap.timeline({ repeat: -1, yoyo: true });
+      // Animações contínuas suaves
       neonElements.forEach((element, index) => {
-        floatTl.to(
-          element,
-          {
-            y: -25 - index * 5,
-            rotation: index % 2 === 0 ? 15 : -15,
-            duration: 4 + index * 0.5,
-            ease: "sine.inOut",
-          },
-          index * 0.2
-        );
-      });
-
-      // Pulsação neon BLASTER
-      const pulseTl = gsap.timeline({ repeat: -1, yoyo: true });
-      pulseTl.to(`.${styles.neonElement}`, {
-        filter: "drop-shadow(0 0 20px currentColor) brightness(1.4)",
-        duration: 2.5,
-        ease: "sine.inOut",
-        stagger: {
-          each: 0.3,
-          from: "random",
-        },
+        gsap.to(element, {
+          y: -15 - index * 2,
+          rotation: index % 2 === 0 ? 8 : -8,
+          duration: 4 + index,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+          delay: index * 0.5,
+        });
       });
     }, heroRef);
 
@@ -243,42 +207,15 @@ export const Hero = () => {
     mouseY.set(0);
   };
 
-  const handleButtonHover = (index: number) => {
-    const button = buttonsRef.current[index];
-    if (button) {
-      gsap.to(button, {
-        scale: 1.08,
-        y: -4,
-        rotationY: 5,
-        duration: 0.3,
-        ease: "power2.out",
-      });
-    }
-  };
-
-  const handleButtonLeave = (index: number) => {
-    const button = buttonsRef.current[index];
-    if (button) {
-      gsap.to(button, {
-        scale: 1,
-        y: 0,
-        rotationY: 0,
-        duration: 0.3,
-        ease: "power2.out",
-      });
-    }
-  };
-
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
       const offsetPosition =
         element.getBoundingClientRect().top + window.pageYOffset - headerHeight;
 
-      gsap.to(window, {
-        duration: 1.2,
-        scrollTo: { y: offsetPosition, autoKill: false },
-        ease: "power2.inOut",
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
       });
     }
   };
@@ -301,48 +238,82 @@ export const Hero = () => {
 
   const titleWords = ["IDEIAS", "EXTRAORDINÁRIAS", "CÓDIGO", "EXCEPCIONAL"];
 
+  // Configuração dos elementos neon (menos e menores)
+  const neonConfigs = [
+    {
+      Icon: Code2,
+      color: "text-cyan-400",
+      size: "text-2xl",
+      top: "20%",
+      left: "15%",
+    },
+    {
+      Icon: Cpu,
+      color: "text-purple-400",
+      size: "text-2xl",
+      top: "25%",
+      left: "80%",
+    },
+    {
+      Icon: Zap,
+      color: "text-green-400",
+      size: "text-xl",
+      top: "70%",
+      left: "20%",
+    },
+    {
+      Icon: Sparkles,
+      color: "text-amber-400",
+      size: "text-xl",
+      top: "65%",
+      left: "75%",
+    },
+    {
+      Icon: Globe,
+      color: "text-blue-400",
+      size: "text-lg",
+      top: "45%",
+      left: "85%",
+    },
+  ];
+
   return (
     <section
       id="hero"
       ref={heroRef}
-      className="relative bg-gray-950 overflow-hidden flex items-center justify-center min-h-screen w-full"
+      className="relative bg-gray-950 overflow-hidden flex items-center justify-center w-full"
       style={{
         height: `calc(100vh - ${headerHeight}px)`,
         minHeight: `calc(100vh - ${headerHeight}px)`,
         marginTop: `${headerHeight}px`,
       }}
     >
-      {/* Background BLASTER PREMIUM */}
+      {/* BACKGROUND SIMPLIFICADO */}
       <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          className={styles.heroBg}
+        <div
+          className="absolute inset-0"
           style={{
             background: `
-              radial-gradient(circle at 15% 25%, rgba(59, 130, 246, 0.3) 0%, transparent 60%),
-              radial-gradient(circle at 85% 15%, rgba(139, 92, 246, 0.25) 0%, transparent 60%),
-              radial-gradient(circle at 45% 75%, rgba(16, 185, 129, 0.2) 0%, transparent 60%),
-              radial-gradient(circle at 75% 85%, rgba(245, 158, 11, 0.15) 0%, transparent 60%),
-              radial-gradient(circle at 25% 45%, rgba(239, 68, 68, 0.15) 0%, transparent 60%),
-              radial-gradient(circle at 60% 30%, rgba(168, 85, 247, 0.2) 0%, transparent 60%),
-              linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.95) 100%)
+              radial-gradient(circle at 15% 25%, rgba(59, 130, 246, 0.2) 0%, transparent 60%),
+              radial-gradient(circle at 85% 15%, rgba(139, 92, 246, 0.15) 0%, transparent 60%),
+              radial-gradient(circle at 45% 75%, rgba(16, 185, 129, 0.1) 0%, transparent 60%),
+              linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%)
             `,
           }}
         />
 
-        {/* Elementos de fundo animados BLASTER */}
+        {/* ELEMENTOS ORB PEQUENOS */}
         <motion.div
-          className="absolute top-1/4 left-1/6 w-72 h-72 bg-cyan-500/15 rounded-full filter blur-3xl"
+          className="absolute top-1/4 left-1/6 w-48 h-48 bg-cyan-500/10 rounded-full filter blur-3xl"
           animate={{
-            opacity: [0.1, 0.25, 0.1],
-            scale: [1, 1.3, 1],
+            opacity: [0.1, 0.15, 0.1],
           }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute bottom-1/4 right-1/5 w-64 h-64 bg-purple-500/12 rounded-full filter blur-3xl"
+          className="absolute bottom-1/3 right-1/5 w-40 h-40 bg-purple-500/08 rounded-full filter blur-3xl"
           animate={{
-            opacity: [0.15, 0.3, 0.15],
-            scale: [1, 1.2, 1],
+            opacity: [0.1, 0.12, 0.1],
           }}
           transition={{
             duration: 7,
@@ -351,57 +322,41 @@ export const Hero = () => {
             delay: 2,
           }}
         />
-        <motion.div
-          className="absolute top-1/3 right-1/4 w-56 h-56 bg-emerald-500/10 rounded-full filter blur-3xl"
-          animate={{
-            opacity: [0.1, 0.2, 0.1],
-            scale: [1, 1.15, 1],
-          }}
-          transition={{
-            duration: 9,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-        />
       </div>
 
-      {/* Elementos Neon Flutuantes BLASTER */}
+      {/* ELEMENTOS NEON REDUZIDOS */}
       <div className="absolute inset-0 pointer-events-none">
-        {[
-          { Icon: Code2, color: "text-cyan-400", size: "text-3xl" },
-          { Icon: Cpu, color: "text-purple-400", size: "text-3xl" },
-          { Icon: Zap, color: "text-green-400", size: "text-2xl" },
-          { Icon: Sparkles, color: "text-amber-400", size: "text-2xl" },
-          { Icon: Server, color: "text-blue-400", size: "text-xl" },
-          { Icon: Database, color: "text-emerald-400", size: "text-xl" },
-          { Icon: Globe, color: "text-indigo-400", size: "text-2xl" },
-        ].map(({ Icon, color, size }, index) => (
+        {neonConfigs.map(({ Icon, color, size, top, left }, index) => (
           <motion.div
             key={index}
             ref={setNeonElementRef(index)}
-            className={`absolute ${styles.neonElement} ${color} ${size}`}
-            style={{
-              top: `${[20, 25, 60, 65, 40, 45, 50][index]}%`,
-              left: `${[15, 80, 20, 75, 85, 10, 50][index]}%`,
+            className={`absolute ${color} ${size} opacity-70`}
+            style={{ top, left }}
+            animate={{
+              y: [0, -10, 0],
+            }}
+            transition={{
+              duration: 4 + index,
+              repeat: Infinity,
+              ease: "easeInOut",
             }}
           >
-            <Icon className={`${styles.neonIcon} w-full h-full`} />
+            <Icon className="w-full h-full drop-shadow-lg" />
           </motion.div>
         ))}
       </div>
 
-      {/* Conteúdo Principal BLASTER PREMIUM */}
-      <div className="relative z-10 w-full h-full flex flex-col items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Conteúdo Central */}
-        <div className="flex flex-col items-center justify-center w-full max-w-7xl mx-auto flex-1 py-12 lg:py-16">
-          {/* Título Principal BLASTER */}
+      {/* CONTEÚDO PRINCIPAL COMPACTO */}
+      <div className="relative z-10 w-full h-full flex flex-col items-center justify-center px-4 sm:px-6">
+        {/* CONTEÚDO CENTRAL - ESPAÇAMENTOS COMPACTOS */}
+        <div className="flex flex-col items-center justify-center w-full max-w-4xl mx-auto">
+          {/* TÍTULO COMPACTO */}
           <div
             ref={titleRef}
             onMouseMove={handleMouseMove}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            className="text-center mb-8 lg:mb-12 w-full"
+            className="text-center mb-6 w-full"
           >
             <motion.h1
               style={{
@@ -409,15 +364,15 @@ export const Hero = () => {
                 rotateY: isHovering && !isMobile ? rotateY : 0,
                 transformStyle: "preserve-3d",
               }}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white mb-4 lg:mb-6 leading-tight lg:leading-none cursor-default transform-gpu"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-tight cursor-default"
             >
               {titleWords.map((word, wordIndex) => (
-                <span key={wordIndex} className="block mb-2 lg:mb-3">
+                <span key={wordIndex} className="block mb-1">
                   {word.split("").map((letter, letterIndex) => (
                     <span
                       key={`${wordIndex}-${letterIndex}`}
                       ref={setTitleLetterRef(wordIndex, letterIndex)}
-                      className="inline-block mx-0.5 lg:mx-1 hover:scale-110 hover:text-cyan-300 transition-transform duration-200"
+                      className="inline-block mx-0.5 hover:scale-110 hover:text-cyan-300 transition-transform duration-200"
                     >
                       {letter === " " ? "\u00A0" : letter}
                     </span>
@@ -427,64 +382,51 @@ export const Hero = () => {
             </motion.h1>
           </div>
 
-          {/* Subtítulo BLASTER */}
-          <div className="w-full max-w-4xl mx-auto mb-8 lg:mb-12 px-4">
+          {/* SUBTÍTULO COMPACTO */}
+          <div className="w-full max-w-2xl mx-auto mb-8">
             <motion.p
               ref={subtitleRef}
-              className="text-lg sm:text-xl lg:text-2xl text-gray-300 text-center leading-relaxed font-light"
+              className="text-base sm:text-lg md:text-xl text-gray-300 text-center leading-relaxed"
             >
-              <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent bg-size-200 animate-gradient">
+              <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
                 Transformo visões ambiciosas em soluções digitais com tecnologia
                 de ponta e código impecável
               </span>
             </motion.p>
           </div>
 
-          {/* Botões CTA BLASTER PREMIUM */}
-          <div className="w-full max-w-md lg:max-w-lg mx-auto mb-8">
-            <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 items-center justify-center w-full px-4">
-              <div
-                ref={setButtonRef(0)}
-                className="w-full sm:w-auto"
-                onMouseEnter={() => handleButtonHover(0)}
-                onMouseLeave={() => handleButtonLeave(0)}
-              >
+          {/* BOTÕES COMPACTOS */}
+          <div className="w-full max-w-md mx-auto mb-8">
+            <div className="flex flex-col sm:flex-row gap-3 items-center justify-center w-full">
+              {/* BOTÃO PRIMÁRIO */}
+              <div ref={setButtonRef(0)} className="w-full sm:w-auto">
                 <Button
                   asChild
-                  className="w-full bg-gradient-to-br from-blue-600 via-purple-600 to-cyan-600 hover:from-blue-700 hover:via-purple-700 hover:to-cyan-700 text-white font-bold text-lg lg:text-xl py-6 lg:py-7 px-8 lg:px-10 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 border border-white/20 relative overflow-hidden group"
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold text-base py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-white/20"
                 >
                   <a
                     href="#contact"
-                    className="flex items-center justify-center gap-3"
-                    onMouseDown={(e) => e.preventDefault()}
+                    className="flex items-center justify-center gap-2"
                   >
-                    <Mail className="w-6 h-6 lg:w-7 lg:h-7 group-hover:scale-110 transition-transform duration-300" />
-                    <span className="font-bold tracking-wide">
-                      INICIAR PROJETO
-                    </span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                    <Mail className="w-5 h-5" />
+                    <span>INICIAR PROJETO</span>
                   </a>
                 </Button>
               </div>
 
-              <div
-                ref={setButtonRef(1)}
-                className="w-full sm:w-auto"
-                onMouseEnter={() => handleButtonHover(1)}
-                onMouseLeave={() => handleButtonLeave(1)}
-              >
+              {/* BOTÃO SECUNDÁRIO */}
+              <div ref={setButtonRef(1)} className="w-full sm:w-auto">
                 <Button
                   asChild
-                  className="w-full bg-white/10 backdrop-blur-xl border border-white/20 text-white font-bold text-lg lg:text-xl py-6 lg:py-7 px-8 lg:px-10 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 hover:bg-white/15 hover:border-white/30 relative overflow-hidden group"
+                  className="w-full bg-white/10 backdrop-blur-lg border border-white/20 text-white font-semibold text-base py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 hover:bg-white/15"
                 >
                   <a
                     href="/docs/curriculo-erick-reis.pdf"
                     download
-                    className="flex items-center justify-center gap-3"
-                    onMouseDown={(e) => e.preventDefault()}
+                    className="flex items-center justify-center gap-2"
                   >
-                    <Download className="w-6 h-6 lg:w-7 lg:h-7 group-hover:scale-110 transition-transform duration-300" />
-                    <span className="font-bold tracking-wide">BAIXAR CV</span>
+                    <Download className="w-5 h-5" />
+                    <span>BAIXAR CV</span>
                   </a>
                 </Button>
               </div>
@@ -492,38 +434,37 @@ export const Hero = () => {
           </div>
         </div>
 
-        {/* Scroll Indicator BLASTER */}
-        <div className="w-full flex justify-center items-center pb-6 lg:pb-8">
+        {/* SCROLL INDICATOR PEQUENO */}
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
           <motion.button
             ref={scrollIndicatorRef}
             onClick={() => scrollToSection("about")}
-            className="bg-transparent border-none rounded-full transition-all duration-400 hover:bg-white/5 cursor-pointer p-4 flex flex-col items-center gap-3 group"
+            className="bg-transparent border-none cursor-pointer p-2 flex flex-col items-center gap-1 group"
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.95 }}
-            onMouseDown={(e) => e.preventDefault()}
           >
             <motion.span
-              className="text-cyan-400 text-xs font-mono font-semibold tracking-widest uppercase group-hover:text-cyan-300"
+              className="text-cyan-400 text-xs font-mono uppercase"
               animate={{
-                opacity: [0.7, 1, 0.7],
+                opacity: [0.6, 1, 0.6],
               }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              Explorar Mais
+              Explorar
             </motion.span>
 
             <motion.div
               animate={{
-                y: [0, 10, 0],
+                y: [0, 5, 0],
               }}
               transition={{
                 duration: 1.5,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="w-12 h-12 rounded-full flex items-center justify-center border border-cyan-400/30 bg-cyan-400/10 backdrop-blur-xl group-hover:border-cyan-400/60 group-hover:bg-cyan-400/20 transition-all duration-300"
+              className="w-8 h-8 rounded-full flex items-center justify-center border border-cyan-400/30 bg-cyan-400/10 group-hover:border-cyan-400/50"
             >
-              <ArrowDown className="w-5 h-5 text-cyan-400 group-hover:text-cyan-300 transition-colors duration-300" />
+              <ArrowDown className="w-3 h-3 text-cyan-400" />
             </motion.div>
           </motion.button>
         </div>

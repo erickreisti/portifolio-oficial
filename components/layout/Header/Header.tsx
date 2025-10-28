@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 import { Menu, X, Download, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
-import styles from "./Header.module.css";
 
 const navItems = [
   { name: "Home", href: "#hero" },
@@ -65,13 +64,54 @@ export const Header = () => {
       transition={{ duration: 0.6, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 w-full overflow-hidden font-poppins h-20 ${
         isScrolled
-          ? "py-4 border-b border-blue-400/10 backdrop-blur-lg bg-gray-950/80 h-16"
+          ? "py-4 border-b border-blue-400/10 backdrop-blur-xl bg-gray-950/90 h-16"
           : "py-6 border-b border-transparent backdrop-blur-none bg-transparent"
       }`}
     >
+      {/* Background que se integra PERFEITAMENTE com o Hero */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Mesmos gradientes do Hero */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `
+              radial-gradient(circle at 15% 25%, rgba(59, 130, 246, 0.25) 0%, transparent 60%),
+              radial-gradient(circle at 85% 15%, rgba(139, 92, 246, 0.2) 0%, transparent 60%),
+              radial-gradient(circle at 45% 75%, rgba(16, 185, 129, 0.15) 0%, transparent 60%),
+              radial-gradient(circle at 75% 85%, rgba(245, 158, 11, 0.1) 0%, transparent 60%),
+              radial-gradient(circle at 25% 45%, rgba(239, 68, 68, 0.1) 0%, transparent 60%),
+              linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.95) 100%)
+            `,
+          }}
+        />
+
+        {/* Mesmos elementos orb do Hero - posicionados no topo */}
+        <motion.div
+          className="absolute -top-20 -left-20 w-40 h-40 bg-cyan-500/10 rounded-full filter blur-3xl"
+          animate={{
+            opacity: [0.1, 0.2, 0.1],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute -top-16 -right-16 w-32 h-32 bg-purple-500/08 rounded-full filter blur-3xl"
+          animate={{
+            opacity: [0.15, 0.25, 0.15],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 7,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2,
+          }}
+        />
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 h-full flex items-center">
         <div className="flex items-center justify-between w-full h-full">
-          {/* Logo BLASTER */}
+          {/* Logo */}
           <motion.button
             onClick={() => scrollToSection("hero")}
             className="flex items-center gap-4 bg-transparent border-none cursor-pointer transition-all duration-500 hover:scale-105 p-3 rounded-2xl hover:bg-blue-500/5 relative overflow-hidden outline-none"
@@ -104,7 +144,7 @@ export const Header = () => {
             </div>
           </motion.button>
 
-          {/* Desktop Navigation BLASTER */}
+          {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-1">
             {navItems.map((item, index) => {
               const sectionName = item.href.replace("#", "");
@@ -117,7 +157,7 @@ export const Header = () => {
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.1 + index * 0.1, duration: 0.4 }}
                   onClick={() => scrollToSection(sectionName)}
-                  className={`relative px-5 py-3 text-sm font-open-sans font-semibold tracking-wider transition-all duration-300 rounded-xl border-none cursor-pointer outline-none ${
+                  className={`relative px-5 py-3 text-sm font-mono font-semibold tracking-wider transition-all duration-300 rounded-xl border-none cursor-pointer outline-none ${
                     isActive
                       ? "text-white bg-white/10 backdrop-blur-xl"
                       : "text-white/70 hover:text-white hover:bg-white/5"
@@ -141,7 +181,7 @@ export const Header = () => {
             })}
           </nav>
 
-          {/* Desktop Actions BLASTER */}
+          {/* Desktop Actions */}
           <motion.div
             className="hidden lg:flex items-center gap-4"
             initial={{ opacity: 0, x: 20 }}
@@ -197,7 +237,7 @@ export const Header = () => {
           </div>
         </div>
 
-        {/* Mobile Menu Dropdown BLASTER */}
+        {/* Mobile Menu Dropdown com background integrado */}
         <AnimatePresence>
           {isOpen && (
             <motion.div
@@ -207,7 +247,19 @@ export const Header = () => {
               transition={{ duration: 0.4, ease: "easeOut" }}
               className="absolute top-full left-0 right-0 bg-gray-950/95 backdrop-blur-xl border-t border-blue-400/10 shadow-2xl shadow-blue-500/10 overflow-hidden lg:hidden"
             >
-              <div className={styles.mobileMenuBackground} />
+              {/* Background integrado com o Hero */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: `
+                    radial-gradient(circle at 15% 25%, rgba(59, 130, 246, 0.25) 0%, transparent 60%),
+                    radial-gradient(circle at 85% 15%, rgba(139, 92, 246, 0.2) 0%, transparent 60%),
+                    radial-gradient(circle at 45% 75%, rgba(16, 185, 129, 0.15) 0%, transparent 60%),
+                    linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.96) 100%)
+                  `,
+                }}
+              />
+
               <nav className="flex flex-col p-6 gap-2 relative z-10">
                 {navItems.map((item, index) => {
                   const sectionName = item.href.replace("#", "");
@@ -220,7 +272,7 @@ export const Header = () => {
                       animate={{ x: 0, opacity: 1 }}
                       transition={{ delay: index * 0.1 }}
                       onClick={() => scrollToSection(sectionName)}
-                      className={`flex items-center justify-between px-4 py-4 text-sm font-open-sans font-semibold tracking-wider rounded-xl transition-all duration-300 border-none cursor-pointer text-left outline-none ${
+                      className={`flex items-center justify-between px-4 py-4 text-sm font-mono font-semibold tracking-wider rounded-xl transition-all duration-300 border-none cursor-pointer text-left outline-none ${
                         isActive
                           ? "text-white bg-white/10 border-l-2 border-blue-400"
                           : "text-white/70 hover:text-white hover:bg-white/5"
