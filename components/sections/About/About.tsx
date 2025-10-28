@@ -188,7 +188,7 @@ const StatCard = ({ stat, index }: { stat: any; index: number }) => {
         {stat.number}
         <span className="text-blue-400">{stat.suffix}</span>
       </div>
-      <div className="text-slate-400 font-mono text-sm font-bold tracking-wider uppercase transition-colors duration-300 hover:text-slate-200">
+      <div className="text-gray-400 font-mono text-sm font-bold tracking-wider uppercase transition-colors duration-300 hover:text-gray-200">
         {stat.label}
       </div>
       <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 to-purple-400/5 opacity-0 transition-opacity duration-400 hover:opacity-100" />
@@ -242,7 +242,7 @@ const PassionItem = ({ item, index }: { item: any; index: number }) => {
         <p className="text-white font-semibold text-base transition-colors duration-300 hover:text-blue-400 mb-1">
           {item.text}
         </p>
-        <p className="text-slate-400 text-sm leading-relaxed">
+        <p className="text-gray-400 text-sm leading-relaxed">
           {item.description}
         </p>
       </div>
@@ -346,7 +346,7 @@ export const About = () => {
     <section
       id="about"
       ref={sectionRef}
-      className="relative min-h-screen bg-slate-900 overflow-hidden flex items-center py-24 lg:py-32 border-t border-gray-800/50"
+      className="relative min-h-screen bg-gray-950 overflow-hidden flex items-center py-24 lg:py-32 border-t border-gray-800/50"
     >
       <PremiumBackground intensity="medium" />
 
@@ -457,7 +457,7 @@ export const About = () => {
                 whileInView={{ opacity: 1, y: 0, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 viewport={{ once: true }}
-                className="bg-slate-900/60 backdrop-blur-2xl p-8 rounded-2xl border border-slate-600/30 shadow-2xl shadow-blue-400/10 transition-all duration-400 relative overflow-hidden hover:border-blue-400/50 hover:shadow-blue-400/20"
+                className="bg-gray-900/60 backdrop-blur-2xl p-8 rounded-2xl border border-gray-700/30 shadow-2xl shadow-blue-400/10 transition-all duration-400 relative overflow-hidden hover:border-blue-400/50 hover:shadow-blue-400/20"
                 whileHover={{ y: -5 }}
               >
                 <motion.div
@@ -465,7 +465,7 @@ export const About = () => {
                   animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 />
-                <p className="text-slate-200 text-base lg:text-lg leading-relaxed font-light relative z-10">
+                <p className="text-gray-200 text-base lg:text-lg leading-relaxed font-light relative z-10">
                   {bioData.paragraph1}
                 </p>
                 <motion.div
@@ -480,7 +480,7 @@ export const About = () => {
                 whileInView={{ opacity: 1, y: 0, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
                 viewport={{ once: true }}
-                className="bg-slate-900/60 backdrop-blur-2xl p-8 rounded-2xl border border-slate-600/30 shadow-2xl shadow-blue-400/10 transition-all duration-400 relative overflow-hidden hover:border-blue-400/50 hover:shadow-blue-400/20"
+                className="bg-gray-900/60 backdrop-blur-2xl p-8 rounded-2xl border border-gray-700/30 shadow-2xl shadow-blue-400/10 transition-all duration-400 relative overflow-hidden hover:border-blue-400/50 hover:shadow-blue-400/20"
                 whileHover={{ y: -5 }}
               >
                 <motion.div
@@ -488,7 +488,7 @@ export const About = () => {
                   animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
                   transition={{ duration: 2, repeat: Infinity, delay: 1 }}
                 />
-                <p className="text-slate-200 text-base lg:text-lg leading-relaxed font-light relative z-10">
+                <p className="text-gray-200 text-base lg:text-lg leading-relaxed font-light relative z-10">
                   {bioData.paragraph2}
                 </p>
                 <motion.div
@@ -509,13 +509,13 @@ export const About = () => {
               transition={{ duration: 0.7, delay: 0.3 }}
               viewport={{ once: true }}
             >
-              <Card className="bg-slate-900/60 backdrop-blur-2xl border-blue-400/20 shadow-2xl shadow-blue-400/10 transition-all duration-400 hover:shadow-blue-400/20">
-                <CardHeader className="pb-6 border-b border-slate-600/30 relative z-10">
+              <Card className="bg-gray-900/60 backdrop-blur-2xl border-blue-400/20 shadow-2xl shadow-blue-400/10 transition-all duration-400 hover:shadow-blue-400/20">
+                <CardHeader className="pb-6 border-b border-gray-700/30 relative z-10">
                   <CardTitle className="text-2xl font-black text-blue-400 flex items-center mb-2">
                     <Brain className="w-6 h-6 mr-3" />
                     ESPECIALIZAÇÕES
                   </CardTitle>
-                  <p className="text-slate-400 text-sm">
+                  <p className="text-gray-400 text-sm">
                     Áreas onde minha expertise faz a diferença
                   </p>
                 </CardHeader>
@@ -535,13 +535,13 @@ export const About = () => {
               transition={{ duration: 0.7, delay: 0.5 }}
               viewport={{ once: true }}
             >
-              <Card className="bg-slate-900/60 backdrop-blur-2xl border-purple-400/20 shadow-2xl shadow-purple-400/10 transition-all duration-400 hover:shadow-purple-400/20">
-                <CardHeader className="pb-6 border-b border-slate-600/30 relative z-10">
+              <Card className="bg-gray-900/60 backdrop-blur-2xl border-purple-400/20 shadow-2xl shadow-purple-400/10 transition-all duration-400 hover:shadow-purple-400/20">
+                <CardHeader className="pb-6 border-b border-gray-700/30 relative z-10">
                   <CardTitle className="text-2xl font-black text-purple-400 flex items-center mb-2">
                     <Shield className="w-6 h-6 mr-3" />
                     COMPROMISSO
                   </CardTitle>
-                  <p className="text-slate-400 text-sm">
+                  <p className="text-gray-400 text-sm">
                     Meu padrão de excelência em cada projeto
                   </p>
                 </CardHeader>
@@ -549,7 +549,7 @@ export const About = () => {
                   {bioData.highlights.map((highlight, index) => (
                     <motion.div
                       key={index}
-                      className="flex items-center justify-between p-4 rounded-xl bg-slate-800/30 transition-all duration-300 cursor-pointer relative overflow-hidden hover:bg-slate-800/50"
+                      className="flex items-center justify-between p-4 rounded-xl bg-gray-800/30 transition-all duration-300 cursor-pointer relative overflow-hidden hover:bg-gray-800/50"
                       whileHover={{ scale: 1.02, y: -2 }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -600,7 +600,7 @@ export const About = () => {
           className="mt-16 lg:mt-24"
         >
           <motion.div
-            className="bg-gradient-to-br from-slate-900/60 to-slate-800/40 backdrop-blur-2xl p-8 rounded-2xl border border-slate-600/30 shadow-2xl shadow-blue-400/10 relative overflow-hidden"
+            className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-2xl p-8 rounded-2xl border border-gray-700/30 shadow-2xl shadow-blue-400/10 relative overflow-hidden"
             whileHover={{ y: -5 }}
           >
             <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12 relative z-10">
@@ -618,7 +618,7 @@ export const About = () => {
                 <h3 className="text-2xl lg:text-3xl font-black text-white mb-2">
                   Pronto para o próximo nível?
                 </h3>
-                <p className="text-slate-300 text-lg lg:text-xl">
+                <p className="text-gray-300 text-lg lg:text-xl">
                   Vamos transformar sua visão em realidade com tecnologia de
                   ponta
                 </p>

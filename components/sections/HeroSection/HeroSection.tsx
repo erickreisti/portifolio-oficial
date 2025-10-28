@@ -78,7 +78,7 @@ const Header = ({
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            <div className="flex items-center gap-4 p-2 rounded-2xl bg-gradient-to-r from-gray-900/50 to-gray-800/30 backdrop-blur-xl border border-gray-700/30 hover:border-tech-cyan/50 transition-all duration-500 hover:scale-105">
+            <div className="flex items-center gap-4 p-2 rounded-2xl bg-gradient-to-r from-gray-900/50 to-gray-800/30 backdrop-blur-xl border border-gray-700/30 hover:border-cyan-400/50 transition-all duration-500 hover:scale-105">
               <div className="relative">
                 <motion.div
                   whileHover={{ rotate: 360 }}
@@ -93,7 +93,7 @@ const Header = ({
                     className="brightness-125 group-hover:brightness-150 transition-all duration-500"
                   />
                 </motion.div>
-                <div className="absolute -inset-2 bg-tech-cyan/10 rounded-xl blur-xl group-hover:bg-tech-cyan/20 transition-all duration-500" />
+                <div className="absolute -inset-2 bg-cyan-400/10 rounded-xl blur-xl group-hover:bg-cyan-400/20 transition-all duration-500" />
               </div>
 
               <div className="text-left hidden sm:block">
@@ -122,7 +122,7 @@ const Header = ({
                   onClick={() => onNavClick(sectionName)}
                   className={`relative px-5 py-2.5 text-sm font-mono font-bold tracking-widest transition-all duration-300 rounded-xl cursor-pointer outline-none backdrop-blur-lg border ${
                     isActive
-                      ? "text-white bg-white/10 border-white/20 shadow-lg shadow-tech-cyan/10"
+                      ? "text-white bg-white/10 border-white/20 shadow-lg shadow-cyan-400/10"
                       : "text-white/80 hover:text-white hover:bg-white/5 border-transparent hover:border-white/10"
                   }`}
                   whileHover={{ y: -1, scale: 1.02 }}
@@ -133,7 +133,7 @@ const Header = ({
                   </span>
                   {isActive && (
                     <motion.div
-                      className="absolute bottom-1 left-4 right-4 h-0.5 bg-gradient-to-r from-tech-cyan to-tech-purple rounded-full"
+                      className="absolute bottom-1 left-4 right-4 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full"
                       layoutId="navIndicator"
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
@@ -154,7 +154,7 @@ const Header = ({
           >
             <Button
               asChild
-              className="bg-gradient-to-r from-tech-cyan to-tech-purple hover:from-tech-cyan/90 hover:to-tech-purple/90 text-white font-bold text-sm px-6 py-2.5 rounded-xl border-0 shadow-2xl hover:shadow-tech-cyan/25 transition-all duration-500 hover:scale-105 relative overflow-hidden group"
+              className="bg-gradient-to-r from-cyan-400 to-purple-400 hover:from-cyan-400/90 hover:to-purple-400/90 text-white font-bold text-sm px-6 py-2.5 rounded-xl border-0 shadow-2xl hover:shadow-cyan-400/25 transition-all duration-500 hover:scale-105 relative overflow-hidden group"
             >
               <a
                 href="/docs/curriculo-erick-reis.pdf"
@@ -173,7 +173,7 @@ const Header = ({
             <Button
               asChild
               size="sm"
-              className="bg-gradient-to-r from-tech-cyan to-tech-purple hover:from-tech-cyan/90 hover:to-tech-purple/90 text-white p-2.5 rounded-xl border-0 shadow-xl hover:shadow-tech-cyan/20 transition-all duration-300 hover:scale-105"
+              className="bg-gradient-to-r from-cyan-400 to-purple-400 hover:from-cyan-400/90 hover:to-purple-400/90 text-white p-2.5 rounded-xl border-0 shadow-xl hover:shadow-cyan-400/20 transition-all duration-300 hover:scale-105"
             >
               <a href="/docs/curriculo-erick-reis.pdf" download>
                 <Download className="w-4 h-4" />
@@ -203,7 +203,7 @@ const Header = ({
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="absolute top-full left-0 right-0 backdrop-blur-xl bg-gray-950/95 border-b border-white/5 shadow-2xl shadow-tech-cyan/10 overflow-hidden lg:hidden"
+              className="absolute top-full left-0 right-0 backdrop-blur-xl bg-gray-950/95 border-b border-white/5 shadow-2xl shadow-cyan-400/10 overflow-hidden lg:hidden"
             >
               <nav className="flex flex-col p-4 gap-2 relative z-10 bg-gray-900/95 rounded-b-2xl">
                 {navItems.map((item, index) => {
@@ -231,7 +231,7 @@ const Header = ({
                       <span>{item.name.toUpperCase()}</span>
                       {isActive && (
                         <motion.div
-                          className="w-2 h-2 bg-gradient-to-r from-tech-cyan to-tech-purple rounded-full"
+                          className="w-2 h-2 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full"
                           animate={{ scale: [1, 1.2, 1] }}
                           transition={{ duration: 2, repeat: Infinity }}
                         />
@@ -248,7 +248,7 @@ const Header = ({
                 >
                   <Button
                     asChild
-                    className="w-full bg-gradient-to-r from-tech-cyan to-tech-purple hover:from-tech-cyan/90 hover:to-tech-purple/90 text-white font-bold py-3 rounded-xl border-0 shadow-xl hover:shadow-tech-cyan/20 transition-all duration-300 hover:scale-105"
+                    className="w-full bg-gradient-to-r from-cyan-400 to-purple-400 hover:from-cyan-400/90 hover:to-purple-400/90 text-white font-bold py-3 rounded-xl border-0 shadow-xl hover:shadow-cyan-400/20 transition-all duration-300 hover:scale-105"
                     onClick={onMobileMenuToggle}
                   >
                     <a
@@ -324,7 +324,7 @@ const HeroContent = ({
   const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["3deg", "-3deg"]);
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-3deg", "3deg"]);
 
-  // Configurações das partículas - POSIÇÕES CORRIGIDAS
+  // Configurações das partículas - CORES CORRIGIDAS
   const particlesConfig = [
     {
       Icon: Crown,
@@ -336,21 +336,21 @@ const HeroContent = ({
     {
       Icon: Code2,
       position: "top-[20%] right-[15%]",
-      color: "text-tech-cyan",
+      color: "text-cyan-400",
       delay: 1,
       size: "text-3xl",
     },
     {
       Icon: Cpu,
       position: "bottom-[40%] left-[15%]",
-      color: "text-tech-purple",
+      color: "text-purple-400",
       delay: 2,
       size: "text-2xl",
     },
     {
       Icon: Zap,
       position: "bottom-[30%] right-[20%]",
-      color: "text-tech-green",
+      color: "text-green-400",
       delay: 3,
       size: "text-2xl",
     },
@@ -364,21 +364,21 @@ const HeroContent = ({
     {
       Icon: Globe,
       position: "top-[40%] right-[10%]",
-      color: "text-tech-blue",
+      color: "text-blue-400",
       delay: 5,
       size: "text-xl",
     },
     {
       Icon: Brain,
       position: "bottom-[20%] right-[10%]",
-      color: "text-tech-pink",
+      color: "text-pink-400",
       delay: 6,
       size: "text-2xl",
     },
     {
       Icon: Rocket,
       position: "bottom-[25%] left-[20%]",
-      color: "text-tech-orange",
+      color: "text-amber-400",
       delay: 7,
       size: "text-xl",
     },
@@ -414,7 +414,7 @@ const HeroContent = ({
       {/* Background Premium */}
       <PremiumBackground intensity="high" />
 
-      {/* Partículas Flutuantes - CORRIGIDAS */}
+      {/* Partículas Flutuantes - CORES CORRIGIDAS */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {particlesConfig.map((particle, index) => (
           <FloatingParticle key={index} {...particle} />
@@ -456,7 +456,7 @@ const HeroContent = ({
                   {word.split("").map((letter, letterIndex) => (
                     <motion.span
                       key={`${wordIndex}-${letterIndex}`}
-                      className="inline-block mx-0.5 sm:mx-1 lg:mx-1.5 hover:scale-110 hover:text-tech-cyan transition-all duration-300 hover:drop-shadow-[0_0_20px_rgba(6,182,212,0.8)] bg-gradient-to-b from-white to-gray-300 bg-clip-text text-transparent"
+                      className="inline-block mx-0.5 sm:mx-1 lg:mx-1.5 hover:scale-110 hover:text-cyan-400 transition-all duration-300 hover:drop-shadow-[0_0_20px_rgba(6,182,212,0.8)] bg-gradient-to-b from-white to-gray-300 bg-clip-text text-transparent"
                       whileHover={{ scale: 1.1 }}
                       transition={{ type: "spring", stiffness: 400 }}
                     >
@@ -476,7 +476,7 @@ const HeroContent = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              <span className="bg-gradient-to-r from-tech-cyan via-tech-blue to-tech-purple bg-clip-text text-transparent bg-size-200 animate-gradient font-medium">
+              <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent bg-size-200 animate-gradient font-medium">
                 Transformo visões ambiciosas em soluções digitais com tecnologia
                 de ponta e código impecável
               </span>
@@ -494,7 +494,7 @@ const HeroContent = ({
               >
                 <Button
                   asChild
-                  className="w-full bg-gradient-to-r from-tech-cyan via-tech-purple to-tech-pink hover:from-tech-cyan/90 hover:via-tech-purple/90 hover:to-tech-pink/90 text-white font-black text-base sm:text-lg lg:text-xl py-4 sm:py-5 lg:py-6 px-6 sm:px-8 lg:px-10 rounded-2xl shadow-2xl hover:shadow-tech-cyan/30 transition-all duration-500 relative overflow-hidden group border-0"
+                  className="w-full bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 hover:from-cyan-400/90 hover:via-purple-400/90 hover:to-pink-400/90 text-white font-black text-base sm:text-lg lg:text-xl py-4 sm:py-5 lg:py-6 px-6 sm:px-8 lg:px-10 rounded-2xl shadow-2xl hover:shadow-cyan-400/30 transition-all duration-500 relative overflow-hidden group border-0"
                 >
                   <a
                     href="#contact"
@@ -544,7 +544,7 @@ const HeroContent = ({
             whileTap={{ scale: 0.95 }}
           >
             <motion.span
-              className="text-tech-cyan text-xs sm:text-sm font-mono font-semibold tracking-widest uppercase group-hover:text-tech-cyan/80"
+              className="text-cyan-400 text-xs sm:text-sm font-mono font-semibold tracking-widest uppercase group-hover:text-cyan-400/80"
               animate={{ opacity: [0.7, 1, 0.7] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
@@ -557,9 +557,9 @@ const HeroContent = ({
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center border border-tech-cyan/30 bg-tech-cyan/10 backdrop-blur-xl group-hover:border-tech-cyan/50 group-hover:bg-tech-cyan/20 transition-all duration-300"
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center border border-cyan-400/30 bg-cyan-400/10 backdrop-blur-xl group-hover:border-cyan-400/50 group-hover:bg-cyan-400/20 transition-all duration-300"
             >
-              <ArrowDown className="w-3 h-3 sm:w-4 sm:h-4 text-tech-cyan group-hover:text-tech-cyan/80" />
+              <ArrowDown className="w-3 h-3 sm:w-4 sm:h-4 text-cyan-400 group-hover:text-cyan-400/80" />
             </motion.div>
           </motion.button>
         </div>

@@ -23,6 +23,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { PremiumBackground } from "@/components/layout/PremiumBackground";
 
 // Configuração centralizada para escalabilidade
 const NEON_ELEMENTS_CONFIG = [
@@ -347,15 +348,12 @@ export const Contact = () => {
       ref={sectionRef}
       className="relative min-h-screen bg-gray-950 overflow-hidden border-t border-gray-800/50"
     >
-      {/* Background Otimizado */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-950 to-gray-900">
-        <div className="absolute top-0 left-0 w-1/3 h-1/3 bg-blue-500/8 blur-2xl rounded-full" />
-        <div className="absolute bottom-0 right-0 w-1/3 h-1/3 bg-purple-500/6 blur-2xl rounded-full" />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/2 bg-cyan-500/5 blur-2xl rounded-full" />
-      </div>
-
-      {/* Elementos Neon - Renderização Otimizada */}
-      <div className="absolute inset-0 pointer-events-none">{neonElements}</div>
+      <PremiumBackground intensity="medium">
+        {/* Elementos Neon - Renderização Otimizada */}
+        <div className="absolute inset-0 pointer-events-none">
+          {neonElements}
+        </div>
+      </PremiumBackground>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
         {/* Header Premium */}

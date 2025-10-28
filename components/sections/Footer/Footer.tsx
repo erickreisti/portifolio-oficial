@@ -1,4 +1,4 @@
-// components/layout/Footer.tsx (BLASTER PREMIUM VERSION)
+// components/layout/Footer.tsx
 "use client";
 
 import Link from "next/link";
@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useReducedMotion } from "framer-motion";
+import { PremiumBackground } from "@/components/layout/PremiumBackground";
 
 const XIcon = () => (
   <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -85,12 +86,7 @@ export const Footer = () => {
 
   return (
     <footer className="relative min-h-[400px] bg-gray-950 border-t border-gray-800/50 overflow-hidden">
-      {/* Background Otimizado */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-950 to-gray-900">
-        {/* Gradientes sutis - menos pesados */}
-        <div className="absolute top-0 left-0 w-1/3 h-1/3 bg-blue-500/5 blur-3xl rounded-full" />
-        <div className="absolute bottom-0 right-0 w-1/3 h-1/3 bg-purple-500/5 blur-3xl rounded-full" />
-
+      <PremiumBackground intensity="soft">
         {/* Elementos flutuantes com performance */}
         <div className="absolute inset-0 pointer-events-none">
           {FLOATING_ELEMENTS.map(({ Icon, position, color, size }, index) => (
@@ -119,7 +115,7 @@ export const Footer = () => {
             </motion.div>
           ))}
         </div>
-      </div>
+      </PremiumBackground>
 
       {/* Conteúdo Principal */}
       <div className="relative z-10 container mx-auto px-4 py-16">
@@ -129,6 +125,7 @@ export const Footer = () => {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
         >
           <Link href="#hero" onClick={scrollToTop} className="group relative">
             <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-gray-900/50 to-gray-800/30 backdrop-blur-xl border border-gray-700/30 hover:border-blue-400/50 transition-all duration-500 hover:scale-105">
@@ -180,6 +177,7 @@ export const Footer = () => {
                 damping: 20,
                 delay: index * 0.1,
               }}
+              viewport={{ once: true }}
             >
               <div className="h-14 w-14 rounded-xl bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700/50 flex items-center justify-center transition-all duration-500 group-hover:from-blue-900/30 group-hover:to-cyan-900/30 group-hover:border-blue-400/50 group-hover:shadow-2xl group-hover:shadow-blue-500/20">
                 <link.icon className="w-6 h-6 text-gray-400 group-hover:text-white transition-colors duration-300" />
@@ -211,6 +209,7 @@ export const Footer = () => {
             className="text-center lg:text-left"
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
           >
             <p className="text-gray-400 font-mono text-sm">
               © {currentYear} ÉRICK REIS
@@ -223,6 +222,7 @@ export const Footer = () => {
             className="flex justify-center"
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
           >
             <div className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-gradient-to-r from-gray-900/80 to-gray-800/60 backdrop-blur-xl border border-gray-700/50 hover:border-blue-500/50 transition-all duration-500 group cursor-pointer">
               <Code2 className="w-5 h-5 text-green-400 group-hover:scale-110 transition-transform duration-300" />
@@ -239,6 +239,7 @@ export const Footer = () => {
             className="text-center lg:text-right"
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
           >
             <button
               onClick={scrollToTop}
@@ -258,6 +259,7 @@ export const Footer = () => {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
+          viewport={{ once: true }}
         >
           <div className="inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-gray-900/40 border border-gray-700/30">
             <Zap className="w-4 h-4 text-yellow-400 animate-pulse" />

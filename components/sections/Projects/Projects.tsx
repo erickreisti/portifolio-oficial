@@ -36,6 +36,7 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { projects } from "@/lib/project-data";
 import type { Project } from "@/lib/project-data";
+import { PremiumBackground } from "@/components/layout/PremiumBackground";
 
 // Componente Modal para tags
 const TagsModal = ({
@@ -270,7 +271,7 @@ const ProjectCard: React.FC<{
   );
 };
 
-// Componente Neon Element para Projects
+// Componente Neon Element para Projects REFATORADO
 const ProjectsNeonElement = ({
   Icon,
   position,
@@ -310,7 +311,7 @@ const ProjectsNeonElement = ({
 
       // Animação flutuante contínua
       gsap.to(elementRef.current, {
-        y: -20,
+        y: -15,
         rotation: 5,
         duration: 4,
         ease: "sine.inOut",
@@ -391,14 +392,6 @@ export const Projects = () => {
     if (!isInView || !sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Animação de entrada da seção
-      gsap.fromTo(
-        sectionRef.current,
-        { opacity: 0 },
-        { opacity: 1, duration: 1, ease: "power2.out" }
-      );
-
-      // Timeline principal
       const tl = gsap.timeline();
 
       tl.fromTo(
@@ -431,7 +424,6 @@ export const Projects = () => {
           "-=0.2"
         );
 
-      // Animação pulsante para elementos interativos
       gsap.to(".projects-interactive", {
         y: -3,
         boxShadow: "0 20px 40px rgba(59, 130, 246, 0.2)",
@@ -452,51 +444,14 @@ export const Projects = () => {
       ref={sectionRef}
       className="relative min-h-screen bg-gray-950 overflow-hidden border-t border-gray-800/50"
     >
-      {/* Background com gradientes animados */}
-      <div className="absolute inset-0">
-        <div
-          className="absolute inset-0"
-          style={{
-            background: `
-              radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.15) 0%, transparent 60%),
-              radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 60%),
-              radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 60%),
-              radial-gradient(circle at 70% 90%, rgba(245, 158, 11, 0.08) 0%, transparent 60%),
-              linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.95) 100%)
-            `,
-          }}
-        />
-
-        {/* Elementos de fundo animados */}
-        <motion.div
-          className="absolute top-1/4 left-1/6 w-72 h-72 bg-cyan-500/10 rounded-full filter blur-3xl"
-          animate={{
-            opacity: [0.1, 0.2, 0.1],
-            scale: [1, 1.2, 1],
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 right-1/5 w-64 h-64 bg-purple-500/08 rounded-full filter blur-3xl"
-          animate={{
-            opacity: [0.15, 0.25, 0.15],
-            scale: [1, 1.15, 1],
-          }}
-          transition={{
-            duration: 7,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 2,
-          }}
-        />
-      </div>
-
-      {/* Elementos Neon Flutuantes */}
-      <div className="absolute inset-0 pointer-events-none">
-        {neonElements.map((element, index) => (
-          <ProjectsNeonElement key={index} {...element} />
-        ))}
-      </div>
+      <PremiumBackground intensity="medium">
+        {/* Elementos Neon Flutuantes */}
+        <div className="absolute inset-0 pointer-events-none">
+          {neonElements.map((element, index) => (
+            <ProjectsNeonElement key={index} {...element} />
+          ))}
+        </div>
+      </PremiumBackground>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
         {/* Header */}
