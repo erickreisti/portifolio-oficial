@@ -1,7 +1,9 @@
 // components/sections/Projects/Projects.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
+import { gsap } from "gsap";
 import NextLink from "next/link";
 import {
   Github,
@@ -14,8 +16,13 @@ import {
   ExternalLink,
   X,
   Tag,
+  Zap,
+  Globe,
+  Database,
+  Server,
+  Smartphone,
+  Cloud,
 } from "lucide-react";
-import MotionDiv from "@/components/ui/MotionDiv";
 import {
   Card,
   CardContent,
@@ -43,7 +50,7 @@ const TagsModal = ({
 
   return (
     <div className={styles.modalOverlay}>
-      <MotionDiv
+      <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.8 }}
@@ -77,14 +84,14 @@ const TagsModal = ({
           </p>
           <div className={styles.modalTagsContainer}>
             {project.tags.map((tag: string, index: number) => (
-              <MotionDiv
+              <motion.div
                 key={tag}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.2, delay: index * 0.05 }}
               >
                 <Badge className={styles.modalTag}>{tag}</Badge>
-              </MotionDiv>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -113,7 +120,7 @@ const TagsModal = ({
             </Button>
           )}
         </div>
-      </MotionDiv>
+      </motion.div>
     </div>
   );
 };
@@ -248,7 +255,7 @@ const ProjectCard: React.FC<{
 
   return (
     <>
-      <MotionDiv
+      <motion.div
         initial={{ opacity: 0, y: 40, scale: 0.9 }}
         whileInView={{ opacity: 1, y: 0, scale: 1 }}
         transition={{
@@ -258,94 +265,102 @@ const ProjectCard: React.FC<{
           stiffness: 100,
         }}
         viewport={{ once: true, amount: 0.2 }}
-        className={styles.projectCardWrapper}
+        className="h-full"
       >
-        <Card className={styles.projectCard}>
+        <Card className="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 shadow-2xl hover:shadow-3xl hover:border-blue-400/30 transition-all duration-500 group h-full flex flex-col overflow-hidden hover:scale-105">
           {/* Header com Imagem */}
-          <div className={styles.projectImageContainer}>
-            <div className={styles.projectImageWrapper}>
+          <div className="h-32 lg:h-48 w-full bg-gradient-to-br from-blue-500/15 to-purple-500/10 relative overflow-hidden border-b border-gray-700/50">
+            <div className="absolute inset-0">
               <Image
                 src={project.image}
                 alt={project.title}
                 fill
-                className={styles.projectImage}
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
               />
-              <div className={styles.projectImageOverlay} />
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/10" />
             </div>
-            <div className={styles.projectIconContainer}>
-              <MotionDiv
+            <div className="relative z-10 h-full flex flex-col items-center justify-center text-center p-4">
+              <motion.div
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 transition={{ type: "spring", stiffness: 300 }}
-                className={styles.projectIconWrapper}
+                className="mb-2"
               >
-                <Cpu className={styles.projectIcon} />
-              </MotionDiv>
-              <span className={styles.projectTitleOverlay}>
+                <Cpu className="w-8 h-8 lg:w-12 lg:h-12 text-blue-400 filter drop-shadow-[0_0_8px_#60a5fa]" />
+              </motion.div>
+              <span className="text-white font-bold text-sm lg:text-base bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 {project.title}
               </span>
             </div>
           </div>
 
-          <CardHeader className={styles.projectCardHeader}>
-            <CardTitle className={styles.projectCardTitle}>
-              <span className={styles.projectTitleText}>{project.title}</span>
-              <MotionDiv
+          <CardHeader className="pb-4 flex-grow">
+            <CardTitle className="text-lg lg:text-xl font-black text-white flex items-center justify-between">
+              <span className="flex-1 truncate mr-2">{project.title}</span>
+              <motion.div
                 whileHover={{ scale: 1.1, rotate: 15 }}
-                className={styles.projectTitleIcon}
+                className="text-blue-400"
               >
-                <Rocket className={styles.rocketIcon} />
-              </MotionDiv>
+                <Rocket className="w-4 h-4 lg:w-5 lg:h-5" />
+              </motion.div>
             </CardTitle>
-            <CardDescription className={styles.projectCardDescription}>
+            <CardDescription className="text-gray-400 text-sm lg:text-base line-clamp-3">
               {project.description}
             </CardDescription>
           </CardHeader>
 
-          <CardContent className={styles.projectCardContent}>
-            <div className={styles.tagsContainer}>
+          <CardContent className="pb-4">
+            <div className="flex flex-wrap gap-2">
               {project.tags.slice(0, 3).map((tag: string, tagIndex: number) => (
-                <MotionDiv
+                <motion.div
                   key={tag}
                   initial={{ opacity: 0, scale: 0.8 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.2, delay: tagIndex * 0.05 }}
                   viewport={{ once: true }}
                 >
-                  <Badge className={styles.tag}>{tag}</Badge>
-                </MotionDiv>
+                  <Badge className="bg-blue-500/10 text-blue-400 border-blue-400/30 font-mono text-xs font-bold hover:bg-blue-500/20 hover:scale-105 transition-all duration-300">
+                    {tag}
+                  </Badge>
+                </motion.div>
               ))}
 
               {project.tags.length > 3 && (
-                <MotionDiv
+                <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.2, delay: 0.15 }}
                   viewport={{ once: true }}
                 >
                   <Badge
-                    className={styles.moreTagsBadge}
+                    className="bg-purple-500/10 text-purple-400 border-purple-400/30 font-mono text-xs font-bold hover:bg-purple-500/20 hover:scale-105 transition-all duration-300 cursor-pointer relative overflow-hidden"
                     onClick={() => setIsModalOpen(true)}
                   >
                     +{project.tags.length - 3}
-                    <div className={styles.moreTagsGlow} />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-400/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
                   </Badge>
-                </MotionDiv>
+                </motion.div>
               )}
             </div>
           </CardContent>
 
-          <CardFooter className={styles.projectCardFooter}>
-            <div className={styles.projectActions}>
-              <Button asChild className={styles.githubButton}>
+          <CardFooter className="pt-4 border-t border-gray-700/50 mt-auto">
+            <div className="flex gap-2 w-full">
+              <Button
+                asChild
+                className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold text-xs lg:text-sm py-2 rounded-lg shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105"
+              >
                 <NextLink href={project.githubUrl} target="_blank">
-                  <Github className={styles.buttonIcon} />
+                  <Github className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
                   CÓDIGO
                 </NextLink>
               </Button>
               {project.liveUrl && (
-                <Button asChild className={styles.demoButton}>
+                <Button
+                  asChild
+                  className="flex-1 bg-gray-800/50 backdrop-blur-sm border border-blue-400/30 text-blue-400 hover:bg-blue-500/10 hover:border-blue-400/60 font-bold text-xs lg:text-sm py-2 rounded-lg transition-all duration-500 hover:scale-105"
+                >
                   <NextLink href={project.liveUrl} target="_blank">
-                    <ExternalLink className={styles.buttonIcon} />
+                    <ExternalLink className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
                     DEMO
                   </NextLink>
                 </Button>
@@ -353,7 +368,7 @@ const ProjectCard: React.FC<{
             </div>
           </CardFooter>
         </Card>
-      </MotionDiv>
+      </motion.div>
 
       <TagsModal
         project={project}
@@ -365,100 +380,219 @@ const ProjectCard: React.FC<{
 };
 
 export const Projects = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const neonElementsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
+
+  useEffect(() => {
+    if (!isInView) return;
+
+    const ctx = gsap.context(() => {
+      // Animação dos elementos neon
+      const neonElements = neonElementsRef.current.filter(Boolean);
+      gsap.fromTo(
+        neonElements,
+        {
+          opacity: 0,
+          scale: 0,
+          y: 100,
+          rotation: -180,
+        },
+        {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          rotation: 0,
+          duration: 1.5,
+          ease: "back.out(1.7)",
+          stagger: 0.15,
+        }
+      );
+
+      // Animações flutuantes contínuas
+      neonElements.forEach((element, index) => {
+        gsap.to(element, {
+          y: -20 - index * 5,
+          rotation: index % 2 === 0 ? 10 : -10,
+          duration: 3 + index,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+          delay: index * 0.3,
+        });
+      });
+
+      // Pulsação neon
+      gsap.to(".neon-projects", {
+        filter: "drop-shadow(0 0 15px currentColor) brightness(1.3)",
+        duration: 2,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+        stagger: 0.5,
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [isInView]);
+
+  const setNeonElementRef = (index: number) => (el: HTMLDivElement | null) => {
+    neonElementsRef.current[index] = el;
+  };
+
   return (
-    <section id="projects" className={styles.projectsSection}>
-      {/* Background */}
-      <div className={styles.background}>
-        <div className={styles.gradientBackground} />
-        <div className={styles.lightEffect1} />
-        <div className={styles.lightEffect2} />
+    <section
+      id="projects"
+      ref={sectionRef}
+      className="relative min-h-screen bg-gray-950 overflow-hidden border-t border-gray-800/50"
+    >
+      {/* Background com gradientes animados */}
+      <div className="absolute inset-0">
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `
+              radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.15) 0%, transparent 60%),
+              radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 60%),
+              radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 60%),
+              radial-gradient(circle at 70% 90%, rgba(245, 158, 11, 0.08) 0%, transparent 60%),
+              linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.95) 100%)
+            `,
+          }}
+        />
+
+        {/* Elementos de fundo animados */}
+        <motion.div
+          className="absolute top-1/4 left-1/6 w-72 h-72 bg-cyan-500/10 rounded-full filter blur-3xl"
+          animate={{
+            opacity: [0.1, 0.2, 0.1],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 right-1/5 w-64 h-64 bg-purple-500/08 rounded-full filter blur-3xl"
+          animate={{
+            opacity: [0.15, 0.25, 0.15],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 7,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2,
+          }}
+        />
       </div>
 
-      {/* Elementos decorativos */}
-      <div className={styles.decorativeElements}>
-        <div className={styles.decoration1}>
-          <svg
-            className={styles.decorationIcon}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-            />
-          </svg>
-        </div>
-        <div className={styles.decoration2}>
-          <svg
-            className={styles.decorationIcon}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <rect width="18" height="18" x="3" y="3" rx="2"></rect>
-            <path d="M11 9h4a2 2 0 0 0 2-2V3"></path>
-            <circle cx="9" cy="9" r="2"></circle>
-            <path d="M7 21v-4a2 2 0 0 1 2-2h4"></path>
-            <circle cx="15" cy="15" r="2"></circle>
-          </svg>
-        </div>
+      {/* Elementos Neon Flutuantes */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[Rocket, Code, Globe, Database, Server, Smartphone, Cloud, Zap].map(
+          (Icon, index) => (
+            <motion.div
+              key={index}
+              ref={setNeonElementRef(index)}
+              className={`absolute ${styles.neonGlow} neon-projects ${
+                index === 0
+                  ? "top-20 left-20"
+                  : index === 1
+                  ? "top-32 right-24"
+                  : index === 2
+                  ? "bottom-40 left-24"
+                  : index === 3
+                  ? "bottom-32 right-20"
+                  : index === 4
+                  ? "top-40 right-16"
+                  : index === 5
+                  ? "bottom-48 left-16"
+                  : index === 6
+                  ? "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                  : "top-1/3 left-1/4"
+              }`}
+            >
+              <Icon
+                className={`
+              ${
+                index === 0
+                  ? "text-cyan-400 text-3xl"
+                  : index === 1
+                  ? "text-purple-400 text-3xl"
+                  : index === 2
+                  ? "text-green-400 text-2xl"
+                  : index === 3
+                  ? "text-amber-400 text-2xl"
+                  : index === 4
+                  ? "text-blue-400 text-xl"
+                  : index === 5
+                  ? "text-emerald-400 text-xl"
+                  : index === 6
+                  ? "text-indigo-400 text-2xl"
+                  : "text-rose-400 text-xl"
+              }
+            `}
+              />
+            </motion.div>
+          )
+        )}
       </div>
 
-      <div className={styles.container}>
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
         {/* Header */}
-        <MotionDiv
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
           viewport={{ once: true, amount: 0.2 }}
-          className={styles.header}
+          className="text-center mb-16 lg:mb-24"
         >
-          <MotionDiv
+          <motion.div
             initial={{ scale: 0, rotate: -180 }}
             whileInView={{ scale: 1, rotate: 0 }}
             transition={{ duration: 0.5, delay: 0.1, type: "spring" }}
             viewport={{ once: true }}
-            className={styles.badge}
+            className="inline-flex items-center text-blue-400 bg-blue-500/10 border border-blue-400/30 px-4 py-2 rounded-full text-sm lg:text-base font-mono font-bold mb-6 lg:mb-8"
           >
-            <Sparkles className={styles.badgeIcon} />
+            <Sparkles className="w-4 h-4 lg:w-5 lg:h-5 mr-2 animate-pulse" />
             PORTFÓLIO PREMIUM
-          </MotionDiv>
+          </motion.div>
 
-          <MotionDiv
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <h1 className={styles.title}>
-              PROJETOS <span className={styles.titleGradient}>DE IMPACTO</span>
+            <h1 className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-black text-white mb-4 lg:mb-6">
+              PROJETOS{" "}
+              <span
+                className={`bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent ${styles.animateGradient}`}
+              >
+                DE IMPACTO
+              </span>
             </h1>
-            <p className={styles.subtitle}>
+            <p className="text-lg lg:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
               Soluções inovadoras desenvolvidas com tecnologias de ponta,
               arquitetura escalável e foco em performance excepcional
             </p>
-          </MotionDiv>
-        </MotionDiv>
+          </motion.div>
+        </motion.div>
 
         {/* Grid de Projetos */}
-        <div className={styles.projectsGrid}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16 lg:mb-24">
           {projects.map((project, index) => (
             <ProjectCard key={project.id} project={project} index={index} />
           ))}
         </div>
 
         {/* Stats */}
-        <MotionDiv
+        <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
-          className={styles.statsSection}
+          className="mb-16 lg:mb-24"
         >
-          <div className={styles.statsGrid}>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
             {[
               {
                 number: projects.length,
@@ -489,52 +623,64 @@ export const Projects = () => {
                 color: "from-green-400 to-emerald-400",
               },
             ].map((stat, index) => (
-              <MotionDiv
+              <motion.div
                 key={index}
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4, delay: 0.05 * index }}
                 viewport={{ once: true }}
-                className={styles.statCard}
+                className="text-center p-6 bg-gray-900/40 backdrop-blur-lg rounded-2xl border border-gray-700/50 hover:border-blue-400/30 transition-all duration-500 cursor-pointer hover:scale-105"
               >
-                <div className={`${styles.statIcon} ${stat.color}`}>
-                  <stat.icon className={styles.statIconInner} />
+                <div
+                  className={`w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-gradient-to-br ${stat.color} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}
+                >
+                  <stat.icon className="w-8 h-8 lg:w-10 lg:h-10 text-white" />
                 </div>
-                <div className={styles.statNumber}>{stat.number}</div>
-                <div className={styles.statTitle}>{stat.title}</div>
-                <div className={styles.statSubtitle}>{stat.subtitle}</div>
-              </MotionDiv>
+                <div className="text-2xl lg:text-3xl xl:text-4xl font-black text-white mb-2 group-hover:scale-105 transition-transform duration-300">
+                  {stat.number}
+                </div>
+                <div className="text-lg lg:text-xl font-bold text-white mb-1">
+                  {stat.title}
+                </div>
+                <div className="text-sm lg:text-base text-gray-400">
+                  {stat.subtitle}
+                </div>
+              </motion.div>
             ))}
           </div>
-        </MotionDiv>
+        </motion.div>
 
         {/* CTA */}
-        <MotionDiv
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
           viewport={{ once: true }}
-          className={styles.ctaSection}
+          className="text-center"
         >
-          <div className={styles.ctaCard}>
-            <div className={styles.ctaContent}>
-              <MotionDiv
+          <div className="bg-gradient-to-r from-gray-900/60 to-gray-800/40 backdrop-blur-xl p-8 lg:p-12 rounded-3xl border border-gray-700/50 shadow-2xl relative overflow-hidden">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 relative z-10">
+              <motion.div
                 initial={{ scale: 0, rotate: -180 }}
                 whileInView={{ scale: 1, rotate: 0 }}
                 transition={{ duration: 0.5, type: "spring" }}
                 viewport={{ once: true }}
-                className={styles.ctaIcon}
+                className="w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-gradient-to-br from-blue-400/20 to-cyan-400/20 flex items-center justify-center border border-blue-400/30 flex-shrink-0"
               >
-                <Rocket className={styles.ctaIconInner} />
-              </MotionDiv>
-              <div className={styles.ctaText}>
-                <h3 className={styles.ctaTitle}>Próximo projeto incrível?</h3>
-                <p className={styles.ctaDescription}>
+                <Rocket className="w-8 h-8 lg:w-10 lg:h-10 text-blue-400 animate-pulse" />
+              </motion.div>
+
+              <div className="flex-1 text-center lg:text-left">
+                <h3 className="text-2xl lg:text-3xl font-black text-white mb-3">
+                  Próximo projeto incrível?
+                </h3>
+                <p className="text-lg lg:text-xl text-gray-300">
                   Vamos transformar sua visão em realidade com tecnologia de
                   ponta
                 </p>
               </div>
-              <MotionDiv
+
+              <motion.div
                 initial={{ opacity: 0, x: 15 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
@@ -546,15 +692,15 @@ export const Projects = () => {
                       .getElementById("contact")
                       ?.scrollIntoView({ behavior: "smooth" })
                   }
-                  className={styles.ctaButton}
+                  className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold text-lg px-8 lg:px-12 py-4 lg:py-5 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 flex items-center justify-center"
                 >
-                  <Sparkles className={styles.buttonIcon} />
+                  <Sparkles className="w-5 h-5 lg:w-6 lg:h-6 mr-3" />
                   INICIAR PROJETO
                 </button>
-              </MotionDiv>
+              </motion.div>
             </div>
           </div>
-        </MotionDiv>
+        </motion.div>
       </div>
     </section>
   );

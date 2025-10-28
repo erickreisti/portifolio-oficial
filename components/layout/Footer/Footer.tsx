@@ -1,9 +1,9 @@
-// components/layout/Footer/Footer.tsx
 "use client";
 
 import Link from "next/link";
 import Image from "next/image";
 import { Github, Instagram, Heart, Rocket, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 import styles from "./Footer.module.css";
 
 const XIcon = () => (
@@ -23,16 +23,19 @@ const socialLinks = [
     icon: Github,
     href: "https://github.com/erickreisti",
     label: "GitHub",
+    color: "hover:text-white",
   },
   {
     icon: Instagram,
     href: "https://www.instagram.com/ereislimati/",
     label: "Instagram",
+    color: "hover:text-pink-400",
   },
   {
     icon: XIcon,
     href: "https://x.com/ereislima",
     label: "X",
+    color: "hover:text-white",
   },
 ];
 
@@ -44,17 +47,40 @@ export const Footer = () => {
   };
 
   return (
-    <footer className={styles.footer}>
+    <footer className="relative bg-slate-900 border-t border-slate-600/50 py-12 lg:py-20 overflow-hidden">
       {/* Background */}
-      <div className={styles.background}>
-        <div className={styles.gradientBackground} />
-        <div className={styles.lightEffect1} />
-        <div className={styles.lightEffect2} />
+      <div className="absolute inset-0">
+        <div className={styles.heroBg} />
+        <motion.div
+          className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-blue-400/10 rounded-full blur-3xl"
+          animate={{
+            opacity: [0.05, 0.1, 0.05],
+          }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute top-0 right-0 w-1/2 h-1/2 bg-purple-400/10 rounded-full blur-3xl"
+          animate={{
+            opacity: [0.08, 0.12, 0.08],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2,
+          }}
+        />
       </div>
 
       {/* Elementos decorativos */}
-      <div className={styles.decorativeElements}>
-        <div className={styles.decoration1}>
+      <div className="absolute inset-0 pointer-events-none">
+        <motion.div
+          className="absolute top-8 left-8 opacity-60"
+          animate={{
+            y: [0, -10, 0],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -65,7 +91,7 @@ export const Footer = () => {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className={styles.decorationIcon}
+            className={`w-12 h-12 lg:w-16 lg:h-16 text-cyan-400 ${styles.neonGlow}`}
             aria-hidden="true"
           >
             <rect width="18" height="18" x="3" y="3" rx="2"></rect>
@@ -74,10 +100,21 @@ export const Footer = () => {
             <path d="M7 21v-4a2 2 0 0 1 2-2h4"></path>
             <circle cx="15" cy="15" r="2"></circle>
           </svg>
-        </div>
-        <div className={styles.decoration2}>
+        </motion.div>
+        <motion.div
+          className="absolute bottom-8 right-8 opacity-60"
+          animate={{
+            y: [0, 10, 0],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 3,
+          }}
+        >
           <svg
-            className={styles.decorationIcon}
+            className={`w-12 h-12 lg:w-16 lg:h-16 text-cyan-400 ${styles.neonGlow}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -89,104 +126,158 @@ export const Footer = () => {
               d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
             />
           </svg>
-        </div>
+        </motion.div>
       </div>
 
-      <div className={styles.container}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Conteúdo Principal */}
-        <div className={styles.mainContent}>
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-0 mb-12 lg:mb-16">
           {/* Logo/Nome */}
           <Link
             href="#hero"
-            className={styles.logoLink}
+            className="group flex items-center gap-3 transition-all duration-300 hover:scale-105"
             onClick={(e) => {
               e.preventDefault();
               scrollToTop();
             }}
           >
-            <div className={styles.logoContainer}>
-              <div className={styles.logoImageWrapper}>
+            <div className="flex items-center gap-3">
+              <motion.div
+                className="h-16 w-16 lg:h-20 lg:w-20 rounded-2xl bg-slate-800/50 backdrop-blur-2xl border border-blue-400/20 flex items-center justify-center overflow-hidden group-hover:border-blue-400/40 transition-all duration-500"
+                whileHover={{ scale: 1.1, rotate: 5 }}
+              >
                 <Image
                   src="/images/hashblue.svg"
                   alt="Erick Reis - Full Stack Developer"
                   width={64}
                   height={64}
-                  className={styles.logoImage}
-                  style={{ width: "auto", height: "auto" }}
+                  className="h-14 w-14 lg:h-16 lg:w-16 object-contain filter brightness-125 group-hover:brightness-150 transition-all duration-500"
                 />
-              </div>
-              <div className={styles.logoText}>
-                <span className={styles.logoName}>Érick Reis</span>
-                <span className={styles.logoTitle}>FULLSTACK DEV</span>
+              </motion.div>
+              <div className="flex flex-col">
+                <span className="text-xl lg:text-2xl font-black bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent group-hover:from-blue-200 group-hover:to-cyan-200 transition-all duration-300">
+                  Érick Reis
+                </span>
+                <span className="text-xs font-mono text-slate-500 group-hover:text-slate-300 transition-colors duration-300 tracking-wider">
+                  FULLSTACK DEV
+                </span>
               </div>
             </div>
           </Link>
 
           {/* Links Sociais */}
-          <div className={styles.socialLinks}>
-            {socialLinks.map((link) => (
-              <a
+          <div className="flex gap-3 lg:gap-4">
+            {socialLinks.map((link, index) => (
+              <motion.a
                 key={link.label}
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={link.label}
-                className={styles.socialLink}
+                className="relative h-12 w-12 lg:h-14 lg:w-14 rounded-xl bg-slate-900/60 backdrop-blur-2xl border border-blue-400/20 text-slate-400 flex items-center justify-center transition-all duration-500 hover:bg-blue-400/10 hover:border-blue-400/40 hover:scale-110 hover:shadow-2xl hover:shadow-blue-400/20 group"
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
               >
-                <link.icon className={styles.socialIcon} />
-                <div className={styles.socialTooltip}>{link.label}</div>
-              </a>
+                <link.icon
+                  className={`w-5 h-5 lg:w-6 lg:h-6 transition-colors duration-300 ${link.color}`}
+                />
+                <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-slate-900/90 backdrop-blur-xl text-white text-xs font-mono font-bold px-2 py-1 rounded border border-slate-600/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
+                  {link.label}
+                  <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-slate-900/90 rotate-45 border-b border-r border-slate-600/50" />
+                </div>
+              </motion.a>
             ))}
           </div>
         </div>
 
         {/* Divisor */}
-        <div className={styles.divider} />
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-blue-400/20 to-transparent mb-8 lg:mb-12" />
 
         {/* Informações */}
-        <div className={styles.infoContent}>
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8">
           {/* Direitos Autorais */}
-          <div className={styles.copyright}>
-            <p className={styles.copyrightText}>
+          <motion.div
+            className="order-2 lg:order-1 text-center lg:text-left"
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <p className="text-slate-500 text-sm font-mono font-bold tracking-wider flex flex-col lg:flex-row items-center gap-1 lg:gap-2">
               <span>© {currentYear} ÉRICK REIS</span>
-              <span className={styles.copyrightSeparator}>•</span>
+              <span className="text-blue-400 hidden lg:inline">•</span>
               <span>TODOS OS DIREITOS</span>
             </p>
-          </div>
+          </motion.div>
 
           {/* Créditos Tech */}
-          <div className={styles.techCredits}>
-            <div className={styles.creditsBadge}>
-              <Rocket className={styles.creditsIcon} />
-              <span className={styles.creditsText}>DESENVOLVIDO</span>
-              <Heart className={styles.heartIcon} />
-              <span className={styles.nameHighlight}>ÉRICK</span>
+          <motion.div
+            className="order-1 lg:order-2"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900/40 backdrop-blur-xl border border-slate-600/50">
+              <Rocket className="w-4 h-4 text-blue-400" />
+              <span className="text-slate-500 text-xs font-mono font-bold tracking-wider">
+                DESENVOLVIDO
+              </span>
+              <Heart className="w-4 h-4 text-red-400 animate-pulse" />
+              <span className="text-blue-400 font-semibold text-xs bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                ÉRICK
+              </span>
             </div>
-          </div>
+          </motion.div>
 
           {/* Botão Voltar ao Topo */}
-          <button onClick={scrollToTop} className={styles.scrollToTopButton}>
-            <div className={styles.scrollToTopContent}>
-              <Rocket className={styles.scrollToTopIcon} />
-              <span className={styles.scrollToTopText}>VOLTAR AO TOPO</span>
-            </div>
-          </button>
+          <motion.button
+            onClick={scrollToTop}
+            className="order-3 text-slate-500 text-xs font-mono font-bold tracking-wider flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-900/40 backdrop-blur-xl border border-slate-600/50 transition-all duration-300 hover:border-blue-400/30 hover:bg-blue-400/10 hover:text-slate-300 group"
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.95 }}
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            viewport={{ once: true }}
+          >
+            <Rocket className="w-4 h-4 transform group-hover:-translate-y-1 transition-transform duration-300" />
+            <span className="hidden sm:inline">VOLTAR AO TOPO</span>
+          </motion.button>
         </div>
 
         {/* Mensagem Final */}
-        <div className={styles.finalMessage}>
-          <div className={styles.messageBadge}>
-            <Sparkles className={styles.messageIcon} />
-            <p className={styles.messageText}>PRONTO PARA DESAFIOS! 🚀</p>
+        <motion.div
+          className="mt-8 lg:mt-12 text-center"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.3 }}
+          viewport={{ once: true }}
+        >
+          <div className="inline-flex items-center gap-2 bg-slate-900/40 backdrop-blur-2xl px-6 py-3 rounded-2xl border border-slate-600/50 transition-all duration-300 hover:border-blue-400/30 hover:scale-105 group cursor-pointer">
+            <Sparkles className="w-4 h-4 lg:w-5 lg:h-5 text-blue-400 group-hover:text-cyan-400 transition-colors duration-300" />
+            <p className="text-slate-500 text-xs lg:text-sm font-mono font-bold tracking-wider group-hover:text-slate-300 transition-colors duration-300">
+              PRONTO PARA DESAFIOS! 🚀
+            </p>
           </div>
-        </div>
+        </motion.div>
 
         {/* Assinatura Tech */}
-        <div className={styles.techSignature}>
-          <p className={styles.signatureText}>
+        <motion.div
+          className="mt-6 text-center"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.7, delay: 0.5 }}
+          viewport={{ once: true }}
+        >
+          <p className="text-slate-600 text-xs font-mono px-2">
             {"</>"} COM 💙 POR ERICK REIS • NEXT.JS • TS • TAILWIND
           </p>
-        </div>
+        </motion.div>
       </div>
     </footer>
   );

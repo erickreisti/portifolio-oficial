@@ -1,6 +1,9 @@
 // components/sections/Contact/Contact.tsx
 "use client";
 
+import { useEffect, useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
+import { gsap } from "gsap";
 import {
   Send,
   Mail,
@@ -13,9 +16,12 @@ import {
   Phone,
   Globe,
   Rocket,
+  Zap,
+  Code2,
+  Server,
+  Database,
+  Cloud,
 } from "lucide-react";
-import { useState } from "react";
-import MotionDiv from "@/components/ui/MotionDiv";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -28,6 +34,66 @@ export const Contact = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const neonElementsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
+
+  useEffect(() => {
+    if (!isInView) return;
+
+    const ctx = gsap.context(() => {
+      // Animação dos elementos neon
+      const neonElements = neonElementsRef.current.filter(Boolean);
+      gsap.fromTo(
+        neonElements,
+        {
+          opacity: 0,
+          scale: 0,
+          y: 100,
+          rotation: -180,
+        },
+        {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          rotation: 0,
+          duration: 1.5,
+          ease: "back.out(1.7)",
+          stagger: 0.15,
+        }
+      );
+
+      // Animações flutuantes contínuas
+      neonElements.forEach((element, index) => {
+        gsap.to(element, {
+          y: -20 - index * 5,
+          rotation: index % 2 === 0 ? 10 : -10,
+          duration: 3 + index,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+          delay: index * 0.3,
+        });
+      });
+
+      // Pulsação neon
+      gsap.to(".neon-contact", {
+        filter: "drop-shadow(0 0 15px currentColor) brightness(1.3)",
+        duration: 2,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+        stagger: 0.5,
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [isInView]);
+
+  const setNeonElementRef = (index: number) => (el: HTMLDivElement | null) => {
+    neonElementsRef.current[index] = el;
+  };
 
   const validateForm = (formData: FormData) => {
     const errors: Record<string, string> = {};
@@ -103,227 +169,257 @@ export const Contact = () => {
   };
 
   return (
-    <section id="contact" className={styles.contactSection}>
-      {/* Background */}
-      <div className={styles.background}>
-        <div className={styles.gradientBackground} />
-        <div className={styles.lightEffect1} />
-        <div className={styles.lightEffect2} />
+    <section
+      id="contact"
+      ref={sectionRef}
+      className="relative min-h-screen bg-gray-950 overflow-hidden border-t border-gray-800/50"
+    >
+      {/* Background com gradientes animados */}
+      <div className="absolute inset-0">
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `
+              radial-gradient(circle at 15% 25%, rgba(59, 130, 246, 0.25) 0%, transparent 60%),
+              radial-gradient(circle at 85% 15%, rgba(139, 92, 246, 0.2) 0%, transparent 60%),
+              radial-gradient(circle at 45% 75%, rgba(16, 185, 129, 0.15) 0%, transparent 60%),
+              radial-gradient(circle at 75% 85%, rgba(245, 158, 11, 0.1) 0%, transparent 60%),
+              radial-gradient(circle at 25% 45%, rgba(239, 68, 68, 0.1) 0%, transparent 60%),
+              linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.95) 100%)
+            `,
+          }}
+        />
+
+        {/* Elementos de fundo animados */}
+        <motion.div
+          className="absolute top-1/4 left-1/6 w-72 h-72 bg-cyan-500/10 rounded-full filter blur-3xl"
+          animate={{
+            opacity: [0.1, 0.2, 0.1],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 right-1/5 w-64 h-64 bg-purple-500/08 rounded-full filter blur-3xl"
+          animate={{
+            opacity: [0.15, 0.25, 0.15],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 7,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2,
+          }}
+        />
       </div>
 
-      {/* Partículas */}
-      <div className={styles.particles}>
-        {[...Array(12)].map((_, i) => (
-          <div
-            key={i}
-            className={`${styles.particle} ${
-              i % 3 === 0
-                ? styles.particleCyan
-                : i % 3 === 1
-                ? styles.particleBlue
-                : styles.particlePurple
-            }`}
-            style={{
-              width: `${Math.random() * 5 + 2}px`,
-              height: `${Math.random() * 5 + 2}px`,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 6}s`,
-              animationDuration: `${Math.random() * 10 + 8}s`,
-            }}
-          />
-        ))}
+      {/* Elementos Neon Flutuantes */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[MessageCircle, Send, Mail, MapPin, Phone, Rocket, Code2, Cloud].map(
+          (Icon, index) => (
+            <motion.div
+              key={index}
+              ref={setNeonElementRef(index)}
+              className={`absolute ${styles.neonGlow} neon-contact ${
+                index === 0
+                  ? "top-20 left-20"
+                  : index === 1
+                  ? "top-32 right-24"
+                  : index === 2
+                  ? "bottom-40 left-24"
+                  : index === 3
+                  ? "bottom-32 right-20"
+                  : index === 4
+                  ? "top-40 right-16"
+                  : index === 5
+                  ? "bottom-48 left-16"
+                  : index === 6
+                  ? "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                  : "top-1/3 left-1/4"
+              }`}
+            >
+              <Icon
+                className={`
+              ${
+                index === 0
+                  ? "text-cyan-400 text-3xl"
+                  : index === 1
+                  ? "text-purple-400 text-3xl"
+                  : index === 2
+                  ? "text-green-400 text-2xl"
+                  : index === 3
+                  ? "text-amber-400 text-2xl"
+                  : index === 4
+                  ? "text-blue-400 text-xl"
+                  : index === 5
+                  ? "text-emerald-400 text-xl"
+                  : index === 6
+                  ? "text-indigo-400 text-2xl"
+                  : "text-rose-400 text-xl"
+              }
+            `}
+              />
+            </motion.div>
+          )
+        )}
       </div>
 
-      {/* Elementos decorativos */}
-      <div className={styles.decorativeElements}>
-        <div className={styles.decoration1}>
-          <svg
-            className={styles.decorationIcon}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-            />
-          </svg>
-        </div>
-        <div className={styles.decoration2}>
-          <svg
-            className={styles.decorationIcon}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <rect width="18" height="18" x="3" y="3" rx="2"></rect>
-            <path d="M11 9h4a2 2 0 0 0 2-2V3"></path>
-            <circle cx="9" cy="9" r="2"></circle>
-            <path d="M7 21v-4a2 2 0 0 1 2-2h4"></path>
-            <circle cx="15" cy="15" r="2"></circle>
-          </svg>
-        </div>
-        <div className={styles.decoration3}>
-          <svg
-            className={styles.decorationIcon}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M13 10V3L4 14h7v7l9-11h-7z"
-            />
-          </svg>
-        </div>
-      </div>
-
-      <div className={styles.container}>
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
         {/* Header */}
-        <MotionDiv
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
           viewport={{ once: true, amount: 0.2 }}
-          className={styles.header}
+          className="text-center mb-16 lg:mb-24"
         >
-          <MotionDiv
+          <motion.div
             initial={{ scale: 0, rotate: -180 }}
             whileInView={{ scale: 1, rotate: 0 }}
             transition={{ duration: 0.5, delay: 0.1, type: "spring" }}
             viewport={{ once: true }}
-            className={styles.badge}
+            className="inline-flex items-center text-blue-400 bg-blue-500/10 border border-blue-400/30 px-4 py-2 rounded-full text-sm lg:text-base font-mono font-bold mb-6 lg:mb-8"
           >
-            <MessageCircle className={styles.badgeIcon} />
+            <MessageCircle className="w-4 h-4 lg:w-5 lg:h-5 mr-2 animate-pulse" />
             CONEXÃO TECH
-          </MotionDiv>
+          </motion.div>
 
-          <MotionDiv
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <h1 className={styles.title}>
-              VAMOS CRIAR <span className={styles.titleGradient}>JUNTOS</span>
+            <h1 className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-black text-white mb-4 lg:mb-6">
+              VAMOS CRIAR{" "}
+              <span
+                className={`bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent ${styles.animateGradient}`}
+              >
+                JUNTOS
+              </span>
             </h1>
-            <p className={styles.subtitle}>
+            <p className="text-lg lg:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
               Pronto para transformar sua visão em realidade? Vamos conversar
               sobre seu projeto e criar algo extraordinário
             </p>
-          </MotionDiv>
-        </MotionDiv>
+          </motion.div>
+        </motion.div>
 
-        <div className={styles.contentGrid}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-16 lg:mb-24">
           {/* Informações de Contato */}
-          <MotionDiv
+          <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, type: "spring" }}
             viewport={{ once: true, amount: 0.2 }}
-            className={styles.infoColumn}
+            className="w-full"
           >
-            <Card className={styles.infoCard}>
-              <CardHeader className={styles.cardHeader}>
-                <CardTitle className={styles.cardTitle}>
-                  <Cpu className={styles.cardIcon} />
+            <Card className="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 shadow-2xl hover:shadow-3xl hover:border-blue-400/30 transition-all duration-500 group h-full hover:scale-105">
+              <CardHeader className="pb-6 border-b border-gray-700/50">
+                <CardTitle className="text-xl lg:text-2xl font-black text-blue-400 flex items-center">
+                  <Cpu className="w-6 h-6 mr-3" />
                   CONECTE-SE
                 </CardTitle>
-                <p className={styles.cardDescription}>
+                <p className="text-sm lg:text-base text-gray-400">
                   Estou sempre disponível para novas oportunidades, desafios
                   inspiradores e parcerias inovadoras
                 </p>
               </CardHeader>
 
-              <CardContent className={styles.cardContent}>
-                <div className={styles.contactItems}>
-                  <div className={styles.contactItem}>
-                    <div className={styles.contactIcon}>
-                      <Mail className={styles.contactIconInner} />
+              <CardContent className="pt-6">
+                <div className="space-y-6">
+                  <div className="flex items-start gap-4 p-4 rounded-xl border border-gray-700/50 hover:border-blue-400/30 transition-all duration-300 group cursor-pointer">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400/20 to-cyan-400/20 flex items-center justify-center border border-blue-400/30 group-hover:scale-110 transition-transform duration-300">
+                      <Mail className="w-6 h-6 text-blue-400" />
                     </div>
-                    <div className={styles.contactInfo}>
-                      <p className={styles.contactLabel}>EMAIL PRINCIPAL</p>
-                      <p className={styles.contactValue}>
+                    <div className="flex-1">
+                      <p className="text-sm font-bold text-white mb-1">
+                        EMAIL PRINCIPAL
+                      </p>
+                      <p className="text-sm text-gray-300 font-mono">
                         erickreisti@gmail.com
                       </p>
-                      <p className={styles.contactNote}>
+                      <p className="text-xs text-gray-500 mt-1">
                         Resposta em até 24 horas
                       </p>
                     </div>
                   </div>
 
-                  <div className={styles.contactItem}>
-                    <div className={styles.contactIcon}>
-                      <MapPin className={styles.contactIconInner} />
+                  <div className="flex items-start gap-4 p-4 rounded-xl border border-gray-700/50 hover:border-cyan-400/30 transition-all duration-300 group cursor-pointer">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-400/20 to-blue-400/20 flex items-center justify-center border border-cyan-400/30 group-hover:scale-110 transition-transform duration-300">
+                      <MapPin className="w-6 h-6 text-cyan-400" />
                     </div>
-                    <div className={styles.contactInfo}>
-                      <p className={styles.contactLabel}>LOCALIZAÇÃO</p>
-                      <p className={styles.contactValue}>
+                    <div className="flex-1">
+                      <p className="text-sm font-bold text-white mb-1">
+                        LOCALIZAÇÃO
+                      </p>
+                      <p className="text-sm text-gray-300">
                         Rio de Janeiro, Brasil
                       </p>
-                      <p className={styles.contactNote}>
+                      <p className="text-xs text-gray-500 mt-1">
                         Disponível para projetos globais
                       </p>
                     </div>
                   </div>
 
-                  <div className={styles.contactItem}>
-                    <div className={styles.contactIcon}>
-                      <Phone className={styles.contactIconInner} />
+                  <div className="flex items-start gap-4 p-4 rounded-xl border border-gray-700/50 hover:border-purple-400/30 transition-all duration-300 group cursor-pointer">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400/20 to-pink-400/20 flex items-center justify-center border border-purple-400/30 group-hover:scale-110 transition-transform duration-300">
+                      <Phone className="w-6 h-6 text-purple-400" />
                     </div>
-                    <div className={styles.contactInfo}>
-                      <p className={styles.contactLabel}>DISPONIBILIDADE</p>
-                      <p className={styles.contactValue}>
+                    <div className="flex-1">
+                      <p className="text-sm font-bold text-white mb-1">
+                        DISPONIBILIDADE
+                      </p>
+                      <p className="text-sm text-gray-300">
                         Flexível & Comprometido
                       </p>
-                      <p className={styles.contactNote}>
+                      <p className="text-xs text-gray-500 mt-1">
                         Projetos de qualquer escala
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className={styles.contactFooter}>
-                  <p className={styles.footerText}>
-                    <Sparkles className={styles.footerIcon} />
+                <div className="mt-6 pt-6 border-t border-gray-700/50">
+                  <p className="text-sm text-gray-400 flex items-start gap-2">
+                    <Sparkles className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
                     Vamos transformar suas ideias em soluções digitais
                     extraordinárias com tecnologia de ponta e criatividade.
                   </p>
                 </div>
               </CardContent>
             </Card>
-          </MotionDiv>
+          </motion.div>
 
           {/* Formulário de Contato */}
-          <MotionDiv
+          <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.1, type: "spring" }}
             viewport={{ once: true, amount: 0.2 }}
-            className={styles.formColumn}
+            className="w-full"
           >
-            <Card className={styles.formCard}>
-              <CardHeader className={styles.cardHeader}>
-                <CardTitle className={styles.cardTitle}>
-                  <Send className={styles.cardIcon} />
+            <Card className="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 shadow-2xl hover:shadow-3xl hover:border-purple-400/30 transition-all duration-500 group h-full hover:scale-105">
+              <CardHeader className="pb-6 border-b border-gray-700/50">
+                <CardTitle className="text-xl lg:text-2xl font-black text-purple-400 flex items-center">
+                  <Send className="w-6 h-6 mr-3" />
                   MENSAGEM RÁPIDA
                 </CardTitle>
-                <p className={styles.cardDescription}>
+                <p className="text-sm lg:text-base text-gray-400">
                   Descreva seu projeto ou ideia - respondo pessoalmente em até
                   24 horas
                 </p>
               </CardHeader>
 
-              <CardContent className={styles.formContent}>
-                <form action={handleSubmit} className={styles.contactForm}>
-                  <div className={styles.formGrid}>
-                    <div className={styles.formField}>
-                      <Label htmlFor="name" className={styles.formLabel}>
+              <CardContent className="pt-6">
+                <form action={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="name"
+                        className="text-sm font-bold text-white"
+                      >
                         SEU NOME *
                       </Label>
                       <Input
@@ -333,17 +429,20 @@ export const Contact = () => {
                         placeholder="Como prefere ser chamado?"
                         required
                         disabled={isLoading}
-                        className={styles.formInput}
+                        className="bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-blue-400 focus:ring-blue-400"
                       />
                       {formErrors.name && (
-                        <p className={styles.formError}>
-                          <AlertCircle className={styles.errorIcon} />
+                        <p className="text-red-400 text-xs flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3" />
                           {formErrors.name}
                         </p>
                       )}
                     </div>
-                    <div className={styles.formField}>
-                      <Label htmlFor="email" className={styles.formLabel}>
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="email"
+                        className="text-sm font-bold text-white"
+                      >
                         SEU EMAIL *
                       </Label>
                       <Input
@@ -353,19 +452,22 @@ export const Contact = () => {
                         placeholder="seu.melhor@email.com"
                         required
                         disabled={isLoading}
-                        className={styles.formInput}
+                        className="bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-blue-400 focus:ring-blue-400"
                       />
                       {formErrors.email && (
-                        <p className={styles.formError}>
-                          <AlertCircle className={styles.errorIcon} />
+                        <p className="text-red-400 text-xs flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3" />
                           {formErrors.email}
                         </p>
                       )}
                     </div>
                   </div>
 
-                  <div className={styles.formField}>
-                    <Label htmlFor="subject" className={styles.formLabel}>
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="subject"
+                      className="text-sm font-bold text-white"
+                    >
                       ASSUNTO DO PROJETO *
                     </Label>
                     <Input
@@ -375,18 +477,21 @@ export const Contact = () => {
                       placeholder="Ex: Site Institucional, App Mobile, Sistema Web..."
                       required
                       disabled={isLoading}
-                      className={styles.formInput}
+                      className="bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-blue-400 focus:ring-blue-400"
                     />
                     {formErrors.subject && (
-                      <p className={styles.formError}>
-                        <AlertCircle className={styles.errorIcon} />
+                      <p className="text-red-400 text-xs flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" />
                         {formErrors.subject}
                       </p>
                     )}
                   </div>
 
-                  <div className={styles.formField}>
-                    <Label htmlFor="message" className={styles.formLabel}>
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="message"
+                      className="text-sm font-bold text-white"
+                    >
                       DETALHES DO PROJETO *
                     </Label>
                     <Textarea
@@ -396,11 +501,11 @@ export const Contact = () => {
                       placeholder="Descreva sua visão, objetivos, tecnologias preferidas, prazo estimado e qualquer detalhe relevante..."
                       required
                       disabled={isLoading}
-                      className={styles.formTextarea}
+                      className="bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-blue-400 focus:ring-blue-400 resize-none"
                     />
                     {formErrors.message && (
-                      <p className={styles.formError}>
-                        <AlertCircle className={styles.errorIcon} />
+                      <p className="text-red-400 text-xs flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" />
                         {formErrors.message}
                       </p>
                     )}
@@ -408,97 +513,100 @@ export const Contact = () => {
 
                   {/* Estados de Feedback */}
                   {error && (
-                    <MotionDiv
+                    <motion.div
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className={styles.errorMessage}
+                      className="p-4 bg-red-500/10 border border-red-500/30 rounded-xl flex items-start gap-3"
                     >
-                      <AlertCircle className={styles.errorMessageIcon} />
-                      <p className={styles.errorMessageText}>{error}</p>
-                    </MotionDiv>
+                      <AlertCircle className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
+                      <p className="text-red-400 text-sm">{error}</p>
+                    </motion.div>
                   )}
 
                   {isSuccess && (
-                    <MotionDiv
+                    <motion.div
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className={styles.successMessage}
+                      className="p-4 bg-green-500/10 border border-green-500/30 rounded-xl flex items-start gap-3"
                     >
-                      <CheckCircle className={styles.successMessageIcon} />
+                      <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
                       <div>
-                        <p className={styles.successMessageText}>
+                        <p className="text-green-400 text-sm font-bold">
                           MENSAGEM ENVIADA COM SUCESSO!
                         </p>
-                        <p className={styles.successMessageNote}>
+                        <p className="text-green-400/80 text-xs mt-1">
                           Entrarei em contato em até 24 horas. Obrigado!
                         </p>
                       </div>
-                    </MotionDiv>
+                    </motion.div>
                   )}
 
-                  {/* Botão de Envio */}
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className={styles.submitButton}
+                    className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-4 rounded-xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   >
                     {!isLoading ? (
-                      <span className={styles.buttonContent}>
-                        <Send className={styles.buttonIcon} />
+                      <span className="flex items-center justify-center gap-2">
+                        <Send className="w-5 h-5" />
                         ENVIAR PROPOSTA
                       </span>
                     ) : (
-                      <div className={styles.loadingContent}>
-                        <div className={styles.loadingSpinner} />
-                        <span className={styles.loadingText}>ENVIANDO...</span>
+                      <div className="flex items-center justify-center gap-2">
+                        <div className="w-5 h-5 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+                        <span className="text-cyan-400 font-mono">
+                          ENVIANDO...
+                        </span>
                       </div>
                     )}
                   </Button>
                 </form>
               </CardContent>
             </Card>
-          </MotionDiv>
+          </motion.div>
         </div>
 
         {/* CTA Final */}
-        <MotionDiv
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
-          className={styles.ctaSection}
+          className="text-center"
         >
-          <div className={styles.ctaCard}>
-            <div className={styles.ctaContent}>
-              <h3 className={styles.ctaTitle}>
+          <div className="bg-gradient-to-r from-gray-900/60 to-gray-800/40 backdrop-blur-xl p-8 lg:p-12 rounded-3xl border border-gray-700/50 shadow-2xl relative overflow-hidden">
+            <div className="relative z-10">
+              <h3 className="text-2xl lg:text-3xl font-black text-white mb-4">
                 Vamos criar algo extraordinário juntos? 🚀
               </h3>
-              <p className={styles.ctaDescription}>
+              <p className="text-lg lg:text-xl text-gray-300 mb-6 max-w-3xl mx-auto">
                 Cada grande projeto começa com uma simples conversa. Estou
                 ansioso para ouvir suas ideias e transformá-las em realidade.
               </p>
 
-              <div className={styles.ctaFeatures}>
-                <div className={styles.ctaFeature}>
-                  <div className={styles.featureDot} />
-                  <span className={styles.featureText}>Resposta Rápida</span>
+              <div className="flex flex-col sm:flex-row justify-center gap-6">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
+                  <span className="text-sm text-gray-400 font-mono">
+                    Resposta Rápida
+                  </span>
                 </div>
-                <div className={styles.ctaFeature}>
-                  <div className={styles.featureDot} />
-                  <span className={styles.featureText}>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" />
+                  <span className="text-sm text-gray-400 font-mono">
                     Orçamento Sem Compromisso
                   </span>
                 </div>
-                <div className={styles.ctaFeature}>
-                  <div className={styles.featureDot} />
-                  <span className={styles.featureText}>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
+                  <span className="text-sm text-gray-400 font-mono">
                     Consultoria Gratuita
                   </span>
                 </div>
               </div>
             </div>
           </div>
-        </MotionDiv>
+        </motion.div>
       </div>
     </section>
   );

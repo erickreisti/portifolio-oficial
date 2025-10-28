@@ -252,13 +252,13 @@ export const About = () => {
     <section
       id="about"
       ref={aboutRef}
-      className={styles.aboutSection}
+      className="relative bg-slate-900 overflow-hidden min-h-screen flex items-center py-24 lg:py-32"
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {/* Background com gradientes animados */}
-      <div className={styles.backgroundContainer}>
+      <div className="absolute inset-0 overflow-hidden">
         <div className={styles.heroBg} />
         <motion.div
           className={styles.animatedOrb1}
@@ -297,33 +297,32 @@ export const About = () => {
       </div>
 
       {/* Elementos Neon Flutuantes */}
-      <div className={styles.neonContainer}>
+      <div className="absolute inset-0 pointer-events-none">
         <motion.div ref={setNeonElementRef(0)} className={styles.neonElement}>
-          <Code2 className={styles.neonIcon} />
+          <Code2 className="w-6 h-6 text-cyan-400" />
         </motion.div>
         <motion.div ref={setNeonElementRef(1)} className={styles.neonElement}>
-          <Cpu className={styles.neonIcon} />
+          <Cpu className="w-6 h-6 text-purple-400" />
         </motion.div>
         <motion.div ref={setNeonElementRef(2)} className={styles.neonElement}>
-          <Database className={styles.neonIcon} />
+          <Database className="w-6 h-6 text-emerald-400" />
         </motion.div>
         <motion.div ref={setNeonElementRef(3)} className={styles.neonElement}>
-          <Server className={styles.neonIcon} />
+          <Server className="w-6 h-6 text-amber-400" />
         </motion.div>
         <motion.div ref={setNeonElementRef(4)} className={styles.neonElement}>
-          <Globe className={styles.neonIcon} />
+          <Globe className="w-6 h-6 text-blue-400" />
         </motion.div>
         <motion.div ref={setNeonElementRef(5)} className={styles.neonElement}>
-          <Layers className={styles.neonIcon} />
+          <Layers className="w-6 h-6 text-green-400" />
         </motion.div>
       </div>
 
       <motion.div
-        className={styles.container}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 transform-style-preserve-3d perspective-1000"
         style={{
           rotateX: isHovering && !isMobile ? rotateX : 0,
           rotateY: isHovering && !isMobile ? rotateY : 0,
-          transformStyle: "preserve-3d",
         }}
       >
         {/* Header */}
@@ -332,17 +331,18 @@ export const About = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           viewport={{ once: true, amount: 0.3 }}
-          className={styles.header}
+          className="text-center mb-16 lg:mb-24"
         >
           <motion.div
             initial={{ scale: 0, rotate: -180 }}
             whileInView={{ scale: 1, rotate: 0 }}
             transition={{ duration: 0.6, delay: 0.1, type: "spring" }}
             viewport={{ once: true }}
-            className={styles.badge}
+            className="inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider text-blue-400 bg-blue-400/10 px-6 py-3 rounded-full border border-blue-400/30 backdrop-blur-2xl mb-6 relative overflow-hidden"
           >
-            <Sparkles className={styles.badgeIcon} />
+            <Sparkles className="w-4 h-4 mr-3 animate-pulse" />
             JORNADA TECH & VISÃO
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/20 to-transparent -translate-x-full transition-transform duration-600 hover:translate-x-full" />
           </motion.div>
 
           <motion.div
@@ -351,11 +351,13 @@ export const About = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <h1 className={styles.title}>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-white mb-6 leading-tight">
               MAIS DO QUE CÓDIGO,{" "}
-              <span className={styles.titleGradient}>UMA VISÃO</span>
+              <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 bg-clip-text text-transparent bg-size-200 animate-gradient">
+                UMA VISÃO
+              </span>
             </h1>
-            <p className={styles.subtitle}>
+            <p className="text-lg lg:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
               Conheça a mente por trás das soluções inovadoras e a paixão que
               impulsiona cada linha de código
             </p>
@@ -363,7 +365,7 @@ export const About = () => {
         </motion.div>
 
         {/* Stats */}
-        <div className={styles.statsGrid}>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 mb-16 lg:mb-24">
           {bioData.stats.map((stat, index) => (
             <motion.div
               key={stat.label}
@@ -372,61 +374,50 @@ export const About = () => {
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 * index }}
               viewport={{ once: true }}
-              className={styles.statCard}
-              whileHover={{
-                y: -8,
-                transition: { duration: 0.3 },
-              }}
+              className="text-center p-8 bg-slate-900/40 backdrop-blur-2xl rounded-2xl border border-slate-600/30 transition-all duration-400 cursor-pointer relative overflow-hidden hover:border-blue-400/50 hover:bg-slate-900/60"
+              whileHover={{ y: -8 }}
             >
-              <div className={styles.statNumber}>
+              <div className="text-3xl lg:text-4xl font-black bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-2">
                 {stat.number}
-                <span className={styles.statSuffix}>{stat.suffix}</span>
+                <span className="text-cyan-400">{stat.suffix}</span>
               </div>
-              <div className={styles.statLabel}>{stat.label}</div>
-              <div className={styles.statGlow} />
+              <div className="text-slate-400 font-mono text-sm font-bold tracking-wider uppercase transition-colors duration-300 hover:text-slate-200">
+                {stat.label}
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 to-purple-500/5 opacity-0 transition-opacity duration-400 hover:opacity-100" />
             </motion.div>
           ))}
         </div>
 
-        <div className={styles.contentGrid}>
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
           {/* Coluna da Esquerda */}
-          <div className={styles.leftColumn}>
+          <div className="w-full lg:w-7/12 flex flex-col gap-8">
             {/* Foto */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
               viewport={{ once: true, amount: 0.3 }}
-              className={styles.photoContainer}
+              className="flex justify-center relative"
             >
               <motion.div
                 ref={photoRef}
-                className={styles.photoWrapper}
-                whileHover={{
-                  scale: 1.05,
-                  rotateY: 5,
-                  transition: { duration: 0.5 },
-                }}
+                className="relative h-64 w-64 sm:h-72 sm:w-72 lg:h-80 lg:w-80 rounded-2xl overflow-hidden shadow-2xl shadow-blue-400/30 transform-style-preserve-3d"
+                whileHover={{ scale: 1.05, rotateY: 5 }}
               >
                 <Image
                   src="/images/avatar.webp"
                   alt="Erick Reis - Full Stack Developer & Tech Leader"
                   width={320}
                   height={320}
-                  className={styles.photo}
+                  className="w-full h-full object-cover transition-transform duration-700"
                   priority
                 />
-                <div className={styles.photoOverlay} />
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 to-purple-500/5 opacity-0 transition-opacity duration-500 hover:opacity-100" />
                 <motion.div
-                  className={styles.photoShine}
-                  animate={{
-                    x: ["-100%", "200%"],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatDelay: 3,
-                  }}
+                  className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-20deg]"
+                  animate={{ x: ["-100%", "200%"] }}
+                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
                 />
               </motion.div>
 
@@ -435,41 +426,34 @@ export const About = () => {
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.5, delay: 0.8 }}
                 viewport={{ once: true }}
-                className={styles.photoBadge}
+                className="absolute -bottom-3 -right-3 bg-gradient-to-br from-blue-600 to-purple-600 text-white px-6 py-3 rounded-full font-mono font-bold text-sm tracking-wider shadow-2xl shadow-blue-400/40 border border-white/20 backdrop-blur-2xl"
                 whileHover={{ scale: 1.1, rotate: 5 }}
               >
-                <Code className={styles.badgeIconSmall} />
+                <Code className="w-3 h-3 inline mr-2" />
                 FULLSTACK
               </motion.div>
             </motion.div>
 
             {/* Parágrafos */}
-            <div className={styles.paragraphs}>
+            <div className="flex flex-col gap-8">
               <motion.div
                 initial={{ opacity: 0, y: 30, x: -20 }}
                 whileInView={{ opacity: 1, y: 0, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 viewport={{ once: true }}
-                className={styles.paragraphCard}
-                whileHover={{
-                  y: -5,
-                  transition: { duration: 0.3 },
-                }}
+                className="bg-slate-900/60 backdrop-blur-2xl p-8 rounded-2xl border border-slate-600/30 shadow-2xl shadow-blue-400/10 transition-all duration-400 relative overflow-hidden hover:border-blue-400/50 hover:shadow-blue-400/20 hover:-translate-y-1"
               >
                 <motion.div
-                  className={styles.paragraphIndicator}
-                  animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.7, 1, 0.7],
-                  }}
+                  className="absolute top-4 left-4 w-2 h-2 bg-blue-400 rounded-full shadow-lg shadow-blue-400"
+                  animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 />
-                <p>{bioData.paragraph1}</p>
+                <p className="text-slate-200 text-base lg:text-lg leading-relaxed font-light relative z-10">
+                  {bioData.paragraph1}
+                </p>
                 <motion.div
-                  className={styles.cardGlow}
-                  animate={{
-                    opacity: [0.3, 0.6, 0.3],
-                  }}
+                  className="absolute inset-0 bg-gradient-to-br from-blue-400/10 to-transparent"
+                  animate={{ opacity: [0.3, 0.6, 0.3] }}
                   transition={{ duration: 3, repeat: Infinity }}
                 />
               </motion.div>
@@ -479,26 +463,19 @@ export const About = () => {
                 whileInView={{ opacity: 1, y: 0, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
                 viewport={{ once: true }}
-                className={styles.paragraphCard}
-                whileHover={{
-                  y: -5,
-                  transition: { duration: 0.3 },
-                }}
+                className="bg-slate-900/60 backdrop-blur-2xl p-8 rounded-2xl border border-slate-600/30 shadow-2xl shadow-blue-400/10 transition-all duration-400 relative overflow-hidden hover:border-blue-400/50 hover:shadow-blue-400/20 hover:-translate-y-1"
               >
                 <motion.div
-                  className={`${styles.paragraphIndicator} ${styles.indicatorRight}`}
-                  animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.7, 1, 0.7],
-                  }}
+                  className="absolute top-4 right-4 w-2 h-2 bg-blue-400 rounded-full shadow-lg shadow-blue-400"
+                  animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
                   transition={{ duration: 2, repeat: Infinity, delay: 1 }}
                 />
-                <p>{bioData.paragraph2}</p>
+                <p className="text-slate-200 text-base lg:text-lg leading-relaxed font-light relative z-10">
+                  {bioData.paragraph2}
+                </p>
                 <motion.div
-                  className={styles.cardGlow}
-                  animate={{
-                    opacity: [0.3, 0.6, 0.3],
-                  }}
+                  className="absolute inset-0 bg-gradient-to-br from-blue-400/10 to-transparent"
+                  animate={{ opacity: [0.3, 0.6, 0.3] }}
                   transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
                 />
               </motion.div>
@@ -506,7 +483,7 @@ export const About = () => {
           </div>
 
           {/* Coluna da Direita */}
-          <div className={styles.rightColumn}>
+          <div className="w-full lg:w-5/12 flex flex-col gap-8 mt-8 lg:mt-0">
             {/* Card de Paixões */}
             <motion.div
               initial={{ opacity: 0, x: 50, y: 20 }}
@@ -514,43 +491,41 @@ export const About = () => {
               transition={{ duration: 0.7, delay: 0.3 }}
               viewport={{ once: true }}
             >
-              <Card className={styles.passionsCard}>
-                <CardHeader className={styles.cardHeader}>
-                  <CardTitle className={styles.cardTitle}>
-                    <Brain className={styles.cardIcon} />
+              <Card className="bg-slate-900/60 backdrop-blur-2xl border-blue-400/20 shadow-2xl shadow-blue-400/10 transition-all duration-400 hover:shadow-blue-400/20 hover:-translate-y-1 relative overflow-hidden">
+                <CardHeader className="pb-6 border-b border-slate-600/30 relative z-10">
+                  <CardTitle className="text-2xl font-black text-blue-400 flex items-center mb-2">
+                    <Brain className="w-6 h-6 mr-3" />
                     ESPECIALIZAÇÕES
                   </CardTitle>
-                  <p className={styles.cardDescription}>
+                  <p className="text-slate-400 text-sm">
                     Áreas onde minha expertise faz a diferença
                   </p>
                 </CardHeader>
 
-                <CardContent className={styles.cardContent}>
+                <CardContent className="pt-6 flex flex-col gap-4 relative z-10">
                   {bioData.passions.map((item, index) => (
                     <motion.div
                       key={index}
                       ref={setPassionItemRef(index)}
-                      className={styles.passionItem}
-                      whileHover={{
-                        x: 8,
-                        transition: { duration: 0.3 },
-                      }}
+                      className="flex items-start gap-4 p-4 rounded-xl border border-transparent transition-all duration-300 cursor-pointer relative overflow-hidden hover:bg-blue-400/10 hover:border-blue-400/20 hover:translate-x-2"
                       whileTap={{ scale: 0.98 }}
                     >
                       <motion.div
-                        className={styles.passionIcon}
+                        className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400/20 to-purple-500/20 flex items-center justify-center border border-blue-400/20 transition-all duration-300"
                         whileHover={{ scale: 1.1, rotate: 5 }}
                       >
-                        <item.icon className={styles.passionIconInner} />
+                        <item.icon className="w-5 h-5 text-blue-400 transition-colors duration-300" />
                       </motion.div>
-                      <div className={styles.passionContent}>
-                        <p className={styles.passionTitle}>{item.text}</p>
-                        <p className={styles.passionDescription}>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-white font-semibold text-base transition-colors duration-300 hover:text-blue-400 mb-1">
+                          {item.text}
+                        </p>
+                        <p className="text-slate-400 text-sm leading-relaxed">
                           {item.description}
                         </p>
                       </div>
                       <motion.div
-                        className={styles.passionHoverGlow}
+                        className="absolute inset-0 bg-gradient-to-br from-blue-400/10 to-transparent rounded-xl"
                         initial={{ scale: 0, opacity: 0 }}
                         whileHover={{ scale: 1, opacity: 1 }}
                       />
@@ -567,51 +542,44 @@ export const About = () => {
               transition={{ duration: 0.7, delay: 0.5 }}
               viewport={{ once: true }}
             >
-              <Card className={styles.highlightsCard}>
-                <CardHeader className={styles.cardHeader}>
-                  <CardTitle className={styles.cardTitle}>
-                    <Shield className={styles.cardIcon} />
+              <Card className="bg-slate-900/60 backdrop-blur-2xl border-purple-400/20 shadow-2xl shadow-purple-400/10 transition-all duration-400 hover:shadow-purple-400/20 hover:-translate-y-1 relative overflow-hidden">
+                <CardHeader className="pb-6 border-b border-slate-600/30 relative z-10">
+                  <CardTitle className="text-2xl font-black text-purple-400 flex items-center mb-2">
+                    <Shield className="w-6 h-6 mr-3" />
                     COMPROMISSO
                   </CardTitle>
-                  <p className={styles.cardDescription}>
+                  <p className="text-slate-400 text-sm">
                     Meu padrão de excelência em cada projeto
                   </p>
                 </CardHeader>
-                <CardContent className={styles.highlightsContent}>
+                <CardContent className="pt-6 grid gap-4 relative z-10">
                   {bioData.highlights.map((highlight, index) => (
                     <motion.div
                       key={index}
                       ref={setHighlightItemRef(index)}
-                      className={styles.highlightItem}
-                      whileHover={{
-                        scale: 1.02,
-                        y: -2,
-                        transition: { duration: 0.2 },
-                      }}
+                      className="flex items-center justify-between p-4 rounded-xl bg-slate-800/30 transition-all duration-300 cursor-pointer relative overflow-hidden hover:bg-slate-800/50 hover:scale-102 hover:-translate-y-0.5"
                       whileTap={{ scale: 0.98 }}
                     >
-                      <div className={styles.highlightLeft}>
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
                         <motion.div
-                          className={styles.highlightIcon}
+                          className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400/20 to-purple-500/20 flex items-center justify-center"
                           whileHover={{ scale: 1.1, rotate: 360 }}
                           transition={{ duration: 0.5 }}
                         >
-                          <highlight.icon
-                            className={styles.highlightIconInner}
-                          />
+                          <highlight.icon className="w-4 h-4 text-white" />
                         </motion.div>
-                        <span className={styles.highlightText}>
+                        <span className="text-white font-semibold text-base">
                           {highlight.text}
                         </span>
                       </div>
                       <motion.span
-                        className={styles.highlightValue}
+                        className="font-mono font-bold text-blue-400 text-base flex-shrink-0 ml-2"
                         whileHover={{ scale: 1.1 }}
                       >
                         {highlight.value}
                       </motion.span>
                       <motion.div
-                        className={styles.highlightPulse}
+                        className="absolute inset-0 bg-gradient-to-br from-blue-400/10 to-transparent rounded-xl"
                         animate={{
                           scale: [1, 1.5, 1],
                           opacity: [0.5, 0, 0.5],
@@ -636,31 +604,28 @@ export const About = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
           viewport={{ once: true }}
-          className={styles.ctaSection}
+          className="mt-16 lg:mt-24"
         >
           <motion.div
-            className={styles.ctaCard}
-            whileHover={{
-              y: -5,
-              transition: { duration: 0.3 },
-            }}
+            className="bg-gradient-to-br from-slate-900/60 to-slate-800/40 backdrop-blur-2xl p-8 rounded-2xl border border-slate-600/30 shadow-2xl shadow-blue-400/10 relative overflow-hidden hover:-translate-y-1"
+            whileHover={{ y: -5 }}
           >
-            <div className={styles.ctaContent}>
+            <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12 relative z-10">
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
                 whileInView={{ scale: 1, rotate: 0 }}
                 transition={{ duration: 0.6, type: "spring" }}
                 viewport={{ once: true }}
-                className={styles.ctaIcon}
+                className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400/20 to-cyan-400/20 flex items-center justify-center border border-blue-400/30 shadow-xl shadow-blue-400/30"
                 whileHover={{ rotate: 360 }}
               >
-                <Rocket className={styles.ctaIconInner} />
+                <Rocket className="w-8 h-8 text-blue-400" />
               </motion.div>
-              <div className={styles.ctaText}>
-                <h3 className={styles.ctaTitle}>
+              <div className="text-center lg:text-left flex-1">
+                <h3 className="text-2xl lg:text-3xl font-black text-white mb-2">
                   Pronto para o próximo nível?
                 </h3>
-                <p className={styles.ctaDescription}>
+                <p className="text-slate-300 text-lg lg:text-xl">
                   Vamos transformar sua visão em realidade com tecnologia de
                   ponta
                 </p>
@@ -670,20 +635,22 @@ export const About = () => {
                 whileInView={{ opacity: 1, x: 0, scale: 1 }}
                 transition={{ duration: 0.5, delay: 0.8 }}
                 viewport={{ once: true }}
+                className="w-full lg:w-auto"
               >
-                <Button asChild className={styles.ctaButton}>
-                  <a href="#contact">
-                    <Sparkles className={styles.buttonIcon} />
+                <Button asChild className="w-full lg:w-auto">
+                  <a
+                    href="#contact"
+                    className="bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-size-200 animate-gradient text-white font-bold text-lg lg:text-xl px-8 lg:px-10 py-4 lg:py-5 rounded-2xl border-none shadow-2xl shadow-blue-400/30 transition-all duration-500 hover:shadow-blue-400/50 hover:scale-105 relative overflow-hidden"
+                  >
+                    <Sparkles className="w-5 h-5 mr-3 transition-transform duration-300" />
                     <motion.span
-                      animate={{
-                        backgroundPosition: ["0%", "100%"],
-                      }}
+                      animate={{ backgroundPosition: ["0%", "100%"] }}
                       transition={{
                         duration: 2,
                         repeat: Infinity,
                         repeatType: "reverse",
                       }}
-                      className={styles.buttonTextGlow}
+                      className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent bg-size-200"
                     >
                       INICIAR PROJETO
                     </motion.span>
@@ -692,7 +659,7 @@ export const About = () => {
               </motion.div>
             </div>
             <motion.div
-              className={styles.ctaOrb}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-radial-gradient(circle, rgba(96, 165, 250, 0.1), transparent 70%) rounded-full"
               animate={{
                 scale: [1, 1.2, 1],
                 opacity: [0.3, 0.6, 0.3],
