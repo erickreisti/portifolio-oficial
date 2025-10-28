@@ -1,4 +1,5 @@
 /* components/layout/Header/Header.module.css */
+
 .header {
   position: fixed;
   top: 0;
@@ -9,6 +10,7 @@
   width: 100%;
   overflow: hidden;
   font-family: var(--font-poppins), sans-serif;
+  height: 80px; /* Altura fixa consistente */
 }
 
 .headerBackground {
@@ -68,6 +70,7 @@
 .headerScrolled {
   padding: 1rem 0;
   border-bottom: 1px solid rgba(96, 165, 250, 0.2);
+  height: 70px; /* Leve redução quando scrolled */
 }
 
 .headerScrolled .headerGradient {
@@ -87,6 +90,9 @@
   padding-right: 1.5rem;
   position: relative;
   z-index: 10;
+  height: 100%; /* Garantir que o container ocupe toda a altura do header */
+  display: flex;
+  align-items: center;
 }
 
 @media (min-width: 640px) {
@@ -107,6 +113,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
+  height: 100%; /* Garantir alinhamento vertical */
 }
 
 .logoButton {

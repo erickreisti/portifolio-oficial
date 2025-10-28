@@ -1,4 +1,3 @@
-// app/layout.tsx
 import type { Metadata } from "next";
 import { Poppins, Open_Sans } from "next/font/google";
 import "./globals.css";
@@ -9,18 +8,29 @@ const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   variable: "--font-poppins",
+  display: "swap",
 });
 
 const openSans = Open_Sans({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-open-sans",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: "Erick Reis | Desenvolvedor FullStack & Arquiteto de Sistemas",
   description:
     "Portfólio profissional de Erick Reis - Desenvolvedor FullStack especializado em Next.js, React, TypeScript e arquitetura de sistemas escaláveis",
+  keywords: [
+    "Desenvolvedor FullStack",
+    "Next.js",
+    "React",
+    "TypeScript",
+    "Arquiteto de Sistemas",
+  ],
+  authors: [{ name: "Erick Reis" }],
+  viewport: "width=device-width, initial-scale=1",
 };
 
 export default function RootLayout({
@@ -32,10 +42,16 @@ export default function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning className="dark">
       <head>
         <meta name="theme-color" content="#0f172a" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
       </head>
       <body
         className={cn(
-          "min-h-screen bg-slate-950 text-white font-sans antialiased",
+          "min-h-screen bg-slate-900 text-white font-sans antialiased",
           poppins.variable,
           openSans.variable
         )}
