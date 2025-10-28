@@ -41,7 +41,7 @@
   }
 }
 
-/* ===== HEADER PRINCIPAL ===== */
+/* ===== HEADER PRINCIPAL COM BACKGROUND DO HERO ===== */
 .header {
   position: fixed;
   top: 0;
@@ -61,28 +61,39 @@
   z-index: -1;
 }
 
+/* BACKGROUND IDÊNTICO AO HERO */
 .headerGradient {
   position: absolute;
   inset: 0;
   background: radial-gradient(
       circle at 15% 25%,
-      rgba(59, 130, 246, 0.1) 0%,
+      rgba(59, 130, 246, 0.25) 0%,
       transparent 60%
     ),
     radial-gradient(
       circle at 85% 15%,
-      rgba(139, 92, 246, 0.08) 0%,
+      rgba(139, 92, 246, 0.2) 0%,
       transparent 60%
     ),
     radial-gradient(
       circle at 45% 75%,
-      rgba(16, 185, 129, 0.06) 0%,
+      rgba(16, 185, 129, 0.15) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 75% 85%,
+      rgba(245, 158, 11, 0.1) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 25% 45%,
+      rgba(239, 68, 68, 0.1) 0%,
       transparent 60%
     ),
     linear-gradient(
       135deg,
-      rgba(15, 23, 42, 0.95) 0%,
-      rgba(30, 41, 59, 0.92) 100%
+      rgba(15, 23, 42, 0.98) 0%,
+      rgba(30, 41, 59, 0.95) 100%
     );
   transition: all 0.5s ease;
 }
@@ -95,20 +106,57 @@
   height: 200%;
   background: radial-gradient(
       circle at 20% 30%,
-      rgba(59, 130, 246, 0.08) 0%,
+      rgba(59, 130, 246, 0.15) 0%,
       transparent 50%
     ),
     radial-gradient(
       circle at 80% 20%,
-      rgba(139, 92, 246, 0.06) 0%,
+      rgba(139, 92, 246, 0.1) 0%,
       transparent 50%
     );
   filter: blur(40px);
   animation: pulseSlow 8s ease-in-out infinite;
-  opacity: 0.4;
+  opacity: 0.3;
 }
 
-/* Estados do Header */
+/* Elementos de fundo animados IDÊNTICOS AO HERO */
+.headerOrb1 {
+  position: absolute;
+  top: 10%;
+  left: 5%;
+  width: 18rem;
+  height: 18rem;
+  background: rgba(6, 182, 212, 0.1);
+  border-radius: 50%;
+  filter: blur(3rem);
+  animation: pulseSlow 8s ease-in-out infinite;
+}
+
+.headerOrb2 {
+  position: absolute;
+  bottom: 15%;
+  right: 10%;
+  width: 16rem;
+  height: 16rem;
+  background: rgba(139, 92, 246, 0.08);
+  border-radius: 50%;
+  filter: blur(3rem);
+  animation: pulseSlow 7s ease-in-out infinite 2s;
+}
+
+.headerOrb3 {
+  position: absolute;
+  top: 33.33%;
+  right: 25%;
+  width: 14rem;
+  height: 14rem;
+  background: rgba(16, 185, 129, 0.06);
+  border-radius: 50%;
+  filter: blur(3rem);
+  animation: pulseSlow 9s ease-in-out infinite 1s;
+}
+
+/* Estados do Header - TRANSPARÊNCIA TOTAL PARA INTEGRAÇÃO */
 .headerTransparent {
   background: transparent;
   padding: 1.5rem 0;
@@ -124,20 +172,33 @@
   opacity: 0.1;
 }
 
+.headerTransparent .headerOrb1,
+.headerTransparent .headerOrb2,
+.headerTransparent .headerOrb3 {
+  opacity: 0.1;
+}
+
+/* Header com scroll - APENAS BLUR SUAVE */
 .headerScrolled {
   padding: 1rem 0;
-  border-bottom: 1px solid rgba(96, 165, 250, 0.15);
+  border-bottom: 1px solid rgba(96, 165, 250, 0.1);
   height: 70px;
-  backdrop-filter: blur(1.5rem);
+  backdrop-filter: blur(0.5rem);
 }
 
 .headerScrolled .headerGradient {
-  opacity: 1;
-  backdrop-filter: blur(1.5rem);
+  opacity: 0.8;
+  backdrop-filter: blur(0.5rem);
 }
 
 .headerScrolled .headerLightEffect {
-  opacity: 0.3;
+  opacity: 0.2;
+}
+
+.headerScrolled .headerOrb1,
+.headerScrolled .headerOrb2,
+.headerScrolled .headerOrb3 {
+  opacity: 0.15;
 }
 
 /* Container */
@@ -216,21 +277,21 @@
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   background: linear-gradient(
     135deg,
-    rgba(59, 130, 246, 0.12),
-    rgba(139, 92, 246, 0.08)
+    rgba(59, 130, 246, 0.1),
+    rgba(139, 92, 246, 0.06)
   );
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), 0 0 25px rgba(59, 130, 246, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1), 0 0 20px rgba(59, 130, 246, 0.03);
 }
 
 .logoButton:hover .logoWrapper {
   transform: scale(1.05) rotate(3deg);
-  box-shadow: 0 12px 30px rgba(59, 130, 246, 0.1),
-    0 0 35px rgba(96, 165, 250, 0.08);
+  box-shadow: 0 12px 30px rgba(59, 130, 246, 0.08),
+    0 0 25px rgba(96, 165, 250, 0.05);
   background: linear-gradient(
     135deg,
-    rgba(59, 130, 246, 0.15),
-    rgba(139, 92, 246, 0.1)
+    rgba(59, 130, 246, 0.12),
+    rgba(139, 92, 246, 0.08)
   );
 }
 
@@ -243,7 +304,7 @@
 }
 
 .logoButton:hover .logoImage {
-  filter: brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(175deg);
+  filter: brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(175deg);
   transform: scale(1.05);
 }
 
@@ -257,7 +318,7 @@
   font-size: 1.375rem;
   font-weight: 700;
   color: white;
-  background: linear-gradient(to right, #f1f5f9, #e2e8f0, #cbd5e1);
+  background: linear-gradient(to right, #f8fafc, #e2e8f0, #cbd5e1);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -330,25 +391,20 @@
 }
 
 .navLinkInactive {
-  color: #94a3b8;
+  color: rgba(255, 255, 255, 0.7);
   background: transparent;
 }
 
 .navLinkInactive:hover {
-  color: #e2e8f0;
-  background: rgba(255, 255, 255, 0.02);
+  color: white;
+  background: rgba(255, 255, 255, 0.05);
   transform: translateY(-1px);
 }
 
 .navLinkActive {
   color: white;
-  background: linear-gradient(
-    135deg,
-    rgba(59, 130, 246, 0.12),
-    rgba(139, 92, 246, 0.08)
-  );
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03),
-    0 4px 12px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
 }
 
 .navIndicator {
@@ -360,17 +416,6 @@
   background: linear-gradient(to right, #60a5fa, #a855f7);
   border-radius: 0.25rem;
   animation: pulse 3s ease-in-out infinite;
-}
-
-.navGlow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(96, 165, 250, 0.06), transparent);
-  border-radius: 0.75rem;
-  animation: glowPulse 4s ease-in-out infinite;
 }
 
 /* ===== BOTÕES DESKTOP ===== */
@@ -387,16 +432,20 @@
 }
 
 .downloadButton {
-  background: linear-gradient(135deg, #1e40af, #5b21b6, #0e7490);
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.8),
+    rgba(124, 58, 237, 0.7)
+  );
   color: white;
   font-family: var(--font-open-sans), monospace;
   font-weight: 600;
   font-size: 0.875rem;
   padding: 0.875rem 1.75rem;
   border-radius: 0.75rem;
-  border: none;
-  box-shadow: 0 8px 25px rgba(30, 64, 175, 0.15),
-    0 0 25px rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 25px rgba(30, 64, 175, 0.2),
+    0 0 25px rgba(59, 130, 246, 0.1);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
@@ -406,12 +455,17 @@
   gap: 0.75rem;
   text-decoration: none;
   outline: none !important;
+  backdrop-filter: blur(10px);
 }
 
 .downloadButton:hover {
-  background: linear-gradient(135deg, #1e3a8a, #4c1d95, #155e75);
-  box-shadow: 0 12px 30px rgba(30, 64, 175, 0.2),
-    0 0 35px rgba(59, 130, 246, 0.12);
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.9),
+    rgba(124, 58, 237, 0.8)
+  );
+  box-shadow: 0 12px 30px rgba(30, 64, 175, 0.3),
+    0 0 35px rgba(59, 130, 246, 0.15);
   transform: translateY(-2px);
 }
 
@@ -462,15 +516,19 @@
 }
 
 .mobileDownloadButton {
-  background: linear-gradient(135deg, #1e40af, #5b21b6);
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.8),
+    rgba(124, 58, 237, 0.7)
+  );
   color: white;
   font-weight: 600;
   font-size: 0.75rem;
   padding: 0.75rem;
   border-radius: 0.75rem;
-  border: none;
-  box-shadow: 0 8px 20px rgba(30, 64, 175, 0.15),
-    0 0 20px rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 20px rgba(30, 64, 175, 0.2),
+    0 0 20px rgba(59, 130, 246, 0.1);
   transition: all 0.4s ease;
   cursor: pointer;
   display: flex;
@@ -479,12 +537,17 @@
   text-decoration: none;
   font-family: var(--font-open-sans), monospace;
   outline: none !important;
+  backdrop-filter: blur(10px);
 }
 
 .mobileDownloadButton:hover {
-  background: linear-gradient(135deg, #1e3a8a, #4c1d95);
-  box-shadow: 0 10px 25px rgba(30, 64, 175, 0.2),
-    0 0 25px rgba(59, 130, 246, 0.12);
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.9),
+    rgba(124, 58, 237, 0.8)
+  );
+  box-shadow: 0 10px 25px rgba(30, 64, 175, 0.3),
+    0 0 25px rgba(59, 130, 246, 0.15);
   transform: scale(1.05);
 }
 
@@ -502,10 +565,10 @@
   width: 3rem;
   height: 3rem;
   border-radius: 0.75rem;
-  color: #94a3b8;
+  color: rgba(255, 255, 255, 0.7);
   background: rgba(30, 41, 59, 0.3);
-  backdrop-filter: blur(1rem);
-  border: 1px solid rgba(100, 116, 139, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
   cursor: pointer;
   display: flex;
@@ -515,9 +578,9 @@
 }
 
 .menuButton:hover {
-  color: #e2e8f0;
+  color: white;
   background: rgba(30, 41, 59, 0.5);
-  border-color: rgba(96, 165, 250, 0.15);
+  border-color: rgba(255, 255, 255, 0.2);
   transform: scale(1.05);
 }
 
@@ -538,9 +601,9 @@
   left: 0;
   right: 0;
   background: transparent;
-  backdrop-filter: blur(1.5rem);
+  backdrop-filter: blur(1rem);
   border-top: 1px solid rgba(96, 165, 250, 0.1);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25), 0 0 60px rgba(59, 130, 246, 0.08);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 60px rgba(59, 130, 246, 0.1);
   max-height: 80vh;
   overflow-y: auto;
   z-index: 1001;
@@ -550,21 +613,26 @@
   position: absolute;
   inset: 0;
   background: radial-gradient(
-      circle at 20% 30%,
-      rgba(59, 130, 246, 0.08) 0%,
-      transparent 50%
+      circle at 15% 25%,
+      rgba(59, 130, 246, 0.25) 0%,
+      transparent 60%
     ),
     radial-gradient(
-      circle at 80% 20%,
-      rgba(139, 92, 246, 0.06) 0%,
-      transparent 50%
+      circle at 85% 15%,
+      rgba(139, 92, 246, 0.2) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 45% 75%,
+      rgba(16, 185, 129, 0.15) 0%,
+      transparent 60%
     ),
     linear-gradient(
       135deg,
       rgba(15, 23, 42, 0.98) 0%,
       rgba(30, 41, 59, 0.96) 100%
     );
-  backdrop-filter: blur(1.5rem);
+  backdrop-filter: blur(1rem);
   z-index: -1;
 }
 
@@ -598,25 +666,21 @@
 }
 
 .mobileNavLinkInactive {
-  color: #94a3b8;
+  color: rgba(255, 255, 255, 0.7);
   background: transparent;
 }
 
 .mobileNavLinkInactive:hover {
-  color: #e2e8f0;
-  background: rgba(255, 255, 255, 0.02);
+  color: white;
+  background: rgba(255, 255, 255, 0.05);
   transform: translateX(3px);
 }
 
 .mobileNavLinkActive {
   color: white;
-  background: linear-gradient(
-    135deg,
-    rgba(96, 165, 250, 0.1),
-    rgba(168, 85, 247, 0.06)
-  );
+  background: rgba(255, 255, 255, 0.08);
   border-left: 0.2rem solid #60a5fa;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
 }
 
 .mobileNavText {
@@ -642,16 +706,20 @@
 }
 
 .mobileMenuDownloadButton {
-  background: linear-gradient(135deg, #1e40af, #5b21b6);
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.8),
+    rgba(124, 58, 237, 0.7)
+  );
   color: white;
   font-family: var(--font-open-sans), monospace;
   font-weight: 600;
   font-size: 0.875rem;
   padding: 1.25rem 1.5rem;
   border-radius: 0.75rem;
-  border: none;
-  box-shadow: 0 8px 25px rgba(30, 64, 175, 0.15),
-    0 0 25px rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 25px rgba(30, 64, 175, 0.2),
+    0 0 25px rgba(59, 130, 246, 0.1);
   transition: all 0.4s ease;
   width: 100%;
   cursor: pointer;
@@ -663,12 +731,17 @@
   position: relative;
   overflow: hidden;
   outline: none !important;
+  backdrop-filter: blur(10px);
 }
 
 .mobileMenuDownloadButton:hover {
-  background: linear-gradient(135deg, #1e3a8a, #4c1d95);
-  box-shadow: 0 12px 30px rgba(30, 64, 175, 0.2),
-    0 0 30px rgba(59, 130, 246, 0.12);
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.9),
+    rgba(124, 58, 237, 0.8)
+  );
+  box-shadow: 0 12px 30px rgba(30, 64, 175, 0.3),
+    0 0 30px rgba(59, 130, 246, 0.15);
   transform: scale(1.02);
 }
 
@@ -743,5 +816,27 @@
 
   .mobileActions {
     gap: 0.5rem;
+  }
+}
+
+/* ===== PERFORMANCE ===== */
+@media (prefers-reduced-motion: reduce) {
+  .headerLightEffect,
+  .headerOrb1,
+  .headerOrb2,
+  .headerOrb3,
+  .navIndicator,
+  .mobileNavIndicator {
+    animation: none;
+  }
+
+  .logoButton,
+  .navLink,
+  .downloadButton,
+  .mobileDownloadButton,
+  .menuButton,
+  .mobileNavLink,
+  .mobileMenuDownloadButton {
+    transition: none;
   }
 }

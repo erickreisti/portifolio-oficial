@@ -113,6 +113,10 @@ export const Header = () => {
       <div className={styles.headerBackground}>
         <div className={styles.headerGradient} />
         <div className={styles.headerLightEffect} />
+        {/* ELEMENTOS ORB ADICIONADOS */}
+        <div className={styles.headerOrb1} />
+        <div className={styles.headerOrb2} />
+        <div className={styles.headerOrb3} />
       </div>
 
       <div className={styles.container}>
@@ -123,7 +127,6 @@ export const Header = () => {
             className={styles.logoButton}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            // Remove focus outline
             onMouseDown={(e) => e.preventDefault()}
           >
             <div className={styles.logoContainer}>
@@ -170,20 +173,16 @@ export const Header = () => {
                   }`}
                   whileHover={{ y: -2 }}
                   whileTap={{ y: 0 }}
-                  // Remove focus outline
                   onMouseDown={(e) => e.preventDefault()}
                 >
                   <span className={styles.navText}>
                     {item.name.toUpperCase()}
                   </span>
                   {isActive && (
-                    <>
-                      <motion.div
-                        className={styles.navIndicator}
-                        layoutId="navIndicator"
-                      />
-                      <div className={styles.navGlow} />
-                    </>
+                    <motion.div
+                      className={styles.navIndicator}
+                      layoutId="navIndicator"
+                    />
                   )}
                 </motion.button>
               );
@@ -201,7 +200,6 @@ export const Header = () => {
               <a
                 href="/docs/curriculo-erick-reis.pdf"
                 download
-                // Remove focus outline
                 onMouseDown={(e) => e.preventDefault()}
               >
                 <Download className={styles.downloadIcon} />
@@ -217,7 +215,6 @@ export const Header = () => {
               <a
                 href="/docs/curriculo-erick-reis.pdf"
                 download
-                // Remove focus outline
                 onMouseDown={(e) => e.preventDefault()}
               >
                 <Download className={styles.mobileDownloadIcon} />
@@ -229,7 +226,6 @@ export const Header = () => {
               size="icon"
               onClick={() => setIsOpen(!isOpen)}
               className={styles.menuButton}
-              // Remove focus outline
               onMouseDown={(e) => e.preventDefault()}
             >
               {isOpen ? (
@@ -271,7 +267,6 @@ export const Header = () => {
                       }`}
                       whileHover={{ x: 5 }}
                       whileTap={{ x: 0 }}
-                      // Remove focus outline
                       onMouseDown={(e) => e.preventDefault()}
                     >
                       <span className={styles.mobileNavText}>
@@ -294,13 +289,11 @@ export const Header = () => {
                     asChild
                     className={styles.mobileMenuDownloadButton}
                     onClick={() => setIsOpen(false)}
-                    // Remove focus outline
                     onMouseDown={(e) => e.preventDefault()}
                   >
                     <a
                       href="/docs/curriculo-erick-reis.pdf"
                       download
-                      // Remove focus outline
                       onMouseDown={(e) => e.preventDefault()}
                     >
                       <Download className={styles.mobileMenuDownloadIcon} />
