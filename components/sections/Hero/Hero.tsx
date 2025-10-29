@@ -8,85 +8,100 @@ import { Button } from "@/components/ui/button";
 import { PremiumBackground } from "@/components/layout/PremiumBackground";
 import { LazyComponent } from "@/components/optimization/LazyComponent";
 import { LazyBackground } from "@/components/optimization/LazyBackground";
-import { OptimizedImage } from "@/components/optimization/OptimizedImage";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 
-// Componente de Partículas Otimizado
+// Componente de Partículas Corrigido - Versão Simplificada
 const TechParticles = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!canvasRef.current) return;
 
-    const particlesContainer = containerRef.current;
-    const particles: HTMLDivElement[] = [];
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    const createParticle = () => {
-      const particle = document.createElement("div");
-      particle.className =
-        "absolute text-xs font-mono text-tech-cyan-400 opacity-20 pointer-events-none z-40";
+    // Ajustar canvas para o tamanho da tela
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
 
-      const codeChars = [
-        "{",
-        "}",
-        "<",
-        ">",
-        "/",
-        ";",
-        "=",
-        "()",
-        "=>",
-        "[]",
-        "fn",
-        "const",
-        "let",
-      ];
-      particle.textContent =
-        codeChars[Math.floor(Math.random() * codeChars.length)];
+    const particles: Array<{
+      x: number;
+      y: number;
+      size: number;
+      speed: number;
+      text: string;
+      opacity: number;
+    }> = [];
 
-      particle.style.left = `${Math.random() * 100}%`;
-      particle.style.top = `${Math.random() * 100}%`;
-      particle.style.fontSize = `${Math.random() * 12 + 10}px`;
-      particle.style.opacity = `${Math.random() * 0.4 + 0.1}`;
+    const codeChars = [
+      "{",
+      "}",
+      "<",
+      ">",
+      "/",
+      ";",
+      "=",
+      "()",
+      "=>",
+      "[]",
+      "fn",
+      "const",
+      "let",
+    ];
 
-      particlesContainer.appendChild(particle);
-      particles.push(particle);
-
-      const duration = Math.random() * 4 + 3;
-      const rotation = Math.random() * 360 - 180;
-
-      gsap.to(particle, {
-        y: -200,
-        x: Math.random() * 100 - 50,
-        rotation: rotation,
-        opacity: 0.8,
-        duration: duration,
-        ease: "power1.out",
-        onComplete: () => {
-          gsap.to(particle, {
-            opacity: 0,
-            duration: 0.8,
-            onComplete: () => {
-              particle.remove();
-              const index = particles.indexOf(particle);
-              if (index > -1) particles.splice(index, 1);
-            },
-          });
-        },
+    // Criar partículas iniciais
+    for (let i = 0; i < 20; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 12 + 10,
+        speed: Math.random() * 2 + 1,
+        text: codeChars[Math.floor(Math.random() * codeChars.length)],
+        opacity: Math.random() * 0.3 + 0.1,
       });
+    }
+
+    const animate = () => {
+      // Limpar canvas com transparência
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Atualizar e desenhar partículas
+      particles.forEach((particle, index) => {
+        // Mover partícula para cima
+        particle.y -= particle.speed;
+
+        // Recycle particles that go off screen
+        if (particle.y < -20) {
+          particle.y = canvas.height + 20;
+          particle.x = Math.random() * canvas.width;
+        }
+
+        // Desenhar partícula
+        ctx.fillStyle = `rgba(6, 182, 212, ${particle.opacity})`;
+        ctx.font = `${particle.size}px 'Courier New', monospace`;
+        ctx.fillText(particle.text, particle.x, particle.y);
+      });
+
+      requestAnimationFrame(animate);
     };
 
-    const interval = setInterval(createParticle, 150);
+    animate();
+
     return () => {
-      clearInterval(interval);
-      particles.forEach((particle) => particle.remove());
+      window.removeEventListener("resize", resizeCanvas);
     };
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="absolute inset-0 pointer-events-none overflow-hidden z-40"
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 pointer-events-none z-0"
+      style={{ opacity: 0.3 }}
     />
   );
 };
@@ -112,7 +127,7 @@ const DynamicTechGrid = () => {
     <LazyComponent animation="fadeIn" delay={100}>
       <div
         ref={gridRef}
-        className="absolute inset-0 pointer-events-none opacity-5 z-30"
+        className="absolute inset-0 pointer-events-none opacity-5 z-0"
         style={{
           backgroundImage: `
             linear-gradient(90deg, transparent 99%, rgba(6,182,212,0.1) 100%),
@@ -168,19 +183,19 @@ const InteractiveBackground = () => {
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 transition-all duration-1000 ease-out pointer-events-none z-20"
+      className="absolute inset-0 transition-all duration-1000 ease-out pointer-events-none z-0"
     />
   );
 };
 
-// Texto Hero com Efeito Máquina de Escrever - CORRIGIDO
+// Texto Hero com Efeito Máquina de Escrever
 const TypewriterHeroText = () => {
   const [displayText, setDisplayText] = useState("");
   const [currentLine, setCurrentLine] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const lines = useMemo(
-    () => ["IDEIAS EXTRAORDINÁRIAS", "CÓDIGO EXCEPCIONAL", "RESULTADOS REAIS"],
+    () => ["VISÃO ESTRATÉGICA", "ENGENHARIA DE PONTA", "RESULTADOS CONCRETOS"],
     []
   );
 
@@ -189,14 +204,11 @@ const TypewriterHeroText = () => {
     let timeout: NodeJS.Timeout;
 
     if (!isDeleting && displayText.length === currentLineText.length) {
-      // Pausa no final da linha
       timeout = setTimeout(() => setIsDeleting(true), 2000);
     } else if (isDeleting && displayText.length === 0) {
-      // Move para a próxima linha
       setIsDeleting(false);
       setCurrentLine((prev) => (prev + 1) % lines.length);
     } else {
-      // Digitação ou deleção
       const speed = isDeleting ? 50 : 100;
       const nextText = isDeleting
         ? currentLineText.slice(0, displayText.length - 1)
@@ -221,7 +233,7 @@ const TypewriterHeroText = () => {
               transition={{
                 duration: 0.8,
                 delay: 0.3 + lineIndex * 0.2,
-                ease: "easeOut", // CORREÇÃO: easing padrão
+                ease: "easeOut",
               }}
             >
               {line.split("").map((char, charIndex) => (
@@ -241,7 +253,7 @@ const TypewriterHeroText = () => {
                   transition={{
                     duration: 0.6,
                     delay: 0.5 + lineIndex * 0.3 + charIndex * 0.03,
-                    ease: "easeOut", // CORREÇÃO: easing padrão
+                    ease: "easeOut",
                   }}
                   whileHover={{
                     scale: 1.2,
@@ -256,7 +268,6 @@ const TypewriterHeroText = () => {
           ))}
         </h1>
 
-        {/* Linha atual da máquina de escrever */}
         <motion.div
           className="mt-8"
           initial={{ opacity: 0 }}
@@ -307,7 +318,7 @@ const AnimatedSubtitle = () => {
         transition={{
           duration: 1,
           delay: 2.5,
-          ease: "easeOut", // CORREÇÃO: easing padrão
+          ease: "easeOut",
         }}
       >
         {displayText}
@@ -374,7 +385,7 @@ const LiveStats = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{
           delay: 3,
-          ease: "easeOut", // CORREÇÃO: easing padrão
+          ease: "easeOut",
         }}
       >
         {stats.map((stat, index) => (
@@ -386,7 +397,7 @@ const LiveStats = () => {
             transition={{
               delay: 3.2 + index * 0.1,
               type: "spring",
-              stiffness: 100, // CORREÇÃO: spring animation
+              stiffness: 100,
             }}
             whileHover={{ scale: 1.1, y: -5 }}
           >
@@ -419,10 +430,9 @@ const AnimatedActionButtons = ({
         transition={{
           duration: 0.8,
           delay: 3.5,
-          ease: "easeOut", // CORREÇÃO: easing padrão
+          ease: "easeOut",
         }}
       >
-        {/* Botão Principal com Efeito Pulsante Contínuo */}
         <motion.div
           animate={{
             scale: [1, 1.02, 1],
@@ -446,7 +456,6 @@ const AnimatedActionButtons = ({
               <Mail className="w-5 h-5" />
             </motion.div>
             INICIAR PROJETO
-            {/* Efeito de brilho contínuo */}
             <motion.div
               className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12"
               animate={{ x: ["-100%", "200%"] }}
@@ -459,7 +468,6 @@ const AnimatedActionButtons = ({
           </Button>
         </motion.div>
 
-        {/* Botão Secundário com Flutuação Suave */}
         <motion.div
           animate={{ y: [0, -5, 0] }}
           transition={{
@@ -505,7 +513,7 @@ const AnimatedScrollIndicator = ({
         transition={{
           duration: 0.8,
           delay: 4,
-          ease: "easeOut", // CORREÇÃO: easing padrão
+          ease: "easeOut",
         }}
       >
         <motion.button
@@ -536,7 +544,6 @@ const AnimatedScrollIndicator = ({
               <ArrowDown className="w-4 h-4" />
             </motion.div>
 
-            {/* Pulsar externo */}
             <motion.div
               className="absolute inset-0 rounded-full border border-tech-cyan-400/20"
               animate={{
@@ -605,17 +612,14 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
     if (!containerRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Animação de entrada em cascata
       const tl = gsap.timeline();
 
-      // Background elements primeiro
       tl.fromTo(
         ".hero-bg-element",
         { opacity: 0, scale: 0.8 },
         { opacity: 1, scale: 1, duration: 1.5, ease: "power2.out" }
       );
 
-      // Conteúdo principal
       tl.fromTo(
         ".hero-content-element",
         { opacity: 0, y: 60 },
@@ -624,12 +628,11 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
           y: 0,
           duration: 1,
           stagger: 0.2,
-          ease: "power2.out", // CORREÇÃO: easing do GSAP (válido aqui)
+          ease: "power2.out",
         },
         "-=0.5"
       );
 
-      // Elementos interativos
       tl.fromTo(
         ".hero-interactive-element",
         { opacity: 0, scale: 0.9 },
@@ -638,7 +641,7 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
           scale: 1,
           duration: 0.8,
           stagger: 0.15,
-          ease: "power2.out", // CORREÇÃO: easing do GSAP (válido aqui)
+          ease: "power2.out",
         },
         "-=0.3"
       );
@@ -660,54 +663,50 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
       ref={containerRef}
       className="relative min-h-screen overflow-hidden bg-gradient-to-br from-gray-900 via-tech-blue-900 to-tech-cyan-900"
     >
-      {/* Background Effects */}
-      <div className="hero-bg-element">
+      {/* BACKGROUND LAYER - z-0 */}
+      <div className="absolute inset-0 z-0">
         <LazyBackground priority="high">
           <PremiumBackground intensity="high" />
         </LazyBackground>
+
+        <div className="hero-bg-element">
+          <InteractiveBackground />
+        </div>
+
+        <div className="hero-bg-element">
+          <DynamicTechGrid />
+        </div>
+
+        <div className="hero-bg-element">
+          <TechParticles />
+        </div>
       </div>
 
-      <div className="hero-bg-element">
-        <DynamicTechGrid />
-      </div>
-
-      <div className="hero-bg-element">
-        <TechParticles />
-      </div>
-
-      <div className="hero-bg-element">
-        <InteractiveBackground />
-      </div>
-
-      <FloatingNeonElements />
-
-      {/* Conteúdo Principal */}
+      {/* CONTENT LAYER - z-50 (na frente) */}
       <div className="relative z-50 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col justify-center min-h-screen">
-        {/* Título com Máquina de Escrever */}
         <div className="hero-content-element">
           <TypewriterHeroText />
         </div>
 
-        {/* Subtítulo Animado */}
         <div className="hero-content-element">
           <AnimatedSubtitle />
         </div>
 
-        {/* Estatísticas em Tempo Real */}
         <div className="hero-content-element">
           <LiveStats />
         </div>
 
-        {/* Botões de Ação com Animações Contínuas */}
         <div className="hero-interactive-element">
           <AnimatedActionButtons onContactClick={handleContactClick} />
         </div>
 
-        {/* Scroll Indicator com Animação Contínua */}
         <div className="hero-interactive-element">
           <AnimatedScrollIndicator onExploreClick={onExploreClick} />
         </div>
       </div>
+
+      {/* FLOATING ELEMENTS LAYER - z-30 (entre background e conteúdo) */}
+      <FloatingNeonElements />
     </section>
   );
 };
