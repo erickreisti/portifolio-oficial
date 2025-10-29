@@ -1,16 +1,17 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
-import { Download, Mail, ArrowDown } from "lucide-react";
+import { Download, Mail, ArrowDown, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PremiumBackground } from "@/components/layout/PremiumBackground";
 import { LazyComponent } from "@/components/optimization/LazyComponent";
 import { LazyBackground } from "@/components/optimization/LazyBackground";
+import { OptimizedImage } from "@/components/optimization/OptimizedImage";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 
-// Componente de Partículas (agora compartilhado com o Header)
+// Componente de Partículas Otimizado
 const TechParticles = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -25,23 +26,41 @@ const TechParticles = () => {
       particle.className =
         "absolute text-xs font-mono text-tech-cyan-400 opacity-20 pointer-events-none z-40";
 
-      const codeChars = ["{", "}", "<", ">", "/", ";", "=", "()", "=>"];
+      const codeChars = [
+        "{",
+        "}",
+        "<",
+        ">",
+        "/",
+        ";",
+        "=",
+        "()",
+        "=>",
+        "[]",
+        "fn",
+        "const",
+        "let",
+      ];
       particle.textContent =
         codeChars[Math.floor(Math.random() * codeChars.length)];
 
-      // Partículas começam desde o topo (incluindo área do header)
       particle.style.left = `${Math.random() * 100}%`;
       particle.style.top = `${Math.random() * 100}%`;
+      particle.style.fontSize = `${Math.random() * 12 + 10}px`;
+      particle.style.opacity = `${Math.random() * 0.4 + 0.1}`;
 
       particlesContainer.appendChild(particle);
       particles.push(particle);
 
+      const duration = Math.random() * 4 + 3;
+      const rotation = Math.random() * 360 - 180;
+
       gsap.to(particle, {
-        opacity: 0.6,
-        y: -150, // Movimento mais longo para passar pelo header
+        y: -200,
         x: Math.random() * 100 - 50,
-        rotation: Math.random() * 180,
-        duration: Math.random() * 4 + 3,
+        rotation: rotation,
+        opacity: 0.8,
+        duration: duration,
         ease: "power1.out",
         onComplete: () => {
           gsap.to(particle, {
@@ -57,7 +76,7 @@ const TechParticles = () => {
       });
     };
 
-    const interval = setInterval(createParticle, 200); // Mais partículas
+    const interval = setInterval(createParticle, 150);
     return () => {
       clearInterval(interval);
       particles.forEach((particle) => particle.remove());
@@ -72,19 +91,41 @@ const TechParticles = () => {
   );
 };
 
-// Grid Tecnológico (compartilhado)
-const TechGrid = () => {
+// Grid Tecnológico Dinâmico
+const DynamicTechGrid = () => {
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!gridRef.current) return;
+
+    const grid = gridRef.current;
+
+    gsap.to(grid, {
+      backgroundPosition: "100px 100px",
+      duration: 20,
+      repeat: -1,
+      ease: "none",
+    });
+  }, []);
+
   return (
     <LazyComponent animation="fadeIn" delay={100}>
-      <div className="absolute inset-0 pointer-events-none opacity-5 z-30">
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_99%,rgba(6,182,212,0.1)_100%)] bg-[length:100px_100px]" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_99%,rgba(6,182,212,0.1)_100%)] bg-[length:100px_100px]" />
-      </div>
+      <div
+        ref={gridRef}
+        className="absolute inset-0 pointer-events-none opacity-5 z-30"
+        style={{
+          backgroundImage: `
+            linear-gradient(90deg, transparent 99%, rgba(6,182,212,0.1) 100%),
+            linear-gradient(180deg, transparent 99%, rgba(6,182,212,0.1) 100%)
+          `,
+          backgroundSize: "100px 100px",
+        }}
+      />
     </LazyComponent>
   );
 };
 
-// Background Interativo (compartilhado)
+// Background Interativo com Mouse
 const InteractiveBackground = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -96,13 +137,17 @@ const InteractiveBackground = () => {
       const x = (clientX / window.innerWidth) * 100;
       const y = (clientY / window.innerHeight) * 100;
 
-      containerRef.current.style.background = `
-        radial-gradient(circle at ${x}% ${y}%, 
-          rgba(6, 182, 212, 0.1) 0%,
-          rgba(59, 130, 246, 0.05) 30%,
-          transparent 70%
-        )
-      `;
+      gsap.to(containerRef.current, {
+        background: `
+          radial-gradient(circle at ${x}% ${y}%, 
+            rgba(6, 182, 212, 0.1) 0%,
+            rgba(59, 130, 246, 0.05) 30%,
+            transparent 70%
+          )
+        `,
+        duration: 0.5,
+        ease: "power2.out",
+      });
     };
 
     let throttled = false;
@@ -128,125 +173,171 @@ const InteractiveBackground = () => {
   );
 };
 
-// Texto Hero Animado
-const AnimatedHeroText = () => {
-  const textRef = useRef<HTMLDivElement>(null);
+// Texto Hero com Efeito Máquina de Escrever - CORRIGIDO
+const TypewriterHeroText = () => {
+  const [displayText, setDisplayText] = useState("");
+  const [currentLine, setCurrentLine] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const titleLines = useMemo(
+  const lines = useMemo(
     () => ["IDEIAS EXTRAORDINÁRIAS", "CÓDIGO EXCEPCIONAL", "RESULTADOS REAIS"],
     []
   );
 
   useEffect(() => {
-    if (!textRef.current) return;
+    const currentLineText = lines[currentLine];
+    let timeout: NodeJS.Timeout;
 
-    const ctx = gsap.context(() => {
-      const chars = textRef.current?.querySelectorAll(".hero-char");
-      if (!chars) return;
+    if (!isDeleting && displayText.length === currentLineText.length) {
+      // Pausa no final da linha
+      timeout = setTimeout(() => setIsDeleting(true), 2000);
+    } else if (isDeleting && displayText.length === 0) {
+      // Move para a próxima linha
+      setIsDeleting(false);
+      setCurrentLine((prev) => (prev + 1) % lines.length);
+    } else {
+      // Digitação ou deleção
+      const speed = isDeleting ? 50 : 100;
+      const nextText = isDeleting
+        ? currentLineText.slice(0, displayText.length - 1)
+        : currentLineText.slice(0, displayText.length + 1);
 
-      gsap.fromTo(
-        chars,
-        {
-          y: 100,
-          opacity: 0,
-          rotationX: -90,
-          rotationY: -90,
-        },
-        {
-          y: 0,
-          opacity: 1,
-          rotationX: 0,
-          rotationY: 0,
-          duration: 1,
-          stagger: 0.03,
-          ease: "back.out(1.7)",
-          delay: 0.5,
-        }
-      );
-    }, textRef);
+      timeout = setTimeout(() => setDisplayText(nextText), speed);
+    }
 
-    return () => ctx.revert();
-  }, []);
+    return () => clearTimeout(timeout);
+  }, [displayText, isDeleting, currentLine, lines]);
 
   return (
     <LazyComponent animation="fadeUp" delay={200}>
-      <div ref={textRef} className="text-center w-full mb-8">
+      <div className="text-center w-full mb-8">
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white leading-tight">
-          {titleLines.map((line, lineIndex) => (
+          {lines.map((line, lineIndex) => (
             <motion.div
               key={lineIndex}
               className="overflow-hidden mb-2 sm:mb-4"
               initial={{ y: 100, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 + lineIndex * 0.2 }}
+              transition={{
+                duration: 0.8,
+                delay: 0.3 + lineIndex * 0.2,
+                ease: "easeOut", // CORREÇÃO: easing padrão
+              }}
             >
               {line.split("").map((char, charIndex) => (
-                <span
+                <motion.span
                   key={`${lineIndex}-${charIndex}`}
-                  className="hero-char inline-block mx-0.5 sm:mx-1 transition-all duration-300 bg-gradient-to-b from-white to-gray-300 bg-clip-text text-transparent hover:scale-110 hover:text-tech-cyan-300 transform-style-preserve-3d"
-                  style={{
-                    transformStyle: "preserve-3d",
+                  className="inline-block mx-0.5 sm:mx-1 transition-all duration-300 bg-gradient-to-b from-white to-gray-300 bg-clip-text text-transparent hover:scale-110 hover:text-tech-cyan-300"
+                  initial={{
+                    y: 100,
+                    opacity: 0,
+                    scale: 0.8,
+                  }}
+                  animate={{
+                    y: 0,
+                    opacity: 1,
+                    scale: 1,
+                  }}
+                  transition={{
+                    duration: 0.6,
+                    delay: 0.5 + lineIndex * 0.3 + charIndex * 0.03,
+                    ease: "easeOut", // CORREÇÃO: easing padrão
+                  }}
+                  whileHover={{
+                    scale: 1.2,
+                    y: -5,
+                    transition: { duration: 0.2 },
                   }}
                 >
                   {char === " " ? "\u00A0" : char}
-                </span>
+                </motion.span>
               ))}
             </motion.div>
           ))}
         </h1>
+
+        {/* Linha atual da máquina de escrever */}
+        <motion.div
+          className="mt-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2 }}
+        >
+          <p className="text-xl sm:text-2xl lg:text-3xl text-gray-300 font-light min-h-[60px] flex items-center justify-center">
+            <span className="bg-gradient-to-r from-tech-cyan-400 to-tech-blue-400 bg-clip-text text-transparent">
+              {displayText}
+              <motion.span
+                animate={{ opacity: [1, 0, 1] }}
+                transition={{ duration: 1, repeat: Infinity }}
+                className="ml-1"
+              >
+                |
+              </motion.span>
+            </span>
+          </p>
+        </motion.div>
       </div>
     </LazyComponent>
   );
 };
 
-// Typewriter Subtitle
-const TypewriterSubtitle = () => {
+// Subtítulo Animado
+const AnimatedSubtitle = () => {
+  const fullText =
+    "Transformo visões ambiciosas em soluções digitais com tecnologia de ponta";
   const [displayText, setDisplayText] = useState("");
-  const fullText = useMemo(
-    () =>
-      "Transformo visões ambiciosas em soluções digitais com tecnologia de ponta",
-    []
-  );
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    let i = 0;
-    const timer = setInterval(() => {
-      if (i < fullText.length) {
-        setDisplayText(fullText.slice(0, i + 1));
-        i++;
-      } else {
-        clearInterval(timer);
-      }
-    }, 50);
-
-    return () => clearInterval(timer);
-  }, [fullText]);
+    if (currentIndex < fullText.length) {
+      const timer = setTimeout(() => {
+        setDisplayText(fullText.slice(0, currentIndex + 1));
+        setCurrentIndex(currentIndex + 1);
+      }, 30);
+      return () => clearTimeout(timer);
+    }
+  }, [currentIndex, fullText]);
 
   return (
     <LazyComponent animation="fadeUp" delay={300}>
-      <p className="text-xl sm:text-2xl lg:text-3xl text-gray-300 font-light leading-relaxed min-h-[120px] flex items-center justify-center">
-        <span className="bg-gradient-to-r from-tech-cyan-400 to-tech-blue-400 bg-clip-text text-transparent">
-          {displayText}
-          <span className="animate-pulse">|</span>
-        </span>
-      </p>
+      <motion.p
+        className="text-lg sm:text-xl lg:text-2xl text-gray-300 font-light leading-relaxed max-w-3xl mx-auto mb-8"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: 1,
+          delay: 2.5,
+          ease: "easeOut", // CORREÇÃO: easing padrão
+        }}
+      >
+        {displayText}
+        <motion.span
+          animate={{ opacity: [1, 0, 1] }}
+          transition={{ duration: 1, repeat: Infinity }}
+          className="ml-1"
+        >
+          |
+        </motion.span>
+      </motion.p>
     </LazyComponent>
   );
 };
 
-// Live Stats
+// Estatísticas Animadas
 const LiveStats = () => {
   const [projects, setProjects] = useState(0);
   const [experience, setExperience] = useState(0);
   const [clients, setClients] = useState(0);
+  const [satisfaction, setSatisfaction] = useState(0);
 
   const stats = useMemo(
     () => [
       { value: projects, label: "Projetos", suffix: "+" },
       { value: experience, label: "Anos Exp", suffix: "+" },
       { value: clients, label: "Clientes", suffix: "+" },
+      { value: satisfaction, label: "Satisfação", suffix: "%" },
     ],
-    [projects, experience, clients]
+    [projects, experience, clients, satisfaction]
   );
 
   useEffect(() => {
@@ -272,18 +363,33 @@ const LiveStats = () => {
     animateValue(setProjects, 50, 2000);
     animateValue(setExperience, 5, 1800);
     animateValue(setClients, 30, 2200);
+    animateValue(setSatisfaction, 100, 2500);
   }, []);
 
   return (
     <LazyComponent animation="fadeUp" delay={400}>
       <motion.div
-        className="flex justify-center gap-8 mb-12"
+        className="flex justify-center gap-6 sm:gap-8 mb-12"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.8 }}
+        transition={{
+          delay: 3,
+          ease: "easeOut", // CORREÇÃO: easing padrão
+        }}
       >
         {stats.map((stat, index) => (
-          <div key={index} className="text-center">
+          <motion.div
+            key={index}
+            className="text-center"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{
+              delay: 3.2 + index * 0.1,
+              type: "spring",
+              stiffness: 100, // CORREÇÃO: spring animation
+            }}
+            whileHover={{ scale: 1.1, y: -5 }}
+          >
             <div className="text-2xl sm:text-3xl font-black text-tech-cyan-400">
               {stat.value}
               {stat.suffix}
@@ -291,13 +397,201 @@ const LiveStats = () => {
             <div className="text-sm text-tech-cyan-300 font-medium">
               {stat.label}
             </div>
-          </div>
+          </motion.div>
         ))}
       </motion.div>
     </LazyComponent>
   );
 };
 
+// Botões de Ação com Animação Contínua
+const AnimatedActionButtons = ({
+  onContactClick,
+}: {
+  onContactClick: () => void;
+}) => {
+  return (
+    <LazyComponent animation="fadeUp" delay={500}>
+      <motion.div
+        className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: 0.8,
+          delay: 3.5,
+          ease: "easeOut", // CORREÇÃO: easing padrão
+        }}
+      >
+        {/* Botão Principal com Efeito Pulsante Contínuo */}
+        <motion.div
+          animate={{
+            scale: [1, 1.02, 1],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          <Button
+            onClick={onContactClick}
+            variant="premium"
+            size="xl"
+            className="gap-3 relative overflow-hidden group"
+          >
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            >
+              <Mail className="w-5 h-5" />
+            </motion.div>
+            INICIAR PROJETO
+            {/* Efeito de brilho contínuo */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12"
+              animate={{ x: ["-100%", "200%"] }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+          </Button>
+        </motion.div>
+
+        {/* Botão Secundário com Flutuação Suave */}
+        <motion.div
+          animate={{ y: [0, -5, 0] }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          <Button
+            variant="neon"
+            size="xl"
+            className="gap-3"
+            onClick={() =>
+              window.open("/docs/curriculo-erick-reis.pdf", "_blank")
+            }
+          >
+            <motion.div
+              whileHover={{ scale: 1.2 }}
+              transition={{ type: "spring", stiffness: 400 }}
+            >
+              <Download className="w-5 h-5" />
+            </motion.div>
+            BAIXAR CV
+          </Button>
+        </motion.div>
+      </motion.div>
+    </LazyComponent>
+  );
+};
+
+// Scroll Indicator com Animação Contínua
+const AnimatedScrollIndicator = ({
+  onExploreClick,
+}: {
+  onExploreClick: () => void;
+}) => {
+  return (
+    <LazyComponent animation="fadeUp" delay={600}>
+      <motion.div
+        className="flex flex-col items-center"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: 0.8,
+          delay: 4,
+          ease: "easeOut", // CORREÇÃO: easing padrão
+        }}
+      >
+        <motion.button
+          onClick={onExploreClick}
+          className="flex flex-col items-center gap-2 text-tech-cyan-400 hover:text-tech-cyan-300 transition-colors group focus:outline-none focus:ring-2 focus:ring-tech-cyan-500 rounded-lg p-2"
+          whileHover={{ y: -2 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <motion.span className="text-sm font-medium">
+            Explorar Mais
+          </motion.span>
+
+          <motion.div
+            animate={{
+              y: [0, 8, 0],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="w-10 h-10 rounded-full border border-tech-cyan-400/30 flex items-center justify-center group-hover:border-tech-cyan-400/50 transition-colors relative"
+          >
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+            >
+              <ArrowDown className="w-4 h-4" />
+            </motion.div>
+
+            {/* Pulsar externo */}
+            <motion.div
+              className="absolute inset-0 rounded-full border border-tech-cyan-400/20"
+              animate={{
+                scale: [1, 1.5, 1],
+                opacity: [0.5, 0, 0.5],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+          </motion.div>
+        </motion.button>
+      </motion.div>
+    </LazyComponent>
+  );
+};
+
+// Elementos Flutuantes Neon
+const FloatingNeonElements = () => {
+  const elements = [
+    { id: 1, x: "10%", y: "20%", delay: 0 },
+    { id: 2, x: "85%", y: "30%", delay: 1 },
+    { id: 3, x: "15%", y: "70%", delay: 2 },
+    { id: 4, x: "90%", y: "80%", delay: 3 },
+  ];
+
+  return (
+    <div className="absolute inset-0 pointer-events-none z-30">
+      {elements.map((element) => (
+        <motion.div
+          key={element.id}
+          className="absolute"
+          style={{ left: element.x, top: element.y }}
+          animate={{
+            y: [0, -20, 0],
+            rotate: [0, 5, -5, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 6,
+            delay: element.delay,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          <Sparkles className="w-6 h-6 text-tech-cyan-400 opacity-50" />
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
+// Interface Principal do Hero
 interface HeroProps {
   onExploreClick: () => void;
 }
@@ -311,23 +605,42 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
     if (!containerRef.current) return;
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        ".hero-subtitle",
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 1, delay: 2.5, ease: "power2.out" }
+      // Animação de entrada em cascata
+      const tl = gsap.timeline();
+
+      // Background elements primeiro
+      tl.fromTo(
+        ".hero-bg-element",
+        { opacity: 0, scale: 0.8 },
+        { opacity: 1, scale: 1, duration: 1.5, ease: "power2.out" }
       );
 
-      gsap.fromTo(
-        ".hero-action-button",
-        { opacity: 0, y: 40 },
+      // Conteúdo principal
+      tl.fromTo(
+        ".hero-content-element",
+        { opacity: 0, y: 60 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
+          duration: 1,
           stagger: 0.2,
-          delay: 3,
-          ease: "back.out(1.7)",
-        }
+          ease: "power2.out", // CORREÇÃO: easing do GSAP (válido aqui)
+        },
+        "-=0.5"
+      );
+
+      // Elementos interativos
+      tl.fromTo(
+        ".hero-interactive-element",
+        { opacity: 0, scale: 0.9 },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: "power2.out", // CORREÇÃO: easing do GSAP (válido aqui)
+        },
+        "-=0.3"
       );
     }, containerRef);
 
@@ -347,100 +660,53 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
       ref={containerRef}
       className="relative min-h-screen overflow-hidden bg-gradient-to-br from-gray-900 via-tech-blue-900 to-tech-cyan-900"
     >
-      {/* Background compartilhado com Header */}
-      <div className="absolute inset-0 z-10">
+      {/* Background Effects */}
+      <div className="hero-bg-element">
         <LazyBackground priority="high">
           <PremiumBackground intensity="high" />
         </LazyBackground>
       </div>
 
-      {/* Elementos visuais compartilhados */}
-      <TechGrid />
-      <TechParticles />
-      <InteractiveBackground />
+      <div className="hero-bg-element">
+        <DynamicTechGrid />
+      </div>
 
-      {/* Header fixo - agora parte do Hero visualmente */}
+      <div className="hero-bg-element">
+        <TechParticles />
+      </div>
 
-      {/* Conteúdo Principal (abaixo do header) */}
+      <div className="hero-bg-element">
+        <InteractiveBackground />
+      </div>
+
+      <FloatingNeonElements />
+
+      {/* Conteúdo Principal */}
       <div className="relative z-50 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col justify-center min-h-screen">
-        {/* Título */}
-        <AnimatedHeroText />
-
-        {/* Subtítulo com Typewriter */}
-        <motion.div
-          className="hero-subtitle max-w-3xl mx-auto mb-8"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 2.5 }}
-        >
-          <TypewriterSubtitle />
-        </motion.div>
-
-        {/* Estatísticas em Tempo Real */}
-        <LiveStats />
-
-        {/* Botões de Ação */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
-          <motion.div
-            className="hero-action-button"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 3 }}
-          >
-            <Button
-              onClick={handleContactClick}
-              variant="premium"
-              size="xl"
-              className="gap-3"
-            >
-              <Mail className="w-5 h-5" />
-              INICIAR PROJETO
-            </Button>
-          </motion.div>
-
-          <motion.div
-            className="hero-action-button"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 3.2 }}
-          >
-            <Button
-              variant="neon"
-              size="xl"
-              className="gap-3"
-              onClick={() =>
-                window.open("/docs/curriculo-erick-reis.pdf", "_blank")
-              }
-            >
-              <Download className="w-5 h-5" />
-              BAIXAR CV
-            </Button>
-          </motion.div>
+        {/* Título com Máquina de Escrever */}
+        <div className="hero-content-element">
+          <TypewriterHeroText />
         </div>
 
-        {/* Scroll Indicator */}
-        <motion.div
-          className="hero-action-button flex flex-col items-center"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 3.4 }}
-        >
-          <motion.button
-            onClick={onExploreClick}
-            className="flex flex-col items-center gap-2 text-tech-cyan-400 hover:text-tech-cyan-300 transition-colors group focus:outline-none focus:ring-2 focus:ring-tech-cyan-500 rounded-lg p-2"
-            whileHover={{ y: -2 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <span className="text-sm font-medium">Explorar Mais</span>
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="w-10 h-10 rounded-full border border-tech-cyan-400/30 flex items-center justify-center group-hover:border-tech-cyan-400/50 transition-colors"
-            >
-              <ArrowDown className="w-4 h-4" />
-            </motion.div>
-          </motion.button>
-        </motion.div>
+        {/* Subtítulo Animado */}
+        <div className="hero-content-element">
+          <AnimatedSubtitle />
+        </div>
+
+        {/* Estatísticas em Tempo Real */}
+        <div className="hero-content-element">
+          <LiveStats />
+        </div>
+
+        {/* Botões de Ação com Animações Contínuas */}
+        <div className="hero-interactive-element">
+          <AnimatedActionButtons onContactClick={handleContactClick} />
+        </div>
+
+        {/* Scroll Indicator com Animação Contínua */}
+        <div className="hero-interactive-element">
+          <AnimatedScrollIndicator onExploreClick={onExploreClick} />
+        </div>
       </div>
     </section>
   );
