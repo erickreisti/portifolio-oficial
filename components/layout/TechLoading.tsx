@@ -103,10 +103,10 @@ export const TechLoading = () => {
 
     if (showDeploy) {
       const deployProgress = [
-        Math.min(100, ((progress - 70) / 5) * 100),
-        Math.min(100, ((progress - 75) / 5) * 100),
-        Math.min(100, ((progress - 80) / 15) * 100),
-        Math.min(100, ((progress - 95) / 5) * 100),
+        Math.min(100, Math.max(0, ((progress - 70) / 5) * 100)),
+        Math.min(100, Math.max(0, ((progress - 75) / 5) * 100)),
+        Math.min(100, Math.max(0, ((progress - 80) / 15) * 100)),
+        Math.min(100, Math.max(0, ((progress - 95) / 5) * 100)),
       ];
 
       setDeployProgress(deployProgress);
@@ -135,7 +135,7 @@ export const TechLoading = () => {
     }, 80);
 
     const systemInterval = setInterval(() => {
-      if (progress < 70) {
+      if (progress < 70 && systems.length > 0) {
         setCurrentSystem((prev) => (prev + 1) % systems.length);
       }
     }, 1200);
@@ -148,11 +148,11 @@ export const TechLoading = () => {
 
   if (isComplete) return null;
 
-  const CurrentSystemIcon = systems[currentSystem].icon;
-  const CurrentDeployStage = deployStages[deployStage];
+  const CurrentSystemIcon = systems[currentSystem]?.icon || Code2;
+  const CurrentDeployStage = deployStages[deployStage] || deployStages[0];
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 z-50 overflow-auto">
+    <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 z-50 overflow-hidden">
       <LazyBackground priority="high" className="absolute inset-0">
         <div className="absolute inset-0 pointer-events-none opacity-10">
           <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_99%,rgba(6,182,212,0.1)_100%)] bg-[length:100px_100px]" />
@@ -162,16 +162,16 @@ export const TechLoading = () => {
 
       <ParticleEffects progress={progress} />
 
-      {/* Container principal com altura mínima e padding vertical */}
-      <div className="min-h-screen flex items-center justify-center py-4 xs:py-6 sm:py-8 px-3 xs:px-4 sm:px-6">
+      {/* Container principal sem nenhuma rolagem */}
+      <div className="h-screen w-screen flex items-center justify-center p-4 overflow-hidden">
         <LazyComponent animation="scale" delay={200}>
-          <div className="w-full max-w-xs xs:max-w-sm sm:max-w-md md:max-w-2xl lg:max-w-4xl">
-            {/* Header Principal - Mais compacto */}
-            <div className="text-center mb-4 xs:mb-6 sm:mb-8">
-              <div className="flex justify-center mb-3 xs:mb-4">
+          <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-2xl xl:max-w-4xl overflow-hidden">
+            {/* Header Principal */}
+            <div className="text-center mb-4 sm:mb-8">
+              <div className="flex justify-center mb-3 sm:mb-4">
                 <div className="relative">
                   <div className="absolute inset-0 bg-cyan-500 rounded-2xl blur-xl opacity-30 animate-pulse" />
-                  <div className="relative bg-gray-900/60 backdrop-blur-xl p-3 xs:p-4 sm:p-6 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/20">
+                  <div className="relative bg-gray-900/60 backdrop-blur-xl p-3 sm:p-6 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/20">
                     <div className="relative">
                       <AnimatePresence mode="wait">
                         <motion.div
@@ -183,65 +183,61 @@ export const TechLoading = () => {
                         >
                           {showDeploy ? (
                             <CurrentDeployStage.icon
-                              className={`w-10 h-10 xs:w-12 xs:h-12 sm:w-16 sm:h-16 ${CurrentDeployStage.color} animate-pulse`}
+                              className={`w-10 h-10 sm:w-16 sm:h-16 ${CurrentDeployStage.color} animate-pulse`}
                             />
                           ) : (
-                            <CurrentSystemIcon className="w-10 h-10 xs:w-12 xs:h-12 sm:w-16 sm:h-16 text-cyan-400 animate-bounce" />
+                            <CurrentSystemIcon className="w-10 h-10 sm:w-16 sm:h-16 text-cyan-400 animate-bounce" />
                           )}
                         </motion.div>
                       </AnimatePresence>
-                      <Sparkles className="absolute -top-1 -right-1 xs:-top-1 xs:-right-1 w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5 text-cyan-400 animate-pulse" />
+                      <Sparkles className="absolute -top-1 -right-1 sm:w-5 sm:h-5 text-cyan-400 animate-pulse" />
                     </div>
                   </div>
                 </div>
               </div>
 
               <motion.h1
-                className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-black text-white font-mono tracking-tight leading-tight mb-2 xs:mb-3"
+                className="text-xl sm:text-3xl md:text-4xl font-black text-white font-mono tracking-tight leading-tight mb-2 sm:mb-3"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
                 SISTEMA{" "}
-                <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent block xs:inline">
+                <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent block sm:inline">
                   ÉRICK REIS
                 </span>
               </motion.h1>
 
-              <div className="flex flex-col xs:flex-row items-center justify-center gap-1 xs:gap-2 text-xs text-gray-300 font-mono">
-                <div className="flex items-center space-x-1 bg-cyan-400/10 px-2 py-1 xs:px-3 xs:py-1 rounded-full border border-cyan-400/20">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 text-xs text-gray-300 font-mono">
+                <div className="flex items-center space-x-1 bg-cyan-400/10 px-2 py-1 sm:px-3 sm:py-1 rounded-full border border-cyan-400/20">
                   <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse" />
                   <span className="font-semibold text-cyan-400 text-xs">
                     FULL STACK
                   </span>
                 </div>
-                <Binary className="w-3 h-3 xs:w-4 xs:h-4 text-cyan-400 hidden xs:block" />
-                <div className="flex items-center space-x-1 bg-gray-800/50 px-2 py-1 xs:px-3 xs:py-1 rounded-full border border-gray-600/30">
+                <Binary className="w-3 h-3 sm:w-4 sm:h-4 text-cyan-400 hidden sm:block" />
+                <div className="flex items-center space-x-1 bg-gray-800/50 px-2 py-1 sm:px-3 sm:py-1 rounded-full border border-gray-600/30">
                   <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse" />
                   <span className="text-cyan-300 text-xs">v2.4.0</span>
                 </div>
               </div>
             </div>
 
-            {/* Layout Principal - Mais compacto */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 xs:gap-4 sm:gap-5 mb-3 xs:mb-4">
+            {/* Layout Principal */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-5 mb-3 sm:mb-4 overflow-hidden">
               {/* Coluna Esquerda - Sistema/Deploy */}
-              <div className="space-y-3 xs:space-y-4">
-                {/* Sistema Atual / Deploy Stages */}
+              <div className="space-y-3 sm:space-y-4 overflow-hidden">
+                {/* Sistema Ativo / Pipeline de Deploy */}
                 <LazyComponent animation="fadeUp" delay={300}>
-                  <div className="bg-gray-900/60 backdrop-blur-xl rounded-xl xs:rounded-2xl p-3 xs:p-4 border border-cyan-500/20 shadow-xl shadow-cyan-400/10">
-                    <div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-1 xs:gap-0 mb-2 xs:mb-3">
-                      <span className="text-gray-300 font-mono text-xs font-semibold tracking-wide">
+                  <div className="bg-gray-900/60 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-cyan-500/20 shadow-xl shadow-cyan-400/10 overflow-hidden">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-0 mb-2 sm:mb-3">
+                      <span className="text-gray-300 font-mono text-xs font-semibold tracking-wide truncate">
                         {showDeploy ? "PIPELINE DE DEPLOY" : "SISTEMA ATIVO"}
                       </span>
                       <span
-                        className={`font-mono text-xs font-bold px-2 py-1 rounded-full border ${
-                          showDeploy
-                            ? "text-green-400 bg-green-400/10 border-green-400/30"
-                            : "text-cyan-400 bg-cyan-400/10 border-cyan-400/30"
-                        }`}
+                        className={`font-mono text-xs font-bold px-2 py-1 rounded-full border truncate`}
                       >
-                        {showDeploy ? "EM PRODUÇÃO" : "INICIALIZANDO"}
+                        {showDeploy ? "PRODUCTION_ENV" : "DEV_ENV: ACTIVE"}
                       </span>
                     </div>
 
@@ -254,16 +250,16 @@ export const TechLoading = () => {
                           exit={{ opacity: 0, y: -20 }}
                           className="space-y-3"
                         >
-                          <div className="flex items-center space-x-2 xs:space-x-3">
+                          <div className="flex items-center space-x-2 sm:space-x-3">
                             <div
-                              className={`p-2 rounded-xl bg-gradient-to-br from-yellow-500/10 to-yellow-500/20 border border-yellow-400/30`}
+                              className={`p-2 rounded-xl bg-gradient-to-br from-yellow-500/10 to-yellow-500/20 border border-yellow-400/30 flex-shrink-0`}
                             >
                               <CurrentDeployStage.icon
-                                className={`w-5 h-5 xs:w-6 xs:h-6 ${CurrentDeployStage.color} animate-pulse`}
+                                className={`w-5 h-5 sm:w-6 sm:h-6 ${CurrentDeployStage.color} animate-pulse`}
                               />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className="text-white font-mono font-bold text-base xs:text-lg tracking-tight truncate">
+                              <div className="text-white font-mono font-bold text-base sm:text-lg tracking-tight truncate">
                                 {CurrentDeployStage.name}
                               </div>
                               <div className="text-cyan-300 font-mono text-xs mt-0.5 truncate">
@@ -274,8 +270,8 @@ export const TechLoading = () => {
                             </div>
                           </div>
 
-                          {/* Grid de Deploy Compacto */}
-                          <div className="grid grid-cols-2 gap-1 xs:gap-2">
+                          {/* Grid de Deploy Responsivo */}
+                          <div className="grid grid-cols-2 gap-1 sm:gap-2">
                             {deployStages.map((stage, index) => {
                               const Icon = stage.icon;
                               const isActive = index === deployStage;
@@ -288,19 +284,11 @@ export const TechLoading = () => {
                                   initial={{ opacity: 0, scale: 0.8 }}
                                   animate={{ opacity: 1, scale: 1 }}
                                   transition={{ delay: index * 0.1 }}
-                                  className={`flex items-center space-x-1 xs:space-x-2 p-2 rounded-xl border transition-all duration-300 ${
-                                    isCompleted
-                                      ? "bg-green-500/20 border-green-400/50 shadow-lg shadow-green-500/20"
-                                      : isActive
-                                      ? "bg-cyan-500/20 border-cyan-400/50 shadow-lg shadow-cyan-500/30 transform scale-105"
-                                      : isUpcoming
-                                      ? "bg-gray-800/30 border-gray-600/30 opacity-60"
-                                      : "bg-gray-800/40 border-cyan-500/20"
-                                  }`}
+                                  className={`flex items-center space-x-1 sm:space-x-2 p-2 rounded-xl border transition-all duration-300 min-w-0`}
                                 >
                                   <div className="relative flex-shrink-0">
                                     <Icon
-                                      className={`w-3 h-3 xs:w-4 xs:h-4 ${
+                                      className={`w-3 h-3 sm:w-4 sm:h-4 ${
                                         isCompleted
                                           ? "text-green-400"
                                           : isActive
@@ -309,17 +297,11 @@ export const TechLoading = () => {
                                       } ${isActive ? "animate-pulse" : ""}`}
                                     />
                                     {isCompleted && (
-                                      <CheckCircle2 className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 xs:w-2 xs:h-2 text-green-400" />
+                                      <CheckCircle2 className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 sm:w-2 sm:h-2 text-green-400" />
                                     )}
                                   </div>
                                   <span
-                                    className={`font-mono text-xs font-semibold truncate ${
-                                      isCompleted
-                                        ? "text-green-400"
-                                        : isActive
-                                        ? "text-white"
-                                        : "text-gray-400"
-                                    }`}
+                                    className={`font-mono text-xs font-semibold truncate`}
                                   >
                                     {stage.name}
                                   </span>
@@ -334,21 +316,19 @@ export const TechLoading = () => {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -20 }}
-                          className="flex items-center space-x-2 xs:space-x-3"
+                          className="flex items-center space-x-2 sm:space-x-3"
                         >
                           <div className="p-2 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-400/30 flex-shrink-0">
-                            <CurrentSystemIcon className="w-5 h-5 xs:w-6 xs:h-6 text-cyan-400 animate-pulse" />
+                            <CurrentSystemIcon className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-400 animate-pulse" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="text-white font-mono font-bold text-base xs:text-lg tracking-tight truncate">
-                              {systems[currentSystem].name}
+                            <div className="text-white font-mono font-bold text-base sm:text-lg tracking-tight truncate">
+                              {systems[currentSystem]?.name || "SYSTEM"}
                             </div>
                             <div className="text-cyan-300 font-mono text-xs mt-0.5 truncate">
-                              {
-                                systems[currentSystem].stages[
-                                  Math.floor(progress / 25) % 3
-                                ]
-                              }
+                              {systems[currentSystem]?.stages[
+                                Math.floor(progress / 25) % 3
+                              ] || "Initializing..."}
                             </div>
                           </div>
                         </motion.div>
@@ -359,22 +339,24 @@ export const TechLoading = () => {
 
                 {/* Barra de Progresso Principal */}
                 <LazyComponent animation="fadeUp" delay={400}>
-                  <div className="bg-gray-900/60 backdrop-blur-xl rounded-xl xs:rounded-2xl p-3 xs:p-4 border border-cyan-500/20 shadow-xl shadow-cyan-400/10">
-                    <div className="flex justify-between items-center text-xs font-mono mb-2 xs:mb-3">
-                      <span className="text-gray-300 font-semibold">
+                  <div className="bg-gray-900/60 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-cyan-500/20 shadow-xl shadow-cyan-400/10 overflow-hidden">
+                    <div className="flex justify-between items-center text-xs font-mono mb-2 sm:mb-3">
+                      <span className="text-gray-300 font-semibold truncate">
                         {showDeploy
                           ? "PIPELINE PROGRESS"
                           : "PROGRESSO DO SISTEMA"}
                       </span>
-                      <span className="text-cyan-400 font-bold text-sm xs:text-base">
+                      <span className="text-cyan-400 font-bold text-sm sm:text-base">
                         {Math.round(progress)}%
                       </span>
                     </div>
 
-                    <div className="bg-gray-800/50 rounded-full h-1.5 xs:h-2 overflow-hidden border border-cyan-500/20 backdrop-blur-sm mb-2 xs:mb-3">
+                    <div className="bg-gray-800/50 rounded-full h-1.5 sm:h-2 overflow-hidden border border-cyan-500/20 backdrop-blur-sm mb-2 sm:mb-3">
                       <div
                         className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full transition-all duration-300 ease-out relative"
-                        style={{ width: `${progress}%` }}
+                        style={{
+                          width: `${Math.max(0, Math.min(100, progress))}%`,
+                        }}
                       >
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-40 animate-shimmer" />
                       </div>
@@ -390,24 +372,18 @@ export const TechLoading = () => {
                         {deployStages.map((stage, index) => (
                           <div
                             key={stage.name}
-                            className="flex items-center space-x-1 xs:space-x-2"
+                            className="flex items-center space-x-1 sm:space-x-2"
                           >
-                            <div className="w-10 xs:w-12 font-mono text-xs text-gray-400 truncate">
+                            <div className="w-10 sm:w-12 font-mono text-xs text-gray-400 truncate">
                               {stage.name}
                             </div>
-                            <div className="flex-1 bg-gray-800/30 rounded-full h-1 xs:h-1.5 overflow-hidden min-w-0">
+                            <div className="flex-1 bg-gray-800/30 rounded-full h-1 sm:h-1.5 overflow-hidden min-w-0">
                               <div
-                                className={`h-full rounded-full transition-all duration-500 ${
-                                  deployProgress[index] >= 100
-                                    ? "bg-green-500"
-                                    : index === deployStage
-                                    ? "bg-cyan-500"
-                                    : "bg-gray-600"
-                                }`}
+                                className={`h-full rounded-full transition-all duration-500`}
                                 style={{ width: `${deployProgress[index]}%` }}
                               />
                             </div>
-                            <div className="w-5 xs:w-6 text-right font-mono text-xs text-gray-400 flex-shrink-0">
+                            <div className="w-5 sm:w-6 text-right font-mono text-xs text-gray-400 flex-shrink-0">
                               {Math.round(deployProgress[index])}%
                             </div>
                           </div>
@@ -420,10 +396,10 @@ export const TechLoading = () => {
 
               {/* Coluna Direita - Terminal */}
               <LazyComponent animation="fadeUp" delay={500}>
-                <div className="bg-gray-900/80 backdrop-blur-xl rounded-xl xs:rounded-2xl p-3 xs:p-4 border border-cyan-500/20 font-mono text-xs shadow-xl h-full flex flex-col min-h-0">
-                  <div className="flex items-center space-x-2 text-cyan-400 mb-2 xs:mb-3">
-                    <Terminal className="w-3 h-3 xs:w-4 xs:h-4" />
-                    <span className="font-bold tracking-wide text-xs">
+                <div className="bg-gray-900/80 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-cyan-500/20 font-mono text-xs shadow-xl h-full flex flex-col min-h-0 overflow-hidden">
+                  <div className="flex items-center space-x-2 text-cyan-400 mb-2 sm:mb-3">
+                    <Terminal className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="font-bold tracking-wide text-xs truncate">
                       {showDeploy ? "DEPLOY_TERMINAL" : "SYSTEM_TERMINAL"}
                     </span>
                   </div>
@@ -467,9 +443,9 @@ export const TechLoading = () => {
               </LazyComponent>
             </div>
 
-            {/* Footer - Mais compacto */}
+            {/* Footer */}
             <LazyComponent animation="fadeUp" delay={600}>
-              <div className="flex flex-col xs:flex-row justify-between items-center gap-1 xs:gap-2 text-xs text-gray-400 font-mono pt-2 xs:pt-3 border-t border-cyan-500/20">
+              <div className="flex flex-col sm:flex-row justify-between items-center gap-1 sm:gap-2 text-xs text-gray-400 font-mono pt-2 sm:pt-3 border-t border-cyan-500/20">
                 <div className="flex items-center space-x-1">
                   <div
                     className={`w-1.5 h-1.5 rounded-full animate-pulse ${
@@ -482,7 +458,7 @@ export const TechLoading = () => {
                     {showDeploy ? "PRODUCTION_ENV" : "DEV_ENV: ACTIVE"}
                   </span>
                 </div>
-                <div className="text-cyan-300 hidden sm:block text-xs">
+                <div className="text-cyan-300 hidden md:block text-xs">
                   PERFORMANCE: OPTIMAL
                 </div>
                 <div className="flex items-center space-x-1">
@@ -504,11 +480,11 @@ export const TechLoading = () => {
 const ParticleEffects = ({ progress }: { progress: number }) => {
   return (
     <LazyComponent animation="fadeIn" delay={150}>
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(Math.floor(progress / 25))].map((_, i) => (
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {[...Array(Math.min(20, Math.floor(progress / 5)))].map((_, i) => (
           <div
             key={i}
-            className="absolute w-1 h-1 bg-cyan-400 rounded-full animate-float hidden xs:block"
+            className="absolute w-1 h-1 bg-cyan-400 rounded-full animate-float hidden sm:block"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -551,6 +527,10 @@ const styles = `
   
   .animate-shimmer {
     animation: shimmer 2s ease-in-out infinite;
+  }
+    
+  body:has(.fixed.inset-0.bg-gradient) {
+    overflow: hidden !important;
   }
 `;
 
