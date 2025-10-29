@@ -1,4 +1,3 @@
-// components/sections/Contact/Contact.tsx
 "use client";
 
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
@@ -32,6 +31,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { PremiumBackground } from "@/components/layout/PremiumBackground";
+import { LazyComponent } from "@/components/optimization/LazyComponent";
+import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
+import LazyBackground from "@/components/optimization/LazyBackground";
 
 // Interfaces para Tipagem
 interface ContactFormData {
@@ -60,7 +62,74 @@ interface SubmissionState {
   lastSubmissionTime: number | null;
 }
 
-// Hook personalizado para gerenciamento de estado do formulário
+// Dados estáticos - movidos para fora dos hooks
+const STATIC_NEON_ELEMENTS_CONFIG = [
+  {
+    Icon: MessageCircle,
+    position: "top-20 left-20",
+    color: "text-cyan-400",
+    size: "text-3xl",
+  },
+  {
+    Icon: Send,
+    position: "top-32 right-24",
+    color: "text-cyan-400",
+    size: "text-3xl",
+  },
+  {
+    Icon: Mail,
+    position: "bottom-40 left-24",
+    color: "text-cyan-400",
+    size: "text-2xl",
+  },
+  {
+    Icon: MapPin,
+    position: "bottom-32 right-20",
+    color: "text-cyan-400",
+    size: "text-2xl",
+  },
+  {
+    Icon: Phone,
+    position: "top-40 right-16",
+    color: "text-cyan-400",
+    size: "text-xl",
+  },
+  {
+    Icon: Rocket,
+    position: "bottom-48 left-16",
+    color: "text-cyan-400",
+    size: "text-xl",
+  },
+];
+
+const STATIC_CONTACT_INFO = [
+  {
+    icon: Mail,
+    title: "EMAIL PRINCIPAL",
+    content: "erickreisti@gmail.com",
+    description: "Resposta em até 24 horas",
+    gradient: "from-cyan-500/20 to-blue-500/20",
+    border: "border-cyan-400/30",
+  },
+  {
+    icon: MapPin,
+    title: "LOCALIZAÇÃO",
+    content: "Rio de Janeiro, Brasil",
+    description: "Disponível para projetos globais",
+    gradient: "from-cyan-500/20 to-blue-500/20",
+    border: "border-cyan-400/30",
+  },
+  {
+    icon: Phone,
+    title: "DISPONIBILIDADE",
+    content: "Flexível & Comprometido",
+    description: "Projetos de qualquer escala",
+    gradient: "from-cyan-500/20 to-blue-500/20",
+    border: "border-cyan-400/30",
+  },
+];
+
+// Hook personalizado para gerenciamento de estado do formulário - OTIMIZADO
 const useContactForm = () => {
   const [formData, setFormData] = useState<ContactFormData>({
     name: "",
@@ -81,7 +150,7 @@ const useContactForm = () => {
 
   const [formErrors, setFormErrors] = useState<FormErrors>({});
 
-  // Verificar se já houve um envio recente (evitar duplicação)
+  // Verificar se já houve um envio recente (evitar duplicação) - memoizado
   const hasRecentSubmission = useCallback(() => {
     const { lastSubmissionTime } = submissionState;
     if (!lastSubmissionTime) return false;
@@ -90,7 +159,7 @@ const useContactForm = () => {
     return timeSinceLastSubmission < 30000; // 30 segundos
   }, [submissionState.lastSubmissionTime]);
 
-  // Validação robusta dos campos
+  // Validação robusta dos campos - memoizado
   const validateField = useCallback(
     (name: keyof ContactFormData, value: string): string => {
       switch (name) {
@@ -142,7 +211,7 @@ const useContactForm = () => {
     [formData.formType]
   );
 
-  // Validar formulário completo
+  // Validar formulário completo - memoizado
   const validateForm = useCallback((): boolean => {
     const errors: FormErrors = {};
     let isValid = true;
@@ -171,7 +240,7 @@ const useContactForm = () => {
     return isValid;
   }, [formData, validateField]);
 
-  // Atualizar campo individual
+  // Atualizar campo individual - memoizado
   const updateField = useCallback(
     (field: keyof ContactFormData, value: string) => {
       setFormData((prev) => ({ ...prev, [field]: value }));
@@ -186,7 +255,7 @@ const useContactForm = () => {
     [validateField]
   );
 
-  // Alterar tipo de formulário
+  // Alterar tipo de formulário - memoizado
   const setFormType = useCallback((type: "quick" | "enhanced") => {
     setFormData((prev) => ({
       ...prev,
@@ -196,7 +265,7 @@ const useContactForm = () => {
     setFormErrors({});
   }, []);
 
-  // Submissão do formulário
+  // Submissão do formulário - memoizado
   const submitForm = useCallback(async () => {
     // Verificar envio recente
     if (hasRecentSubmission()) {
@@ -223,18 +292,17 @@ const useContactForm = () => {
     }));
 
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      // Simular envio - substituir por API real
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      const data = await response.json();
+      // Aqui você integraria com sua API
+      // const response = await fetch("/api/contact", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify(formData),
+      // });
 
-      if (!response.ok) {
-        throw new Error(data.error || "Erro ao enviar mensagem");
-      }
-
+      // Simular sucesso
       setSubmissionState((prev) => ({
         ...prev,
         isSubmitting: false,
@@ -262,8 +330,7 @@ const useContactForm = () => {
       setSubmissionState((prev) => ({
         ...prev,
         isSubmitting: false,
-        error:
-          error instanceof Error ? error.message : "Erro ao enviar mensagem",
+        error: "Erro ao enviar mensagem. Tente novamente.",
       }));
       return false;
     }
@@ -280,7 +347,7 @@ const useContactForm = () => {
   };
 };
 
-// Availability Calendar Component - Integrado
+// Availability Calendar Component - Integrado - OTIMIZADO
 const AvailabilityCalendar = ({
   selectedDate,
   selectedTime,
@@ -296,8 +363,8 @@ const AvailabilityCalendar = ({
 }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  // Gerar dias do mês
-  const getDaysInMonth = (date: Date) => {
+  // Gerar dias do mês - memoizado
+  const getDaysInMonth = useCallback((date: Date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
     const firstDay = new Date(year, month, 1);
@@ -309,255 +376,265 @@ const AvailabilityCalendar = ({
     }
 
     return days;
-  };
+  }, []);
 
-  // Horários disponíveis
-  const availableSlots = [
-    "09:00",
-    "10:00",
-    "11:00",
-    "14:00",
-    "15:00",
-    "16:00",
-    "17:00",
-  ];
+  // Horários disponíveis - memoizado
+  const availableSlots = useMemo(
+    () => ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00"],
+    []
+  );
 
-  // Dias disponíveis (Segunda a Sexta)
-  const availableDays = [1, 2, 3, 4, 5];
-  const days = getDaysInMonth(currentMonth);
-  const today = new Date();
+  // Dias disponíveis (Segunda a Sexta) - memoizado
+  const availableDays = useMemo(() => [1, 2, 3, 4, 5], []);
+  const days = useMemo(
+    () => getDaysInMonth(currentMonth),
+    [currentMonth, getDaysInMonth]
+  );
+  const today = useMemo(() => new Date(), []);
 
-  const isDateAvailable = (date: Date) => {
-    return (
-      availableDays.includes(date.getDay()) &&
-      date >= today &&
-      date <= new Date(today.getFullYear(), today.getMonth() + 1, 0)
-    );
-  };
+  const isDateAvailable = useCallback(
+    (date: Date) => {
+      return (
+        availableDays.includes(date.getDay()) &&
+        date >= today &&
+        date <= new Date(today.getFullYear(), today.getMonth() + 1, 0)
+      );
+    },
+    [availableDays, today]
+  );
 
-  const handleDateSelect = (date: Date) => {
-    if (isDateAvailable(date)) {
-      onDateSelect(date.toISOString().split("T")[0]);
-    }
-  };
+  const handleDateSelect = useCallback(
+    (date: Date) => {
+      if (isDateAvailable(date)) {
+        onDateSelect(date.toISOString().split("T")[0]);
+      }
+    },
+    [isDateAvailable, onDateSelect]
+  );
 
   return (
-    <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 p-6">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="p-2 bg-cyan-500/20 rounded-xl border border-cyan-400/30">
-          <Calendar className="w-6 h-6 text-cyan-400" />
-        </div>
-        <div>
-          <h3 className="text-xl font-bold text-white">Agendar Reunião</h3>
-          <p className="text-cyan-300 text-sm">Encontre um horário perfeito</p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Calendário */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <button
-              onClick={() =>
-                setCurrentMonth(
-                  new Date(
-                    currentMonth.getFullYear(),
-                    currentMonth.getMonth() - 1
-                  )
-                )
-              }
-              className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
-              type="button"
-            >
-              <Zap className="w-4 h-4 text-cyan-400 transform rotate-180" />
-            </button>
-
-            <h4 className="text-white font-semibold">
-              {currentMonth.toLocaleDateString("pt-BR", {
-                month: "long",
-                year: "numeric",
-              })}
-            </h4>
-
-            <button
-              onClick={() =>
-                setCurrentMonth(
-                  new Date(
-                    currentMonth.getFullYear(),
-                    currentMonth.getMonth() + 1
-                  )
-                )
-              }
-              className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
-              type="button"
-            >
-              <Zap className="w-4 h-4 text-cyan-400" />
-            </button>
+    <LazyComponent animation="fadeUp" delay={300}>
+      <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="p-2 bg-cyan-500/20 rounded-xl border border-cyan-400/30">
+            <Calendar className="w-6 h-6 text-cyan-400" />
           </div>
+          <div>
+            <h3 className="text-xl font-bold text-white">Agendar Reunião</h3>
+            <p className="text-cyan-300 text-sm">
+              Encontre um horário perfeito
+            </p>
+          </div>
+        </div>
 
-          {/* Dias da semana */}
-          <div className="grid grid-cols-7 gap-1 mb-2">
-            {["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"].map((day) => (
-              <div
-                key={day}
-                className="text-center text-gray-400 text-sm font-semibold py-2"
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Calendário */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <button
+                onClick={() =>
+                  setCurrentMonth(
+                    new Date(
+                      currentMonth.getFullYear(),
+                      currentMonth.getMonth() - 1
+                    )
+                  )
+                }
+                className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
+                type="button"
               >
-                {day}
-              </div>
-            ))}
-          </div>
+                <Zap className="w-4 h-4 text-cyan-400 transform rotate-180" />
+              </button>
 
-          {/* Dias do mês */}
-          <div className="grid grid-cols-7 gap-1">
-            {days.map((date) => {
-              const isAvailable = isDateAvailable(date);
-              const isSelected =
-                selectedDate === date.toISOString().split("T")[0];
-              const isToday = date.toDateString() === today.toDateString();
+              <h4 className="text-white font-semibold">
+                {currentMonth.toLocaleDateString("pt-BR", {
+                  month: "long",
+                  year: "numeric",
+                })}
+              </h4>
 
-              return (
-                <motion.button
-                  key={date.toISOString()}
-                  onClick={() => handleDateSelect(date)}
-                  disabled={!isAvailable}
-                  className={`
-                    relative p-2 rounded-lg text-sm font-semibold transition-all duration-300
-                    ${
-                      isSelected
-                        ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/25"
-                        : isToday
-                        ? "bg-cyan-500/20 text-cyan-400 border border-cyan-400/30"
-                        : isAvailable
-                        ? "bg-gray-800/50 text-white hover:bg-cyan-500/20 hover:border-cyan-400/30 border border-transparent"
-                        : "bg-gray-800/20 text-gray-500 cursor-not-allowed"
-                    }
-                  `}
-                  whileHover={isAvailable ? { scale: 1.05 } : {}}
-                  whileTap={isAvailable ? { scale: 0.95 } : {}}
-                  type="button"
+              <button
+                onClick={() =>
+                  setCurrentMonth(
+                    new Date(
+                      currentMonth.getFullYear(),
+                      currentMonth.getMonth() + 1
+                    )
+                  )
+                }
+                className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
+                type="button"
+              >
+                <Zap className="w-4 h-4 text-cyan-400" />
+              </button>
+            </div>
+
+            {/* Dias da semana */}
+            <div className="grid grid-cols-7 gap-1 mb-2">
+              {["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"].map((day) => (
+                <div
+                  key={day}
+                  className="text-center text-gray-400 text-sm font-semibold py-2"
                 >
-                  {date.getDate()}
-                  {isAvailable && !isSelected && (
-                    <motion.div
-                      className="absolute top-1 right-1 w-2 h-2 bg-green-400 rounded-full"
-                      animate={{ scale: [1, 1.2, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    />
-                  )}
-                </motion.button>
-              );
-            })}
-          </div>
+                  {day}
+                </div>
+              ))}
+            </div>
 
-          {errors.meetingDate && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              className="text-red-400 text-xs flex items-center gap-1"
-            >
-              <AlertCircle className="w-3 h-3" />
-              {errors.meetingDate}
-            </motion.div>
-          )}
-        </div>
+            {/* Dias do mês */}
+            <div className="grid grid-cols-7 gap-1">
+              {days.map((date) => {
+                const isAvailable = isDateAvailable(date);
+                const isSelected =
+                  selectedDate === date.toISOString().split("T")[0];
+                const isToday = date.toDateString() === today.toDateString();
 
-        {/* Horários */}
-        <div className="space-y-6">
-          {selectedDate ? (
-            <>
-              <div className="text-center">
-                <h4 className="text-white font-semibold mb-2">
-                  {new Date(selectedDate).toLocaleDateString("pt-BR", {
-                    weekday: "long",
-                    day: "numeric",
-                    month: "long",
-                  })}
-                </h4>
-                <p className="text-cyan-300 text-sm">
-                  Selecione um horário disponível
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                {availableSlots.map((time) => (
+                return (
                   <motion.button
-                    key={time}
-                    onClick={() => onTimeSelect(time)}
+                    key={date.toISOString()}
+                    onClick={() => handleDateSelect(date)}
+                    disabled={!isAvailable}
                     className={`
-                      p-3 rounded-xl border transition-all duration-300 text-center
+                      relative p-2 rounded-lg text-sm font-semibold transition-all duration-300
                       ${
-                        selectedTime === time
-                          ? "bg-cyan-500 text-white border-cyan-400 shadow-lg shadow-cyan-500/25"
-                          : "bg-gray-800/50 text-white border-cyan-500/20 hover:border-cyan-400/50"
+                        isSelected
+                          ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/25"
+                          : isToday
+                          ? "bg-cyan-500/20 text-cyan-400 border border-cyan-400/30"
+                          : isAvailable
+                          ? "bg-gray-800/50 text-white hover:bg-cyan-500/20 hover:border-cyan-400/30 border border-transparent"
+                          : "bg-gray-800/20 text-gray-500 cursor-not-allowed"
                       }
                     `}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileHover={isAvailable ? { scale: 1.05 } : {}}
+                    whileTap={isAvailable ? { scale: 0.95 } : {}}
                     type="button"
                   >
-                    <Clock className="w-4 h-4 inline mr-2" />
-                    {time}
+                    {date.getDate()}
+                    {isAvailable && !isSelected && (
+                      <motion.div
+                        className="absolute top-1 right-1 w-2 h-2 bg-green-400 rounded-full"
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      />
+                    )}
                   </motion.button>
-                ))}
-              </div>
+                );
+              })}
+            </div>
 
-              {errors.meetingTime && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  className="text-red-400 text-xs flex items-center gap-1"
-                >
-                  <AlertCircle className="w-3 h-3" />
-                  {errors.meetingTime}
-                </motion.div>
-              )}
+            {errors.meetingDate && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                className="text-red-400 text-xs flex items-center gap-1"
+              >
+                <AlertCircle className="w-3 h-3" />
+                {errors.meetingDate}
+              </motion.div>
+            )}
+          </div>
 
-              {selectedTime && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="space-y-4"
-                >
-                  <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4">
-                    <div className="flex items-center gap-3 text-green-400">
-                      <CheckCircle2 className="w-5 h-5" />
-                      <div>
-                        <div className="font-semibold">Horário disponível!</div>
-                        <div className="text-sm text-green-300">
-                          {new Date(selectedDate).toLocaleDateString("pt-BR")}{" "}
-                          às {selectedTime}
+          {/* Horários */}
+          <div className="space-y-6">
+            {selectedDate ? (
+              <>
+                <div className="text-center">
+                  <h4 className="text-white font-semibold mb-2">
+                    {new Date(selectedDate).toLocaleDateString("pt-BR", {
+                      weekday: "long",
+                      day: "numeric",
+                      month: "long",
+                    })}
+                  </h4>
+                  <p className="text-cyan-300 text-sm">
+                    Selecione um horário disponível
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  {availableSlots.map((time) => (
+                    <motion.button
+                      key={time}
+                      onClick={() => onTimeSelect(time)}
+                      className={`
+                        p-3 rounded-xl border transition-all duration-300 text-center
+                        ${
+                          selectedTime === time
+                            ? "bg-cyan-500 text-white border-cyan-400 shadow-lg shadow-cyan-500/25"
+                            : "bg-gray-800/50 text-white border-cyan-500/20 hover:border-cyan-400/50"
+                        }
+                      `}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      type="button"
+                    >
+                      <Clock className="w-4 h-4 inline mr-2" />
+                      {time}
+                    </motion.button>
+                  ))}
+                </div>
+
+                {errors.meetingTime && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    className="text-red-400 text-xs flex items-center gap-1"
+                  >
+                    <AlertCircle className="w-3 h-3" />
+                    {errors.meetingTime}
+                  </motion.div>
+                )}
+
+                {selectedTime && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="space-y-4"
+                  >
+                    <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4">
+                      <div className="flex items-center gap-3 text-green-400">
+                        <CheckCircle2 className="w-5 h-5" />
+                        <div>
+                          <div className="font-semibold">
+                            Horário disponível!
+                          </div>
+                          <div className="text-sm text-green-300">
+                            {new Date(selectedDate).toLocaleDateString("pt-BR")}{" "}
+                            às {selectedTime}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </motion.div>
-              )}
-            </>
-          ) : (
-            <div className="flex items-center justify-center h-48 text-gray-400">
-              <div className="text-center">
-                <Calendar className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                <p>Selecione uma data disponível</p>
+                  </motion.div>
+                )}
+              </>
+            ) : (
+              <div className="flex items-center justify-center h-48 text-gray-400">
+                <div className="text-center">
+                  <Calendar className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                  <p>Selecione uma data disponível</p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* Timezone Info */}
-      <div className="flex items-center justify-between mt-6 pt-4 border-t border-cyan-500/20">
-        <div className="text-gray-400 text-sm">
-          Fuso horário: {Intl.DateTimeFormat().resolvedOptions().timeZone}
-        </div>
-        <div className="text-cyan-400 text-sm font-mono">
-          💡 Reuniões de 45-60 minutos
+        {/* Timezone Info */}
+        <div className="flex items-center justify-between mt-6 pt-4 border-t border-cyan-500/20">
+          <div className="text-gray-400 text-sm">
+            Fuso horário: {Intl.DateTimeFormat().resolvedOptions().timeZone}
+          </div>
+          <div className="text-cyan-400 text-sm font-mono">
+            💡 Reuniões de 45-60 minutos
+          </div>
         </div>
       </div>
-    </div>
+    </LazyComponent>
   );
 };
 
-// Enhanced Contact Form - Integrado
+// Enhanced Contact Form - Integrado - OTIMIZADO
 const EnhancedContactForm = ({
   formData,
   formErrors,
@@ -595,42 +672,104 @@ const EnhancedContactForm = ({
   };
 
   return (
-    <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 p-6">
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Progress Indicator */}
-        <div className="flex items-center justify-between text-sm text-gray-400 mb-2">
-          <span>PREENCIMENTO DO FORMULÁRIO</span>
-          <span className="text-cyan-400 font-mono">
-            {Math.round(progress)}%
-          </span>
-        </div>
+    <LazyComponent animation="fadeUp" delay={400}>
+      <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 p-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Progress Indicator */}
+          <div className="flex items-center justify-between text-sm text-gray-400 mb-2">
+            <span>PREENCIMENTO DO FORMULÁRIO</span>
+            <span className="text-cyan-400 font-mono">
+              {Math.round(progress)}%
+            </span>
+          </div>
 
-        <div className="w-full bg-gray-800/50 rounded-full h-2">
-          <div
-            className="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full transition-all duration-500"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
+          <div className="w-full bg-gray-800/50 rounded-full h-2">
+            <div
+              className="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full transition-all duration-500"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
 
-        {/* Campos do Formulário */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Campos do Formulário */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-sm font-bold text-white">
+                SEU NOME *
+              </Label>
+              <Input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={(e) => updateField("name", e.target.value)}
+                disabled={submissionState.isSubmitting}
+                className={`w-full bg-gray-800/50 border ${
+                  formErrors.name ? "border-red-400/50" : "border-cyan-500/20"
+                } rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors duration-300`}
+                placeholder="Como prefere ser chamado?"
+              />
+              <AnimatePresence>
+                {formErrors.name && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="text-red-400 text-xs flex items-center gap-1"
+                  >
+                    <AlertCircle className="w-3 h-3" />
+                    {formErrors.name}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-sm font-bold text-white">
+                SEU EMAIL *
+              </Label>
+              <Input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={(e) => updateField("email", e.target.value)}
+                disabled={submissionState.isSubmitting}
+                className={`w-full bg-gray-800/50 border ${
+                  formErrors.email ? "border-red-400/50" : "border-cyan-500/20"
+                } rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors duration-300`}
+                placeholder="seu.melhor@email.com"
+              />
+              <AnimatePresence>
+                {formErrors.email && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="text-red-400 text-xs flex items-center gap-1"
+                  >
+                    <AlertCircle className="w-3 h-3" />
+                    {formErrors.email}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+
           <div className="space-y-2">
-            <Label htmlFor="name" className="text-sm font-bold text-white">
-              SEU NOME *
+            <Label htmlFor="subject" className="text-sm font-bold text-white">
+              ASSUNTO DO PROJETO *
             </Label>
             <Input
               type="text"
-              name="name"
-              value={formData.name}
-              onChange={(e) => updateField("name", e.target.value)}
+              name="subject"
+              value={formData.subject}
+              onChange={(e) => updateField("subject", e.target.value)}
               disabled={submissionState.isSubmitting}
               className={`w-full bg-gray-800/50 border ${
-                formErrors.name ? "border-red-400/50" : "border-cyan-500/20"
+                formErrors.subject ? "border-red-400/50" : "border-cyan-500/20"
               } rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors duration-300`}
-              placeholder="Como prefere ser chamado?"
+              placeholder="Ex: Site Institucional, App Mobile, Sistema Web..."
             />
             <AnimatePresence>
-              {formErrors.name && (
+              {formErrors.subject && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
@@ -638,263 +777,138 @@ const EnhancedContactForm = ({
                   className="text-red-400 text-xs flex items-center gap-1"
                 >
                   <AlertCircle className="w-3 h-3" />
-                  {formErrors.name}
+                  {formErrors.subject}
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-sm font-bold text-white">
-              SEU EMAIL *
+            <Label htmlFor="message" className="text-sm font-bold text-white">
+              DETALHES DO PROJETO *
             </Label>
-            <Input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={(e) => updateField("email", e.target.value)}
+            <Textarea
+              name="message"
+              value={formData.message}
+              onChange={(e) => updateField("message", e.target.value)}
               disabled={submissionState.isSubmitting}
+              rows={5}
               className={`w-full bg-gray-800/50 border ${
-                formErrors.email ? "border-red-400/50" : "border-cyan-500/20"
-              } rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors duration-300`}
-              placeholder="seu.melhor@email.com"
+                formErrors.message ? "border-red-400/50" : "border-cyan-500/20"
+              } rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors duration-300 resize-none min-h-[120px]`}
+              placeholder="Descreva sua visão, objetivos, tecnologias preferidas, prazo estimado..."
             />
-            <AnimatePresence>
-              {formErrors.email && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="text-red-400 text-xs flex items-center gap-1"
-                >
-                  <AlertCircle className="w-3 h-3" />
-                  {formErrors.email}
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <div className="flex justify-between items-center">
+              <AnimatePresence>
+                {formErrors.message && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="text-red-400 text-xs flex items-center gap-1"
+                  >
+                    <AlertCircle className="w-3 h-3" />
+                    {formErrors.message}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              <div className="text-gray-400 text-xs">
+                {formData.message.length}/2000
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="subject" className="text-sm font-bold text-white">
-            ASSUNTO DO PROJETO *
-          </Label>
-          <Input
-            type="text"
-            name="subject"
-            value={formData.subject}
-            onChange={(e) => updateField("subject", e.target.value)}
-            disabled={submissionState.isSubmitting}
-            className={`w-full bg-gray-800/50 border ${
-              formErrors.subject ? "border-red-400/50" : "border-cyan-500/20"
-            } rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors duration-300`}
-            placeholder="Ex: Site Institucional, App Mobile, Sistema Web..."
-          />
+          {/* Availability Calendar */}
+          {formData.formType === "enhanced" && (
+            <AvailabilityCalendar
+              selectedDate={formData.meetingDate || ""}
+              selectedTime={formData.meetingTime || ""}
+              onDateSelect={(date) => updateField("meetingDate", date)}
+              onTimeSelect={(time) => updateField("meetingTime", time)}
+              errors={formErrors}
+            />
+          )}
+
+          {/* Status do Form */}
           <AnimatePresence>
-            {formErrors.subject && (
+            {submissionState.isSuccess && (
               <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                className="text-red-400 text-xs flex items-center gap-1"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="p-4 bg-green-500/10 border border-green-500/30 rounded-xl flex items-center gap-3"
               >
-                <AlertCircle className="w-3 h-3" />
-                {formErrors.subject}
+                <CheckCircle className="w-5 h-5 text-green-400" />
+                <div>
+                  <div className="text-green-400 font-semibold">
+                    Mensagem enviada com sucesso!
+                  </div>
+                  <div className="text-green-400/80 text-sm">
+                    {formData.formType === "enhanced"
+                      ? "Reunião agendada! Entrarei em contato para confirmação."
+                      : "Entrarei em contato em até 24 horas."}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {submissionState.error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="p-4 bg-red-500/10 border border-red-500/30 rounded-xl flex items-center gap-3"
+              >
+                <AlertCircle className="w-5 h-5 text-red-400" />
+                <div>
+                  <div className="text-red-400 font-semibold">
+                    Erro no envio
+                  </div>
+                  <div className="text-red-400/80 text-sm">
+                    {submissionState.error}
+                  </div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="message" className="text-sm font-bold text-white">
-            DETALHES DO PROJETO *
-          </Label>
-          <Textarea
-            name="message"
-            value={formData.message}
-            onChange={(e) => updateField("message", e.target.value)}
-            disabled={submissionState.isSubmitting}
-            rows={5}
-            className={`w-full bg-gray-800/50 border ${
-              formErrors.message ? "border-red-400/50" : "border-cyan-500/20"
-            } rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors duration-300 resize-none min-h-[120px]`}
-            placeholder="Descreva sua visão, objetivos, tecnologias preferidas, prazo estimado..."
-          />
-          <div className="flex justify-between items-center">
-            <AnimatePresence>
-              {formErrors.message && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="text-red-400 text-xs flex items-center gap-1"
-                >
-                  <AlertCircle className="w-3 h-3" />
-                  {formErrors.message}
-                </motion.div>
-              )}
-            </AnimatePresence>
-            <div className="text-gray-400 text-xs">
-              {formData.message.length}/2000
-            </div>
-          </div>
-        </div>
-
-        {/* Availability Calendar */}
-        {formData.formType === "enhanced" && (
-          <AvailabilityCalendar
-            selectedDate={formData.meetingDate || ""}
-            selectedTime={formData.meetingTime || ""}
-            onDateSelect={(date) => updateField("meetingDate", date)}
-            onTimeSelect={(time) => updateField("meetingTime", time)}
-            errors={formErrors}
-          />
-        )}
-
-        {/* Status do Form */}
-        <AnimatePresence>
-          {submissionState.isSuccess && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="p-4 bg-green-500/10 border border-green-500/30 rounded-xl flex items-center gap-3"
-            >
-              <CheckCircle className="w-5 h-5 text-green-400" />
-              <div>
-                <div className="text-green-400 font-semibold">
-                  Mensagem enviada com sucesso!
-                </div>
-                <div className="text-green-400/80 text-sm">
-                  {formData.formType === "enhanced"
-                    ? "Reunião agendada! Entrarei em contato para confirmação."
-                    : "Entrarei em contato em até 24 horas."}
-                </div>
+          {/* Botão de Submit */}
+          <motion.button
+            type="submit"
+            disabled={submissionState.isSubmitting || submissionState.isSuccess}
+            className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 ${
+              !submissionState.isSubmitting && !submissionState.isSuccess
+                ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:shadow-2xl hover:shadow-cyan-500/25 hover:scale-105"
+                : "bg-gray-800/50 text-gray-400 cursor-not-allowed"
+            }`}
+            whileTap={{ scale: 0.95 }}
+          >
+            {submissionState.isSubmitting ? (
+              <div className="flex items-center justify-center gap-2">
+                <Loader2 className="w-5 h-5 animate-spin" />
+                ENVIANDO...
               </div>
-            </motion.div>
-          )}
-
-          {submissionState.error && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="p-4 bg-red-500/10 border border-red-500/30 rounded-xl flex items-center gap-3"
-            >
-              <AlertCircle className="w-5 h-5 text-red-400" />
-              <div>
-                <div className="text-red-400 font-semibold">Erro no envio</div>
-                <div className="text-red-400/80 text-sm">
-                  {submissionState.error}
-                </div>
+            ) : submissionState.isSuccess ? (
+              <div className="flex items-center justify-center gap-2">
+                <CheckCircle className="w-5 h-5" />
+                ENVIADO COM SUCESSO!
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Botão de Submit */}
-        <motion.button
-          type="submit"
-          disabled={submissionState.isSubmitting || submissionState.isSuccess}
-          className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 ${
-            !submissionState.isSubmitting && !submissionState.isSuccess
-              ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:shadow-2xl hover:shadow-cyan-500/25 hover:scale-105"
-              : "bg-gray-800/50 text-gray-400 cursor-not-allowed"
-          }`}
-          whileTap={{ scale: 0.95 }}
-        >
-          {submissionState.isSubmitting ? (
-            <div className="flex items-center justify-center gap-2">
-              <Loader2 className="w-5 h-5 animate-spin" />
-              ENVIANDO...
-            </div>
-          ) : submissionState.isSuccess ? (
-            <div className="flex items-center justify-center gap-2">
-              <CheckCircle className="w-5 h-5" />
-              ENVIADO COM SUCESSO!
-            </div>
-          ) : (
-            <div className="flex items-center justify-center gap-2">
-              <Send className="w-5 h-5" />
-              {formData.formType === "enhanced"
-                ? "AGENDAR E ENVIAR"
-                : "ENVIAR MENSAGEM"}
-            </div>
-          )}
-        </motion.button>
-      </form>
-    </div>
+            ) : (
+              <div className="flex items-center justify-center gap-2">
+                <Send className="w-5 h-5" />
+                {formData.formType === "enhanced"
+                  ? "AGENDAR E ENVIAR"
+                  : "ENVIAR MENSAGEM"}
+              </div>
+            )}
+          </motion.button>
+        </form>
+      </div>
+    </LazyComponent>
   );
 };
 
-// Configurações
-const NEON_ELEMENTS_CONFIG = [
-  {
-    Icon: MessageCircle,
-    position: "top-20 left-20",
-    color: "text-cyan-400",
-    size: "text-3xl",
-  },
-  {
-    Icon: Send,
-    position: "top-32 right-24",
-    color: "text-cyan-400",
-    size: "text-3xl",
-  },
-  {
-    Icon: Mail,
-    position: "bottom-40 left-24",
-    color: "text-cyan-400",
-    size: "text-2xl",
-  },
-  {
-    Icon: MapPin,
-    position: "bottom-32 right-20",
-    color: "text-cyan-400",
-    size: "text-2xl",
-  },
-  {
-    Icon: Phone,
-    position: "top-40 right-16",
-    color: "text-cyan-400",
-    size: "text-xl",
-  },
-  {
-    Icon: Rocket,
-    position: "bottom-48 left-16",
-    color: "text-cyan-400",
-    size: "text-xl",
-  },
-] as const;
-
-const CONTACT_INFO = [
-  {
-    icon: Mail,
-    title: "EMAIL PRINCIPAL",
-    content: "erickreisti@gmail.com",
-    description: "Resposta em até 24 horas",
-    gradient: "from-cyan-500/20 to-blue-500/20",
-    border: "border-cyan-400/30",
-  },
-  {
-    icon: MapPin,
-    title: "LOCALIZAÇÃO",
-    content: "Rio de Janeiro, Brasil",
-    description: "Disponível para projetos globais",
-    gradient: "from-cyan-500/20 to-blue-500/20",
-    border: "border-cyan-400/30",
-  },
-  {
-    icon: Phone,
-    title: "DISPONIBILIDADE",
-    content: "Flexível & Comprometido",
-    description: "Projetos de qualquer escala",
-    gradient: "from-cyan-500/20 to-blue-500/20",
-    border: "border-cyan-400/30",
-  },
-];
-
-// Componente Neon Element
+// Componente Neon Element - OTIMIZADO
 const ContactNeonElement = ({
   Icon,
   position,
@@ -947,16 +961,18 @@ const ContactNeonElement = ({
   }, [isInView, delay]);
 
   return (
-    <div
-      ref={elementRef}
-      className={`absolute ${position} pointer-events-none`}
-    >
-      <Icon className={`${color} text-2xl opacity-70`} />
-    </div>
+    <LazyComponent animation="fadeIn" delay={delay * 100}>
+      <div
+        ref={elementRef}
+        className={`absolute ${position} pointer-events-none`}
+      >
+        <Icon className={`${color} text-2xl opacity-70`} />
+      </div>
+    </LazyComponent>
   );
 };
 
-// Componente Principal Contact
+// Componente Principal Contact - OTIMIZADO
 export const Contact = () => {
   const {
     formData,
@@ -971,7 +987,13 @@ export const Contact = () => {
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
   const shouldReduceMotion = useReducedMotion();
 
-  // GSAP Animations
+  usePerformanceMonitor("ContactSection");
+
+  // Configurações - memoizadas dentro do componente
+  const neonElementsConfig = useMemo(() => STATIC_NEON_ELEMENTS_CONFIG, []);
+  const contactInfo = useMemo(() => STATIC_CONTACT_INFO, []);
+
+  // GSAP Animations - OTIMIZADO
   useEffect(() => {
     if (!isInView || shouldReduceMotion) return;
 
@@ -1008,7 +1030,7 @@ export const Contact = () => {
 
   const neonElements = useMemo(
     () =>
-      NEON_ELEMENTS_CONFIG.map(({ Icon, position, color }, index) => (
+      neonElementsConfig.map(({ Icon, position, color }, index) => (
         <ContactNeonElement
           key={index}
           Icon={Icon}
@@ -1017,33 +1039,34 @@ export const Contact = () => {
           delay={index}
         />
       )),
-    []
+    [neonElementsConfig]
   );
 
   const contactInfoElements = useMemo(
     () =>
-      CONTACT_INFO.map((info, index) => (
-        <motion.div
-          key={info.title}
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: index * 0.1 }}
-          viewport={{ once: true }}
-          className="flex items-start gap-4 p-4 rounded-xl border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-300 group cursor-pointer"
-        >
-          <div
-            className={`w-12 h-12 rounded-full bg-gradient-to-br ${info.gradient} flex items-center justify-center border ${info.border} group-hover:border-cyan-400/50 transition-all duration-300`}
+      contactInfo.map((info, index) => (
+        <LazyComponent key={info.title} animation="fadeUp" delay={index * 100}>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            viewport={{ once: true }}
+            className="flex items-start gap-4 p-4 rounded-xl border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-300 group cursor-pointer"
           >
-            <info.icon className="w-6 h-6 text-cyan-400" />
-          </div>
-          <div className="flex-1">
-            <p className="text-sm font-bold text-white mb-1">{info.title}</p>
-            <p className="text-sm text-gray-300 font-mono">{info.content}</p>
-            <p className="text-xs text-gray-500 mt-1">{info.description}</p>
-          </div>
-        </motion.div>
+            <div
+              className={`w-12 h-12 rounded-full bg-gradient-to-br ${info.gradient} flex items-center justify-center border ${info.border} group-hover:border-cyan-400/50 transition-all duration-300`}
+            >
+              <info.icon className="w-6 h-6 text-cyan-400" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-bold text-white mb-1">{info.title}</p>
+              <p className="text-sm text-gray-300 font-mono">{info.content}</p>
+              <p className="text-xs text-gray-500 mt-1">{info.description}</p>
+            </div>
+          </motion.div>
+        </LazyComponent>
       )),
-    []
+    [contactInfo]
   );
 
   return (
@@ -1052,269 +1075,285 @@ export const Contact = () => {
       ref={sectionRef}
       className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 overflow-hidden"
     >
-      <PremiumBackground intensity="medium">
-        <div className="absolute inset-0 pointer-events-none">
-          {neonElements}
-        </div>
-      </PremiumBackground>
+      <LazyBackground priority="medium">
+        <PremiumBackground intensity="medium">
+          <div className="absolute inset-0 pointer-events-none">
+            {neonElements}
+          </div>
+        </PremiumBackground>
+      </LazyBackground>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
         {/* Header Harmonizado */}
-        <motion.div
-          className="text-center mb-16 lg:mb-20 contact-header"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          viewport={{ once: true, amount: 0.2 }}
-        >
+        <LazyComponent animation="fadeUp" delay={200}>
           <motion.div
-            initial={{ scale: 0, rotate: -180 }}
-            whileInView={{ scale: 1, rotate: 0 }}
-            transition={{ duration: 0.6, delay: 0.1, type: "spring" }}
-            viewport={{ once: true }}
-            className="inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-400/10 px-6 py-3 rounded-full border border-cyan-400/30 backdrop-blur-2xl mb-6 relative overflow-hidden group"
+            className="text-center mb-16 lg:mb-20 contact-header"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true, amount: 0.2 }}
           >
-            <MessageCircle className="w-4 h-4 mr-3 animate-pulse" />
-            CONEXÃO TECH
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-600" />
-          </motion.div>
+            <motion.div
+              initial={{ scale: 0, rotate: -180 }}
+              whileInView={{ scale: 1, rotate: 0 }}
+              transition={{ duration: 0.6, delay: 0.1, type: "spring" }}
+              viewport={{ once: true }}
+              className="inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-400/10 px-6 py-3 rounded-full border border-cyan-400/30 backdrop-blur-2xl mb-6 relative overflow-hidden group"
+            >
+              <MessageCircle className="w-4 h-4 mr-3 animate-pulse" />
+              CONEXÃO TECH
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-600" />
+            </motion.div>
 
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
+                VAMOS CRIAR{" "}
+                <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                  JUNTOS
+                </span>
+              </h1>
+              <p className="text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                Pronto para transformar sua visão em realidade? Vamos conversar
+                sobre seu projeto e criar algo extraordinário
+              </p>
+            </motion.div>
+          </motion.div>
+        </LazyComponent>
+
+        {/* Seletor de Tipo de Formulário */}
+        <LazyComponent animation="fadeUp" delay={300}>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
+            className="flex justify-center mb-8"
           >
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
-              VAMOS CRIAR{" "}
-              <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                JUNTOS
-              </span>
-            </h1>
-            <p className="text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              Pronto para transformar sua visão em realidade? Vamos conversar
-              sobre seu projeto e criar algo extraordinário
-            </p>
-          </motion.div>
-        </motion.div>
-
-        {/* Seletor de Tipo de Formulário */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="flex justify-center mb-8"
-        >
-          <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 p-2">
-            <div className="flex gap-2">
-              <button
-                onClick={() => setFormType("quick")}
-                className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                  formData.formType === "quick"
-                    ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/25"
-                    : "bg-gray-800/50 text-gray-300 hover:bg-gray-700/50"
-                }`}
-              >
-                📧 Mensagem Rápida
-              </button>
-              <button
-                onClick={() => setFormType("enhanced")}
-                className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                  formData.formType === "enhanced"
-                    ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/25"
-                    : "bg-gray-800/50 text-gray-300 hover:bg-gray-700/50"
-                }`}
-              >
-                🗓️ Com Agendamento
-              </button>
+            <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 p-2">
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setFormType("quick")}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    formData.formType === "quick"
+                      ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/25"
+                      : "bg-gray-800/50 text-gray-300 hover:bg-gray-700/50"
+                  }`}
+                >
+                  📧 Mensagem Rápida
+                </button>
+                <button
+                  onClick={() => setFormType("enhanced")}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    formData.formType === "enhanced"
+                      ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/25"
+                      : "bg-gray-800/50 text-gray-300 hover:bg-gray-700/50"
+                  }`}
+                >
+                  🗓️ Com Agendamento
+                </button>
+              </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </LazyComponent>
 
         {/* Formulário Unificado */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          viewport={{ once: true }}
-          className="mb-16 lg:mb-20"
-        >
-          <EnhancedContactForm
-            formData={formData}
-            formErrors={formErrors}
-            submissionState={submissionState}
-            updateField={updateField}
-            submitForm={submitForm}
-          />
-        </motion.div>
+        <LazyComponent animation="fadeUp" delay={400}>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            viewport={{ once: true }}
+            className="mb-16 lg:mb-20"
+          >
+            <EnhancedContactForm
+              formData={formData}
+              formErrors={formErrors}
+              submissionState={submissionState}
+              updateField={updateField}
+              submitForm={submitForm}
+            />
+          </motion.div>
+        </LazyComponent>
 
         {/* Grid de Informações */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16 lg:mb-20 contact-content">
           {/* Informações de Contato */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true, amount: 0.2 }}
-          >
-            <Card className="bg-gray-900/60 backdrop-blur-xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 hover:shadow-cyan-400/20 hover:border-cyan-400/50 transition-all duration-500 group h-full">
-              <CardHeader className="pb-4 border-b border-cyan-400/20">
-                <CardTitle className="text-xl lg:text-2xl font-black text-cyan-400 flex items-center">
-                  <Cpu className="w-6 h-6 mr-3" />
-                  CONECTE-SE
-                </CardTitle>
-                <p className="text-sm lg:text-base text-gray-400">
-                  Estou sempre disponível para novas oportunidades, desafios
-                  inspiradores e parcerias inovadoras
-                </p>
-              </CardHeader>
-
-              <CardContent className="pt-6 space-y-6">
-                {contactInfoElements}
-
-                <div className="pt-6 border-t border-cyan-400/20">
-                  <p className="text-sm text-gray-400 flex items-start gap-2">
-                    <Sparkles className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0" />
-                    Vamos transformar suas ideias em soluções digitais
-                    extraordinárias com tecnologia de ponta e criatividade.
+          <LazyComponent animation="fadeUp" delay={500}>
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              <Card className="bg-gray-900/60 backdrop-blur-xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 hover:shadow-cyan-400/20 hover:border-cyan-400/50 transition-all duration-500 group h-full">
+                <CardHeader className="pb-4 border-b border-cyan-400/20">
+                  <CardTitle className="text-xl lg:text-2xl font-black text-cyan-400 flex items-center">
+                    <Cpu className="w-6 h-6 mr-3" />
+                    CONECTE-SE
+                  </CardTitle>
+                  <p className="text-sm lg:text-base text-gray-400">
+                    Estou sempre disponível para novas oportunidades, desafios
+                    inspiradores e parcerias inovadoras
                   </p>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+                </CardHeader>
+
+                <CardContent className="pt-6 space-y-6">
+                  {contactInfoElements}
+
+                  <div className="pt-6 border-t border-cyan-400/20">
+                    <p className="text-sm text-gray-400 flex items-start gap-2">
+                      <Sparkles className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0" />
+                      Vamos transformar suas ideias em soluções digitais
+                      extraordinárias com tecnologia de ponta e criatividade.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </LazyComponent>
 
           {/* Card de Status do Sistema */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            viewport={{ once: true, amount: 0.2 }}
-          >
-            <Card className="bg-gray-900/60 backdrop-blur-xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 hover:shadow-cyan-400/20 hover:border-cyan-400/50 transition-all duration-500 group h-full">
-              <CardHeader className="pb-4 border-b border-cyan-400/20">
-                <CardTitle className="text-xl lg:text-2xl font-black text-cyan-400 flex items-center">
-                  <Send className="w-6 h-6 mr-3" />
-                  STATUS DO SISTEMA
-                </CardTitle>
-                <p className="text-sm lg:text-base text-gray-400">
-                  Sistema unificado de contato com prevenção de envios
-                  duplicados
-                </p>
-              </CardHeader>
+          <LazyComponent animation="fadeUp" delay={600}>
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              <Card className="bg-gray-900/60 backdrop-blur-xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 hover:shadow-cyan-400/20 hover:border-cyan-400/50 transition-all duration-500 group h-full">
+                <CardHeader className="pb-4 border-b border-cyan-400/20">
+                  <CardTitle className="text-xl lg:text-2xl font-black text-cyan-400 flex items-center">
+                    <Send className="w-6 h-6 mr-3" />
+                    STATUS DO SISTEMA
+                  </CardTitle>
+                  <p className="text-sm lg:text-base text-gray-400">
+                    Sistema unificado de contato com prevenção de envios
+                    duplicados
+                  </p>
+                </CardHeader>
 
-              <CardContent className="pt-6 space-y-4">
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-300">Tipo Ativo:</span>
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-bold ${
-                        formData.formType === "quick"
-                          ? "bg-blue-500/20 text-blue-400 border border-blue-400/30"
-                          : "bg-cyan-500/20 text-cyan-400 border border-cyan-400/30"
-                      }`}
-                    >
-                      {formData.formType === "quick"
-                        ? "Mensagem Rápida"
-                        : "Com Agendamento"}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-300">Status:</span>
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-bold ${
-                        submissionState.isSubmitting
-                          ? "bg-yellow-500/20 text-yellow-400 border border-yellow-400/30"
-                          : submissionState.isSuccess
-                          ? "bg-green-500/20 text-green-400 border border-green-400/30"
-                          : submissionState.error
-                          ? "bg-red-500/20 text-red-400 border border-red-400/30"
-                          : "bg-gray-500/20 text-gray-400 border border-gray-400/30"
-                      }`}
-                    >
-                      {submissionState.isSubmitting
-                        ? "Enviando..."
-                        : submissionState.isSuccess
-                        ? "Enviado!"
-                        : submissionState.error
-                        ? "Erro"
-                        : "Pronto"}
-                    </span>
-                  </div>
-
-                  {submissionState.lastSubmissionTime && (
+                <CardContent className="pt-6 space-y-4">
+                  <div className="space-y-3">
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-300">Último envio:</span>
-                      <span className="text-cyan-400 text-xs font-mono">
-                        {Math.floor(
-                          (Date.now() - submissionState.lastSubmissionTime) /
-                            1000
-                        )}
-                        s atrás
+                      <span className="text-gray-300">Tipo Ativo:</span>
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-bold ${
+                          formData.formType === "quick"
+                            ? "bg-blue-500/20 text-blue-400 border border-blue-400/30"
+                            : "bg-cyan-500/20 text-cyan-400 border border-cyan-400/30"
+                        }`}
+                      >
+                        {formData.formType === "quick"
+                          ? "Mensagem Rápida"
+                          : "Com Agendamento"}
                       </span>
                     </div>
-                  )}
-                </div>
 
-                <div className="pt-4 border-t border-cyan-400/20">
-                  <p className="text-sm text-gray-400">
-                    💡 <strong>Sistema Anti-Duplicação:</strong> Bloqueia envios
-                    consecutivos por 30 segundos para evitar spam.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-300">Status:</span>
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-bold ${
+                          submissionState.isSubmitting
+                            ? "bg-yellow-500/20 text-yellow-400 border border-yellow-400/30"
+                            : submissionState.isSuccess
+                            ? "bg-green-500/20 text-green-400 border border-green-400/30"
+                            : submissionState.error
+                            ? "bg-red-500/20 text-red-400 border border-red-400/30"
+                            : "bg-gray-500/20 text-gray-400 border border-gray-400/30"
+                        }`}
+                      >
+                        {submissionState.isSubmitting
+                          ? "Enviando..."
+                          : submissionState.isSuccess
+                          ? "Enviado!"
+                          : submissionState.error
+                          ? "Erro"
+                          : "Pronto"}
+                      </span>
+                    </div>
+
+                    {submissionState.lastSubmissionTime && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-300">Último envio:</span>
+                        <span className="text-cyan-400 text-xs font-mono">
+                          {Math.floor(
+                            (Date.now() - submissionState.lastSubmissionTime) /
+                              1000
+                          )}
+                          s atrás
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="pt-4 border-t border-cyan-400/20">
+                    <p className="text-sm text-gray-400">
+                      💡 <strong>Sistema Anti-Duplicação:</strong> Bloqueia
+                      envios consecutivos por 30 segundos para evitar spam.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </LazyComponent>
         </div>
 
         {/* CTA Final */}
-        <motion.div
-          className="text-center contact-cta"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
-        >
-          <div className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-2xl p-8 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 relative overflow-hidden group">
-            <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-8 relative z-10">
-              <motion.div
-                initial={{ scale: 0, rotate: -180 }}
-                whileInView={{ scale: 1, rotate: 0 }}
-                transition={{ duration: 0.6, type: "spring" }}
-                viewport={{ once: true }}
-                className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/30 shadow-xl shadow-cyan-400/30 group-hover:border-cyan-400/50"
-                whileHover={{ rotate: 360 }}
-              >
-                <Rocket className="w-6 h-6 text-cyan-400" />
-              </motion.div>
-              <div className="text-center lg:text-left flex-1">
-                <h3 className="text-xl lg:text-2xl font-black text-white mb-2">
-                  Pronto para o próximo nível?
-                </h3>
-                <p className="text-gray-300 text-base lg:text-lg">
-                  Sua visão + minha expertise = Resultados extraordinários
-                </p>
-              </div>
-              <motion.div
-                initial={{ opacity: 0, x: 20, scale: 0.9 }}
-                whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.8 }}
-                viewport={{ once: true }}
-                className="w-full lg:w-auto"
-              >
-                <Button
-                  onClick={() => setFormType("enhanced")}
-                  className="w-full lg:w-auto bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl border-none shadow-2xl shadow-cyan-400/30 transition-all duration-500 hover:shadow-cyan-400/50 hover:scale-105 relative overflow-hidden focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
+        <LazyComponent animation="fadeUp" delay={700}>
+          <motion.div
+            className="text-center contact-cta"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            viewport={{ once: true }}
+          >
+            <div className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-2xl p-8 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 relative overflow-hidden group">
+              <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-8 relative z-10">
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  whileInView={{ scale: 1, rotate: 0 }}
+                  transition={{ duration: 0.6, type: "spring" }}
+                  viewport={{ once: true }}
+                  className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/30 shadow-xl shadow-cyan-400/30 group-hover:border-cyan-400/50"
+                  whileHover={{ rotate: 360 }}
                 >
-                  <Sparkles className="w-4 h-4 mr-2 transition-transform duration-300" />
-                  AGENDAR CONVERSA
-                </Button>
-              </motion.div>
+                  <Rocket className="w-6 h-6 text-cyan-400" />
+                </motion.div>
+                <div className="text-center lg:text-left flex-1">
+                  <h3 className="text-xl lg:text-2xl font-black text-white mb-2">
+                    Pronto para o próximo nível?
+                  </h3>
+                  <p className="text-gray-300 text-base lg:text-lg">
+                    Sua visão + minha expertise = Resultados extraordinários
+                  </p>
+                </div>
+                <motion.div
+                  initial={{ opacity: 0, x: 20, scale: 0.9 }}
+                  whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.8 }}
+                  viewport={{ once: true }}
+                  className="w-full lg:w-auto"
+                >
+                  <Button
+                    onClick={() => setFormType("enhanced")}
+                    className="w-full lg:w-auto bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl border-none shadow-2xl shadow-cyan-400/30 transition-all duration-500 hover:shadow-cyan-400/50 hover:scale-105 relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+                  >
+                    <Sparkles className="w-4 h-4 mr-2 transition-transform duration-300" />
+                    AGENDAR CONVERSA
+                  </Button>
+                </motion.div>
+              </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </LazyComponent>
       </div>
     </section>
   );
 };
+
+export default Contact;

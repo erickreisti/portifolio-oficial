@@ -1,15 +1,17 @@
-// components/sections/HeroSection/HeroSection.tsx
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
-import Image from "next/image";
 import { Download, Mail, ArrowDown, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PremiumBackground } from "@/components/layout/PremiumBackground";
+import { LazyComponent } from "@/components/optimization/LazyComponent";
+import { OptimizedImage } from "@/components/optimization/OptimizedImage";
+import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
+import LazyBackground from "@/components/optimization/LazyBackground";
 
-// Itens de navegação em português
+// Itens de navegação em português - memoizado
 const navItems = [
   { name: "Início", href: "#hero" },
   { name: "Sobre", href: "#about" },
@@ -18,7 +20,7 @@ const navItems = [
   { name: "Contato", href: "#contact" },
 ];
 
-// Sistema de Partículas Simplificado - MAIS VISÍVEIS
+// Sistema de Partículas Simplificado - OTIMIZADO
 const TechParticles = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -73,24 +75,28 @@ const TechParticles = () => {
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="absolute inset-0 pointer-events-none overflow-hidden"
-    />
+    <LazyComponent animation="fadeIn" threshold={0.05}>
+      <div
+        ref={containerRef}
+        className="absolute inset-0 pointer-events-none overflow-hidden"
+      />
+    </LazyComponent>
   );
 };
 
-// Grid Tecnológico Simplificado
+// Grid Tecnológico Simplificado - OTIMIZADO
 const TechGrid = () => {
   return (
-    <div className="absolute inset-0 pointer-events-none opacity-10">
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_99%,rgba(6,182,212,0.1)_100%)] bg-[length:100px_100px]" />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_99%,rgba(6,182,212,0.1)_100%)] bg-[length:100px_100px]" />
-    </div>
+    <LazyComponent animation="fadeIn" delay={100}>
+      <div className="absolute inset-0 pointer-events-none opacity-10">
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_99%,rgba(6,182,212,0.1)_100%)] bg-[length:100px_100px]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_99%,rgba(6,182,212,0.1)_100%)] bg-[length:100px_100px]" />
+      </div>
+    </LazyComponent>
   );
 };
 
-// Background Interativo com Mouse Move
+// Background Interativo com Mouse Move - OTIMIZADO
 const InteractiveBackground = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -111,23 +117,40 @@ const InteractiveBackground = () => {
       `;
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    // Throttle the mousemove event
+    let throttled = false;
+    const throttledMouseMove = (e: MouseEvent) => {
+      if (!throttled) {
+        handleMouseMove(e);
+        throttled = true;
+        setTimeout(() => {
+          throttled = false;
+        }, 16); // ~60fps
+      }
+    };
+
+    window.addEventListener("mousemove", throttledMouseMove);
+    return () => window.removeEventListener("mousemove", throttledMouseMove);
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="absolute inset-0 transition-all duration-1000 ease-out pointer-events-none"
-    />
+    <LazyComponent animation="fadeIn">
+      <div
+        ref={containerRef}
+        className="absolute inset-0 transition-all duration-1000 ease-out pointer-events-none"
+      />
+    </LazyComponent>
   );
 };
 
-// Efeito de Digitação no Subtítulo
+// Efeito de Digitação no Subtítulo - OTIMIZADO
 const TypewriterSubtitle = () => {
   const [displayText, setDisplayText] = useState("");
-  const fullText =
-    "Transformo visões ambiciosas em soluções digitais com tecnologia de ponta";
+  const fullText = useMemo(
+    () =>
+      "Transformo visões ambiciosas em soluções digitais com tecnologia de ponta",
+    []
+  );
 
   useEffect(() => {
     let i = 0;
@@ -141,26 +164,41 @@ const TypewriterSubtitle = () => {
     }, 50);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [fullText]);
 
   return (
-    <p className="text-xl sm:text-2xl lg:text-3xl text-gray-300 font-light leading-relaxed min-h-[120px] flex items-center justify-center">
-      <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-        {displayText}
-        <span className="animate-pulse">|</span>
-      </span>
-    </p>
+    <LazyComponent animation="fadeUp" delay={300}>
+      <p className="text-xl sm:text-2xl lg:text-3xl text-gray-300 font-light leading-relaxed min-h-[120px] flex items-center justify-center">
+        <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+          {displayText}
+          <span className="animate-pulse">|</span>
+        </span>
+      </p>
+    </LazyComponent>
   );
 };
 
-// Contador de Estatísticas em Tempo Real
+// Contador de Estatísticas em Tempo Real - OTIMIZADO
 const LiveStats = () => {
   const [projects, setProjects] = useState(0);
   const [experience, setExperience] = useState(0);
   const [clients, setClients] = useState(0);
 
+  const stats = useMemo(
+    () => [
+      { value: projects, label: "Projetos", suffix: "+" },
+      { value: experience, label: "Anos Exp", suffix: "+" },
+      { value: clients, label: "Clientes", suffix: "+" },
+    ],
+    [projects, experience, clients]
+  );
+
   useEffect(() => {
-    const animateValue = (setter: any, end: number, duration: number) => {
+    const animateValue = (
+      setter: React.Dispatch<React.SetStateAction<number>>,
+      end: number,
+      duration: number
+    ) => {
       let start = 0;
       const increment = end / (duration / 16);
 
@@ -181,32 +219,37 @@ const LiveStats = () => {
   }, []);
 
   return (
-    <motion.div
-      className="flex justify-center gap-8 mb-12"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 1.8 }}
-    >
-      {[
-        { value: projects, label: "Projetos", suffix: "+" },
-        { value: experience, label: "Anos Exp", suffix: "+" },
-        { value: clients, label: "Clientes", suffix: "+" },
-      ].map((stat, index) => (
-        <div key={index} className="text-center">
-          <div className="text-2xl sm:text-3xl font-black text-cyan-400">
-            {stat.value}
-            {stat.suffix}
+    <LazyComponent animation="fadeUp" delay={400}>
+      <motion.div
+        className="flex justify-center gap-8 mb-12"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.8 }}
+      >
+        {stats.map((stat, index) => (
+          <div key={index} className="text-center">
+            <div className="text-2xl sm:text-3xl font-black text-cyan-400">
+              {stat.value}
+              {stat.suffix}
+            </div>
+            <div className="text-sm text-gray-400 font-medium">
+              {stat.label}
+            </div>
           </div>
-          <div className="text-sm text-gray-400 font-medium">{stat.label}</div>
-        </div>
-      ))}
-    </motion.div>
+        ))}
+      </motion.div>
+    </LazyComponent>
   );
 };
 
-// Texto Principal com Animação 3D
+// Texto Principal com Animação 3D - OTIMIZADO
 const AnimatedHeroText = () => {
   const textRef = useRef<HTMLDivElement>(null);
+
+  const titleLines = useMemo(
+    () => ["IDEIAS EXTRAORDINÁRIAS", "CÓDIGO EXCEPCIONAL", "RESULTADOS REAIS"],
+    []
+  );
 
   useEffect(() => {
     if (!textRef.current) return;
@@ -215,7 +258,6 @@ const AnimatedHeroText = () => {
       const chars = textRef.current?.querySelectorAll(".hero-char");
       if (!chars) return;
 
-      // Animação de entrada
       gsap.fromTo(
         chars,
         {
@@ -236,7 +278,6 @@ const AnimatedHeroText = () => {
         }
       );
 
-      // Animação 3D no scroll
       chars.forEach((char, index) => {
         gsap.to(char, {
           rotationY: 360,
@@ -257,42 +298,38 @@ const AnimatedHeroText = () => {
     return () => ctx.revert();
   }, []);
 
-  const titleLines = [
-    "IDEIAS EXTRAORDINÁRIAS",
-    "CÓDIGO EXCEPCIONAL",
-    "RESULTADOS REAIS",
-  ];
-
   return (
-    <div ref={textRef} className="text-center w-full mb-8">
-      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white leading-tight">
-        {titleLines.map((line, lineIndex) => (
-          <motion.div
-            key={lineIndex}
-            className="overflow-hidden mb-2 sm:mb-4"
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.3 + lineIndex * 0.2 }}
-          >
-            {line.split("").map((char, charIndex) => (
-              <span
-                key={`${lineIndex}-${charIndex}`}
-                className="hero-char inline-block mx-0.5 sm:mx-1 transition-all duration-300 bg-gradient-to-b from-white to-gray-300 bg-clip-text text-transparent hover:scale-110 hover:text-cyan-300 transform-style-preserve-3d"
-                style={{
-                  transformStyle: "preserve-3d",
-                }}
-              >
-                {char === " " ? "\u00A0" : char}
-              </span>
-            ))}
-          </motion.div>
-        ))}
-      </h1>
-    </div>
+    <LazyComponent animation="fadeUp" delay={200}>
+      <div ref={textRef} className="text-center w-full mb-8">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white leading-tight">
+          {titleLines.map((line, lineIndex) => (
+            <motion.div
+              key={lineIndex}
+              className="overflow-hidden mb-2 sm:mb-4"
+              initial={{ y: 100, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 + lineIndex * 0.2 }}
+            >
+              {line.split("").map((char, charIndex) => (
+                <span
+                  key={`${lineIndex}-${charIndex}`}
+                  className="hero-char inline-block mx-0.5 sm:mx-1 transition-all duration-300 bg-gradient-to-b from-white to-gray-300 bg-clip-text text-transparent hover:scale-110 hover:text-cyan-300 transform-style-preserve-3d"
+                  style={{
+                    transformStyle: "preserve-3d",
+                  }}
+                >
+                  {char === " " ? "\u00A0" : char}
+                </span>
+              ))}
+            </motion.div>
+          ))}
+        </h1>
+      </div>
+    </LazyComponent>
   );
 };
 
-// Botão Melhorado - Com efeitos dinâmicos
+// Botão Melhorado - OTIMIZADO
 const ImprovedButton = ({
   children,
   onClick,
@@ -314,7 +351,7 @@ const ImprovedButton = ({
 }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const getVariantClasses = () => {
+  const getVariantClasses = useMemo(() => {
     switch (variant) {
       case "primary":
         return "bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white shadow-2xl hover:shadow-cyan-500/25";
@@ -325,9 +362,9 @@ const ImprovedButton = ({
       default:
         return "bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white shadow-2xl hover:shadow-cyan-500/25";
     }
-  };
+  }, [variant]);
 
-  const getSizeClasses = () => {
+  const getSizeClasses = useMemo(() => {
     switch (size) {
       case "sm":
         return "py-2 px-4 text-sm";
@@ -336,12 +373,11 @@ const ImprovedButton = ({
       default:
         return "py-3 px-6";
     }
-  };
+  }, [size]);
 
   const handleMouseEnter = () => {
     if (!buttonRef.current || disabled) return;
 
-    // Efeito de partículas melhorado
     for (let i = 0; i < 8; i++) {
       const particle = document.createElement("div");
       particle.className = `absolute w-2 h-2 rounded-full pointer-events-none ${
@@ -363,7 +399,6 @@ const ImprovedButton = ({
       });
     }
 
-    // Efeito de onda
     const wave = document.createElement("div");
     wave.className =
       "absolute inset-0 rounded-2xl border-2 border-cyan-400 opacity-0";
@@ -383,9 +418,9 @@ const ImprovedButton = ({
       ref={buttonRef}
       className={`
         relative font-bold rounded-2xl border-0 transition-all duration-300 transform hover:scale-105 active:scale-95
-        flex items-center justify-center gap-3 group overflow-hidden ${getVariantClasses()} ${getSizeClasses()} ${className}
+        flex items-center justify-center gap-3 group overflow-hidden ${getVariantClasses} ${getSizeClasses} ${className}
         ${disabled ? "opacity-50 cursor-not-allowed" : ""}
-        focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900
+        focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900
       `}
       whileHover={!disabled ? { y: -2 } : {}}
       whileTap={!disabled ? { scale: 0.95 } : {}}
@@ -406,7 +441,7 @@ const ImprovedButton = ({
       <a
         href={href}
         download={href.includes("curriculo")}
-        className={`inline-block focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded-2xl ${
+        className={`inline-block focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-2xl ${
           disabled ? "pointer-events-none" : ""
         }`}
       >
@@ -418,7 +453,7 @@ const ImprovedButton = ({
   return buttonContent;
 };
 
-// Header Refinado
+// Header Refinado - OTIMIZADO
 const RefinedHeader = ({
   isScrolled,
   activeSection,
@@ -433,190 +468,193 @@ const RefinedHeader = ({
   onMobileMenuToggle: () => void;
 }) => {
   return (
-    <motion.header
-      initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6 }}
-      className={`
-        fixed top-0 left-0 right-0 z-50 transition-all duration-500 w-full
-        ${
-          isScrolled
-            ? "h-16 bg-gray-950/95 backdrop-blur-xl border-b border-gray-800/50 shadow-xl"
-            : "h-20 bg-transparent"
-        }
-      `}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
-        {/* Logo */}
-        <motion.button
-          onClick={() => onNavClick("hero")}
-          className="flex items-center gap-3 group focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded-lg p-1"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <div className="flex items-center gap-3 p-2 rounded-xl bg-gradient-to-r from-gray-900/30 to-gray-800/20 backdrop-blur-sm border border-gray-700/20 group-hover:border-cyan-400/30 transition-all duration-300">
-            <motion.div
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.8 }}
-            >
-              <Image
-                src="/images/hashblue.svg"
-                alt="Erick Reis Logo"
-                width={36}
-                height={36}
-                className="brightness-125"
-              />
-            </motion.div>
-            <div className="text-left hidden sm:block">
-              <h3 className="text-base sm:text-lg font-black bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                ÉRICK REIS
-              </h3>
-              <p className="text-xs font-mono text-gray-400 tracking-widest">
-                FULLSTACK ENGINEER
-              </p>
-            </div>
-          </div>
-        </motion.button>
-
-        {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-2">
-          {navItems.map((item, index) => {
-            const sectionName = item.href.replace("#", "");
-            const isActive = activeSection === sectionName;
-
-            return (
-              <motion.button
-                key={item.name}
-                onClick={() => onNavClick(sectionName)}
-                className={`
-                  px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 border
-                  ${
-                    isActive
-                      ? "text-cyan-400 bg-cyan-400/10 border-cyan-400/20"
-                      : "text-gray-300 hover:text-white hover:bg-white/5 border-transparent"
-                  }
-                  focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900
-                `}
-                whileHover={{ y: -1 }}
-                whileTap={{ y: 0 }}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 + index * 0.1 }}
-              >
-                {item.name}
-              </motion.button>
-            );
-          })}
-        </nav>
-
-        {/* Desktop CTA */}
-        <motion.div
-          className="hidden lg:flex items-center gap-3"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <ImprovedButton
-            href="/docs/curriculo-erick-reis.pdf"
-            variant="outline"
-            size="sm"
-            icon={<Download className="w-4 h-4" />}
+    <LazyComponent priority="high">
+      <motion.header
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className={`
+          fixed top-0 left-0 right-0 z-50 transition-all duration-500 w-full
+          ${
+            isScrolled
+              ? "h-16 bg-gray-950/95 backdrop-blur-xl border-b border-gray-800/50 shadow-xl"
+              : "h-20 bg-transparent"
+          }
+        `}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
+          {/* Logo */}
+          <motion.button
+            onClick={() => onNavClick("hero")}
+            className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-lg p-1"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
-            CV
-          </ImprovedButton>
-        </motion.div>
-
-        {/* Mobile Menu Button */}
-        <div className="flex lg:hidden items-center gap-2">
-          <ImprovedButton
-            href="/docs/curriculo-erick-reis.pdf"
-            variant="outline"
-            size="sm"
-            icon={<Download className="w-4 h-4" />}
-          >
-            CV
-          </ImprovedButton>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onMobileMenuToggle}
-            className="w-10 h-10 rounded-xl text-white/80 hover:text-white bg-white/10 backdrop-blur-xl border border-white/10 hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
-          >
-            {isMobileMenuOpen ? (
-              <X className="w-5 h-5" />
-            ) : (
-              <Menu className="w-5 h-5" />
-            )}
-          </Button>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="absolute top-full left-0 right-0 bg-gray-950/95 backdrop-blur-xl border-b border-gray-800/50 lg:hidden overflow-hidden"
-          >
-            <nav className="p-4 space-y-2">
-              {navItems.map((item, index) => {
-                const sectionName = item.href.replace("#", "");
-                const isActive = activeSection === sectionName;
-
-                return (
-                  <motion.button
-                    key={item.name}
-                    onClick={() => {
-                      onNavClick(sectionName);
-                      onMobileMenuToggle();
-                    }}
-                    className={`
-                      w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg transition-all duration-300 border
-                      ${
-                        isActive
-                          ? "text-cyan-400 bg-cyan-400/10 border-cyan-400/20"
-                          : "text-gray-300 hover:text-white hover:bg-white/5 border-transparent"
-                      }
-                      focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900
-                    `}
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    {item.name}
-                    {isActive && (
-                      <div className="w-2 h-2 bg-cyan-400 rounded-full" />
-                    )}
-                  </motion.button>
-                );
-              })}
+            <div className="flex items-center gap-3 p-2 rounded-xl bg-gradient-to-r from-gray-900/30 to-gray-800/20 backdrop-blur-sm border border-gray-700/20 group-hover:border-cyan-400/30 transition-all duration-300">
               <motion.div
-                className="pt-4 border-t border-gray-700/50"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.8 }}
               >
-                <ImprovedButton
-                  href="/docs/curriculo-erick-reis.pdf"
-                  variant="outline"
-                  className="w-full justify-center"
-                  icon={<Download className="w-4 h-4" />}
-                >
-                  BAIXAR CV
-                </ImprovedButton>
+                <OptimizedImage
+                  src="/images/hashblue.svg"
+                  alt="Erick Reis Logo"
+                  width={36}
+                  height={36}
+                  priority={true}
+                  className="brightness-125"
+                />
               </motion.div>
-            </nav>
+              <div className="text-left hidden sm:block">
+                <h3 className="text-base sm:text-lg font-black bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                  ÉRICK REIS
+                </h3>
+                <p className="text-xs font-mono text-gray-400 tracking-widest">
+                  FULLSTACK ENGINEER
+                </p>
+              </div>
+            </div>
+          </motion.button>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center gap-2">
+            {navItems.map((item, index) => {
+              const sectionName = item.href.replace("#", "");
+              const isActive = activeSection === sectionName;
+
+              return (
+                <motion.button
+                  key={item.name}
+                  onClick={() => onNavClick(sectionName)}
+                  className={`
+                    px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 border
+                    ${
+                      isActive
+                        ? "text-cyan-400 bg-cyan-400/10 border-cyan-400/20"
+                        : "text-gray-300 hover:text-white hover:bg-white/5 border-transparent"
+                    }
+                    focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900
+                  `}
+                  whileHover={{ y: -1 }}
+                  whileTap={{ y: 0 }}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + index * 0.1 }}
+                >
+                  {item.name}
+                </motion.button>
+              );
+            })}
+          </nav>
+
+          {/* Desktop CTA */}
+          <motion.div
+            className="hidden lg:flex items-center gap-3"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <ImprovedButton
+              href="/docs/curriculo-erick-reis.pdf"
+              variant="outline"
+              size="sm"
+              icon={<Download className="w-4 h-4" />}
+            >
+              CV
+            </ImprovedButton>
           </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.header>
+
+          {/* Mobile Menu Button */}
+          <div className="flex lg:hidden items-center gap-2">
+            <ImprovedButton
+              href="/docs/curriculo-erick-reis.pdf"
+              variant="outline"
+              size="sm"
+              icon={<Download className="w-4 h-4" />}
+            >
+              CV
+            </ImprovedButton>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onMobileMenuToggle}
+              className="w-10 h-10 rounded-xl text-white/80 hover:text-white bg-white/10 backdrop-blur-xl border border-white/10 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
+            </Button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="absolute top-full left-0 right-0 bg-gray-950/95 backdrop-blur-xl border-b border-gray-800/50 lg:hidden overflow-hidden"
+            >
+              <nav className="p-4 space-y-2">
+                {navItems.map((item, index) => {
+                  const sectionName = item.href.replace("#", "");
+                  const isActive = activeSection === sectionName;
+
+                  return (
+                    <motion.button
+                      key={item.name}
+                      onClick={() => {
+                        onNavClick(sectionName);
+                        onMobileMenuToggle();
+                      }}
+                      className={`
+                        w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg transition-all duration-300 border
+                        ${
+                          isActive
+                            ? "text-cyan-400 bg-cyan-400/10 border-cyan-400/20"
+                            : "text-gray-300 hover:text-white hover:bg-white/5 border-transparent"
+                        }
+                        focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900
+                      `}
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      {item.name}
+                      {isActive && (
+                        <div className="w-2 h-2 bg-cyan-400 rounded-full" />
+                      )}
+                    </motion.button>
+                  );
+                })}
+                <motion.div
+                  className="pt-4 border-t border-gray-700/50"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <ImprovedButton
+                    href="/docs/curriculo-erick-reis.pdf"
+                    variant="outline"
+                    className="w-full justify-center"
+                    icon={<Download className="w-4 h-4" />}
+                  >
+                    BAIXAR CV
+                  </ImprovedButton>
+                </motion.div>
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.header>
+    </LazyComponent>
   );
 };
 
-// Hero Content
+// Hero Content - OTIMIZADO
 const HeroContent = ({ onExploreClick }: { onExploreClick: () => void }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -661,7 +699,10 @@ const HeroContent = ({ onExploreClick }: { onExploreClick: () => void }) => {
       className="relative flex flex-col items-center justify-center min-h-screen pt-20 overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900"
     >
       {/* Background Effects */}
-      <PremiumBackground intensity="high" />
+      <LazyBackground priority="high">
+        <PremiumBackground intensity="high" />
+      </LazyBackground>
+
       <TechGrid />
       <TechParticles />
       <InteractiveBackground />
@@ -726,7 +767,7 @@ const HeroContent = ({ onExploreClick }: { onExploreClick: () => void }) => {
         >
           <motion.button
             onClick={onExploreClick}
-            className="flex flex-col items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors group focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded-lg p-2"
+            className="flex flex-col items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors group focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-lg p-2"
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -745,10 +786,13 @@ const HeroContent = ({ onExploreClick }: { onExploreClick: () => void }) => {
   );
 };
 
+// Componente Principal - OTIMIZADO
 export const HeroSection = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  usePerformanceMonitor("HeroSection");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -772,14 +816,24 @@ export const HeroSection = () => {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    window.addEventListener("scroll", handleActiveSection);
+    // Throttle scroll events
+    let scrollTimeout: NodeJS.Timeout;
+    const throttledScroll = () => {
+      if (!scrollTimeout) {
+        scrollTimeout = setTimeout(() => {
+          handleScroll();
+          handleActiveSection();
+          scrollTimeout = null as any;
+        }, 10);
+      }
+    };
 
+    window.addEventListener("scroll", throttledScroll);
     handleScroll();
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("scroll", handleActiveSection);
+      window.removeEventListener("scroll", throttledScroll);
+      if (scrollTimeout) clearTimeout(scrollTimeout);
     };
   }, []);
 
@@ -827,3 +881,5 @@ if (typeof document !== "undefined") {
   styleSheet.textContent = styles;
   document.head.appendChild(styleSheet);
 }
+
+export default HeroSection;

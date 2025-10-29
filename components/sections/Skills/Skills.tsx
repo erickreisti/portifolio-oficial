@@ -1,7 +1,6 @@
-// components/sections/Skills/Skills.tsx
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useMemo } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import {
@@ -9,30 +8,28 @@ import {
   Database,
   Cloud,
   Zap,
-  Brain,
   Server,
   Smartphone,
   GitBranch,
-  Rocket,
   Sparkles,
   Cpu,
-  Globe,
-  Terminal,
   Target,
   Award,
   Clock,
   Heart,
   Search,
-  Filter,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PremiumBackground } from "@/components/layout/PremiumBackground";
+import { LazyComponent } from "@/components/optimization/LazyComponent";
+import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
+import LazyBackground from "@/components/optimization/LazyBackground";
 
-// Skills Data ÚNICA - mesma para Matrix 3D e Cards
-const skillsData = [
+// Dados estáticos - movidos para fora dos hooks
+const staticSkillsData = [
   {
     id: "frontend",
     name: "Frontend",
@@ -137,20 +134,57 @@ const skillsData = [
   },
 ];
 
-// Componente Skill Matrix 3D - FASE 2 - usando MESMAS skills dos cards
+const staticStatsData = [
+  {
+    number: "12+",
+    title: "Tecnologias",
+    subtitle: "Stack Completa",
+    icon: Target,
+    color: "from-cyan-400 to-blue-400",
+  },
+  {
+    number: "92%",
+    title: "Proficiência",
+    subtitle: "Média de Domínio",
+    icon: Award,
+    color: "from-cyan-400 to-blue-400",
+  },
+  {
+    number: "5+",
+    title: "Anos Exp",
+    subtitle: "Experiência Comprovada",
+    icon: Clock,
+    color: "from-cyan-400 to-blue-400",
+  },
+  {
+    number: "100%",
+    title: "Qualidade",
+    subtitle: "Padrão de Excelência",
+    icon: Heart,
+    color: "from-cyan-400 to-blue-400",
+  },
+];
+
+// Componente Skill Matrix 3D - FASE 2 - OTIMIZADO
 const SkillMatrix3D = () => {
   const [selectedCategory, setSelectedCategory] = useState("frontend");
   const [searchTerm, setSearchTerm] = useState("");
   const [hoveredSkill, setHoveredSkill] = useState<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const currentCategory = skillsData.find((cat) => cat.id === selectedCategory);
-  const filteredSkills =
-    currentCategory?.skills.filter((skill) =>
-      skill.name.toLowerCase().includes(searchTerm.toLowerCase())
-    ) || [];
+  // useMemo movido para dentro do componente
+  const skillsData = useMemo(() => staticSkillsData, []);
 
-  // Efeito de parallax no mouse
+  const currentCategory = skillsData.find((cat) => cat.id === selectedCategory);
+  const filteredSkills = useMemo(
+    () =>
+      currentCategory?.skills.filter((skill) =>
+        skill.name.toLowerCase().includes(searchTerm.toLowerCase())
+      ) || [],
+    [currentCategory, searchTerm]
+  );
+
+  // Efeito de parallax no mouse - OTIMIZADO
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current) return;
@@ -162,183 +196,202 @@ const SkillMatrix3D = () => {
       containerRef.current.style.transform = `perspective(1000px) rotateY(${x}deg) rotateX(${-y}deg)`;
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    let throttled = false;
+    const throttledMouseMove = (e: MouseEvent) => {
+      if (!throttled) {
+        handleMouseMove(e);
+        throttled = true;
+        setTimeout(() => {
+          throttled = false;
+        }, 16);
+      }
+    };
+
+    window.addEventListener("mousemove", throttledMouseMove);
+    return () => window.removeEventListener("mousemove", throttledMouseMove);
   }, []);
 
   return (
-    <div className="space-y-8">
-      {/* Filtros e Search */}
-      <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-        {/* Categorias */}
-        <div className="flex flex-wrap gap-2">
-          {skillsData.map((category) => {
-            const Icon = category.icon;
-            return (
-              <motion.button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all duration-300 ${
-                  selectedCategory === category.id
-                    ? `bg-gradient-to-r ${category.color} text-white border-transparent shadow-lg`
-                    : "bg-gray-800/50 border-cyan-500/20 text-gray-300 hover:border-cyan-400/50"
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Icon className="w-4 h-4" />
-                <span className="font-semibold">{category.name}</span>
-              </motion.button>
-            );
-          })}
+    <LazyComponent animation="fadeUp" delay={200}>
+      <div className="space-y-8">
+        {/* Filtros e Search */}
+        <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
+          {/* Categorias */}
+          <div className="flex flex-wrap gap-2">
+            {skillsData.map((category) => {
+              const Icon = category.icon;
+              return (
+                <motion.button
+                  key={category.id}
+                  onClick={() => setSelectedCategory(category.id)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all duration-300 ${
+                    selectedCategory === category.id
+                      ? `bg-gradient-to-r ${category.color} text-white border-transparent shadow-lg`
+                      : "bg-gray-800/50 border-cyan-500/20 text-gray-300 hover:border-cyan-400/50"
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span className="font-semibold">{category.name}</span>
+                </motion.button>
+              );
+            })}
+          </div>
+
+          {/* Search */}
+          <LazyComponent animation="fadeIn" delay={100}>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Input
+                type="text"
+                placeholder="Buscar tecnologia..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="bg-gray-800/50 border border-cyan-500/20 rounded-xl pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400 transition-colors duration-300 w-64"
+              />
+            </div>
+          </LazyComponent>
         </div>
 
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <Input
-            type="text"
-            placeholder="Buscar tecnologia..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="bg-gray-800/50 border border-cyan-500/20 rounded-xl pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400 transition-colors duration-300 w-64"
-          />
-        </div>
-      </div>
-
-      {/* Matrix 3D */}
-      <div className="relative">
-        <motion.div
-          ref={containerRef}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 transition-transform duration-100 ease-out"
-          style={{ transformStyle: "preserve-3d" as const }}
-        >
-          {filteredSkills.map((skill, index) => (
+        {/* Matrix 3D */}
+        <LazyComponent animation="scale" delay={300}>
+          <div className="relative">
             <motion.div
-              key={skill.name}
-              initial={{ opacity: 0, scale: 0.8, rotateY: -180 }}
-              animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="relative group cursor-pointer"
-              onMouseEnter={() => setHoveredSkill(skill)}
-              onMouseLeave={() => setHoveredSkill(null)}
+              ref={containerRef}
+              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 transition-transform duration-100 ease-out"
               style={{ transformStyle: "preserve-3d" as const }}
             >
-              {/* Card de Skill */}
-              <div
-                className={`bg-gray-900/60 backdrop-blur-xl rounded-2xl p-4 border ${
-                  hoveredSkill?.name === skill.name
-                    ? "border-cyan-400/50 shadow-2xl shadow-cyan-400/20 scale-110"
-                    : "border-cyan-500/20"
-                } transition-all duration-300 h-32 flex flex-col justify-between relative overflow-hidden`}
-              >
-                {/* Nível de Proficiência */}
-                <div className="absolute top-3 right-3">
-                  <div className="text-cyan-400 font-mono font-bold text-sm">
-                    {skill.level}%
-                  </div>
-                </div>
-
-                {/* Nome da Skill */}
-                <div className="text-white font-bold text-lg mb-2">
-                  {skill.name}
-                </div>
-
-                {/* Barra de Progresso 3D */}
-                <div className="relative">
-                  <div className="w-full bg-gray-800/50 rounded-full h-2 overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${skill.level}%` }}
-                      transition={{ duration: 1.5, delay: index * 0.2 }}
-                      className={`h-full bg-gradient-to-r ${currentCategory?.color} rounded-full relative`}
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-30 animate-pulse" />
-                    </motion.div>
-                  </div>
-
-                  {/* Popularidade */}
-                  <div className="flex justify-between text-xs text-gray-400 mt-1">
-                    <span>Proficiência</span>
-                    <span>Popularidade: {skill.popularity}%</span>
-                  </div>
-                </div>
-
-                {/* Efeito de Glow no Hover */}
-                <div
-                  className={`absolute inset-0 bg-gradient-to-r ${currentCategory?.color} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-300`}
-                />
-              </div>
-
-              {/* Tooltip Detalhado */}
-              <AnimatePresence>
-                {hoveredSkill?.name === skill.name && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.8 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.8 }}
-                    className="absolute z-10 top-full left-1/2 transform -translate-x-1/2 mt-2 w-64 bg-gray-900/95 backdrop-blur-xl rounded-xl border border-cyan-500/20 p-4 shadow-2xl"
+              {filteredSkills.map((skill, index) => (
+                <motion.div
+                  key={skill.name}
+                  initial={{ opacity: 0, scale: 0.8, rotateY: -180 }}
+                  animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="relative group cursor-pointer"
+                  onMouseEnter={() => setHoveredSkill(skill)}
+                  onMouseLeave={() => setHoveredSkill(null)}
+                  style={{ transformStyle: "preserve-3d" as const }}
+                >
+                  {/* Card de Skill */}
+                  <div
+                    className={`bg-gray-900/60 backdrop-blur-xl rounded-2xl p-4 border ${
+                      hoveredSkill?.name === skill.name
+                        ? "border-cyan-400/50 shadow-2xl shadow-cyan-400/20 scale-110"
+                        : "border-cyan-500/20"
+                    } transition-all duration-300 h-32 flex flex-col justify-between relative overflow-hidden`}
                   >
-                    <div className="text-white font-bold text-sm mb-2">
+                    {/* Nível de Proficiência */}
+                    <div className="absolute top-3 right-3">
+                      <div className="text-cyan-400 font-mono font-bold text-sm">
+                        {skill.level}%
+                      </div>
+                    </div>
+
+                    {/* Nome da Skill */}
+                    <div className="text-white font-bold text-lg mb-2">
                       {skill.name}
                     </div>
-                    <div className="space-y-2 text-xs">
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Proficiência:</span>
-                        <span className="text-cyan-400 font-mono">
-                          {skill.level}%
-                        </span>
+
+                    {/* Barra de Progresso 3D */}
+                    <div className="relative">
+                      <div className="w-full bg-gray-800/50 rounded-full h-2 overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${skill.level}%` }}
+                          transition={{ duration: 1.5, delay: index * 0.2 }}
+                          className={`h-full bg-gradient-to-r ${currentCategory?.color} rounded-full relative`}
+                        >
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-30 animate-pulse" />
+                        </motion.div>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Demanda:</span>
-                        <span className="text-green-400 font-mono">
-                          {skill.popularity}%
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Experiência:</span>
-                        <span className="text-yellow-400">
-                          {skill.level >= 90
-                            ? "Expert"
-                            : skill.level >= 80
-                            ? "Avançado"
-                            : skill.level >= 70
-                            ? "Intermediário"
-                            : "Básico"}
-                        </span>
-                      </div>
-                      <div className="pt-2 border-t border-gray-700">
-                        <span className="text-gray-400 text-xs">
-                          {skill.description}
-                        </span>
+
+                      {/* Popularidade */}
+                      <div className="flex justify-between text-xs text-gray-400 mt-1">
+                        <span>Proficiência</span>
+                        <span>Popularidade: {skill.popularity}%</span>
                       </div>
                     </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          ))}
-        </motion.div>
 
-        {/* Legenda */}
-        <div className="flex justify-center mt-8">
-          <div className="flex items-center gap-6 text-sm text-gray-400">
-            {skillsData.map((category) => (
-              <div key={category.id} className="flex items-center gap-2">
-                <div
-                  className={`w-3 h-3 bg-gradient-to-r ${category.color} rounded-full`}
-                />
-                <span>{category.name}</span>
+                    {/* Efeito de Glow no Hover */}
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-r ${currentCategory?.color} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-300`}
+                    />
+                  </div>
+
+                  {/* Tooltip Detalhado */}
+                  <AnimatePresence>
+                    {hoveredSkill?.name === skill.name && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.8 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.8 }}
+                        className="absolute z-10 top-full left-1/2 transform -translate-x-1/2 mt-2 w-64 bg-gray-900/95 backdrop-blur-xl rounded-xl border border-cyan-500/20 p-4 shadow-2xl"
+                      >
+                        <div className="text-white font-bold text-sm mb-2">
+                          {skill.name}
+                        </div>
+                        <div className="space-y-2 text-xs">
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Proficiência:</span>
+                            <span className="text-cyan-400 font-mono">
+                              {skill.level}%
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Demanda:</span>
+                            <span className="text-green-400 font-mono">
+                              {skill.popularity}%
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Experiência:</span>
+                            <span className="text-yellow-400">
+                              {skill.level >= 90
+                                ? "Expert"
+                                : skill.level >= 80
+                                ? "Avançado"
+                                : skill.level >= 70
+                                ? "Intermediário"
+                                : "Básico"}
+                            </span>
+                          </div>
+                          <div className="pt-2 border-t border-gray-700">
+                            <span className="text-gray-400 text-xs">
+                              {skill.description}
+                            </span>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Legenda */}
+            <LazyComponent animation="fadeUp" delay={500}>
+              <div className="flex justify-center mt-8">
+                <div className="flex items-center gap-6 text-sm text-gray-400">
+                  {skillsData.map((category) => (
+                    <div key={category.id} className="flex items-center gap-2">
+                      <div
+                        className={`w-3 h-3 bg-gradient-to-r ${category.color} rounded-full`}
+                      />
+                      <span>{category.name}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
+            </LazyComponent>
           </div>
-        </div>
+        </LazyComponent>
       </div>
-    </div>
+    </LazyComponent>
   );
 };
 
-// Componente Neon Element Harmonizado
+// Componente Neon Element Harmonizado - OTIMIZADO
 const SkillsNeonElement = ({
   Icon,
   position,
@@ -393,16 +446,18 @@ const SkillsNeonElement = ({
   }, [delay]);
 
   return (
-    <div
-      ref={elementRef}
-      className={`absolute ${position} pointer-events-none`}
-    >
-      <Icon className={`${color} text-2xl opacity-70`} />
-    </div>
+    <LazyComponent animation="fadeIn" delay={delay * 100}>
+      <div
+        ref={elementRef}
+        className={`absolute ${position} pointer-events-none`}
+      >
+        <Icon className={`${color} text-2xl opacity-70`} />
+      </div>
+    </LazyComponent>
   );
 };
 
-// Componente Skill Bar Harmonizado
+// Componente Skill Bar Harmonizado - OTIMIZADO
 const SkillBar = ({
   name,
   level,
@@ -429,39 +484,41 @@ const SkillBar = ({
   }, [isInView, level, index]);
 
   return (
-    <motion.div
-      className="group cursor-pointer space-y-3"
-      whileHover={{ x: 5 }}
-      transition={{ type: "spring", stiffness: 300 }}
-    >
-      <div className="flex justify-between items-start gap-2">
-        <div className="flex-1 min-w-0">
-          <span className="block text-sm lg:text-base font-semibold text-white group-hover:text-cyan-400 transition-colors duration-300 mb-1">
-            {name}
-          </span>
-          <span className="block text-xs lg:text-sm text-gray-400 leading-relaxed">
-            {description}
-          </span>
+    <LazyComponent animation="fadeUp" delay={index * 50}>
+      <motion.div
+        className="group cursor-pointer space-y-3"
+        whileHover={{ x: 5 }}
+        transition={{ type: "spring", stiffness: 300 }}
+      >
+        <div className="flex justify-between items-start gap-2">
+          <div className="flex-1 min-w-0">
+            <span className="block text-sm lg:text-base font-semibold text-white group-hover:text-cyan-400 transition-colors duration-300 mb-1">
+              {name}
+            </span>
+            <span className="block text-xs lg:text-sm text-gray-400 leading-relaxed">
+              {description}
+            </span>
+          </div>
+          <Badge className="bg-cyan-400/10 text-cyan-400 border-cyan-400/30 font-mono font-bold px-2 py-1 text-xs lg:text-sm group-hover:scale-110 transition-transform duration-300">
+            {level}%
+          </Badge>
         </div>
-        <Badge className="bg-cyan-400/10 text-cyan-400 border-cyan-400/30 font-mono font-bold px-2 py-1 text-xs lg:text-sm group-hover:scale-110 transition-transform duration-300">
-          {level}%
-        </Badge>
-      </div>
 
-      <div className="h-2 lg:h-3 w-full bg-gray-800/50 rounded-full overflow-hidden border border-cyan-500/20 shadow-inner backdrop-blur-sm">
-        <motion.div
-          ref={barRef}
-          initial={{ width: 0 }}
-          className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-blue-400 relative overflow-hidden"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-        </motion.div>
-      </div>
-    </motion.div>
+        <div className="h-2 lg:h-3 w-full bg-gray-800/50 rounded-full overflow-hidden border border-cyan-500/20 shadow-inner backdrop-blur-sm">
+          <motion.div
+            ref={barRef}
+            initial={{ width: 0 }}
+            className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-blue-400 relative overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+          </motion.div>
+        </div>
+      </motion.div>
+    </LazyComponent>
   );
 };
 
-// Componente Skill Card Harmonizado
+// Componente Skill Card Harmonizado - OTIMIZADO
 const SkillCard = ({ group, index }: { group: any; index: number }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.3 });
@@ -492,49 +549,56 @@ const SkillCard = ({ group, index }: { group: any; index: number }) => {
   }, [isInView, index]);
 
   return (
-    <motion.div
-      ref={cardRef}
-      whileHover={{ y: -5, scale: 1.02 }}
-      transition={{ type: "spring", stiffness: 300 }}
-    >
-      <Card className="bg-gray-900/60 backdrop-blur-xl border border-cyan-500/20 shadow-2xl hover:shadow-cyan-400/20 hover:border-cyan-400/50 transition-all duration-500 group h-full">
-        <CardHeader className="pb-4 border-b border-cyan-400/20">
-          <div className="flex items-center gap-4 mb-3">
-            <motion.div
-              className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/30 group-hover:border-cyan-400/50 transition-all duration-300"
-              whileHover={{ scale: 1.1, rotate: 360 }}
-              transition={{ duration: 0.5 }}
-            >
-              <group.icon className="w-6 h-6 text-cyan-400" />
-            </motion.div>
-            <CardTitle className="text-xl lg:text-2xl font-black text-cyan-400">
-              {group.category}
-            </CardTitle>
-          </div>
-          <p className="text-sm lg:text-base text-gray-400">
-            {group.description}
-          </p>
-        </CardHeader>
+    <LazyComponent animation="fadeUp" delay={index * 100}>
+      <motion.div
+        ref={cardRef}
+        whileHover={{ y: -5, scale: 1.02 }}
+        transition={{ type: "spring", stiffness: 300 }}
+      >
+        <Card className="bg-gray-900/60 backdrop-blur-xl border border-cyan-500/20 shadow-2xl hover:shadow-cyan-400/20 hover:border-cyan-400/50 transition-all duration-500 group h-full">
+          <CardHeader className="pb-4 border-b border-cyan-400/20">
+            <div className="flex items-center gap-4 mb-3">
+              <motion.div
+                className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/30 group-hover:border-cyan-400/50 transition-all duration-300"
+                whileHover={{ scale: 1.1, rotate: 360 }}
+                transition={{ duration: 0.5 }}
+              >
+                <group.icon className="w-6 h-6 text-cyan-400" />
+              </motion.div>
+              <CardTitle className="text-xl lg:text-2xl font-black text-cyan-400">
+                {group.category}
+              </CardTitle>
+            </div>
+            <p className="text-sm lg:text-base text-gray-400">
+              {group.description}
+            </p>
+          </CardHeader>
 
-        <CardContent className="pt-6 space-y-6 lg:space-y-8">
-          {group.skills.map((skill: any, skillIndex: number) => (
-            <motion.div
-              key={skill.name}
-              initial={{ opacity: 0, x: -15 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: skillIndex * 0.1 }}
-              viewport={{ once: true }}
-            >
-              <SkillBar {...skill} index={skillIndex} />
-            </motion.div>
-          ))}
-        </CardContent>
-      </Card>
-    </motion.div>
+          <CardContent className="pt-6 space-y-6 lg:space-y-8">
+            {group.skills.map((skill: any, skillIndex: number) => (
+              <LazyComponent
+                key={skill.name}
+                animation="fadeIn"
+                delay={skillIndex * 50}
+              >
+                <motion.div
+                  initial={{ opacity: 0, x: -15 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.4, delay: skillIndex * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <SkillBar {...skill} index={skillIndex} />
+                </motion.div>
+              </LazyComponent>
+            ))}
+          </CardContent>
+        </Card>
+      </motion.div>
+    </LazyComponent>
   );
 };
 
-// Componente Stat Card Harmonizado
+// Componente Stat Card Harmonizado - OTIMIZADO
 const SkillsStatCard = ({ stat, index }: { stat: any; index: number }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.3 });
@@ -565,101 +629,83 @@ const SkillsStatCard = ({ stat, index }: { stat: any; index: number }) => {
   }, [isInView, index]);
 
   return (
-    <motion.div
-      ref={cardRef}
-      className="text-center p-6 bg-gray-900/40 backdrop-blur-lg rounded-2xl border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-500 cursor-pointer group"
-      whileHover={{ y: -5, scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-    >
-      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center mx-auto mb-4 border border-cyan-400/30 group-hover:border-cyan-400/50 transition-all duration-300">
-        <stat.icon className="w-8 h-8 text-cyan-400" />
-      </div>
-      <div className="text-2xl lg:text-3xl font-black bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-2">
-        {stat.number}
-      </div>
-      <div className="text-lg font-bold text-white mb-1">{stat.title}</div>
-      <div className="text-sm text-gray-400">{stat.subtitle}</div>
-    </motion.div>
+    <LazyComponent animation="scale" delay={index * 100}>
+      <motion.div
+        ref={cardRef}
+        className="text-center p-6 bg-gray-900/40 backdrop-blur-lg rounded-2xl border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-500 cursor-pointer group"
+        whileHover={{ y: -5, scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center mx-auto mb-4 border border-cyan-400/30 group-hover:border-cyan-400/50 transition-all duration-300">
+          <stat.icon className="w-8 h-8 text-cyan-400" />
+        </div>
+        <div className="text-2xl lg:text-3xl font-black bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-2">
+          {stat.number}
+        </div>
+        <div className="text-lg font-bold text-white mb-1">{stat.title}</div>
+        <div className="text-sm text-gray-400">{stat.subtitle}</div>
+      </motion.div>
+    </LazyComponent>
   );
 };
 
+// Componente Principal Skills - OTIMIZADO
 export const Skills = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
-  // Neon Elements Configuration - CORES HARMONIZADAS
-  const neonElements = [
-    {
-      Icon: Code2,
-      position: "top-20 left-10",
-      color: "text-cyan-400",
-      delay: 0,
-    },
-    {
-      Icon: Cpu,
-      position: "top-10 right-15",
-      color: "text-cyan-400",
-      delay: 1,
-    },
-    {
-      Icon: Zap,
-      position: "bottom-40 left-15",
-      color: "text-cyan-400",
-      delay: 2,
-    },
-    {
-      Icon: Sparkles,
-      position: "bottom-20 right-10",
-      color: "text-cyan-400",
-      delay: 3,
-    },
-    {
-      Icon: Server,
-      position: "top-40 right-5",
-      color: "text-cyan-400",
-      delay: 4,
-    },
-    {
-      Icon: Database,
-      position: "bottom-40 left-5",
-      color: "text-cyan-400",
-      delay: 5,
-    },
-  ];
+  usePerformanceMonitor("SkillsSection");
 
-  // Stats Data Harmonizada
-  const statsData = [
-    {
-      number: "12+",
-      title: "Tecnologias",
-      subtitle: "Stack Completa",
-      icon: Target,
-      color: "from-cyan-400 to-blue-400",
-    },
-    {
-      number: "92%",
-      title: "Proficiência",
-      subtitle: "Média de Domínio",
-      icon: Award,
-      color: "from-cyan-400 to-blue-400",
-    },
-    {
-      number: "5+",
-      title: "Anos Exp",
-      subtitle: "Experiência Comprovada",
-      icon: Clock,
-      color: "from-cyan-400 to-blue-400",
-    },
-    {
-      number: "100%",
-      title: "Qualidade",
-      subtitle: "Padrão de Excelência",
-      icon: Heart,
-      color: "from-cyan-400 to-blue-400",
-    },
-  ];
+  // Neon Elements Configuration - CORES HARMONIZADAS - memoizado
+  const neonElements = useMemo(
+    () => [
+      {
+        Icon: Code2,
+        position: "top-20 left-10",
+        color: "text-cyan-400",
+        delay: 0,
+      },
+      {
+        Icon: Cpu,
+        position: "top-10 right-15",
+        color: "text-cyan-400",
+        delay: 1,
+      },
+      {
+        Icon: Zap,
+        position: "bottom-40 left-15",
+        color: "text-cyan-400",
+        delay: 2,
+      },
+      {
+        Icon: Sparkles,
+        position: "bottom-20 right-10",
+        color: "text-cyan-400",
+        delay: 3,
+      },
+      {
+        Icon: Server,
+        position: "top-40 right-5",
+        color: "text-cyan-400",
+        delay: 4,
+      },
+      {
+        Icon: Database,
+        position: "bottom-40 left-5",
+        color: "text-cyan-400",
+        delay: 5,
+      },
+    ],
+    []
+  );
 
-  // GSAP Animations
+  // Skills Data - useMemo movido para dentro do componente
+  const skillsData = useMemo(() => staticSkillsData, []);
+
+  // Stats Data - useMemo movido para dentro do componente
+  const statsData = useMemo(() => staticStatsData, []);
+
+  // GSAP Animations - OTIMIZADO
   useEffect(() => {
     if (!isInView || !sectionRef.current) return;
 
@@ -712,7 +758,9 @@ export const Skills = () => {
       ref={sectionRef}
       className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 overflow-hidden flex items-center py-20 lg:py-28"
     >
-      <PremiumBackground intensity="medium" />
+      <LazyBackground priority="medium">
+        <PremiumBackground intensity="medium" />
+      </LazyBackground>
 
       {/* Elementos Neon Harmonizados */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -762,15 +810,17 @@ export const Skills = () => {
         </motion.div>
 
         {/* Skill Matrix 3D - FASE 2 */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          viewport={{ once: true }}
-          className="mb-16 lg:mb-20"
-        >
-          <SkillMatrix3D />
-        </motion.div>
+        <LazyComponent animation="fadeUp" delay={300}>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="mb-16 lg:mb-20"
+          >
+            <SkillMatrix3D />
+          </motion.div>
+        </LazyComponent>
 
         {/* Grid de Skills Harmonizado */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 mb-16 lg:mb-20 skills-grid">
@@ -780,69 +830,75 @@ export const Skills = () => {
         </div>
 
         {/* Stats Harmonizado */}
-        <motion.div
-          className="mb-16 lg:mb-20 skills-stats"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
-        >
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-            {statsData.map((stat, index) => (
-              <SkillsStatCard key={stat.title} stat={stat} index={index} />
-            ))}
-          </div>
-        </motion.div>
+        <LazyComponent animation="fadeUp" delay={400}>
+          <motion.div
+            className="mb-16 lg:mb-20 skills-stats"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            viewport={{ once: true }}
+          >
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+              {statsData.map((stat, index) => (
+                <SkillsStatCard key={stat.title} stat={stat} index={index} />
+              ))}
+            </div>
+          </motion.div>
+        </LazyComponent>
 
         {/* CTA Harmonizado */}
-        <motion.div
-          className="text-center skills-cta"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          viewport={{ once: true }}
-        >
-          <div className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-2xl p-8 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 relative overflow-hidden group">
-            <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-8 relative z-10">
-              <motion.div
-                initial={{ scale: 0, rotate: -180 }}
-                whileInView={{ scale: 1, rotate: 0 }}
-                transition={{ duration: 0.6, type: "spring" }}
-                viewport={{ once: true }}
-                className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/30 shadow-xl shadow-cyan-400/30 group-hover:border-cyan-400/50"
-                whileHover={{ rotate: 360 }}
-              >
-                <GitBranch className="w-6 h-6 text-cyan-400" />
-              </motion.div>
-              <div className="text-center lg:text-left flex-1">
-                <h3 className="text-xl lg:text-2xl font-black text-white mb-2">
-                  Pronto para elevar seu projeto?
-                </h3>
-                <p className="text-gray-300 text-base lg:text-lg">
-                  Vamos aplicar essa expertise técnica no seu próximo desafio
-                </p>
+        <LazyComponent animation="fadeUp" delay={600}>
+          <motion.div
+            className="text-center skills-cta"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <div className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-2xl p-8 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 relative overflow-hidden group">
+              <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-8 relative z-10">
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  whileInView={{ scale: 1, rotate: 0 }}
+                  transition={{ duration: 0.6, type: "spring" }}
+                  viewport={{ once: true }}
+                  className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/30 shadow-xl shadow-cyan-400/30 group-hover:border-cyan-400/50"
+                  whileHover={{ rotate: 360 }}
+                >
+                  <GitBranch className="w-6 h-6 text-cyan-400" />
+                </motion.div>
+                <div className="text-center lg:text-left flex-1">
+                  <h3 className="text-xl lg:text-2xl font-black text-white mb-2">
+                    Pronto para elevar seu projeto?
+                  </h3>
+                  <p className="text-gray-300 text-base lg:text-lg">
+                    Vamos aplicar essa expertise técnica no seu próximo desafio
+                  </p>
+                </div>
+                <motion.div
+                  initial={{ opacity: 0, x: 20, scale: 0.9 }}
+                  whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.8 }}
+                  viewport={{ once: true }}
+                  className="w-full lg:w-auto"
+                >
+                  <Button asChild className="w-full lg:w-auto">
+                    <a
+                      href="#contact"
+                      className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl border-none shadow-2xl shadow-cyan-400/30 transition-all duration-500 hover:shadow-cyan-400/50 hover:scale-105 relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+                    >
+                      <Sparkles className="w-4 h-4 mr-2 transition-transform duration-300" />
+                      INICIAR COLABORAÇÃO
+                    </a>
+                  </Button>
+                </motion.div>
               </div>
-              <motion.div
-                initial={{ opacity: 0, x: 20, scale: 0.9 }}
-                whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.8 }}
-                viewport={{ once: true }}
-                className="w-full lg:w-auto"
-              >
-                <Button asChild className="w-full lg:w-auto">
-                  <a
-                    href="#contact"
-                    className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl border-none shadow-2xl shadow-cyan-400/30 transition-all duration-500 hover:shadow-cyan-400/50 hover:scale-105 relative overflow-hidden focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
-                  >
-                    <Sparkles className="w-4 h-4 mr-2 transition-transform duration-300" />
-                    INICIAR COLABORAÇÃO
-                  </a>
-                </Button>
-              </motion.div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </LazyComponent>
       </div>
     </section>
   );
 };
+
+export default Skills;
