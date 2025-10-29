@@ -20,6 +20,11 @@ import {
   ChevronDown,
   ChevronUp,
   Star,
+  Sparkles,
+  Target,
+  Award,
+  Clock,
+  Heart,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { projects } from "@/lib/project-data";
@@ -29,8 +34,6 @@ import { LazyComponent } from "@/components/optimization/LazyComponent";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import LazyBackground from "@/components/optimization/LazyBackground";
 import Image from "next/image";
-
-// Import the hook and the forceReleaseAll fallback you created
 import { useLockScroll, forceReleaseAll } from "@/hooks/useLockScroll";
 import ModalPortal from "@/components/ui/ModalPortal";
 
@@ -121,7 +124,77 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   );
 };
 
-/* ---------------- Modals (no direct lock calls) ---------------- */
+/* ---------------- Dados Estáticos ---------------- */
+const staticProjectsData = {
+  stats: [
+    {
+      number: projects.length.toString(),
+      title: "Projetos",
+      subtitle: "Entregues com Excelência",
+      icon: Rocket,
+    },
+    {
+      number: `${Math.round(
+        (projects.filter((p) => p.liveUrl).length / projects.length) * 100
+      )}%`,
+      title: "Online",
+      subtitle: "Projetos em Produção",
+      icon: Eye,
+    },
+    {
+      number: "24/7",
+      title: "Disponível",
+      subtitle: "Para Novos Desafios",
+      icon: Star,
+    },
+    {
+      number: "5+",
+      title: "Anos Exp",
+      subtitle: "Experiência Comprovada",
+      icon: Code,
+    },
+  ],
+  neonElements: [
+    {
+      Icon: Rocket,
+      position: "top-20 left-20",
+      color: "text-cyan-400",
+      delay: 0,
+    },
+    {
+      Icon: Code,
+      position: "top-32 right-24",
+      color: "text-cyan-400",
+      delay: 1,
+    },
+    {
+      Icon: Globe,
+      position: "bottom-40 left-24",
+      color: "text-cyan-400",
+      delay: 2,
+    },
+    {
+      Icon: Database,
+      position: "bottom-32 right-20",
+      color: "text-cyan-400",
+      delay: 3,
+    },
+    {
+      Icon: Server,
+      position: "top-40 right-16",
+      color: "text-cyan-400",
+      delay: 4,
+    },
+    {
+      Icon: Smartphone,
+      position: "bottom-48 left-16",
+      color: "text-cyan-400",
+      delay: 5,
+    },
+  ],
+};
+
+/* ---------------- Componentes de Modal ---------------- */
 const TechnologiesModal: React.FC<{
   technologies: string[];
   onClose: () => void;
@@ -132,7 +205,7 @@ const TechnologiesModal: React.FC<{
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+        className="fixed inset-0 z-[9990] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
         onClick={onClose}
       >
         <motion.div
@@ -190,7 +263,7 @@ const ImageZoomModal: React.FC<{
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm"
+        className="fixed inset-0 z-[9990] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm"
         onClick={onClose}
       >
         <motion.div
@@ -222,7 +295,121 @@ const ImageZoomModal: React.FC<{
   );
 };
 
-/* ---------------- ProjectShowcase (central lock control) ---------------- */
+/* ---------------- Componente NeonElement ---------------- */
+const ProjectsNeonElement: React.FC<{
+  Icon: any;
+  position: string;
+  color: string;
+  delay?: number;
+}> = ({ Icon, position, color, delay = 0 }) => {
+  const elementRef = useRef<HTMLDivElement | null>(null);
+  const isInView = useInView(elementRef, { once: true, amount: 0.3 });
+
+  useEffect(() => {
+    if (!isInView || !elementRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        elementRef.current!,
+        { opacity: 0, scale: 0, y: 100, rotation: -180 },
+        {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          rotation: 0,
+          duration: 1.2,
+          ease: "back.out(1.7)",
+          delay: delay * 0.15,
+        }
+      );
+      gsap.to(elementRef.current!, {
+        y: -12,
+        rotation: 5,
+        duration: 4,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+        delay: delay * 0.2,
+      });
+    }, elementRef);
+
+    return () => ctx.revert();
+  }, [isInView, delay]);
+
+  return (
+    <LazyComponent animation="fadeIn" delay={delay * 80}>
+      <div
+        ref={elementRef}
+        className={`absolute ${position} pointer-events-none`}
+      >
+        <Icon className={`${color} text-2xl opacity-70`} />
+      </div>
+    </LazyComponent>
+  );
+};
+
+/* ---------------- Componente StatCard ---------------- */
+const StatCard = ({ stat, index }: { stat: any; index: number }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(cardRef, { once: true, amount: 0.3 });
+
+  useEffect(() => {
+    if (!isInView || !cardRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        cardRef.current,
+        {
+          opacity: 0,
+          scale: 0.8,
+          y: 50,
+        },
+        {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "back.out(1.7)",
+          delay: index * 0.1,
+        }
+      );
+    });
+
+    return () => ctx.revert();
+  }, [isInView, index]);
+
+  return (
+    <LazyComponent animation="scale" delay={index * 100}>
+      <motion.div
+        ref={cardRef}
+        className="text-center p-6 bg-gray-900/40 backdrop-blur-2xl rounded-2xl border border-cyan-500/20 transition-all duration-400 cursor-pointer relative overflow-hidden hover:border-cyan-400/50 hover:bg-cyan-500/10 group"
+        whileHover={{ y: -8, scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+      >
+        <div className="flex justify-center mb-3">
+          <motion.div
+            className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/30 group-hover:border-cyan-400/50 transition-all duration-300"
+            whileHover={{ scale: 1.1, rotate: 5 }}
+          >
+            <stat.icon className="w-5 h-5 text-cyan-400" />
+          </motion.div>
+        </div>
+        <div className="text-2xl lg:text-3xl font-black bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-2">
+          {stat.number}
+        </div>
+        <div className="text-gray-400 font-medium text-sm tracking-wide transition-colors duration-300 group-hover:text-gray-200">
+          {stat.title}
+        </div>
+        <div className="text-xs text-gray-500 transition-colors duration-300 group-hover:text-gray-400">
+          {stat.subtitle}
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/5 to-blue-400/5 opacity-0 transition-opacity duration-400 group-hover:opacity-100" />
+      </motion.div>
+    </LazyComponent>
+  );
+};
+
+/* ---------------- ProjectShowcase ---------------- */
 const ProjectShowcase: React.FC = () => {
   const [selectedProject, setSelectedProject] =
     useState<ExtendedProject | null>(null);
@@ -242,12 +429,10 @@ const ProjectShowcase: React.FC = () => {
   // Apply lock while any modal is open (centralized)
   useLockScroll(isModalLocked);
 
-  // When any modal opens, ensure we enable lock immediately.
   useEffect(() => {
     if (selectedProject || zoomImage || showAllTechnologies) {
       setIsModalLocked(true);
     }
-    // do not automatically set false here; release happens after exit animations complete.
   }, [selectedProject, zoomImage, showAllTechnologies]);
 
   const handlePlayPause = () => {
@@ -430,12 +615,9 @@ const ProjectShowcase: React.FC = () => {
         </div>
       </LazyComponent>
 
-      {/* Single AnimatePresence — release lock after exit completes */}
       <AnimatePresence
         onExitComplete={() => {
-          // safety: forcefully restore styles and clear locks
           forceReleaseAll();
-          // also clear local lock flag if used elsewhere
           setIsModalLocked(false);
         }}
       >
@@ -445,7 +627,7 @@ const ProjectShowcase: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+              className="fixed inset-0 z-[9990] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
               onClick={() => {
                 setSelectedProject(null);
                 setIsPlaying(false);
@@ -579,158 +761,17 @@ const ProjectShowcase: React.FC = () => {
   );
 };
 
-/* ---------------- rest of the file (neon elements, stats, main Projects) ---------------- */
-/* For brevity keep the rest of the Projects component intact; ensure it's unchanged from your working copy. */
-
-const TechnicalDeepDive: React.FC<{ project: ExtendedProject }> = ({
-  project,
-}) => {
-  return (
-    <LazyComponent animation="fadeUp" delay={400}>
-      <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 overflow-hidden mt-12 p-6">
-        <h4 className="text-white font-semibold mb-2">
-          Deep Dive Técnico — {project.title}
-        </h4>
-        <p className="text-gray-300 text-sm">
-          Arquitetura, infra e decisões técnicas relevantes.
-        </p>
-      </div>
-    </LazyComponent>
-  );
-};
-
-const ProjectsNeonElement: React.FC<{
-  Icon: any;
-  position: string;
-  color: string;
-  delay?: number;
-}> = ({ Icon, position, color, delay = 0 }) => {
-  const elementRef = useRef<HTMLDivElement | null>(null);
-  const isInView = useInView(elementRef, { once: true, amount: 0.3 });
-
-  useEffect(() => {
-    if (!isInView || !elementRef.current) return;
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        elementRef.current!,
-        { opacity: 0, scale: 0, y: 100, rotation: -180 },
-        {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          rotation: 0,
-          duration: 1.2,
-          ease: "back.out(1.7)",
-          delay: delay * 0.15,
-        }
-      );
-      gsap.to(elementRef.current!, {
-        y: -12,
-        rotation: 5,
-        duration: 4,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-        delay: delay * 0.2,
-      });
-    }, elementRef);
-
-    return () => ctx.revert();
-  }, [isInView, delay]);
-
-  return (
-    <LazyComponent animation="fadeIn" delay={delay * 80}>
-      <div
-        ref={elementRef}
-        className={`absolute ${position} pointer-events-none`}
-      >
-        <Icon className={`${color} text-2xl opacity-70`} />
-      </div>
-    </LazyComponent>
-  );
-};
-
+/* ---------------- Componente Principal Projects ---------------- */
 const Projects: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
   usePerformanceMonitor("ProjectsSection");
 
-  const neonElements = useMemo(
-    () => [
-      {
-        Icon: Rocket,
-        position: "top-20 left-20",
-        color: "text-cyan-400",
-        delay: 0,
-      },
-      {
-        Icon: Code,
-        position: "top-32 right-24",
-        color: "text-cyan-400",
-        delay: 1,
-      },
-      {
-        Icon: Globe,
-        position: "bottom-40 left-24",
-        color: "text-cyan-400",
-        delay: 2,
-      },
-      {
-        Icon: Database,
-        position: "bottom-32 right-20",
-        color: "text-cyan-400",
-        delay: 3,
-      },
-      {
-        Icon: Server,
-        position: "top-40 right-16",
-        color: "text-cyan-400",
-        delay: 4,
-      },
-      {
-        Icon: Smartphone,
-        position: "bottom-48 left-16",
-        color: "text-cyan-400",
-        delay: 5,
-      },
-    ],
-    []
-  );
+  // Dados otimizados com useMemo
+  const projectsData = useMemo(() => staticProjectsData, []);
 
-  const statsData = useMemo(
-    () => [
-      {
-        number: projects.length,
-        title: "Projetos",
-        subtitle: "Entregues com Excelência",
-        icon: Rocket,
-      },
-      {
-        number: `${Math.round(
-          (projects.filter((p) => p.liveUrl).length / projects.length) * 100
-        )}%`,
-        title: "Online",
-        subtitle: "Projetos em Produção",
-        icon: Eye,
-      },
-      {
-        number: "24/7",
-        title: "Disponível",
-        subtitle: "Para Novos Desafios",
-        icon: Star,
-      },
-      {
-        number: "5+",
-        title: "Anos Exp",
-        subtitle: "Experiência Comprovada",
-        icon: Code,
-      },
-    ],
-    []
-  );
-
+  // GSAP Animations
   useEffect(() => {
     if (!isInView || !sectionRef.current) return;
 
@@ -774,7 +815,7 @@ const Projects: React.FC = () => {
       <LazyBackground priority="medium">
         <PremiumBackground intensity="medium">
           <div className="absolute inset-0 pointer-events-none">
-            {neonElements.map((element, idx) => (
+            {projectsData.neonElements.map((element, idx) => (
               <ProjectsNeonElement
                 key={`${element.position}-${idx}`}
                 {...element}
@@ -785,43 +826,108 @@ const Projects: React.FC = () => {
       </LazyBackground>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="projects-header text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-            Projetos
-          </h2>
-          <p className="mt-2 text-cyan-300">
-            Alguns trabalhos selecionados e estudos de caso.
-          </p>
-        </div>
+        {/* Header */}
+        <motion.div
+          className="text-center mb-16 projects-header"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.3 }}
+        >
+          <motion.div
+            initial={{ scale: 0, rotate: -180 }}
+            whileInView={{ scale: 1, rotate: 0 }}
+            transition={{ duration: 0.6, delay: 0.1, type: "spring" }}
+            viewport={{ once: true }}
+            className="inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-400/10 px-6 py-3 rounded-full border border-cyan-400/30 backdrop-blur-2xl mb-6 relative overflow-hidden group"
+          >
+            <Sparkles className="w-4 h-4 mr-3 animate-pulse" />
+            PORTFÓLIO & PROJETOS
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-600" />
+          </motion.div>
 
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
+              PROJETOS QUE{" "}
+              <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                IMPACTAM
+              </span>
+            </h1>
+            <p className="text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              Soluções reais, código limpo e resultados excepcionais. Conheça
+              alguns dos projetos onde transformei ideias em experiências
+              digitais memoráveis.
+            </p>
+          </motion.div>
+        </motion.div>
+
+        {/* Project Showcase */}
         <ProjectShowcase />
 
+        {/* Stats */}
         <div className="projects-stats grid grid-cols-1 md:grid-cols-4 gap-4 mt-12">
-          {statsData.map((s, i) => (
-            <div
-              key={i}
-              className="bg-gray-900/50 border border-cyan-500/10 rounded-lg p-4 flex items-center gap-4"
-            >
-              <div className="p-3 bg-cyan-500/10 rounded-md">
-                <s.icon className="text-cyan-400 w-6 h-6" />
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-white">{s.number}</div>
-                <div className="text-sm text-gray-300">{s.title}</div>
-                <div className="text-xs text-gray-400">{s.subtitle}</div>
-              </div>
-            </div>
+          {projectsData.stats.map((stat, i) => (
+            <StatCard key={i} stat={stat} index={i} />
           ))}
         </div>
 
-        <div className="projects-cta mt-12 text-center">
-          <a
-            href="#contact"
-            className="inline-block bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 px-6 rounded-md font-bold shadow-lg hover:shadow-cyan-500/30 transition-all"
+        {/* CTA */}
+        <LazyComponent animation="fadeUp" delay={800}>
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            viewport={{ once: true }}
+            className="mt-16 projects-cta"
           >
-            Vamos conversar
-          </a>
-        </div>
+            <motion.div
+              className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-2xl p-6 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 relative overflow-hidden group"
+              whileHover={{ y: -5 }}
+            >
+              <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-8 relative z-10">
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  whileInView={{ scale: 1, rotate: 0 }}
+                  transition={{ duration: 0.6, type: "spring" }}
+                  viewport={{ once: true }}
+                  className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/30 shadow-xl shadow-cyan-400/30 group-hover:border-cyan-400/50"
+                  whileHover={{ rotate: 360 }}
+                >
+                  <Rocket className="w-6 h-6 text-cyan-400" />
+                </motion.div>
+                <div className="text-center lg:text-left flex-1">
+                  <h3 className="text-xl lg:text-2xl font-black text-white mb-2">
+                    Pronto para iniciar seu projeto?
+                  </h3>
+                  <p className="text-gray-300 text-base lg:text-lg">
+                    Vamos criar algo incrível juntos usando as melhores
+                    tecnologias do mercado
+                  </p>
+                </div>
+                <motion.div
+                  initial={{ opacity: 0, x: 20, scale: 0.9 }}
+                  whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.8 }}
+                  viewport={{ once: true }}
+                  className="w-full lg:w-auto"
+                >
+                  <a
+                    href="#contact"
+                    className="inline-block bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl border-none shadow-2xl shadow-cyan-400/30 transition-all duration-500 hover:shadow-cyan-400/50 hover:scale-105 relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+                  >
+                    <Sparkles className="w-4 h-4 mr-2 transition-transform duration-300" />
+                    INICIAR PROJETO
+                  </a>
+                </motion.div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </LazyComponent>
       </div>
     </section>
   );

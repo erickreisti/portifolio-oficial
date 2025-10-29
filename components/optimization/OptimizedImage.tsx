@@ -27,7 +27,6 @@ export const OptimizedImage = ({
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
-  // Fallback para imagens quebradas
   if (hasError) {
     return (
       <div

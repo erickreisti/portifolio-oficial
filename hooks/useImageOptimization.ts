@@ -1,5 +1,4 @@
-// hooks/useImageOptimization.ts
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface UseImageOptimizationProps {
   src: string;
@@ -15,6 +14,7 @@ export const useImageOptimization = ({
   const [isLoading, setIsLoading] = useState(!priority);
   const [hasError, setHasError] = useState(false);
   const [imageSrc, setImageSrc] = useState(priority ? src : "");
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     if (!src) {
@@ -23,46 +23,62 @@ export const useImageOptimization = ({
     }
 
     if (priority) {
-      // Carregamento imediato para imagens prioritárias
       setIsLoading(false);
       setImageSrc(src);
       return;
     }
 
-    // Lazy loading para imagens não prioritárias
     setIsLoading(true);
+    setHasError(false);
 
     const img = new Image();
     img.src = src;
 
-    img.onload = () => {
+    const onLoad = () => {
       setIsLoading(false);
       setImageSrc(src);
     };
 
-    img.onerror = () => {
+    const onError = () => {
       setIsLoading(false);
       setHasError(true);
     };
 
-    // Intersection Observer para lazy loading
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setImageSrc(src);
-            observer.disconnect();
-          }
-        });
-      },
-      { rootMargin: "50px" } // Começar a carregar 50px antes de entrar na viewport
-    );
+    img.addEventListener("load", onLoad);
+    img.addEventListener("error", onError);
 
-    const dummyElement = document.createElement("div");
-    observer.observe(dummyElement);
+    if ("IntersectionObserver" in window) {
+      observerRef.current = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setImageSrc(src);
+              observerRef.current?.disconnect();
+            }
+          });
+        },
+        { rootMargin: "50px" }
+      );
+
+      const observerElement = document.createElement("div");
+      document.body.appendChild(observerElement);
+      observerRef.current.observe(observerElement);
+
+      return () => {
+        observerRef.current?.disconnect();
+        if (document.body.contains(observerElement)) {
+          document.body.removeChild(observerElement);
+        }
+        img.removeEventListener("load", onLoad);
+        img.removeEventListener("error", onError);
+      };
+    } else {
+      setImageSrc(src);
+    }
 
     return () => {
-      observer.disconnect();
+      img.removeEventListener("load", onLoad);
+      img.removeEventListener("error", onError);
     };
   }, [src, priority]);
 
@@ -73,3 +89,5 @@ export const useImageOptimization = ({
     sizes,
   };
 };
+
+export default useImageOptimization;

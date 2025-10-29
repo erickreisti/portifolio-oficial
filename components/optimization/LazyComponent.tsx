@@ -10,7 +10,7 @@ interface LazyComponentProps {
   rootMargin?: string;
   animation?: "fadeUp" | "fadeIn" | "scale" | "slideUp";
   delay?: number;
-  priority?: "high" | "medium" | "low"; // Adicione esta linha
+  priority?: "high" | "medium" | "low";
 }
 
 export const LazyComponent = ({
@@ -20,13 +20,12 @@ export const LazyComponent = ({
   rootMargin = "50px",
   animation = "fadeUp",
   delay = 0,
-  priority = "medium", // Valor padrão
+  priority = "medium",
 }: LazyComponentProps) => {
-  const [isVisible, setIsVisible] = useState(priority === "high"); // High priority já é visível
+  const [isVisible, setIsVisible] = useState(priority === "high");
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Se não for high priority, usa intersection observer
     if (priority !== "high") {
       const observer = new IntersectionObserver(
         ([entry]) => {

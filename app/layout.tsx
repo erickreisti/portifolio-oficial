@@ -104,7 +104,6 @@ export default function RootLayout({
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
-        {/* ✅ FONTES OTIMIZADAS - APENAS GOOGLE FONTS */}
         <meta name="theme-color" content="#0f172a" />
         <meta name="msapplication-TileColor" content="#0f172a" />
       </head>
@@ -119,7 +118,6 @@ export default function RootLayout({
         <ThemeFlashPrevent />
         <LoadingProvider>{children}</LoadingProvider>
 
-        {/* Schema Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

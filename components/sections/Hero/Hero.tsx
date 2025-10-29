@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import { Download, Mail, ArrowDown, Sparkles } from "lucide-react";
@@ -10,98 +10,83 @@ import { LazyComponent } from "@/components/optimization/LazyComponent";
 import { LazyBackground } from "@/components/optimization/LazyBackground";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 
-// Componente de Partículas Corrigido - Versão Simplificada
+// Componente de Partículas Otimizado
 const TechParticles = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!canvasRef.current) return;
+    if (!containerRef.current) return;
 
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const particlesContainer = containerRef.current;
+    const particles: HTMLDivElement[] = [];
 
-    // Ajustar canvas para o tamanho da tela
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
+    const createParticle = () => {
+      const particle = document.createElement("div");
+      particle.className =
+        "absolute text-xs font-mono text-cyan-400 opacity-40 pointer-events-none z-40";
 
-    const particles: Array<{
-      x: number;
-      y: number;
-      size: number;
-      speed: number;
-      text: string;
-      opacity: number;
-    }> = [];
+      const codeChars = [
+        "{",
+        "}",
+        "<",
+        ">",
+        "/",
+        ";",
+        "=",
+        "()",
+        "=>",
+        "[]",
+        "fn",
+        "const",
+        "let",
+      ];
+      particle.textContent =
+        codeChars[Math.floor(Math.random() * codeChars.length)];
 
-    const codeChars = [
-      "{",
-      "}",
-      "<",
-      ">",
-      "/",
-      ";",
-      "=",
-      "()",
-      "=>",
-      "[]",
-      "fn",
-      "const",
-      "let",
-    ];
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.top = `${Math.random() * 100}%`;
+      particle.style.fontSize = `${Math.random() * 12 + 10}px`;
+      particle.style.opacity = `${Math.random() * 0.6 + 0.2}`;
+      particle.style.zIndex = "40";
 
-    // Criar partículas iniciais
-    for (let i = 0; i < 20; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 12 + 10,
-        speed: Math.random() * 2 + 1,
-        text: codeChars[Math.floor(Math.random() * codeChars.length)],
-        opacity: Math.random() * 0.3 + 0.1,
+      particlesContainer.appendChild(particle);
+      particles.push(particle);
+
+      const duration = Math.random() * 4 + 3;
+      const rotation = Math.random() * 360 - 180;
+
+      gsap.to(particle, {
+        y: -200,
+        x: Math.random() * 100 - 50,
+        rotation: rotation,
+        opacity: 0.8,
+        duration: duration,
+        ease: "power1.out",
+        onComplete: () => {
+          gsap.to(particle, {
+            opacity: 0,
+            duration: 0.8,
+            onComplete: () => {
+              particle.remove();
+              const index = particles.indexOf(particle);
+              if (index > -1) particles.splice(index, 1);
+            },
+          });
+        },
       });
-    }
-
-    const animate = () => {
-      // Limpar canvas com transparência
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Atualizar e desenhar partículas
-      particles.forEach((particle, index) => {
-        // Mover partícula para cima
-        particle.y -= particle.speed;
-
-        // Recycle particles that go off screen
-        if (particle.y < -20) {
-          particle.y = canvas.height + 20;
-          particle.x = Math.random() * canvas.width;
-        }
-
-        // Desenhar partícula
-        ctx.fillStyle = `rgba(6, 182, 212, ${particle.opacity})`;
-        ctx.font = `${particle.size}px 'Courier New', monospace`;
-        ctx.fillText(particle.text, particle.x, particle.y);
-      });
-
-      requestAnimationFrame(animate);
     };
 
-    animate();
-
+    const interval = setInterval(createParticle, 150);
     return () => {
-      window.removeEventListener("resize", resizeCanvas);
+      clearInterval(interval);
+      particles.forEach((particle) => particle.remove());
     };
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 pointer-events-none z-0"
-      style={{ opacity: 0.3 }}
+    <div
+      ref={containerRef}
+      className="absolute inset-0 pointer-events-none overflow-hidden z-40"
     />
   );
 };
@@ -127,7 +112,7 @@ const DynamicTechGrid = () => {
     <LazyComponent animation="fadeIn" delay={100}>
       <div
         ref={gridRef}
-        className="absolute inset-0 pointer-events-none opacity-5 z-0"
+        className="absolute inset-0 pointer-events-none opacity-5 z-30"
         style={{
           backgroundImage: `
             linear-gradient(90deg, transparent 99%, rgba(6,182,212,0.1) 100%),
@@ -183,7 +168,7 @@ const InteractiveBackground = () => {
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 transition-all duration-1000 ease-out pointer-events-none z-0"
+      className="absolute inset-0 transition-all duration-1000 ease-out pointer-events-none z-20"
     />
   );
 };
@@ -195,7 +180,7 @@ const TypewriterHeroText = () => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const lines = useMemo(
-    () => ["VISÃO ESTRATÉGICA", "ENGENHARIA DE PONTA", "RESULTADOS CONCRETOS"],
+    () => ["IDEIAS EXTRAORDINÁRIAS", "CÓDIGO EXCEPCIONAL", "RESULTADOS REAIS"],
     []
   );
 
@@ -239,7 +224,7 @@ const TypewriterHeroText = () => {
               {line.split("").map((char, charIndex) => (
                 <motion.span
                   key={`${lineIndex}-${charIndex}`}
-                  className="inline-block mx-0.5 sm:mx-1 transition-all duration-300 bg-gradient-to-b from-white to-gray-300 bg-clip-text text-transparent hover:scale-110 hover:text-tech-cyan-300"
+                  className="inline-block mx-0.5 sm:mx-1 transition-all duration-300 bg-gradient-to-b from-white to-gray-300 bg-clip-text text-transparent hover:scale-110 hover:text-cyan-300"
                   initial={{
                     y: 100,
                     opacity: 0,
@@ -275,7 +260,7 @@ const TypewriterHeroText = () => {
           transition={{ delay: 2 }}
         >
           <p className="text-xl sm:text-2xl lg:text-3xl text-gray-300 font-light min-h-[60px] flex items-center justify-center">
-            <span className="bg-gradient-to-r from-tech-cyan-400 to-tech-blue-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
               {displayText}
               <motion.span
                 animate={{ opacity: [1, 0, 1] }}
@@ -401,11 +386,11 @@ const LiveStats = () => {
             }}
             whileHover={{ scale: 1.1, y: -5 }}
           >
-            <div className="text-2xl sm:text-3xl font-black text-tech-cyan-400">
+            <div className="text-2xl sm:text-3xl font-black text-cyan-400">
               {stat.value}
               {stat.suffix}
             </div>
-            <div className="text-sm text-tech-cyan-300 font-medium">
+            <div className="text-sm text-cyan-300 font-medium">
               {stat.label}
             </div>
           </motion.div>
@@ -518,7 +503,7 @@ const AnimatedScrollIndicator = ({
       >
         <motion.button
           onClick={onExploreClick}
-          className="flex flex-col items-center gap-2 text-tech-cyan-400 hover:text-tech-cyan-300 transition-colors group focus:outline-none focus:ring-2 focus:ring-tech-cyan-500 rounded-lg p-2"
+          className="flex flex-col items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors group focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded-lg p-2"
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.95 }}
         >
@@ -535,7 +520,7 @@ const AnimatedScrollIndicator = ({
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="w-10 h-10 rounded-full border border-tech-cyan-400/30 flex items-center justify-center group-hover:border-tech-cyan-400/50 transition-colors relative"
+            className="w-10 h-10 rounded-full border border-cyan-400/30 flex items-center justify-center group-hover:border-cyan-400/50 transition-colors relative"
           >
             <motion.div
               animate={{ rotate: 360 }}
@@ -545,7 +530,7 @@ const AnimatedScrollIndicator = ({
             </motion.div>
 
             <motion.div
-              className="absolute inset-0 rounded-full border border-tech-cyan-400/20"
+              className="absolute inset-0 rounded-full border border-cyan-400/20"
               animate={{
                 scale: [1, 1.5, 1],
                 opacity: [0.5, 0, 0.5],
@@ -591,7 +576,7 @@ const FloatingNeonElements = () => {
             ease: "easeInOut",
           }}
         >
-          <Sparkles className="w-6 h-6 text-tech-cyan-400 opacity-50" />
+          <Sparkles className="w-6 h-6 text-cyan-400 opacity-50" />
         </motion.div>
       ))}
     </div>
@@ -661,28 +646,28 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
     <section
       id="hero"
       ref={containerRef}
-      className="relative min-h-screen overflow-hidden bg-gradient-to-br from-gray-900 via-tech-blue-900 to-tech-cyan-900"
+      className="relative min-h-screen overflow-hidden bg-gray-950"
     >
-      {/* BACKGROUND LAYER - z-0 */}
-      <div className="absolute inset-0 z-0">
+      <div className="hero-bg-element">
         <LazyBackground priority="high">
           <PremiumBackground intensity="high" />
         </LazyBackground>
-
-        <div className="hero-bg-element">
-          <InteractiveBackground />
-        </div>
-
-        <div className="hero-bg-element">
-          <DynamicTechGrid />
-        </div>
-
-        <div className="hero-bg-element">
-          <TechParticles />
-        </div>
       </div>
 
-      {/* CONTENT LAYER - z-50 (na frente) */}
+      <div className="hero-bg-element">
+        <DynamicTechGrid />
+      </div>
+
+      <div className="hero-bg-element">
+        <TechParticles />
+      </div>
+
+      <div className="hero-bg-element">
+        <InteractiveBackground />
+      </div>
+
+      <FloatingNeonElements />
+
       <div className="relative z-50 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col justify-center min-h-screen">
         <div className="hero-content-element">
           <TypewriterHeroText />
@@ -704,9 +689,6 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
           <AnimatedScrollIndicator onExploreClick={onExploreClick} />
         </div>
       </div>
-
-      {/* FLOATING ELEMENTS LAYER - z-30 (entre background e conteúdo) */}
-      <FloatingNeonElements />
     </section>
   );
 };

@@ -159,7 +159,7 @@ const SocialLink = ({ link, index }: { link: any; index: number }) => (
   </LazyComponent>
 );
 
-// Componente Logo Area Otimizado
+// Componente Logo Area Otimizado - CORRIGIDO
 const LogoArea = () => {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -186,7 +186,7 @@ const LogoArea = () => {
                   width={60}
                   height={60}
                   priority={true}
-                  className="brightness-125 group-hover:brightness-150 transition-all duration-500"
+                  className="brightness-125 group-hover:brightness-150 transition-all duration-500 w-auto h-auto" // ← CORREÇÃO AQUI
                 />
               </motion.div>
               <div className="absolute -inset-2 bg-cyan-500/10 rounded-xl blur-xl group-hover:bg-cyan-500/20 transition-all duration-500" />

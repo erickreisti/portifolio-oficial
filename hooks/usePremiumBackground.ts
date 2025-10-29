@@ -1,4 +1,3 @@
-// hooks/usePremiumBackground.ts
 "use client";
 
 import { useRef, useEffect } from "react";

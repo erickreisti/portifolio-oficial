@@ -1,4 +1,3 @@
-// components/optimization/LazyBackground.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -28,7 +27,6 @@ export const LazyBackground = ({
       priority === "high" ? 0 : priority === "medium" ? 100 : 300
     );
 
-    // Intersection Observer para lazy loading
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
