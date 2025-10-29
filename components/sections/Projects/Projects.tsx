@@ -136,66 +136,138 @@ const TechnologiesModal = ({
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        onClose();
+      }
+    };
+
     document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, [onClose]);
 
   return (
-    <LazyComponent priority="high">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+    >
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-        onClick={onClose}
+        ref={modalRef}
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        className="bg-gray-900/95 backdrop-blur-xl rounded-2xl border border-cyan-500/20 shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden"
       >
-        <motion.div
-          ref={modalRef}
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.8, opacity: 0 }}
-          className="bg-gray-900/95 backdrop-blur-xl rounded-2xl border border-cyan-500/20 shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="flex items-center justify-between p-6 border-b border-cyan-500/20">
-            <div>
-              <h3 className="text-2xl font-bold text-white">
-                Todas as Tecnologias
-              </h3>
-              <p className="text-cyan-300 text-sm">
-                {technologies.length} tecnologias utilizadas
-              </p>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
-            >
-              <X className="w-6 h-6 text-gray-400" />
-            </button>
+        <div className="flex items-center justify-between p-6 border-b border-cyan-500/20">
+          <div>
+            <h3 className="text-2xl font-bold text-white">
+              Todas as Tecnologias
+            </h3>
+            <p className="text-cyan-300 text-sm">
+              {technologies.length} tecnologias utilizadas
+            </p>
           </div>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
+          >
+            <X className="w-6 h-6 text-gray-400" />
+          </button>
+        </div>
 
-          <div className="p-6 max-h-[60vh] overflow-y-auto">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {technologies.map((tech, index) => (
-                <motion.div
-                  key={tech}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="bg-cyan-500/10 text-cyan-400 border border-cyan-400/30 rounded-lg px-3 py-2 text-sm font-mono text-center hover:bg-cyan-500/20 transition-colors duration-200"
-                >
-                  {tech}
-                </motion.div>
-              ))}
-            </div>
+        <div className="p-6 max-h-[60vh] overflow-y-auto">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {technologies.map((tech, index) => (
+              <motion.div
+                key={tech}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.05 }}
+                className="bg-cyan-500/10 text-cyan-400 border border-cyan-400/30 rounded-lg px-3 py-2 text-sm font-mono text-center hover:bg-cyan-500/20 transition-colors duration-200"
+              >
+                {tech}
+              </motion.div>
+            ))}
           </div>
-        </motion.div>
+        </div>
       </motion.div>
-    </LazyComponent>
+    </motion.div>
   );
 };
 
-// Componente Project Showcase - CORRIGIDO E MELHORADO
+// Modal de Zoom da Imagem - CORRIGIDO
+const ImageZoomModal = ({
+  imageSrc,
+  onClose,
+}: {
+  imageSrc: string;
+  onClose: () => void;
+}) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [onClose]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm"
+    >
+      <motion.div
+        ref={modalRef}
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        className="relative max-w-6xl w-full max-h-[90vh]"
+      >
+        <button
+          onClick={onClose}
+          className="absolute -top-12 right-0 p-2 text-white hover:text-cyan-400 transition-colors z-10"
+        >
+          <X className="w-6 h-6" />
+        </button>
+        <div className="relative w-full h-full max-h-[80vh]">
+          <OptimizedImage
+            src={imageSrc}
+            alt="Imagem ampliada"
+            fill
+            className="object-contain rounded-lg"
+            priority={true}
+          />
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+// Componente Project Showcase - CORRIGIDO
 const ProjectShowcase = () => {
   const [selectedProject, setSelectedProject] =
     useState<ExtendedProject | null>(null);
@@ -224,6 +296,7 @@ const ProjectShowcase = () => {
 
   const toggleProjectExpansion = (projectId: number, e: React.MouseEvent) => {
     e.stopPropagation();
+    e.preventDefault();
     const idStr = projectId.toString();
     const newExpanded = new Set(expandedProjects);
     if (newExpanded.has(idStr)) {
@@ -239,23 +312,27 @@ const ProjectShowcase = () => {
     e: React.MouseEvent
   ) => {
     e.stopPropagation();
+    e.preventDefault();
     setShowAllTechnologies(technologies);
   };
 
   const handleImageZoom = (imageSrc: string, e: React.MouseEvent) => {
     e.stopPropagation();
+    e.preventDefault();
     setZoomImage(imageSrc);
   };
 
-  const handleLiveDemo = (project: ExtendedProject, e: React.MouseEvent) => {
+  const handleLiveDemo = (liveUrl: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (project.liveUrl) {
-      window.open(project.liveUrl, "_blank", "noopener,noreferrer");
+    e.preventDefault();
+    if (liveUrl) {
+      window.open(liveUrl, "_blank", "noopener,noreferrer");
     }
   };
 
   const handleGithubClick = (githubUrl: string, e: React.MouseEvent) => {
     e.stopPropagation();
+    e.preventDefault();
     window.open(githubUrl, "_blank", "noopener,noreferrer");
   };
 
@@ -283,8 +360,6 @@ const ProjectShowcase = () => {
                   className="group cursor-pointer"
                 >
                   <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 overflow-hidden hover:border-cyan-400/50 transition-all duration-300 hover:scale-[1.02] h-full flex flex-col min-h-[500px]">
-                    {" "}
-                    {/* Altura mínima padronizada */}
                     {/* Container da imagem com ações */}
                     <div className="relative aspect-video overflow-hidden">
                       <OptimizedImage
@@ -306,7 +381,7 @@ const ProjectShowcase = () => {
 
                         {project.liveUrl && (
                           <button
-                            onClick={(e) => handleLiveDemo(project, e)}
+                            onClick={(e) => handleLiveDemo(project.liveUrl!, e)}
                             className="p-3 bg-cyan-500/20 rounded-full border border-cyan-400/30 backdrop-blur-sm hover:bg-cyan-500/30 transition-all duration-300 hover:scale-110"
                           >
                             <Play className="w-6 h-6 text-cyan-400" />
@@ -331,6 +406,7 @@ const ProjectShowcase = () => {
                         </div>
                       )}
                     </div>
+
                     {/* Conteúdo do card */}
                     <div className="p-5 flex-1 flex flex-col">
                       <div className="flex items-start justify-between mb-2">
@@ -526,40 +602,14 @@ const ProjectShowcase = () => {
       {/* Modal de Zoom da Imagem */}
       <AnimatePresence>
         {zoomImage && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm"
-            onClick={() => setZoomImage(null)}
-          >
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              className="relative max-w-6xl max-h-[90vh]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={() => setZoomImage(null)}
-                className="absolute -top-12 right-0 p-2 text-white hover:text-cyan-400 transition-colors"
-              >
-                <X className="w-6 h-6" />
-              </button>
-              <div className="relative w-full h-full">
-                <OptimizedImage
-                  src={zoomImage}
-                  alt="Imagem ampliada"
-                  fill
-                  className="object-contain rounded-lg"
-                  priority={true}
-                />
-              </div>
-            </motion.div>
-          </motion.div>
+          <ImageZoomModal
+            imageSrc={zoomImage}
+            onClose={() => setZoomImage(null)}
+          />
         )}
       </AnimatePresence>
 
+      {/* Modal de Tecnologias */}
       <AnimatePresence>
         {showAllTechnologies && (
           <TechnologiesModal
@@ -572,7 +622,7 @@ const ProjectShowcase = () => {
   );
 };
 
-// ... (mantenha os componentes TechnicalDeepDive, ProjectsNeonElement e Projects exatamente como estão, pois não tinham conflitos)
+// ... (mantenha os componentes TechnicalDeepDive, ProjectsNeonElement e Projects exatamente como estavam)
 
 // Componente Technical Deep Dive - FASE 2 - OTIMIZADO (mantido igual)
 const TechnicalDeepDive = ({ project }: { project: ExtendedProject }) => {
