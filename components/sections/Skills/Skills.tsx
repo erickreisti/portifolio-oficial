@@ -1,8 +1,8 @@
 // components/sections/Skills/Skills.tsx
 "use client";
 
-import { useRef, useEffect } from "react";
-import { motion, useInView } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import {
   Code2,
@@ -22,12 +22,282 @@ import {
   Award,
   Clock,
   Heart,
+  Search,
+  Filter,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { PremiumBackground } from "@/components/layout/PremiumBackground";
 
+// Skill Matrix 3D Data - FASE 2
+const skillCategories = [
+  {
+    id: "frontend",
+    name: "Frontend",
+    icon: Zap,
+    color: "from-cyan-500 to-blue-500",
+    skills: [
+      { name: "Next.js", level: 96, popularity: 95 },
+      { name: "TypeScript", level: 94, popularity: 90 },
+      { name: "React", level: 92, popularity: 88 },
+      { name: "Tailwind CSS", level: 98, popularity: 85 },
+      { name: "Vue.js", level: 85, popularity: 75 },
+      { name: "Svelte", level: 80, popularity: 70 },
+    ],
+  },
+  {
+    id: "backend",
+    name: "Backend",
+    icon: Cpu,
+    color: "from-purple-500 to-pink-500",
+    skills: [
+      { name: "Node.js", level: 92, popularity: 90 },
+      { name: "Express", level: 88, popularity: 85 },
+      { name: "Python", level: 85, popularity: 80 },
+      { name: "FastAPI", level: 82, popularity: 75 },
+      { name: "GraphQL", level: 78, popularity: 70 },
+      { name: "REST APIs", level: 95, popularity: 92 },
+    ],
+  },
+  {
+    id: "database",
+    name: "Database",
+    icon: Database,
+    color: "from-green-500 to-emerald-500",
+    skills: [
+      { name: "PostgreSQL", level: 88, popularity: 85 },
+      { name: "MongoDB", level: 82, popularity: 80 },
+      { name: "Redis", level: 85, popularity: 78 },
+      { name: "Prisma", level: 85, popularity: 82 },
+      { name: "SQL", level: 90, popularity: 88 },
+      { name: "Supabase", level: 80, popularity: 75 },
+    ],
+  },
+  {
+    id: "cloud",
+    name: "Cloud & DevOps",
+    icon: Cloud,
+    color: "from-orange-500 to-red-500",
+    skills: [
+      { name: "AWS", level: 84, popularity: 82 },
+      { name: "Docker", level: 78, popularity: 75 },
+      { name: "Vercel", level: 95, popularity: 90 },
+      { name: "CI/CD", level: 87, popularity: 80 },
+      { name: "Kubernetes", level: 75, popularity: 70 },
+      { name: "Terraform", level: 72, popularity: 68 },
+    ],
+  },
+];
+
+// Componente Skill Matrix 3D - FASE 2
+const SkillMatrix3D = () => {
+  const [selectedCategory, setSelectedCategory] = useState("frontend");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [hoveredSkill, setHoveredSkill] = useState<any>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const currentCategory = skillCategories.find(
+    (cat) => cat.id === selectedCategory
+  );
+  const filteredSkills =
+    currentCategory?.skills.filter((skill) =>
+      skill.name.toLowerCase().includes(searchTerm.toLowerCase())
+    ) || [];
+
+  // Efeito de parallax no mouse
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return;
+
+      const { clientX, clientY } = e;
+      const x = (clientX / window.innerWidth) * 50 - 25;
+      const y = (clientY / window.innerHeight) * 50 - 25;
+
+      containerRef.current.style.transform = `perspective(1000px) rotateY(${x}deg) rotateX(${-y}deg)`;
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  return (
+    <div className="space-y-8">
+      {/* Filtros e Search */}
+      <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
+        {/* Categorias */}
+        <div className="flex flex-wrap gap-2">
+          {skillCategories.map((category) => {
+            const Icon = category.icon;
+            return (
+              <motion.button
+                key={category.id}
+                onClick={() => setSelectedCategory(category.id)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all duration-300 ${
+                  selectedCategory === category.id
+                    ? `bg-gradient-to-r ${category.color} text-white border-transparent shadow-lg`
+                    : "bg-gray-800/50 border-cyan-500/20 text-gray-300 hover:border-cyan-400/50"
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Icon className="w-4 h-4" />
+                <span className="font-semibold">{category.name}</span>
+              </motion.button>
+            );
+          })}
+        </div>
+
+        {/* Search */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Input
+            type="text"
+            placeholder="Buscar tecnologia..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="bg-gray-800/50 border border-cyan-500/20 rounded-xl pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400 transition-colors duration-300 w-64"
+          />
+        </div>
+      </div>
+
+      {/* Matrix 3D */}
+      <div className="relative">
+        <motion.div
+          ref={containerRef}
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 transition-transform duration-100 ease-out"
+          style={{ transformStyle: "preserve-3d" as const }}
+        >
+          {filteredSkills.map((skill, index) => (
+            <motion.div
+              key={skill.name}
+              initial={{ opacity: 0, scale: 0.8, rotateY: -180 }}
+              animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              className="relative group cursor-pointer"
+              onMouseEnter={() => setHoveredSkill(skill)}
+              onMouseLeave={() => setHoveredSkill(null)}
+              style={{ transformStyle: "preserve-3d" as const }}
+            >
+              {/* Card de Skill */}
+              <div
+                className={`bg-gray-900/60 backdrop-blur-xl rounded-2xl p-4 border ${
+                  hoveredSkill?.name === skill.name
+                    ? "border-cyan-400/50 shadow-2xl shadow-cyan-400/20 scale-110"
+                    : "border-cyan-500/20"
+                } transition-all duration-300 h-32 flex flex-col justify-between relative overflow-hidden`}
+              >
+                {/* Nível de Proficiência */}
+                <div className="absolute top-3 right-3">
+                  <div className="text-cyan-400 font-mono font-bold text-sm">
+                    {skill.level}%
+                  </div>
+                </div>
+
+                {/* Nome da Skill */}
+                <div className="text-white font-bold text-lg mb-2">
+                  {skill.name}
+                </div>
+
+                {/* Barra de Progresso 3D */}
+                <div className="relative">
+                  <div className="w-full bg-gray-800/50 rounded-full h-2 overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${skill.level}%` }}
+                      transition={{ duration: 1.5, delay: index * 0.2 }}
+                      className={`h-full bg-gradient-to-r ${currentCategory?.color} rounded-full relative`}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-30 animate-pulse" />
+                    </motion.div>
+                  </div>
+
+                  {/* Popularidade */}
+                  <div className="flex justify-between text-xs text-gray-400 mt-1">
+                    <span>Proficiência</span>
+                    <span>Popularidade: {skill.popularity}%</span>
+                  </div>
+                </div>
+
+                {/* Efeito de Glow no Hover */}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-r ${currentCategory?.color} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-300`}
+                />
+              </div>
+
+              {/* Tooltip Detalhado */}
+              <AnimatePresence>
+                {hoveredSkill?.name === skill.name && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.8 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.8 }}
+                    className="absolute z-10 top-full left-1/2 transform -translate-x-1/2 mt-2 w-64 bg-gray-900/95 backdrop-blur-xl rounded-xl border border-cyan-500/20 p-4 shadow-2xl"
+                  >
+                    <div className="text-white font-bold text-sm mb-2">
+                      {skill.name}
+                    </div>
+                    <div className="space-y-2 text-xs">
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Proficiência:</span>
+                        <span className="text-cyan-400 font-mono">
+                          {skill.level}%
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Demanda:</span>
+                        <span className="text-green-400 font-mono">
+                          {skill.popularity}%
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Experiência:</span>
+                        <span className="text-yellow-400">
+                          {skill.level >= 90
+                            ? "Expert"
+                            : skill.level >= 80
+                            ? "Avançado"
+                            : skill.level >= 70
+                            ? "Intermediário"
+                            : "Básico"}
+                        </span>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Legenda */}
+        <div className="flex justify-center mt-8">
+          <div className="flex items-center gap-6 text-sm text-gray-400">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full" />
+              <span>Frontend</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full" />
+              <span>Backend</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full" />
+              <span>Database</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-gradient-to-r from-orange-500 to-red-500 rounded-full" />
+              <span>Cloud & DevOps</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Skills Data Original
 const skillsData = [
   {
     category: "FRONTEND & MOBILE",
@@ -548,6 +818,17 @@ export const Skills = () => {
               interfaces imersivas até infraestrutura escalável
             </p>
           </motion.div>
+        </motion.div>
+
+        {/* Skill Matrix 3D - FASE 2 */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          viewport={{ once: true }}
+          className="mb-16 lg:mb-20"
+        >
+          <SkillMatrix3D />
         </motion.div>
 
         {/* Grid de Skills Harmonizado */}

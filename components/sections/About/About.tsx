@@ -1,8 +1,8 @@
 // components/sections/About/About.tsx
 "use client";
 
-import { useRef, useEffect } from "react";
-import { motion, useInView } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import Image from "next/image";
 import {
@@ -23,11 +23,61 @@ import {
   Award,
   Clock,
   Heart,
+  Calendar,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PremiumBackground } from "@/components/layout/PremiumBackground";
 
+// Timeline Data - FASE 1
+const timelineData = [
+  {
+    year: "2024",
+    title: "Tech Lead & Arquitetura Cloud",
+    company: "Projetos Freelance",
+    description:
+      "Liderança técnica em projetos de grande escala, arquitetura microservices e implementação de soluções AWS",
+    icon: Rocket,
+    color: "from-cyan-500 to-blue-500",
+    projects: ["Sistema de E-commerce", "Plataforma SaaS", "App Mobile"],
+    skills: ["AWS", "Microservices", "Node.js", "React Native"],
+  },
+  {
+    year: "2022-2023",
+    title: "Desenvolvedor FullStack Sênior",
+    company: "Startups & Empresas",
+    description:
+      "Desenvolvimento de aplicações web e mobile com foco em performance e escalabilidade",
+    icon: Code2,
+    color: "from-purple-500 to-pink-500",
+    projects: ["Dashboard Analytics", "API REST", "PWA"],
+    skills: ["Next.js", "TypeScript", "PostgreSQL", "Docker"],
+  },
+  {
+    year: "2020-2021",
+    title: "Desenvolvedor FullStack Pleno",
+    company: "Agências & Clientes",
+    description:
+      "Implementação de sistemas completos e mentoria de desenvolvedores juniores",
+    icon: Users,
+    color: "from-green-500 to-emerald-500",
+    projects: ["Sites Institucionais", "E-commerce", "Sistemas Internos"],
+    skills: ["React", "Node.js", "MongoDB", "Express"],
+  },
+  {
+    year: "2019",
+    title: "Início da Jornada Tech",
+    company: "Primeiros Projetos",
+    description:
+      "Transição de carreira e primeiras experiências com desenvolvimento web moderno",
+    icon: Award,
+    color: "from-orange-500 to-red-500",
+    projects: ["Landing Pages", "Blogs", "Sistemas Básicos"],
+    skills: ["HTML/CSS", "JavaScript", "PHP", "MySQL"],
+  },
+];
+
+// Bio Data Original
 const bioData = {
   paragraph1:
     "Olá! Sou Érick Reis, um Desenvolvedor FullStack & Arquiteto de Sistemas apaixonado por transformar ideias em soluções digitais robustas e escaláveis. Minha jornada na tecnologia começou com formação em Tecnologia da Informação e Sistemas de Informação, seguida por especialização em Redes de Computadores. Essa base técnica diversificada me proporcionou uma visão holística de sistemas, que hoje aplico no desenvolvimento de aplicações modernas.",
@@ -85,7 +135,141 @@ const bioData = {
   ],
 };
 
-// Componente Neon Element - Harmonizado com Hero
+// Componente Timeline Interativa - FASE 1
+const InteractiveTimeline = () => {
+  const [activeItem, setActiveItem] = useState(0);
+
+  return (
+    <div className="relative py-20">
+      <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-cyan-500/20 to-blue-500/20" />
+
+      <div className="space-y-12">
+        {timelineData.map((item, index) => {
+          const isActive = activeItem === index;
+          const Icon = item.icon;
+
+          return (
+            <motion.div
+              key={item.year}
+              className={`relative flex items-center ${
+                index % 2 === 0 ? "flex-row" : "flex-row-reverse"
+              }`}
+              initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              onMouseEnter={() => setActiveItem(index)}
+            >
+              {/* Ponto na linha do tempo */}
+              <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
+                <motion.div
+                  className={`w-6 h-6 rounded-full bg-gradient-to-r ${
+                    item.color
+                  } border-4 border-gray-900 ${
+                    isActive ? "scale-125" : "scale-100"
+                  } transition-all duration-300`}
+                  whileHover={{ scale: 1.2 }}
+                />
+              </div>
+
+              {/* Card de conteúdo */}
+              <div className={`w-5/12 ${index % 2 === 0 ? "pr-12" : "pl-12"}`}>
+                <motion.div
+                  className={`bg-gray-900/60 backdrop-blur-xl p-6 rounded-2xl border ${
+                    isActive
+                      ? "border-cyan-400/50 shadow-2xl shadow-cyan-400/20"
+                      : "border-gray-700/30"
+                  } transition-all duration-300 cursor-pointer group`}
+                  whileHover={{ y: -5, scale: 1.02 }}
+                >
+                  {/* Header */}
+                  <div className="flex items-center gap-3 mb-4">
+                    <div
+                      className={`p-2 rounded-xl bg-gradient-to-r ${item.color}/20 border ${item.color}/30`}
+                    >
+                      <Icon className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <div className="text-cyan-400 font-mono text-sm font-bold">
+                        {item.year}
+                      </div>
+                      <h3 className="text-white font-bold text-lg">
+                        {item.title}
+                      </h3>
+                    </div>
+                  </div>
+
+                  {/* Descrição */}
+                  <p className="text-gray-300 text-sm mb-4 leading-relaxed">
+                    {item.description}
+                  </p>
+
+                  {/* Empresa */}
+                  <div className="text-cyan-300 font-mono text-xs mb-4">
+                    {item.company}
+                  </div>
+
+                  <AnimatePresence>
+                    {isActive && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="space-y-3"
+                      >
+                        {/* Projetos */}
+                        <div>
+                          <div className="text-xs text-gray-400 font-semibold mb-2">
+                            PROJETOS DESTAQUE:
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {item.projects.map((project, i) => (
+                              <motion.span
+                                key={project}
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: i * 0.1 }}
+                                className="px-2 py-1 bg-cyan-500/10 text-cyan-400 text-xs rounded-full border border-cyan-400/20"
+                              >
+                                {project}
+                              </motion.span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Skills */}
+                        <div>
+                          <div className="text-xs text-gray-400 font-semibold mb-2">
+                            TECNOLOGIAS:
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            {item.skills.map((skill, i) => (
+                              <motion.span
+                                key={skill}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: i * 0.05 }}
+                                className="px-2 py-1 bg-gray-800/50 text-gray-300 text-xs rounded border border-gray-700/30"
+                              >
+                                {skill}
+                              </motion.span>
+                            ))}
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+// Componente Neon Element
 const NeonElement = ({
   Icon,
   position,
@@ -149,7 +333,7 @@ const NeonElement = ({
   );
 };
 
-// Componente Stat Card - Harmonizado com Hero
+// Componente Stat Card
 const StatCard = ({ stat, index }: { stat: any; index: number }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.3 });
@@ -206,7 +390,7 @@ const StatCard = ({ stat, index }: { stat: any; index: number }) => {
   );
 };
 
-// Componente Passion Item - Harmonizado com Hero
+// Componente Passion Item
 const PassionItem = ({ item, index }: { item: any; index: number }) => {
   const itemRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(itemRef, { once: true, amount: 0.3 });
@@ -269,7 +453,7 @@ export const About = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
-  // Neon Elements Configuration - CORES HARMONIZADAS
+  // Neon Elements Configuration
   const neonElements = [
     {
       Icon: Code2,
@@ -587,13 +771,49 @@ export const About = () => {
           </div>
         </div>
 
-        {/* CTA Final Harmonizado */}
+        {/* Timeline Interativa - FASE 1 */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
           viewport={{ once: true }}
-          className="mt-12 lg:mt-16"
+          className="mt-20"
+        >
+          <div className="text-center mb-16">
+            <motion.div
+              initial={{ scale: 0, rotate: -180 }}
+              whileInView={{ scale: 1, rotate: 0 }}
+              transition={{ duration: 0.6, delay: 0.1, type: "spring" }}
+              viewport={{ once: true }}
+              className="inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-400/10 px-6 py-3 rounded-full border border-cyan-400/30 backdrop-blur-2xl mb-6 relative overflow-hidden group"
+            >
+              <Calendar className="w-4 h-4 mr-3 animate-pulse" />
+              MINHA JORNADA
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-600" />
+            </motion.div>
+
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-6">
+              Linha do Tempo{" "}
+              <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                Profissional
+              </span>
+            </h2>
+            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+              Da paixão inicial pela tecnologia até a expertise em
+              desenvolvimento fullstack
+            </p>
+          </div>
+
+          <InteractiveTimeline />
+        </motion.div>
+
+        {/* CTA Final Harmonizado */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          viewport={{ once: true }}
+          className="mt-16 lg:mt-20"
         >
           <motion.div
             className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-2xl p-6 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 relative overflow-hidden group"

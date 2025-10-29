@@ -22,6 +22,10 @@ import {
   Server,
   Smartphone,
   Cloud,
+  Play,
+  Square,
+  ZoomIn,
+  Loader,
 } from "lucide-react";
 import {
   Card,
@@ -38,236 +42,497 @@ import { projects } from "@/lib/project-data";
 import type { Project } from "@/lib/project-data";
 import { PremiumBackground } from "@/components/layout/PremiumBackground";
 
-// Componente Modal para tags
-const TagsModal = ({
-  project,
-  isOpen,
-  onClose,
-}: {
-  project: Project;
-  isOpen: boolean;
-  onClose: () => void;
-}) => {
-  if (!isOpen) return null;
+// Interface estendida para incluir as propriedades faltantes
+interface ExtendedProject extends Project {
+  demoVideo?: string;
+  techStack?: Array<{
+    name: string;
+    category: string;
+    description: string;
+    icon: any;
+  }>;
+}
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.8 }}
-        className="bg-gray-900/95 backdrop-blur-xl border border-cyan-500/20 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden"
-      >
-        <div className="flex items-center justify-between p-6 border-b border-cyan-400/20">
-          <div className="flex items-center gap-3">
-            <Tag className="w-5 h-5 text-cyan-400" />
-            <h3 className="text-xl font-bold text-white">
-              Tecnologias Utilizadas
-            </h3>
-          </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="w-8 h-8 rounded-lg hover:bg-gray-800/50"
-          >
-            <X className="w-4 h-4" />
-          </Button>
-        </div>
+// Componente Project Showcase - FASE 1
+const ProjectShowcase = () => {
+  const [selectedProject, setSelectedProject] =
+    useState<ExtendedProject | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
-        <div className="p-6 border-b border-cyan-400/20">
-          <h4 className="text-lg font-bold text-white mb-2">{project.title}</h4>
-          <p className="text-gray-300 text-sm">{project.description}</p>
-        </div>
-
-        <div className="p-6">
-          <p className="text-sm font-mono font-bold text-gray-400 mb-4">
-            STACK COMPLETA ({project.tags.length} tecnologias):
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {project.tags.map((tag: string, index: number) => (
-              <motion.div
-                key={tag}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.2, delay: index * 0.05 }}
-              >
-                <Badge className="bg-cyan-500/10 text-cyan-400 border-cyan-400/30 font-mono text-xs font-bold">
-                  {tag}
-                </Badge>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex gap-3 p-6 border-t border-cyan-400/20">
-          <Button
-            asChild
-            className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white"
-          >
-            <a
-              href={project.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <ExternalLink className="w-4 h-4 mr-2" />
-              VER CÓDIGO
-            </a>
-          </Button>
-          {project.liveUrl && (
-            <Button
-              asChild
-              className="flex-1 bg-gray-800/50 border border-cyan-400/30 text-cyan-400 hover:bg-cyan-500/10"
-            >
-              <a
-                href={project.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <ExternalLink className="w-4 h-4 mr-2" />
-                VER DEMO
-              </a>
-            </Button>
-          )}
-        </div>
-      </motion.div>
-    </div>
-  );
-};
-
-// Componente de Card de Projeto
-const ProjectCard: React.FC<{
-  project: Project;
-  index: number;
-}> = ({ project, index }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handlePlayPause = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
 
   return (
     <>
-      <motion.div
-        initial={{ opacity: 0, y: 40, scale: 0.9 }}
-        whileInView={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{
-          duration: 0.6,
-          delay: index * 0.1,
-          type: "spring",
-          stiffness: 100,
-        }}
-        viewport={{ once: true, amount: 0.2 }}
-        className="h-full"
-      >
-        <Card className="bg-gray-900/60 backdrop-blur-xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 hover:shadow-cyan-400/20 hover:border-cyan-400/50 transition-all duration-500 group h-full flex flex-col overflow-hidden hover:scale-105">
-          {/* Header com Imagem */}
-          <div className="h-32 lg:h-48 w-full bg-gradient-to-br from-cyan-500/15 to-blue-500/10 relative overflow-hidden border-b border-cyan-400/20">
-            <div className="absolute inset-0">
-              <Image
-                src={project.image}
-                alt={project.title}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-blue-500/10" />
-            </div>
-            <div className="relative z-10 h-full flex flex-col items-center justify-center text-center p-4">
-              <motion.div
-                whileHover={{ scale: 1.1, rotate: 5 }}
-                transition={{ type: "spring", stiffness: 300 }}
-                className="mb-2"
-              >
-                <Cpu className="w-8 h-8 lg:w-12 lg:h-12 text-cyan-400" />
-              </motion.div>
-              <span className="text-white font-bold text-sm lg:text-base bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                {project.title}
-              </span>
-            </div>
-          </div>
+      {/* Grid de Projetos */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 projects-grid">
+        {(projects as ExtendedProject[]).map((project, index) => (
+          <motion.div
+            key={project.id}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: index * 0.1 }}
+            className="group cursor-pointer"
+            onClick={() => setSelectedProject(project)}
+          >
+            <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 overflow-hidden hover:border-cyan-400/50 transition-all duration-300 hover:scale-105 h-full flex flex-col">
+              {/* Thumbnail com overlay */}
+              <div className="relative aspect-video overflow-hidden flex-1">
+                <Image
+                  src={project.image}
+                  alt={project.title}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                />
 
-          <CardHeader className="pb-4 flex-grow">
-            <CardTitle className="text-lg lg:text-xl font-black text-white flex items-center justify-between">
-              <span className="flex-1 truncate mr-2">{project.title}</span>
-              <motion.div
-                whileHover={{ scale: 1.1, rotate: 15 }}
-                className="text-cyan-400"
-              >
-                <Rocket className="w-4 h-4 lg:w-5 lg:h-5" />
-              </motion.div>
-            </CardTitle>
-            <CardDescription className="text-gray-400 text-sm lg:text-base line-clamp-3">
-              {project.description}
-            </CardDescription>
-          </CardHeader>
+                {/* Overlay de preview */}
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <div className="flex gap-4">
+                    <div className="p-3 bg-cyan-500/20 rounded-full border border-cyan-400/30 backdrop-blur-sm">
+                      <Play className="w-6 h-6 text-cyan-400" />
+                    </div>
+                    <div className="p-3 bg-white/10 rounded-full border border-white/20 backdrop-blur-sm">
+                      <ZoomIn className="w-6 h-6 text-white" />
+                    </div>
+                  </div>
+                </div>
 
-          <CardContent className="pb-4">
-            <div className="flex flex-wrap gap-2">
-              {project.tags.slice(0, 3).map((tag: string, tagIndex: number) => (
-                <motion.div
-                  key={tag}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.2, delay: tagIndex * 0.05 }}
-                  viewport={{ once: true }}
-                >
-                  <Badge className="bg-cyan-500/10 text-cyan-400 border-cyan-400/30 font-mono text-xs font-bold hover:bg-cyan-500/20 hover:scale-105 transition-all duration-300">
-                    {tag}
-                  </Badge>
-                </motion.div>
-              ))}
+                {/* Badge de preview disponível */}
+                {project.demoVideo && (
+                  <div className="absolute top-3 right-3 bg-cyan-500/20 px-2 py-1 rounded-full border border-cyan-400/30">
+                    <span className="text-cyan-400 text-xs font-mono">
+                      DEMO
+                    </span>
+                  </div>
+                )}
+              </div>
 
-              {project.tags.length > 3 && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.2, delay: 0.15 }}
-                  viewport={{ once: true }}
-                >
-                  <Badge
-                    className="bg-cyan-500/10 text-cyan-400 border-cyan-400/30 font-mono text-xs font-bold hover:bg-cyan-500/20 hover:scale-105 transition-all duration-300 cursor-pointer relative overflow-hidden"
-                    onClick={() => setIsModalOpen(true)}
+              {/* Info do projeto */}
+              <div className="p-4 flex-1 flex flex-col">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-white font-bold text-lg flex-1">
+                    {project.title}
+                  </h3>
+                  <motion.div
+                    whileHover={{ scale: 1.1, rotate: 15 }}
+                    className="text-cyan-400"
                   >
-                    +{project.tags.length - 3}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
-                  </Badge>
-                </motion.div>
-              )}
-            </div>
-          </CardContent>
+                    <Rocket className="w-4 h-4" />
+                  </motion.div>
+                </div>
+                <p className="text-gray-300 text-sm line-clamp-2 flex-1">
+                  {project.description}
+                </p>
 
-          <CardFooter className="pt-4 border-t border-cyan-400/20 mt-auto">
-            <div className="flex gap-2 w-full">
-              <Button
-                asChild
-                className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold text-xs lg:text-sm py-2 rounded-lg shadow-xl shadow-cyan-400/30 hover:shadow-cyan-400/50 transition-all duration-500 hover:scale-105"
-              >
-                <NextLink href={project.githubUrl} target="_blank">
-                  <Github className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
-                  CÓDIGO
-                </NextLink>
-              </Button>
-              {project.liveUrl && (
-                <Button
-                  asChild
-                  className="flex-1 bg-gray-800/50 backdrop-blur-sm border border-cyan-400/30 text-cyan-400 hover:bg-cyan-500/10 hover:border-cyan-400/60 font-bold text-xs lg:text-sm py-2 rounded-lg transition-all duration-500 hover:scale-105"
-                >
-                  <NextLink href={project.liveUrl} target="_blank">
-                    <ExternalLink className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
-                    DEMO
-                  </NextLink>
-                </Button>
-              )}
+                {/* Tags */}
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {project.tags
+                    .slice(0, 3)
+                    .map((tag: string, tagIndex: number) => (
+                      <Badge
+                        key={tag}
+                        className="bg-cyan-500/10 text-cyan-400 border-cyan-400/30 font-mono text-xs font-bold"
+                      >
+                        {tag}
+                      </Badge>
+                    ))}
+                  {project.tags.length > 3 && (
+                    <Badge className="bg-cyan-500/10 text-cyan-400 border-cyan-400/30 font-mono text-xs font-bold">
+                      +{project.tags.length - 3}
+                    </Badge>
+                  )}
+                </div>
+              </div>
             </div>
-          </CardFooter>
-        </Card>
-      </motion.div>
+          </motion.div>
+        ))}
+      </div>
 
+      {/* Modal de Demo */}
       <AnimatePresence>
-        <TagsModal
-          project={project}
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        />
+        {selectedProject && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            onClick={() => {
+              setSelectedProject(null);
+              setIsPlaying(false);
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              className="bg-gray-900/95 backdrop-blur-xl rounded-2xl border border-cyan-500/20 shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b border-cyan-500/20">
+                <div>
+                  <h3 className="text-2xl font-bold text-white">
+                    {selectedProject.title}
+                  </h3>
+                  <p className="text-cyan-300 text-sm">
+                    {selectedProject.description}
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    setSelectedProject(null);
+                    setIsPlaying(false);
+                  }}
+                  className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
+                >
+                  <X className="w-6 h-6 text-gray-400" />
+                </button>
+              </div>
+
+              {/* Conteúdo */}
+              <div className="p-6">
+                {selectedProject.demoVideo ? (
+                  <div className="relative rounded-lg overflow-hidden">
+                    <video
+                      ref={videoRef}
+                      src={selectedProject.demoVideo}
+                      className="w-full rounded-lg"
+                      controls={false}
+                    />
+                    <button
+                      onClick={handlePlayPause}
+                      className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors"
+                    >
+                      <div className="p-6 bg-black/50 rounded-full backdrop-blur-sm border border-white/20">
+                        {isPlaying ? (
+                          <Square className="w-8 h-8 text-white" />
+                        ) : (
+                          <Play className="w-8 h-8 text-white" />
+                        )}
+                      </div>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="relative aspect-video rounded-lg overflow-hidden">
+                    <Image
+                      src={selectedProject.image}
+                      alt={selectedProject.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+
+                {/* Links do projeto */}
+                <div className="flex gap-4 mt-6">
+                  <a
+                    href={selectedProject.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 px-6 rounded-lg font-bold text-center hover:shadow-2xl hover:shadow-cyan-500/25 transition-all duration-300 flex items-center justify-center gap-2"
+                  >
+                    <ExternalLink className="w-5 h-5" />
+                    VISITAR SITE
+                  </a>
+                  <a
+                    href={selectedProject.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 bg-gray-800/50 border border-cyan-500/20 text-cyan-400 py-3 px-6 rounded-lg font-bold text-center hover:bg-cyan-500/10 transition-all duration-300 flex items-center justify-center gap-2"
+                  >
+                    <Github className="w-5 h-5" />
+                    VER CÓDIGO
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
       </AnimatePresence>
     </>
+  );
+};
+
+// Componente Technical Deep Dive - FASE 2
+const TechnicalDeepDive = ({ project }: { project: ExtendedProject }) => {
+  const [activeTab, setActiveTab] = useState("architecture");
+
+  const tabs = [
+    { id: "architecture", name: "Arquitetura", icon: Server },
+    { id: "techstack", name: "Tech Stack", icon: Code },
+    { id: "performance", name: "Performance", icon: Zap },
+    { id: "database", name: "Database", icon: Database },
+  ];
+
+  const performanceMetrics = {
+    lighthouse: {
+      performance: 95,
+      accessibility: 100,
+      bestPractices: 100,
+      seo: 100,
+    },
+    loadTime: "1.2s",
+    bundleSize: "245KB",
+    coreWebVitals: {
+      lcp: "1.1s",
+      fid: "45ms",
+      cls: "0.05",
+    },
+  };
+
+  return (
+    <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 overflow-hidden mt-8">
+      {/* Header */}
+      <div className="border-b border-cyan-500/20 p-6">
+        <h3 className="text-2xl font-bold text-white mb-2">
+          Análise Técnica: {project.title}
+        </h3>
+        <p className="text-cyan-300">
+          Detalhes de implementação e métricas de performance
+        </p>
+      </div>
+
+      {/* Tabs */}
+      <div className="border-b border-cyan-500/20">
+        <div className="flex overflow-x-auto">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 px-6 py-4 border-b-2 transition-all duration-300 whitespace-nowrap ${
+                  isActive
+                    ? "border-cyan-400 text-cyan-400 bg-cyan-400/10"
+                    : "border-transparent text-gray-400 hover:text-cyan-300"
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                <span className="font-semibold">{tab.name}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="p-6">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            {activeTab === "architecture" && (
+              <div className="space-y-6">
+                <h4 className="text-xl font-bold text-white mb-4">
+                  Arquitetura do Sistema
+                </h4>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <h5 className="text-cyan-400 font-semibold">Frontend</h5>
+                    <ul className="space-y-2 text-gray-300">
+                      <li className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-cyan-400 rounded-full" />
+                        Next.js 14 com App Router
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-cyan-400 rounded-full" />
+                        TypeScript para type safety
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-cyan-400 rounded-full" />
+                        Tailwind CSS para styling
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-cyan-400 rounded-full" />
+                        Framer Motion para animações
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h5 className="text-cyan-400 font-semibold">Backend</h5>
+                    <ul className="space-y-2 text-gray-300">
+                      <li className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-purple-400 rounded-full" />
+                        Node.js com Express
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-purple-400 rounded-full" />
+                        PostgreSQL com Prisma ORM
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-purple-400 rounded-full" />
+                        Autenticação JWT
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-purple-400 rounded-full" />
+                        API RESTful
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="bg-gray-800/50 rounded-xl p-4 border border-cyan-500/20">
+                  <h5 className="text-cyan-400 font-semibold mb-2">
+                    Padrões Arquiteturais
+                  </h5>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div className="text-center p-3 bg-cyan-500/10 rounded-lg border border-cyan-400/20">
+                      <div className="text-cyan-400 font-bold">MVC</div>
+                      <div className="text-gray-400 text-xs">Pattern</div>
+                    </div>
+                    <div className="text-center p-3 bg-purple-500/10 rounded-lg border border-purple-400/20">
+                      <div className="text-purple-400 font-bold">REST</div>
+                      <div className="text-gray-400 text-xs">API Design</div>
+                    </div>
+                    <div className="text-center p-3 bg-green-500/10 rounded-lg border border-green-400/20">
+                      <div className="text-green-400 font-bold">SSR</div>
+                      <div className="text-gray-400 text-xs">Rendering</div>
+                    </div>
+                    <div className="text-center p-3 bg-orange-500/10 rounded-lg border border-orange-400/20">
+                      <div className="text-orange-400 font-bold">CDN</div>
+                      <div className="text-gray-400 text-xs">Delivery</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "performance" && (
+              <div className="space-y-6">
+                <h4 className="text-xl font-bold text-white mb-4">
+                  Métricas de Performance
+                </h4>
+
+                {/* Lighthouse Scores */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {Object.entries(performanceMetrics.lighthouse).map(
+                    ([key, value]) => (
+                      <div
+                        key={key}
+                        className="text-center p-4 bg-gray-800/50 rounded-xl border border-cyan-500/20"
+                      >
+                        <div className="text-2xl font-bold text-cyan-400 mb-1">
+                          {value}
+                        </div>
+                        <div className="text-gray-300 text-sm capitalize">
+                          {key}
+                        </div>
+                        <div className="w-full bg-gray-700 rounded-full h-2 mt-2">
+                          <div
+                            className="bg-cyan-500 h-2 rounded-full transition-all duration-1000"
+                            style={{ width: `${value}%` }}
+                          />
+                        </div>
+                      </div>
+                    )
+                  )}
+                </div>
+
+                {/* Core Web Vitals */}
+                <div className="bg-gray-800/50 rounded-xl p-4 border border-cyan-500/20">
+                  <h5 className="text-cyan-400 font-semibold mb-4">
+                    Core Web Vitals
+                  </h5>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {Object.entries(performanceMetrics.coreWebVitals).map(
+                      ([key, value]) => (
+                        <div key={key} className="text-center">
+                          <div className="text-lg font-bold text-white mb-1">
+                            {value}
+                          </div>
+                          <div className="text-gray-400 text-sm uppercase">
+                            {key}
+                          </div>
+                        </div>
+                      )
+                    )}
+                  </div>
+                </div>
+
+                {/* Outras Métricas */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-gray-800/50 rounded-xl p-4 border border-green-500/20">
+                    <div className="text-green-400 font-bold text-lg">
+                      {performanceMetrics.loadTime}
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Tempo de Carregamento
+                    </div>
+                  </div>
+                  <div className="bg-gray-800/50 rounded-xl p-4 border border-blue-500/20">
+                    <div className="text-blue-400 font-bold text-lg">
+                      {performanceMetrics.bundleSize}
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Tamanho do Bundle
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "techstack" && (
+              <div className="space-y-6">
+                <h4 className="text-xl font-bold text-white mb-4">
+                  Stack Tecnológico Completo
+                </h4>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {project.techStack?.map((tech: any, index: number) => (
+                    <motion.div
+                      key={tech.name}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="bg-gray-800/50 rounded-xl p-4 border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-300"
+                    >
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-10 h-10 bg-cyan-500/20 rounded-lg flex items-center justify-center">
+                          <tech.icon className="w-6 h-6 text-cyan-400" />
+                        </div>
+                        <div>
+                          <div className="text-white font-bold">
+                            {tech.name}
+                          </div>
+                          <div className="text-cyan-400 text-sm">
+                            {tech.category}
+                          </div>
+                        </div>
+                      </div>
+                      <p className="text-gray-300 text-sm">
+                        {tech.description}
+                      </p>
+                    </motion.div>
+                  )) || (
+                    <div className="col-span-full text-center py-8 text-gray-400">
+                      <Code className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                      <p>Detalhes técnicos em desenvolvimento</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </div>
   );
 };
 
@@ -335,6 +600,8 @@ const ProjectsNeonElement = ({
 
 export const Projects = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [selectedProjectForDetails, setSelectedProjectForDetails] =
+    useState<ExtendedProject | null>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
   // Neon Elements Configuration
@@ -473,12 +740,15 @@ export const Projects = () => {
           </motion.div>
         </motion.div>
 
-        {/* Grid de Projetos */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16 lg:mb-20 projects-grid">
-          {projects.map((project, index) => (
-            <ProjectCard key={project.id} project={project} index={index} />
-          ))}
-        </div>
+        {/* Project Showcase - FASE 1 */}
+        <ProjectShowcase />
+
+        {/* Technical Deep Dives - FASE 2 */}
+        <AnimatePresence>
+          {selectedProjectForDetails && (
+            <TechnicalDeepDive project={selectedProjectForDetails} />
+          )}
+        </AnimatePresence>
 
         {/* Stats */}
         <motion.div
