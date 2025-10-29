@@ -29,11 +29,11 @@ import { projects } from "@/lib/project-data";
 import type { Project } from "@/lib/project-data";
 import { PremiumBackground } from "@/components/layout/PremiumBackground";
 import { LazyComponent } from "@/components/optimization/LazyComponent";
-import { OptimizedImage } from "@/components/optimization/OptimizedImage";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import LazyBackground from "@/components/optimization/LazyBackground";
+import Image from "next/image";
 
-// Interface estendida — mantém id como number
+// Interface estendida
 interface ExtendedProject extends Project {
   demoVideo?: string;
   techStack?: Array<{
@@ -44,7 +44,85 @@ interface ExtendedProject extends Project {
   }>;
 }
 
-// Componente para mostrar todas as tecnologias - OTIMIZADO
+// Componente Image otimizado CORRIGIDO
+interface OptimizedImageProps {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  className?: string;
+  priority?: boolean;
+  fill?: boolean;
+  sizes?: string;
+}
+
+const OptimizedImage = ({
+  src,
+  alt,
+  width,
+  height,
+  className = "",
+  priority = false,
+  fill = false,
+  sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+}: OptimizedImageProps) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+
+  // Fallback para imagens quebradas
+  if (hasError) {
+    return (
+      <div
+        className={`bg-gray-800 flex items-center justify-center ${className} ${
+          fill ? "w-full h-full" : ""
+        }`}
+      >
+        <div className="text-gray-500 text-center p-4">
+          <div className="w-8 h-8 mx-auto mb-2 bg-gray-600 rounded-full flex items-center justify-center">
+            <span className="text-white text-xs">?</span>
+          </div>
+          <span className="text-sm">Imagem não disponível</span>
+        </div>
+      </div>
+    );
+  }
+
+  const imageProps = fill
+    ? { fill: true, sizes }
+    : { width: width || 400, height: height || 300 };
+
+  return (
+    <div
+      className={`relative overflow-hidden ${
+        fill ? "w-full h-full" : ""
+      } ${className}`}
+    >
+      <Image
+        src={src}
+        alt={alt}
+        {...imageProps}
+        className={`
+          transition-all duration-500 ease-out object-cover
+          ${isLoading ? "scale-110 blur-lg" : "scale-100 blur-0"}
+          ${fill ? "w-full h-full" : ""}
+        `}
+        priority={priority}
+        onLoad={() => setIsLoading(false)}
+        onError={() => {
+          setIsLoading(false);
+          setHasError(true);
+        }}
+      />
+      {isLoading && (
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-700 to-gray-900 animate-pulse flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Componente para mostrar todas as tecnologias - CORRIGIDO
 const TechnologiesModal = ({
   technologies,
   onClose,
@@ -52,6 +130,16 @@ const TechnologiesModal = ({
   technologies: string[];
   onClose: () => void;
 }) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [onClose]);
+
   return (
     <LazyComponent priority="high">
       <motion.div
@@ -62,6 +150,7 @@ const TechnologiesModal = ({
         onClick={onClose}
       >
         <motion.div
+          ref={modalRef}
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.8, opacity: 0 }}
@@ -106,7 +195,7 @@ const TechnologiesModal = ({
   );
 };
 
-// Componente Project Showcase - FASE 1 - OTIMIZADO
+// Componente Project Showcase - CORRIGIDO E MELHORADO
 const ProjectShowcase = () => {
   const [selectedProject, setSelectedProject] =
     useState<ExtendedProject | null>(null);
@@ -117,6 +206,7 @@ const ProjectShowcase = () => {
   const [expandedProjects, setExpandedProjects] = useState<Set<string>>(
     new Set()
   );
+  const [zoomImage, setZoomImage] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   usePerformanceMonitor("ProjectShowcase");
@@ -132,7 +222,8 @@ const ProjectShowcase = () => {
     }
   };
 
-  const toggleProjectExpansion = (projectId: number) => {
+  const toggleProjectExpansion = (projectId: number, e: React.MouseEvent) => {
+    e.stopPropagation();
     const idStr = projectId.toString();
     const newExpanded = new Set(expandedProjects);
     if (newExpanded.has(idStr)) {
@@ -143,8 +234,29 @@ const ProjectShowcase = () => {
     setExpandedProjects(newExpanded);
   };
 
-  const showTechnologiesModal = (technologies: string[]) => {
+  const showTechnologiesModal = (
+    technologies: string[],
+    e: React.MouseEvent
+  ) => {
+    e.stopPropagation();
     setShowAllTechnologies(technologies);
+  };
+
+  const handleImageZoom = (imageSrc: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setZoomImage(imageSrc);
+  };
+
+  const handleLiveDemo = (project: ExtendedProject, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (project.liveUrl) {
+      window.open(project.liveUrl, "_blank", "noopener,noreferrer");
+    }
+  };
+
+  const handleGithubClick = (githubUrl: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    window.open(githubUrl, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -170,28 +282,45 @@ const ProjectShowcase = () => {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   className="group cursor-pointer"
                 >
-                  <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 overflow-hidden hover:border-cyan-400/50 transition-all duration-300 hover:scale-[1.02] h-full flex flex-col">
-                    <div
-                      className="relative aspect-video overflow-hidden"
-                      onClick={() => setSelectedProject(project)}
-                    >
+                  <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 overflow-hidden hover:border-cyan-400/50 transition-all duration-300 hover:scale-[1.02] h-full flex flex-col min-h-[500px]">
+                    {" "}
+                    {/* Altura mínima padronizada */}
+                    {/* Container da imagem com ações */}
+                    <div className="relative aspect-video overflow-hidden">
                       <OptimizedImage
                         src={project.image}
                         alt={project.title}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-110"
-                        priority={index < 3} // Prioridade para primeiros projetos
+                        priority={index < 3}
                       />
 
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <div className="flex gap-4">
-                          <div className="p-3 bg-cyan-500/20 rounded-full border border-cyan-400/30 backdrop-blur-sm">
+                      {/* Overlay com ações */}
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
+                        <button
+                          onClick={(e) => handleImageZoom(project.image, e)}
+                          className="p-3 bg-white/20 rounded-full border border-white/30 backdrop-blur-sm hover:bg-white/30 transition-all duration-300 hover:scale-110"
+                        >
+                          <ZoomIn className="w-6 h-6 text-white" />
+                        </button>
+
+                        {project.liveUrl && (
+                          <button
+                            onClick={(e) => handleLiveDemo(project, e)}
+                            className="p-3 bg-cyan-500/20 rounded-full border border-cyan-400/30 backdrop-blur-sm hover:bg-cyan-500/30 transition-all duration-300 hover:scale-110"
+                          >
                             <Play className="w-6 h-6 text-cyan-400" />
-                          </div>
-                          <div className="p-3 bg-white/10 rounded-full border border-white/20 backdrop-blur-sm">
-                            <ZoomIn className="w-6 h-6 text-white" />
-                          </div>
-                        </div>
+                          </button>
+                        )}
+
+                        <button
+                          onClick={(e) =>
+                            handleGithubClick(project.githubUrl, e)
+                          }
+                          className="p-3 bg-gray-800/80 rounded-full border border-gray-600/30 backdrop-blur-sm hover:bg-gray-700/80 transition-all duration-300 hover:scale-110"
+                        >
+                          <Github className="w-6 h-6 text-white" />
+                        </button>
                       </div>
 
                       {project.demoVideo && (
@@ -202,15 +331,15 @@ const ProjectShowcase = () => {
                         </div>
                       )}
                     </div>
-
+                    {/* Conteúdo do card */}
                     <div className="p-5 flex-1 flex flex-col">
                       <div className="flex items-start justify-between mb-2">
-                        <h3 className="text-white font-bold text-lg flex-1 pr-2">
+                        <h3 className="text-white font-bold text-lg flex-1 pr-2 line-clamp-2">
                           {project.title}
                         </h3>
                         <motion.div
                           whileHover={{ scale: 1.1, rotate: 15 }}
-                          className="text-cyan-400 mt-0.5"
+                          className="text-cyan-400 mt-0.5 flex-shrink-0"
                         >
                           <Rocket className="w-4 h-4" />
                         </motion.div>
@@ -220,6 +349,7 @@ const ProjectShowcase = () => {
                         {project.description}
                       </p>
 
+                      {/* Tecnologias */}
                       <div className="space-y-2">
                         <div className="flex flex-wrap gap-1.5">
                           {visibleTags.map((tag: string) => (
@@ -235,10 +365,9 @@ const ProjectShowcase = () => {
                         {hasMoreTags && (
                           <div className="flex gap-2 pt-1">
                             <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                toggleProjectExpansion(project.id);
-                              }}
+                              onClick={(e) =>
+                                toggleProjectExpansion(project.id, e)
+                              }
                               className="flex items-center gap-1 text-cyan-400 text-xs font-mono hover:text-cyan-300 transition-colors px-2 py-1 rounded border border-cyan-400/30 hover:border-cyan-400/50"
                             >
                               {isExpanded ? (
@@ -255,10 +384,9 @@ const ProjectShowcase = () => {
                             </button>
 
                             <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                showTechnologiesModal(project.tags);
-                              }}
+                              onClick={(e) =>
+                                showTechnologiesModal(project.tags, e)
+                              }
                               className="text-gray-400 text-xs font-mono hover:text-gray-300 transition-colors px-2 py-1 rounded border border-gray-600 hover:border-gray-500"
                             >
                               Ver todas
@@ -275,6 +403,7 @@ const ProjectShowcase = () => {
         </div>
       </LazyComponent>
 
+      {/* Modal do Projeto */}
       <AnimatePresence>
         {selectedProject && (
           <LazyComponent priority="high">
@@ -366,15 +495,17 @@ const ProjectShowcase = () => {
                   </div>
 
                   <div className="flex gap-4">
-                    <a
-                      href={selectedProject.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 px-6 rounded-lg font-bold text-center hover:shadow-2xl hover:shadow-cyan-500/25 transition-all duration-300 flex items-center justify-center gap-2"
-                    >
-                      <ExternalLink className="w-5 h-5" />
-                      VISITAR SITE
-                    </a>
+                    {selectedProject.liveUrl && (
+                      <a
+                        href={selectedProject.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 px-6 rounded-lg font-bold text-center hover:shadow-2xl hover:shadow-cyan-500/25 transition-all duration-300 flex items-center justify-center gap-2"
+                      >
+                        <ExternalLink className="w-5 h-5" />
+                        VISITAR SITE
+                      </a>
+                    )}
                     <a
                       href={selectedProject.githubUrl}
                       target="_blank"
@@ -392,6 +523,43 @@ const ProjectShowcase = () => {
         )}
       </AnimatePresence>
 
+      {/* Modal de Zoom da Imagem */}
+      <AnimatePresence>
+        {zoomImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm"
+            onClick={() => setZoomImage(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              className="relative max-w-6xl max-h-[90vh]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setZoomImage(null)}
+                className="absolute -top-12 right-0 p-2 text-white hover:text-cyan-400 transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              <div className="relative w-full h-full">
+                <OptimizedImage
+                  src={zoomImage}
+                  alt="Imagem ampliada"
+                  fill
+                  className="object-contain rounded-lg"
+                  priority={true}
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence>
         {showAllTechnologies && (
           <TechnologiesModal
@@ -404,7 +572,9 @@ const ProjectShowcase = () => {
   );
 };
 
-// Componente Technical Deep Dive - FASE 2 - OTIMIZADO
+// ... (mantenha os componentes TechnicalDeepDive, ProjectsNeonElement e Projects exatamente como estão, pois não tinham conflitos)
+
+// Componente Technical Deep Dive - FASE 2 - OTIMIZADO (mantido igual)
 const TechnicalDeepDive = ({ project }: { project: ExtendedProject }) => {
   const [activeTab, setActiveTab] = useState("architecture");
 
@@ -726,7 +896,7 @@ const TechnicalDeepDive = ({ project }: { project: ExtendedProject }) => {
   );
 };
 
-// Componente Neon Element para Projects - OTIMIZADO
+// Componente Neon Element para Projects - OTIMIZADO (mantido igual)
 const ProjectsNeonElement = ({
   Icon,
   position,
@@ -785,7 +955,7 @@ const ProjectsNeonElement = ({
   );
 };
 
-// Componente Principal Projects - OTIMIZADO
+// Componente Principal Projects - OTIMIZADO (mantido igual)
 export const Projects = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [selectedProjectForDetails, setSelectedProjectForDetails] =

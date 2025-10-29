@@ -62,6 +62,14 @@ interface SubmissionState {
   lastSubmissionTime: number | null;
 }
 
+interface ApiResponse {
+  success?: boolean;
+  error?: string;
+  message?: string;
+  timestamp?: string;
+  id?: string;
+}
+
 // Dados estáticos - movidos para fora dos hooks
 const STATIC_NEON_ELEMENTS_CONFIG = [
   {
@@ -265,7 +273,7 @@ const useContactForm = () => {
     setFormErrors({});
   }, []);
 
-  // Submissão do formulário - memoizado
+  // Submissão do formulário - INTEGRADO COM API REAL
   const submitForm = useCallback(async () => {
     // Verificar envio recente
     if (hasRecentSubmission()) {
@@ -292,17 +300,34 @@ const useContactForm = () => {
     }));
 
     try {
-      // Simular envio - substituir por API real
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // ENVIO REAL PARA API
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          subject: formData.subject.trim(),
+          message: formData.message.trim(),
+          meetingDate: formData.meetingDate || undefined,
+          meetingTime: formData.meetingTime || undefined,
+          formType: formData.formType,
+        }),
+      });
 
-      // Aqui você integraria com sua API
-      // const response = await fetch("/api/contact", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(formData),
-      // });
+      const result: ApiResponse = await response.json();
 
-      // Simular sucesso
+      if (!response.ok) {
+        throw new Error(result.error || "Erro ao enviar mensagem");
+      }
+
+      if (!result.success) {
+        throw new Error(result.error || "Erro no envio da mensagem");
+      }
+
+      // Sucesso
       setSubmissionState((prev) => ({
         ...prev,
         isSubmitting: false,
@@ -327,10 +352,26 @@ const useContactForm = () => {
 
       return true;
     } catch (error) {
+      console.error("Erro no envio:", error);
+
+      let errorMessage = "Erro ao enviar mensagem. Tente novamente.";
+
+      if (error instanceof Error) {
+        if (error.message.includes("30 segundos")) {
+          errorMessage = "Aguarde 30 segundos antes de enviar outra mensagem.";
+        } else if (error.message.includes("Email inválido")) {
+          errorMessage = "Por favor, insira um email válido.";
+        } else if (error.message.includes("obrigatórios")) {
+          errorMessage = "Por favor, preencha todos os campos obrigatórios.";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+
       setSubmissionState((prev) => ({
         ...prev,
         isSubmitting: false,
-        error: "Erro ao enviar mensagem. Tente novamente.",
+        error: errorMessage,
       }));
       return false;
     }
