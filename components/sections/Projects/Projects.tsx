@@ -137,18 +137,10 @@ const TechnologiesModal = ({
       if (e.key === "Escape") onClose();
     };
 
-    const handleClickOutside = (e: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-        onClose();
-      }
-    };
-
     document.addEventListener("keydown", handleEscape);
-    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
       document.removeEventListener("keydown", handleEscape);
-      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [onClose]);
 
@@ -157,7 +149,8 @@ const TechnologiesModal = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+      onClick={onClose}
     >
       <motion.div
         ref={modalRef}
@@ -165,6 +158,7 @@ const TechnologiesModal = ({
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.8, opacity: 0 }}
         className="bg-gray-900/95 backdrop-blur-xl rounded-2xl border border-cyan-500/20 shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-6 border-b border-cyan-500/20">
           <div>
@@ -218,18 +212,10 @@ const ImageZoomModal = ({
       if (e.key === "Escape") onClose();
     };
 
-    const handleClickOutside = (e: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-        onClose();
-      }
-    };
-
     document.addEventListener("keydown", handleEscape);
-    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
       document.removeEventListener("keydown", handleEscape);
-      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [onClose]);
 
@@ -238,7 +224,8 @@ const ImageZoomModal = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm"
+      onClick={onClose}
     >
       <motion.div
         ref={modalRef}
@@ -246,19 +233,20 @@ const ImageZoomModal = ({
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.8, opacity: 0 }}
         className="relative max-w-6xl w-full max-h-[90vh]"
+        onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute -top-12 right-0 p-2 text-white hover:text-cyan-400 transition-colors z-10"
+          className="absolute -top-12 right-0 p-2 text-white hover:text-cyan-400 transition-colors z-10 bg-black/50 rounded-full"
         >
           <X className="w-6 h-6" />
         </button>
-        <div className="relative w-full h-full max-h-[80vh]">
+        <div className="relative w-full h-[80vh] bg-black rounded-lg overflow-hidden">
           <OptimizedImage
             src={imageSrc}
             alt="Imagem ampliada"
             fill
-            className="object-contain rounded-lg"
+            className="object-contain"
             priority={true}
           />
         </div>
@@ -296,7 +284,6 @@ const ProjectShowcase = () => {
 
   const toggleProjectExpansion = (projectId: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    e.preventDefault();
     const idStr = projectId.toString();
     const newExpanded = new Set(expandedProjects);
     if (newExpanded.has(idStr)) {
@@ -312,19 +299,17 @@ const ProjectShowcase = () => {
     e: React.MouseEvent
   ) => {
     e.stopPropagation();
-    e.preventDefault();
     setShowAllTechnologies(technologies);
   };
 
   const handleImageZoom = (imageSrc: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    e.preventDefault();
+    console.log("Zoom clicked for image:", imageSrc); // Debug
     setZoomImage(imageSrc);
   };
 
   const handleLiveDemo = (liveUrl: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    e.preventDefault();
     if (liveUrl) {
       window.open(liveUrl, "_blank", "noopener,noreferrer");
     }
@@ -332,7 +317,6 @@ const ProjectShowcase = () => {
 
   const handleGithubClick = (githubUrl: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    e.preventDefault();
     window.open(githubUrl, "_blank", "noopener,noreferrer");
   };
 
@@ -482,120 +466,118 @@ const ProjectShowcase = () => {
       {/* Modal do Projeto */}
       <AnimatePresence>
         {selectedProject && (
-          <LazyComponent priority="high">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            onClick={() => {
+              setSelectedProject(null);
+              setIsPlaying(false);
+            }}
+          >
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-              onClick={() => {
-                setSelectedProject(null);
-                setIsPlaying(false);
-              }}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              className="bg-gray-900/95 backdrop-blur-xl rounded-2xl border border-cyan-500/20 shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
             >
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                className="bg-gray-900/95 backdrop-blur-xl rounded-2xl border border-cyan-500/20 shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="flex items-center justify-between p-6 border-b border-cyan-500/20">
-                  <div>
-                    <h3 className="text-2xl font-bold text-white">
-                      {selectedProject.title}
-                    </h3>
-                    <p className="text-cyan-300 text-sm">
-                      {selectedProject.description}
-                    </p>
+              <div className="flex items-center justify-between p-6 border-b border-cyan-500/20">
+                <div>
+                  <h3 className="text-2xl font-bold text-white">
+                    {selectedProject.title}
+                  </h3>
+                  <p className="text-cyan-300 text-sm">
+                    {selectedProject.description}
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    setSelectedProject(null);
+                    setIsPlaying(false);
+                  }}
+                  className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
+                >
+                  <X className="w-6 h-6 text-gray-400" />
+                </button>
+              </div>
+
+              <div className="p-6">
+                {selectedProject.demoVideo ? (
+                  <div className="relative rounded-lg overflow-hidden mb-6">
+                    <video
+                      ref={videoRef}
+                      src={selectedProject.demoVideo}
+                      className="w-full rounded-lg"
+                      controls={false}
+                    />
+                    <button
+                      onClick={handlePlayPause}
+                      className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors"
+                    >
+                      <div className="p-6 bg-black/50 rounded-full backdrop-blur-sm border border-white/20">
+                        {isPlaying ? (
+                          <Square className="w-8 h-8 text-white" />
+                        ) : (
+                          <Play className="w-8 h-8 text-white" />
+                        )}
+                      </div>
+                    </button>
                   </div>
-                  <button
-                    onClick={() => {
-                      setSelectedProject(null);
-                      setIsPlaying(false);
-                    }}
-                    className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
-                  >
-                    <X className="w-6 h-6 text-gray-400" />
-                  </button>
+                ) : (
+                  <div className="relative aspect-video rounded-lg overflow-hidden mb-6">
+                    <OptimizedImage
+                      src={selectedProject.image}
+                      alt={selectedProject.title}
+                      fill
+                      className="object-cover"
+                      priority={true}
+                    />
+                  </div>
+                )}
+
+                <div className="mb-6">
+                  <h4 className="text-white font-semibold mb-3">
+                    Tecnologias Utilizadas
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedProject.tags.map((tag: string) => (
+                      <Badge
+                        key={tag}
+                        className="bg-cyan-500/10 text-cyan-400 border-cyan-400/30 font-mono text-xs font-bold"
+                      >
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
 
-                <div className="p-6">
-                  {selectedProject.demoVideo ? (
-                    <div className="relative rounded-lg overflow-hidden mb-6">
-                      <video
-                        ref={videoRef}
-                        src={selectedProject.demoVideo}
-                        className="w-full rounded-lg"
-                        controls={false}
-                      />
-                      <button
-                        onClick={handlePlayPause}
-                        className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors"
-                      >
-                        <div className="p-6 bg-black/50 rounded-full backdrop-blur-sm border border-white/20">
-                          {isPlaying ? (
-                            <Square className="w-8 h-8 text-white" />
-                          ) : (
-                            <Play className="w-8 h-8 text-white" />
-                          )}
-                        </div>
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="relative aspect-video rounded-lg overflow-hidden mb-6">
-                      <OptimizedImage
-                        src={selectedProject.image}
-                        alt={selectedProject.title}
-                        fill
-                        className="object-cover"
-                        priority={true}
-                      />
-                    </div>
-                  )}
-
-                  <div className="mb-6">
-                    <h4 className="text-white font-semibold mb-3">
-                      Tecnologias Utilizadas
-                    </h4>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedProject.tags.map((tag: string) => (
-                        <Badge
-                          key={tag}
-                          className="bg-cyan-500/10 text-cyan-400 border-cyan-400/30 font-mono text-xs font-bold"
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex gap-4">
-                    {selectedProject.liveUrl && (
-                      <a
-                        href={selectedProject.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 px-6 rounded-lg font-bold text-center hover:shadow-2xl hover:shadow-cyan-500/25 transition-all duration-300 flex items-center justify-center gap-2"
-                      >
-                        <ExternalLink className="w-5 h-5" />
-                        VISITAR SITE
-                      </a>
-                    )}
+                <div className="flex gap-4">
+                  {selectedProject.liveUrl && (
                     <a
-                      href={selectedProject.githubUrl}
+                      href={selectedProject.liveUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 bg-gray-800/50 border border-cyan-500/20 text-cyan-400 py-3 px-6 rounded-lg font-bold text-center hover:bg-cyan-500/10 transition-all duration-300 flex items-center justify-center gap-2"
+                      className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 px-6 rounded-lg font-bold text-center hover:shadow-2xl hover:shadow-cyan-500/25 transition-all duration-300 flex items-center justify-center gap-2"
                     >
-                      <Github className="w-5 h-5" />
-                      VER CÓDIGO
+                      <ExternalLink className="w-5 h-5" />
+                      VISITAR SITE
                     </a>
-                  </div>
+                  )}
+                  <a
+                    href={selectedProject.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 bg-gray-800/50 border border-cyan-500/20 text-cyan-400 py-3 px-6 rounded-lg font-bold text-center hover:bg-cyan-500/10 transition-all duration-300 flex items-center justify-center gap-2"
+                  >
+                    <Github className="w-5 h-5" />
+                    VER CÓDIGO
+                  </a>
                 </div>
-              </motion.div>
+              </div>
             </motion.div>
-          </LazyComponent>
+          </motion.div>
         )}
       </AnimatePresence>
 
