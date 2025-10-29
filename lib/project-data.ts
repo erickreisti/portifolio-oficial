@@ -1,4 +1,5 @@
 // lib/project-data.ts
+
 export type Project = {
   id: number;
   title: string;

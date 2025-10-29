@@ -26,6 +26,8 @@ import {
   Square,
   ZoomIn,
   Loader,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import {
   Card,
@@ -42,7 +44,7 @@ import { projects } from "@/lib/project-data";
 import type { Project } from "@/lib/project-data";
 import { PremiumBackground } from "@/components/layout/PremiumBackground";
 
-// Interface estendida para incluir as propriedades faltantes
+// Interface estendida — agora `id` é string por padrão
 interface ExtendedProject extends Project {
   demoVideo?: string;
   techStack?: Array<{
@@ -53,11 +55,79 @@ interface ExtendedProject extends Project {
   }>;
 }
 
+// Componente para mostrar todas as tecnologias
+const TechnologiesModal = ({
+  technologies,
+  onClose,
+}: {
+  technologies: string[];
+  onClose: () => void;
+}) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        className="bg-gray-900/95 backdrop-blur-xl rounded-2xl border border-cyan-500/20 shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-cyan-500/20">
+          <div>
+            <h3 className="text-2xl font-bold text-white">
+              Todas as Tecnologias
+            </h3>
+            <p className="text-cyan-300 text-sm">
+              {technologies.length} tecnologias utilizadas
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
+          >
+            <X className="w-6 h-6 text-gray-400" />
+          </button>
+        </div>
+
+        {/* Conteúdo */}
+        <div className="p-6 max-h-[60vh] overflow-y-auto">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {technologies.map((tech, index) => (
+              <motion.div
+                key={tech}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.05 }}
+                className="bg-cyan-500/10 text-cyan-400 border border-cyan-400/30 rounded-lg px-3 py-2 text-sm font-mono text-center hover:bg-cyan-500/20 transition-colors duration-200"
+              >
+                {tech}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 // Componente Project Showcase - FASE 1
 const ProjectShowcase = () => {
   const [selectedProject, setSelectedProject] =
     useState<ExtendedProject | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showAllTechnologies, setShowAllTechnologies] = useState<
+    string[] | null
+  >(null);
+  const [expandedProjects, setExpandedProjects] = useState<Set<string>>(
+    new Set()
+  );
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const handlePlayPause = () => {
@@ -71,90 +141,146 @@ const ProjectShowcase = () => {
     }
   };
 
+  const toggleProjectExpansion = (projectId: string) => {
+    const idStr = projectId.toString();
+    const newExpanded = new Set(expandedProjects);
+    if (newExpanded.has(idStr)) {
+      newExpanded.delete(idStr);
+    } else {
+      newExpanded.add(idStr);
+    }
+    setExpandedProjects(newExpanded);
+  };
+
+  const showTechnologiesModal = (technologies: string[]) => {
+    setShowAllTechnologies(technologies);
+  };
+
   return (
     <>
       {/* Grid de Projetos */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 projects-grid">
-        {(projects as ExtendedProject[]).map((project, index) => (
-          <motion.div
-            key={project.id}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: index * 0.1 }}
-            className="group cursor-pointer"
-            onClick={() => setSelectedProject(project)}
-          >
-            <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 overflow-hidden hover:border-cyan-400/50 transition-all duration-300 hover:scale-105 h-full flex flex-col">
-              {/* Thumbnail com overlay */}
-              <div className="relative aspect-video overflow-hidden flex-1">
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
-                />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 projects-grid">
+        {(projects as ExtendedProject[]).map((project, index) => {
+          const isExpanded = expandedProjects.has(project.id.toString());
+          const visibleTags = isExpanded
+            ? project.tags
+            : project.tags.slice(0, 4);
+          const hasMoreTags = project.tags.length > 4;
 
-                {/* Overlay de preview */}
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <div className="flex gap-4">
-                    <div className="p-3 bg-cyan-500/20 rounded-full border border-cyan-400/30 backdrop-blur-sm">
-                      <Play className="w-6 h-6 text-cyan-400" />
-                    </div>
-                    <div className="p-3 bg-white/10 rounded-full border border-white/20 backdrop-blur-sm">
-                      <ZoomIn className="w-6 h-6 text-white" />
+          return (
+            <motion.div
+              key={project.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              className="group cursor-pointer"
+            >
+              <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 overflow-hidden hover:border-cyan-400/50 transition-all duration-300 hover:scale-105 h-full flex flex-col">
+                {/* Thumbnail com overlay */}
+                <div
+                  className="relative aspect-video overflow-hidden flex-1"
+                  onClick={() => setSelectedProject(project)}
+                >
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+
+                  {/* Overlay de preview */}
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div className="flex gap-4">
+                      <div className="p-3 bg-cyan-500/20 rounded-full border border-cyan-400/30 backdrop-blur-sm">
+                        <Play className="w-6 h-6 text-cyan-400" />
+                      </div>
+                      <div className="p-3 bg-white/10 rounded-full border border-white/20 backdrop-blur-sm">
+                        <ZoomIn className="w-6 h-6 text-white" />
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Badge de preview disponível */}
-                {project.demoVideo && (
-                  <div className="absolute top-3 right-3 bg-cyan-500/20 px-2 py-1 rounded-full border border-cyan-400/30">
-                    <span className="text-cyan-400 text-xs font-mono">
-                      DEMO
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              {/* Info do projeto */}
-              <div className="p-4 flex-1 flex flex-col">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-white font-bold text-lg flex-1">
-                    {project.title}
-                  </h3>
-                  <motion.div
-                    whileHover={{ scale: 1.1, rotate: 15 }}
-                    className="text-cyan-400"
-                  >
-                    <Rocket className="w-4 h-4" />
-                  </motion.div>
-                </div>
-                <p className="text-gray-300 text-sm line-clamp-2 flex-1">
-                  {project.description}
-                </p>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {project.tags
-                    .slice(0, 3)
-                    .map((tag: string, tagIndex: number) => (
-                      <Badge
-                        key={tag}
-                        className="bg-cyan-500/10 text-cyan-400 border-cyan-400/30 font-mono text-xs font-bold"
-                      >
-                        {tag}
-                      </Badge>
-                    ))}
-                  {project.tags.length > 3 && (
-                    <Badge className="bg-cyan-500/10 text-cyan-400 border-cyan-400/30 font-mono text-xs font-bold">
-                      +{project.tags.length - 3}
-                    </Badge>
+                  {/* Badge de preview disponível */}
+                  {project.demoVideo && (
+                    <div className="absolute top-3 right-3 bg-cyan-500/20 px-2 py-1 rounded-full border border-cyan-400/30">
+                      <span className="text-cyan-400 text-xs font-mono">
+                        DEMO
+                      </span>
+                    </div>
                   )}
                 </div>
+
+                {/* Info do projeto */}
+                <div className="p-6 flex-1 flex flex-col">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-white font-bold text-lg flex-1">
+                      {project.title}
+                    </h3>
+                    <motion.div
+                      whileHover={{ scale: 1.1, rotate: 15 }}
+                      className="text-cyan-400"
+                    >
+                      <Rocket className="w-4 h-4" />
+                    </motion.div>
+                  </div>
+
+                  <p className="text-gray-300 text-sm line-clamp-3 flex-1 mb-4 leading-relaxed">
+                    {project.description}
+                  </p>
+
+                  {/* Tags com expansão */}
+                  <div className="space-y-3">
+                    <div className="flex flex-wrap gap-2">
+                      {visibleTags.map((tag: string) => (
+                        <Badge
+                          key={tag}
+                          className="bg-cyan-500/10 text-cyan-400 border-cyan-400/30 font-mono text-xs font-bold hover:bg-cyan-500/20 transition-colors"
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+
+                    {/* Controles de expansão */}
+                    {hasMoreTags && (
+                      <div className="flex gap-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleProjectExpansion(project.id.toString()); // ✅ agora project.id é string
+                          }}
+                          className="flex items-center gap-1 text-cyan-400 text-xs font-mono hover:text-cyan-300 transition-colors px-2 py-1 rounded border border-cyan-400/30 hover:border-cyan-400/50"
+                        >
+                          {isExpanded ? (
+                            <>
+                              <ChevronUp className="w-3 h-3" />
+                              Ver menos
+                            </>
+                          ) : (
+                            <>
+                              <ChevronDown className="w-3 h-3" />+
+                              {project.tags.length - 4} tecnologias
+                            </>
+                          )}
+                        </button>
+
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            showTechnologiesModal(project.tags);
+                          }}
+                          className="text-gray-400 text-xs font-mono hover:text-gray-300 transition-colors px-2 py-1 rounded border border-gray-600 hover:border-gray-500"
+                        >
+                          Ver todas
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          </motion.div>
-        ))}
+            </motion.div>
+          );
+        })}
       </div>
 
       {/* Modal de Demo */}
@@ -201,7 +327,7 @@ const ProjectShowcase = () => {
               {/* Conteúdo */}
               <div className="p-6">
                 {selectedProject.demoVideo ? (
-                  <div className="relative rounded-lg overflow-hidden">
+                  <div className="relative rounded-lg overflow-hidden mb-6">
                     <video
                       ref={videoRef}
                       src={selectedProject.demoVideo}
@@ -222,7 +348,7 @@ const ProjectShowcase = () => {
                     </button>
                   </div>
                 ) : (
-                  <div className="relative aspect-video rounded-lg overflow-hidden">
+                  <div className="relative aspect-video rounded-lg overflow-hidden mb-6">
                     <Image
                       src={selectedProject.image}
                       alt={selectedProject.title}
@@ -232,8 +358,25 @@ const ProjectShowcase = () => {
                   </div>
                 )}
 
+                {/* Tecnologias no modal */}
+                <div className="mb-6">
+                  <h4 className="text-white font-semibold mb-3">
+                    Tecnologias Utilizadas
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedProject.tags.map((tag: string) => (
+                      <Badge
+                        key={tag}
+                        className="bg-cyan-500/10 text-cyan-400 border-cyan-400/30 font-mono text-xs font-bold"
+                      >
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Links do projeto */}
-                <div className="flex gap-4 mt-6">
+                <div className="flex gap-4">
                   <a
                     href={selectedProject.liveUrl}
                     target="_blank"
@@ -256,6 +399,16 @@ const ProjectShowcase = () => {
               </div>
             </motion.div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Modal de Todas as Tecnologias */}
+      <AnimatePresence>
+        {showAllTechnologies && (
+          <TechnologiesModal
+            technologies={showAllTechnologies}
+            onClose={() => setShowAllTechnologies(null)}
+          />
         )}
       </AnimatePresence>
     </>
@@ -290,13 +443,13 @@ const TechnicalDeepDive = ({ project }: { project: ExtendedProject }) => {
   };
 
   return (
-    <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 overflow-hidden mt-8">
+    <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 overflow-hidden mt-12">
       {/* Header */}
-      <div className="border-b border-cyan-500/20 p-6">
-        <h3 className="text-2xl font-bold text-white mb-2">
+      <div className="border-b border-cyan-500/20 p-8">
+        <h3 className="text-2xl font-bold text-white mb-3">
           Análise Técnica: {project.title}
         </h3>
-        <p className="text-cyan-300">
+        <p className="text-cyan-300 text-lg">
           Detalhes de implementação e métricas de performance
         </p>
       </div>
@@ -312,14 +465,14 @@ const TechnicalDeepDive = ({ project }: { project: ExtendedProject }) => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-6 py-4 border-b-2 transition-all duration-300 whitespace-nowrap ${
+                className={`flex items-center gap-3 px-8 py-5 border-b-2 transition-all duration-300 whitespace-nowrap ${
                   isActive
                     ? "border-cyan-400 text-cyan-400 bg-cyan-400/10"
                     : "border-transparent text-gray-400 hover:text-cyan-300"
                 }`}
               >
-                <Icon className="w-4 h-4" />
-                <span className="font-semibold">{tab.name}</span>
+                <Icon className="w-5 h-5" />
+                <span className="font-semibold text-base">{tab.name}</span>
               </button>
             );
           })}
@@ -327,7 +480,7 @@ const TechnicalDeepDive = ({ project }: { project: ExtendedProject }) => {
       </div>
 
       {/* Content */}
-      <div className="p-6">
+      <div className="p-8">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -337,77 +490,93 @@ const TechnicalDeepDive = ({ project }: { project: ExtendedProject }) => {
             transition={{ duration: 0.3 }}
           >
             {activeTab === "architecture" && (
-              <div className="space-y-6">
-                <h4 className="text-xl font-bold text-white mb-4">
+              <div className="space-y-8">
+                <h4 className="text-xl font-bold text-white mb-6">
                   Arquitetura do Sistema
                 </h4>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <h5 className="text-cyan-400 font-semibold">Frontend</h5>
-                    <ul className="space-y-2 text-gray-300">
-                      <li className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-cyan-400 rounded-full" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-6">
+                    <h5 className="text-cyan-400 font-semibold text-lg">
+                      Frontend
+                    </h5>
+                    <ul className="space-y-4 text-gray-300">
+                      <li className="flex items-center gap-3">
+                        <div className="w-3 h-3 bg-cyan-400 rounded-full" />
                         Next.js 14 com App Router
                       </li>
-                      <li className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-cyan-400 rounded-full" />
+                      <li className="flex items-center gap-3">
+                        <div className="w-3 h-3 bg-cyan-400 rounded-full" />
                         TypeScript para type safety
                       </li>
-                      <li className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-cyan-400 rounded-full" />
+                      <li className="flex items-center gap-3">
+                        <div className="w-3 h-3 bg-cyan-400 rounded-full" />
                         Tailwind CSS para styling
                       </li>
-                      <li className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-cyan-400 rounded-full" />
+                      <li className="flex items-center gap-3">
+                        <div className="w-3 h-3 bg-cyan-400 rounded-full" />
                         Framer Motion para animações
                       </li>
                     </ul>
                   </div>
 
-                  <div className="space-y-4">
-                    <h5 className="text-cyan-400 font-semibold">Backend</h5>
-                    <ul className="space-y-2 text-gray-300">
-                      <li className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-purple-400 rounded-full" />
+                  <div className="space-y-6">
+                    <h5 className="text-cyan-400 font-semibold text-lg">
+                      Backend
+                    </h5>
+                    <ul className="space-y-4 text-gray-300">
+                      <li className="flex items-center gap-3">
+                        <div className="w-3 h-3 bg-purple-400 rounded-full" />
                         Node.js com Express
                       </li>
-                      <li className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-purple-400 rounded-full" />
+                      <li className="flex items-center gap-3">
+                        <div className="w-3 h-3 bg-purple-400 rounded-full" />
                         PostgreSQL com Prisma ORM
                       </li>
-                      <li className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-purple-400 rounded-full" />
+                      <li className="flex items-center gap-3">
+                        <div className="w-3 h-3 bg-purple-400 rounded-full" />
                         Autenticação JWT
                       </li>
-                      <li className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-purple-400 rounded-full" />
+                      <li className="flex items-center gap-3">
+                        <div className="w-3 h-3 bg-purple-400 rounded-full" />
                         API RESTful
                       </li>
                     </ul>
                   </div>
                 </div>
 
-                <div className="bg-gray-800/50 rounded-xl p-4 border border-cyan-500/20">
-                  <h5 className="text-cyan-400 font-semibold mb-2">
+                <div className="bg-gray-800/50 rounded-xl p-6 border border-cyan-500/20">
+                  <h5 className="text-cyan-400 font-semibold mb-4 text-lg">
                     Padrões Arquiteturais
                   </h5>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                    <div className="text-center p-3 bg-cyan-500/10 rounded-lg border border-cyan-400/20">
-                      <div className="text-cyan-400 font-bold">MVC</div>
-                      <div className="text-gray-400 text-xs">Pattern</div>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-sm">
+                    <div className="text-center p-4 bg-cyan-500/10 rounded-lg border border-cyan-400/20">
+                      <div className="text-cyan-400 font-bold text-base">
+                        MVC
+                      </div>
+                      <div className="text-gray-400 text-xs mt-1">Pattern</div>
                     </div>
-                    <div className="text-center p-3 bg-purple-500/10 rounded-lg border border-purple-400/20">
-                      <div className="text-purple-400 font-bold">REST</div>
-                      <div className="text-gray-400 text-xs">API Design</div>
+                    <div className="text-center p-4 bg-purple-500/10 rounded-lg border border-purple-400/20">
+                      <div className="text-purple-400 font-bold text-base">
+                        REST
+                      </div>
+                      <div className="text-gray-400 text-xs mt-1">
+                        API Design
+                      </div>
                     </div>
-                    <div className="text-center p-3 bg-green-500/10 rounded-lg border border-green-400/20">
-                      <div className="text-green-400 font-bold">SSR</div>
-                      <div className="text-gray-400 text-xs">Rendering</div>
+                    <div className="text-center p-4 bg-green-500/10 rounded-lg border border-green-400/20">
+                      <div className="text-green-400 font-bold text-base">
+                        SSR
+                      </div>
+                      <div className="text-gray-400 text-xs mt-1">
+                        Rendering
+                      </div>
                     </div>
-                    <div className="text-center p-3 bg-orange-500/10 rounded-lg border border-orange-400/20">
-                      <div className="text-orange-400 font-bold">CDN</div>
-                      <div className="text-gray-400 text-xs">Delivery</div>
+                    <div className="text-center p-4 bg-orange-500/10 rounded-lg border border-orange-400/20">
+                      <div className="text-orange-400 font-bold text-base">
+                        CDN
+                      </div>
+                      <div className="text-gray-400 text-xs mt-1">Delivery</div>
                     </div>
                   </div>
                 </div>
@@ -415,28 +584,28 @@ const TechnicalDeepDive = ({ project }: { project: ExtendedProject }) => {
             )}
 
             {activeTab === "performance" && (
-              <div className="space-y-6">
-                <h4 className="text-xl font-bold text-white mb-4">
+              <div className="space-y-8">
+                <h4 className="text-xl font-bold text-white mb-6">
                   Métricas de Performance
                 </h4>
 
                 {/* Lighthouse Scores */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   {Object.entries(performanceMetrics.lighthouse).map(
                     ([key, value]) => (
                       <div
                         key={key}
-                        className="text-center p-4 bg-gray-800/50 rounded-xl border border-cyan-500/20"
+                        className="text-center p-6 bg-gray-800/50 rounded-xl border border-cyan-500/20"
                       >
-                        <div className="text-2xl font-bold text-cyan-400 mb-1">
+                        <div className="text-2xl font-bold text-cyan-400 mb-2">
                           {value}
                         </div>
-                        <div className="text-gray-300 text-sm capitalize">
+                        <div className="text-gray-300 text-sm capitalize mb-3">
                           {key}
                         </div>
-                        <div className="w-full bg-gray-700 rounded-full h-2 mt-2">
+                        <div className="w-full bg-gray-700 rounded-full h-3">
                           <div
-                            className="bg-cyan-500 h-2 rounded-full transition-all duration-1000"
+                            className="bg-cyan-500 h-3 rounded-full transition-all duration-1000"
                             style={{ width: `${value}%` }}
                           />
                         </div>
@@ -446,15 +615,15 @@ const TechnicalDeepDive = ({ project }: { project: ExtendedProject }) => {
                 </div>
 
                 {/* Core Web Vitals */}
-                <div className="bg-gray-800/50 rounded-xl p-4 border border-cyan-500/20">
+                <div className="bg-gray-800/50 rounded-xl p-6 border border-cyan-500/20">
                   <h5 className="text-cyan-400 font-semibold mb-4">
                     Core Web Vitals
                   </h5>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {Object.entries(performanceMetrics.coreWebVitals).map(
                       ([key, value]) => (
                         <div key={key} className="text-center">
-                          <div className="text-lg font-bold text-white mb-1">
+                          <div className="text-lg font-bold text-white mb-2">
                             {value}
                           </div>
                           <div className="text-gray-400 text-sm uppercase">
@@ -467,8 +636,8 @@ const TechnicalDeepDive = ({ project }: { project: ExtendedProject }) => {
                 </div>
 
                 {/* Outras Métricas */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-gray-800/50 rounded-xl p-4 border border-green-500/20">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-gray-800/50 rounded-xl p-6 border border-green-500/20">
                     <div className="text-green-400 font-bold text-lg">
                       {performanceMetrics.loadTime}
                     </div>
@@ -476,7 +645,7 @@ const TechnicalDeepDive = ({ project }: { project: ExtendedProject }) => {
                       Tempo de Carregamento
                     </div>
                   </div>
-                  <div className="bg-gray-800/50 rounded-xl p-4 border border-blue-500/20">
+                  <div className="bg-gray-800/50 rounded-xl p-6 border border-blue-500/20">
                     <div className="text-blue-400 font-bold text-lg">
                       {performanceMetrics.bundleSize}
                     </div>
@@ -489,26 +658,26 @@ const TechnicalDeepDive = ({ project }: { project: ExtendedProject }) => {
             )}
 
             {activeTab === "techstack" && (
-              <div className="space-y-6">
-                <h4 className="text-xl font-bold text-white mb-4">
+              <div className="space-y-8">
+                <h4 className="text-xl font-bold text-white mb-6">
                   Stack Tecnológico Completo
                 </h4>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {project.techStack?.map((tech: any, index: number) => (
+                  {project.techStack?.map((tech: any, techIndex: number) => (
                     <motion.div
                       key={tech.name}
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="bg-gray-800/50 rounded-xl p-4 border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-300"
+                      transition={{ delay: techIndex * 0.1 }}
+                      className="bg-gray-800/50 rounded-xl p-6 border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-300"
                     >
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 bg-cyan-500/20 rounded-lg flex items-center justify-center">
-                          <tech.icon className="w-6 h-6 text-cyan-400" />
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="w-12 h-12 bg-cyan-500/20 rounded-lg flex items-center justify-center">
+                          <tech.icon className="w-7 h-7 text-cyan-400" />
                         </div>
                         <div>
-                          <div className="text-white font-bold">
+                          <div className="text-white font-bold text-base">
                             {tech.name}
                           </div>
                           <div className="text-cyan-400 text-sm">
@@ -516,14 +685,16 @@ const TechnicalDeepDive = ({ project }: { project: ExtendedProject }) => {
                           </div>
                         </div>
                       </div>
-                      <p className="text-gray-300 text-sm">
+                      <p className="text-gray-300 text-sm leading-relaxed">
                         {tech.description}
                       </p>
                     </motion.div>
                   )) || (
-                    <div className="col-span-full text-center py-8 text-gray-400">
-                      <Code className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                      <p>Detalhes técnicos em desenvolvimento</p>
+                    <div className="col-span-full text-center py-12 text-gray-400">
+                      <Code className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                      <p className="text-lg">
+                        Detalhes técnicos em desenvolvimento
+                      </p>
                     </div>
                   )}
                 </div>
@@ -695,15 +866,18 @@ export const Projects = () => {
         {/* Elementos Neon Flutuantes */}
         <div className="absolute inset-0 pointer-events-none">
           {neonElements.map((element, index) => (
-            <ProjectsNeonElement key={index} {...element} />
+            <ProjectsNeonElement
+              key={`${element.position}-${index}`}
+              {...element}
+            />
           ))}
         </div>
       </PremiumBackground>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-24 lg:py-32">
         {/* Header Harmonizado */}
         <motion.div
-          className="text-center mb-16 lg:mb-20 projects-header"
+          className="text-center mb-20 lg:mb-24 projects-header"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
@@ -714,7 +888,7 @@ export const Projects = () => {
             whileInView={{ scale: 1, rotate: 0 }}
             transition={{ duration: 0.6, delay: 0.1, type: "spring" }}
             viewport={{ once: true }}
-            className="inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-400/10 px-6 py-3 rounded-full border border-cyan-400/30 backdrop-blur-2xl mb-6 relative overflow-hidden group"
+            className="inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-400/10 px-6 py-3 rounded-full border border-cyan-400/30 backdrop-blur-2xl mb-8 relative overflow-hidden group"
           >
             <Sparkles className="w-4 h-4 mr-3 animate-pulse" />
             PORTFÓLIO PREMIUM
@@ -727,13 +901,13 @@ export const Projects = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-white mb-8 leading-tight">
               PROJETOS{" "}
               <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
                 DE IMPACTO
               </span>
             </h1>
-            <p className="text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl lg:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
               Soluções inovadoras desenvolvidas com tecnologias de ponta,
               arquitetura escalável e foco em performance excepcional
             </p>
@@ -752,13 +926,13 @@ export const Projects = () => {
 
         {/* Stats */}
         <motion.div
-          className="mb-16 lg:mb-20 projects-stats"
+          className="mb-20 lg:mb-24 projects-stats"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
         >
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {[
               {
                 number: projects.length,
@@ -793,23 +967,23 @@ export const Projects = () => {
               },
             ].map((stat, index) => (
               <motion.div
-                key={index}
+                key={stat.title}
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: 0.05 * index }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
                 viewport={{ once: true }}
-                className="text-center p-6 bg-gray-900/40 backdrop-blur-lg rounded-2xl border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-500 cursor-pointer group"
+                className="text-center p-8 bg-gray-900/40 backdrop-blur-lg rounded-2xl border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-500 cursor-pointer group"
               >
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center mx-auto mb-4 border border-cyan-400/30 group-hover:border-cyan-400/50 transition-all duration-300">
-                  <stat.icon className="w-8 h-8 text-cyan-400" />
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center mx-auto mb-6 border border-cyan-400/30 group-hover:border-cyan-400/50 transition-all duration-300">
+                  <stat.icon className="w-10 h-10 text-cyan-400" />
                 </div>
-                <div className="text-2xl lg:text-3xl font-black bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-2">
+                <div className="text-3xl lg:text-4xl font-black bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-3">
                   {stat.number}
                 </div>
-                <div className="text-lg font-bold text-white mb-1">
+                <div className="text-xl font-bold text-white mb-2">
                   {stat.title}
                 </div>
-                <div className="text-sm text-gray-400">{stat.subtitle}</div>
+                <div className="text-gray-400 text-base">{stat.subtitle}</div>
               </motion.div>
             ))}
           </div>
@@ -823,23 +997,23 @@ export const Projects = () => {
           transition={{ duration: 0.6, delay: 0.6 }}
           viewport={{ once: true }}
         >
-          <div className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-2xl p-8 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 relative overflow-hidden group">
-            <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-8 relative z-10">
+          <div className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-2xl p-10 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 relative overflow-hidden group">
+            <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-10 relative z-10">
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
                 whileInView={{ scale: 1, rotate: 0 }}
-                transition={{ duration: 0.6, type: "spring" }}
+                transition={{ duration: 0.6, delay: 0.1, type: "spring" }}
                 viewport={{ once: true }}
-                className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/30 shadow-xl shadow-cyan-400/30 group-hover:border-cyan-400/50"
+                className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/30 shadow-xl shadow-cyan-400/30 group-hover:border-cyan-400/50"
                 whileHover={{ rotate: 360 }}
               >
-                <Rocket className="w-6 h-6 text-cyan-400" />
+                <Rocket className="w-8 h-8 text-cyan-400" />
               </motion.div>
               <div className="text-center lg:text-left flex-1">
-                <h3 className="text-xl lg:text-2xl font-black text-white mb-2">
+                <h3 className="text-2xl lg:text-3xl font-black text-white mb-3">
                   Próximo projeto incrível?
                 </h3>
-                <p className="text-gray-300 text-base lg:text-lg">
+                <p className="text-gray-300 text-lg lg:text-xl">
                   Vamos transformar sua visão em realidade com tecnologia de
                   ponta
                 </p>
@@ -857,9 +1031,9 @@ export const Projects = () => {
                       .getElementById("contact")
                       ?.scrollIntoView({ behavior: "smooth" })
                   }
-                  className="w-full lg:w-auto bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl border-none shadow-2xl shadow-cyan-400/30 transition-all duration-500 hover:shadow-cyan-400/50 hover:scale-105 relative overflow-hidden focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
+                  className="w-full lg:w-auto bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-lg lg:text-xl px-8 lg:px-10 py-4 lg:py-5 rounded-2xl border-none shadow-2xl shadow-cyan-400/30 transition-all duration-500 hover:shadow-cyan-400/50 hover:scale-105 relative overflow-hidden focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
                 >
-                  <Sparkles className="w-4 h-4 mr-2 transition-transform duration-300" />
+                  <Sparkles className="w-5 h-5 mr-3 transition-transform duration-300" />
                   INICIAR PROJETO
                 </Button>
               </motion.div>
