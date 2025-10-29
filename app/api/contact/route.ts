@@ -106,152 +106,333 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // ENVIO REAL COM RESEND
+    // ENVIO REAL COM RESEND - TEMA CLARO COM CORES DO PORTFOLIO
     const emailSubject =
       formType === "enhanced"
-        ? `🎯 AGENDAMENTO - ${subject} - ${name}`
-        : `📧 CONTATO - ${subject} - ${name}`;
+        ? `🎯 Agendamento - ${subject} - ${name}`
+        : `📧 Contato - ${subject} - ${name}`;
 
     const emailHtml = `
       <!DOCTYPE html>
       <html>
         <head>
           <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <style>
-            body { 
-              font-family: 'Segoe UI', Arial, sans-serif; 
-              background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-              color: #f8fafc; 
-              margin: 0; 
-              padding: 0; 
+            /* RESET E ESTILOS BASE */
+            * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
             }
-            .container { 
-              max-width: 600px; 
-              margin: 0 auto; 
-              background: #1e293b;
-              border-radius: 16px;
+            
+            body {
+              font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+              background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+              color: #1e293b;
+              line-height: 1.6;
+              margin: 0;
+              padding: 20px;
+            }
+            
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              background: white;
+              border-radius: 20px;
               overflow: hidden;
-              box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+              box-shadow: 
+                0 10px 25px rgba(6, 182, 212, 0.1),
+                0 5px 10px rgba(6, 182, 212, 0.05);
+              border: 1px solid #e2e8f0;
             }
-            .header { 
-              background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
-              padding: 30px;
+            
+            /* HEADER COM GRADIENTE DO PORTFOLIO */
+            .header {
+              background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
+              padding: 40px 30px;
               text-align: center;
+              position: relative;
+              overflow: hidden;
             }
-            .header h1 { 
-              margin: 0; 
+            
+            .header::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            }
+            
+            .header h1 {
+              color: white;
               font-size: 28px;
               font-weight: 800;
+              margin-bottom: 8px;
+              position: relative;
+              z-index: 2;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.1);
             }
-            .content { 
-              padding: 30px; 
+            
+            .header .subtitle {
+              color: rgba(255, 255, 255, 0.9);
+              font-size: 16px;
+              font-weight: 500;
+              position: relative;
+              z-index: 2;
             }
-            .info-grid {
-              display: grid;
-              grid-template-columns: 1fr 1fr;
-              gap: 15px;
-              margin: 20px 0;
-            }
-            .info-item {
-              background: #334155;
-              padding: 15px;
-              border-radius: 8px;
-              border-left: 4px solid #06b6d4;
-            }
-            .message-box {
-              background: #0f172a;
-              padding: 20px;
-              border-radius: 8px;
-              margin: 20px 0;
-              border: 1px solid #334155;
-            }
-            .footer {
-              background: #0f172a;
-              padding: 20px;
-              text-align: center;
-              border-top: 1px solid #334155;
-              color: #94a3b8;
-              font-size: 12px;
-            }
+            
+            /* BADGE */
             .badge {
               display: inline-block;
-              background: ${formType === "enhanced" ? "#10b981" : "#3b82f6"};
+              background: ${
+                formType === "enhanced"
+                  ? "linear-gradient(135deg, #10b981, #059669)"
+                  : "linear-gradient(135deg, #3b82f6, #1d4ed8)"
+              };
               color: white;
-              padding: 4px 12px;
+              padding: 8px 16px;
               border-radius: 20px;
               font-size: 12px;
+              font-weight: 700;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+              margin-top: 8px;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+              position: relative;
+              z-index: 2;
+            }
+            
+            /* CONTENT */
+            .content {
+              padding: 40px 30px;
+            }
+            
+            /* INFO GRID */
+            .info-grid {
+              display: grid;
+              grid-template-columns: 1fr;
+              gap: 16px;
+              margin-bottom: 30px;
+            }
+            
+            @media (min-width: 480px) {
+              .info-grid {
+                grid-template-columns: 1fr 1fr;
+              }
+            }
+            
+            .info-item {
+              background: #f8fafc;
+              padding: 20px;
+              border-radius: 12px;
+              border-left: 4px solid #06b6d4;
+              transition: all 0.3s ease;
+            }
+            
+            .info-item:hover {
+              background: #f1f5f9;
+              transform: translateY(-2px);
+              box-shadow: 0 4px 12px rgba(6, 182, 212, 0.1);
+            }
+            
+            .info-item strong {
+              color: #06b6d4;
+              font-size: 12px;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+              display: block;
+              margin-bottom: 6px;
+            }
+            
+            .info-item div {
+              color: #1e293b;
+              font-size: 15px;
               font-weight: 600;
-              margin-left: 10px;
+            }
+            
+            /* MESSAGE BOX */
+            .message-box {
+              background: #f8fafc;
+              padding: 25px;
+              border-radius: 12px;
+              border: 1px solid #e2e8f0;
+              margin: 25px 0;
+            }
+            
+            .message-box strong {
+              color: #06b6d4;
+              font-size: 14px;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+              display: block;
+              margin-bottom: 15px;
+            }
+            
+            .message-content {
+              color: #334155;
+              font-size: 15px;
+              line-height: 1.7;
+              white-space: pre-wrap;
+              background: white;
+              padding: 20px;
+              border-radius: 8px;
+              border: 1px solid #e2e8f0;
+            }
+            
+            /* ACTION BOX */
+            .action-box {
+              background: linear-gradient(135deg, #ecfdf5, #f0fdfa);
+              padding: 20px;
+              border-radius: 12px;
+              border-left: 4px solid #10b981;
+              margin: 25px 0;
+            }
+            
+            .action-box strong {
+              color: #065f46;
+              font-size: 14px;
+              display: block;
+              margin-bottom: 8px;
+            }
+            
+            .action-box div {
+              color: #047857;
+              font-size: 14px;
+              line-height: 1.5;
+            }
+            
+            /* FOOTER */
+            .footer {
+              background: #f1f5f9;
+              padding: 25px 30px;
+              text-align: center;
+              border-top: 1px solid #e2e8f0;
+            }
+            
+            .footer small {
+              color: #64748b;
+              font-size: 12px;
+              line-height: 1.5;
+            }
+            
+            .footer-logo {
+              color: #06b6d4;
+              font-weight: 800;
+              font-size: 16px;
+              margin-bottom: 8px;
+              display: block;
+            }
+            
+            /* UTILITIES */
+            .text-gradient {
+              background: linear-gradient(135deg, #06b6d4, #3b82f6);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              background-clip: text;
+            }
+            
+            .divider {
+              height: 1px;
+              background: linear-gradient(90deg, transparent, #06b6d4, transparent);
+              margin: 25px 0;
             }
           </style>
         </head>
         <body>
           <div class="container">
+            <!-- HEADER -->
             <div class="header">
               <h1>
                 ${
                   formType === "enhanced"
-                    ? "🎯 NOVO AGENDAMENTO"
-                    : "📧 NOVA MENSAGEM"
+                    ? "🎯 Novo Agendamento"
+                    : "📧 Nova Mensagem"
                 }
-                <span class="badge">${
-                  formType === "enhanced" ? "COM REUNIÃO" : "MENSAGEM RÁPIDA"
-                }</span>
               </h1>
+              <div class="subtitle">Portfolio - Erick Reis</div>
+              <div class="badge">
+                ${
+                  formType === "enhanced"
+                    ? "Reunião Agendada"
+                    : "Mensagem Rápida"
+                }
+              </div>
             </div>
             
+            <!-- CONTENT -->
             <div class="content">
+              <!-- INFO GRID -->
               <div class="info-grid">
                 <div class="info-item">
-                  <strong>👤 Nome:</strong><br>
-                  ${name.trim()}
+                  <strong>👤 Nome</strong>
+                  <div>${name.trim()}</div>
                 </div>
+                
                 <div class="info-item">
-                  <strong>📧 Email:</strong><br>
-                  ${email.trim()}
+                  <strong>📧 Email</strong>
+                  <div>${email.trim()}</div>
                 </div>
+                
                 <div class="info-item">
-                  <strong>🎯 Assunto:</strong><br>
-                  ${subject.trim()}
+                  <strong>🎯 Assunto</strong>
+                  <div>${subject.trim()}</div>
                 </div>
+                
                 ${
                   meetingDate && meetingTime
                     ? `<div class="info-item">
-                        <strong>📅 Reunião Agendada:</strong><br>
-                        ${new Date(meetingDate).toLocaleDateString(
-                          "pt-BR"
-                        )} às ${meetingTime}
+                        <strong>📅 Reunião Agendada</strong>
+                        <div>${new Date(meetingDate).toLocaleDateString(
+                          "pt-BR",
+                          {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          }
+                        )} às ${meetingTime}</div>
                        </div>`
-                    : ""
+                    : '<div class="info-item"><strong>⏰ Tipo</strong><div>Mensagem Rápida</div></div>'
                 }
               </div>
+              
+              <div class="divider"></div>
 
+              <!-- MESSAGE -->
               <div class="message-box">
-                <strong>💬 Mensagem:</strong>
-                <div style="margin-top: 15px; line-height: 1.6; color: #cbd5e1;">
-                  ${message.trim().replace(/\n/g, "<br>")}
-                </div>
+                <strong>💬 Detalhes da Mensagem</strong>
+                <div class="message-content">${message
+                  .trim()
+                  .replace(/\n/g, "<br>")}</div>
               </div>
 
-              <div style="background: #065f46; padding: 15px; border-radius: 8px; border-left: 4px solid #10b981;">
-                <strong>🚀 Ação Requerida:</strong><br>
-                ${
-                  formType === "enhanced"
-                    ? "Este contato inclui um agendamento de reunião. Por favor, confirme a disponibilidade."
-                    : "Responda este contato dentro de 24 horas para manter uma comunicação eficiente."
-                }
+              <!-- ACTION REQUIRED -->
+              <div class="action-box">
+                <strong>🚀 Ação Requerida</strong>
+                <div>
+                  ${
+                    formType === "enhanced"
+                      ? "Este contato inclui um agendamento de reunião. Por favor, confirme a disponibilidade e responda o mais breve possível."
+                      : "Por favor, responda este contato dentro de 24 horas para manter uma comunicação eficiente e demonstrar profissionalismo."
+                  }
+                </div>
               </div>
             </div>
 
+            <!-- FOOTER -->
             <div class="footer">
+              <div class="footer-logo">ERICK REIS • FULLSTACK DEVELOPER</div>
               <small>
                 Tipo: ${
                   formType === "enhanced"
                     ? "Com Agendamento"
                     : "Mensagem Rápida"
-                } | 
-                Enviado em: ${new Date().toLocaleString("pt-BR")} |
-                Fingerprint: ${fingerprint}
+                } • 
+                Enviado em: ${new Date().toLocaleString("pt-BR")} • 
+                Portfolio Contact System
               </small>
             </div>
           </div>
@@ -318,6 +499,7 @@ export async function GET() {
       "Validação de dados",
       "Suporte a agendamentos",
       "Modo desenvolvimento",
+      "Template claro com cores do portfolio",
     ],
   });
 }
