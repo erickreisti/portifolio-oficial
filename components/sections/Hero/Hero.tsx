@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { gsap } from "gsap";
-import { Download, Mail, ArrowDown } from "lucide-react";
+import { Download, Rocket, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PremiumBackground } from "@/components/layout/PremiumBackground";
 import { LazyComponent } from "@/components/optimization/LazyComponent";
@@ -11,7 +11,7 @@ import { LazyBackground } from "@/components/optimization/LazyBackground";
 import { HeroNeonElements } from "@/components/layout/HeroNeonElements";
 import { getSafeColors } from "@/lib/colors";
 
-// 🔥 TEXTO HERO COM TYPEWRITER APENAS NO SUBTÍTULO
+// TEXTO HERO COM TYPEWRITER APENAS NO SUBTÍTULO
 const HeroText = () => {
   const colors = getSafeColors();
 
@@ -124,7 +124,7 @@ const HeroText = () => {
   );
 };
 
-// 🔥 PARTÍCULAS VISUAIS OTIMIZADAS
+// PARTÍCULAS VISUAIS OTIMIZADAS
 const TechParticles = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -229,7 +229,7 @@ const TechParticles = () => {
   );
 };
 
-// 🔥 CONEXÕES ENTRE PARTÍCULAS - OTIMIZADO
+// CONEXÕES ENTRE PARTÍCULAS - OTIMIZADO
 const ParticleConnections = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -318,7 +318,7 @@ const ParticleConnections = () => {
   );
 };
 
-// 🔥 ESTATÍSTICAS ANIMADAS
+//  ESTATÍSTICAS ANIMADAS
 const LiveStats = () => {
   const [projects, setProjects] = useState(0);
   const [experience, setExperience] = useState(0);
@@ -396,42 +396,122 @@ const LiveStats = () => {
   );
 };
 
-// 🔥 BOTÕES DE AÇÃO
+//  BOTÕES DE AÇÃO
 const ActionButtons = ({ onContactClick }: { onContactClick: () => void }) => {
   return (
     <LazyComponent animation="fadeUp" delay={500}>
       <motion.div
-        className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
+        className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 1.6, ease: "easeOut" }}
       >
-        <Button
-          onClick={onContactClick}
-          variant="premium"
-          size="xl"
-          className="gap-3 relative overflow-hidden group"
+        {/* BOTÃO INICIAR PROJETO - COM ROCKET */}
+        <motion.div
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
         >
-          <Mail className="w-5 h-5" />
-          INICIAR PROJETO
-        </Button>
+          <Button
+            onClick={onContactClick}
+            variant="premium"
+            size="xl"
+            className="gap-3 relative overflow-hidden group px-8"
+          >
+            {/* Efeito de brilho interno CONTÍNUO */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12"
+              animate={{ x: ["-100%", "200%"] }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut",
+                repeatDelay: 2,
+              }}
+            />
+            {/* Efeito de brilho extra no HOVER (QUASE INSTANTÂNEO) */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent transform -skew-x-12"
+              initial={{ x: "-100%" }}
+              whileHover={{ x: "200%" }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+            />
+            {/* Ícone com animação */}
+            <motion.div
+              className="relative"
+              whileHover={{ scale: 1.2, rotate: 10 }}
+              transition={{ type: "spring", stiffness: 400 }}
+            >
+              <Rocket className="w-5 h-5" />
+              {/* Efeito de propulsão */}
+              <motion.div
+                className="absolute -bottom-1 -right-1 w-2 h-1 bg-yellow-400 rounded-full blur-sm"
+                animate={{ scale: [1, 1.5, 1], opacity: [0.7, 1, 0.7] }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+            </motion.div>
+            INICIAR PROJETO
+            {/* Reflexo na borda */}
+            <div className="absolute inset-0 rounded-xl border border-white/30 group-hover:border-white/50 transition-all duration-300" />
+          </Button>
+        </motion.div>
 
-        <Button
-          variant="neon"
-          size="xl"
-          className="gap-3"
-          onClick={() =>
-            window.open("/docs/curriculo-erick-reis.pdf", "_blank")
-          }
+        {/* BOTÃO BAIXAR CV */}
+        <motion.div
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
         >
-          <Download className="w-5 h-5" />
-          BAIXAR CV
-        </Button>
+          <Button
+            variant="neon"
+            size="xl"
+            className="gap-3 relative overflow-hidden group px-8 border-2"
+          >
+            {/* Efeito de brilho pulsante na borda */}
+            <motion.div
+              className="absolute inset-0 rounded-xl border border-cyan-400/50"
+              animate={{ opacity: [0.3, 0.7, 0.3] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            />
+            {/* Efeito de brilho interno CONTÍNUO */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent transform -skew-x-12"
+              animate={{ x: ["-100%", "200%"] }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut",
+                repeatDelay: 2,
+              }}
+            />
+            {/* Efeito de brilho extra no HOVER (QUASE INSTANTÂNEO) */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent transform -skew-x-12"
+              initial={{ x: "-100%" }}
+              whileHover={{ x: "200%" }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+            />
+            {/* Ícone com animação */}
+            <motion.div
+              className="relative"
+              whileHover={{ scale: 1.2, y: -2 }}
+              transition={{ type: "spring", stiffness: 400 }}
+            >
+              <Download className="w-5 h-5" />
+            </motion.div>
+            BAIXAR CV
+            {/* Reflexo na borda */}
+            <div className="absolute inset-0 rounded-xl border border-cyan-400/20 group-hover:border-cyan-400/40 transition-all duration-300" />
+          </Button>
+        </motion.div>
       </motion.div>
     </LazyComponent>
   );
 };
-
 // 🔥 INDICADOR DE SCROLL
 const ScrollIndicator = ({
   onExploreClick,
