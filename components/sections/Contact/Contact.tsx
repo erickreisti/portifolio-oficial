@@ -988,30 +988,297 @@ export const Contact = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="flex justify-center mb-8"
+            className="flex justify-center mb-12"
           >
-            <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 p-2">
-              <div className="flex gap-2">
-                <button
+            <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 p-3 shadow-2xl shadow-cyan-400/10">
+              <div className="flex gap-3">
+                {/* Botão Mensagem Rápida */}
+                <motion.button
                   onClick={() => setFormType("quick")}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                  className={`group relative px-8 py-4 rounded-2xl font-bold transition-all duration-500 overflow-hidden min-w-[180px] ${
                     formData.formType === "quick"
-                      ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/25"
-                      : "bg-gray-800/50 text-gray-300 hover:bg-gray-700/50"
+                      ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-2xl shadow-cyan-500/30"
+                      : "bg-gray-800/50 text-gray-300 hover:bg-gray-700/60 border border-cyan-500/20"
                   }`}
+                  whileHover={{
+                    scale: formData.formType === "quick" ? 1 : 1.05,
+                    y: formData.formType === "quick" ? 0 : -2,
+                  }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  📧 Mensagem Rápida
-                </button>
-                <button
+                  {/* Efeito de brilho para estado ativo */}
+                  {formData.formType === "quick" && (
+                    <>
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-cyan-400/20 to-blue-400/20"
+                        animate={{
+                          opacity: [0.3, 0.6, 0.3],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      />
+
+                      {/* Partículas de dados */}
+                      <div className="absolute inset-0">
+                        {[...Array(3)].map((_, i) => (
+                          <motion.div
+                            key={i}
+                            className="absolute w-1 h-1 bg-white rounded-full blur-sm"
+                            style={{
+                              left: `${20 + i * 30}%`,
+                              top: "20%",
+                            }}
+                            animate={{
+                              y: [0, 10, 0],
+                              opacity: [0, 1, 0],
+                            }}
+                            transition={{
+                              duration: 2 + i,
+                              repeat: Infinity,
+                              delay: i * 0.3,
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  )}
+
+                  {/* Efeito de brilho no hover para estado inativo */}
+                  {formData.formType !== "quick" && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  )}
+
+                  {/* Conteúdo do botão */}
+                  <div className="relative z-10 flex items-center gap-3 justify-center">
+                    <motion.div
+                      animate={{
+                        scale: formData.formType === "quick" ? [1, 1.1, 1] : 1,
+                      }}
+                      transition={{
+                        duration: formData.formType === "quick" ? 2 : 0.3,
+                        repeat: formData.formType === "quick" ? Infinity : 0,
+                      }}
+                      className="relative"
+                    >
+                      {/* Ícone de mensagem instantânea */}
+                      <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                        />
+                        {/* Efeito de notificação */}
+                        {formData.formType === "quick" && (
+                          <motion.circle
+                            cx="18"
+                            cy="6"
+                            r="3"
+                            fill="#22d3ee"
+                            initial={{ scale: 0 }}
+                            animate={{ scale: [0, 1, 0] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                          />
+                        )}
+                      </svg>
+                    </motion.div>
+
+                    <div className="flex flex-col items-start">
+                      <span
+                        className={`text-sm font-bold tracking-wide ${
+                          formData.formType === "quick"
+                            ? "text-white"
+                            : "text-gray-300 group-hover:text-cyan-300"
+                        } transition-colors duration-300`}
+                      >
+                        MENSAGEM RÁPIDA
+                      </span>
+                      <span
+                        className={`text-xs ${
+                          formData.formType === "quick"
+                            ? "text-cyan-100"
+                            : "text-gray-400 group-hover:text-cyan-400/80"
+                        } transition-colors duration-300`}
+                      >
+                        Envio direto
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Efeito de borda brilhante para estado ativo */}
+                  {formData.formType === "quick" && (
+                    <motion.div
+                      className="absolute inset-0 rounded-2xl border-2 border-cyan-400/50"
+                      animate={{
+                        boxShadow: [
+                          "0 0 20px rgba(6, 182, 212, 0.3)",
+                          "0 0 30px rgba(6, 182, 212, 0.6)",
+                          "0 0 20px rgba(6, 182, 212, 0.3)",
+                        ],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                      }}
+                    />
+                  )}
+                </motion.button>
+
+                {/* Botão Com Agendamento */}
+                <motion.button
                   onClick={() => setFormType("enhanced")}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                  className={`group relative px-8 py-4 rounded-2xl font-bold transition-all duration-500 overflow-hidden min-w-[180px] ${
                     formData.formType === "enhanced"
-                      ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/25"
-                      : "bg-gray-800/50 text-gray-300 hover:bg-gray-700/50"
+                      ? "bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-2xl shadow-purple-500/30"
+                      : "bg-gray-800/50 text-gray-300 hover:bg-gray-700/60 border border-purple-500/20"
                   }`}
+                  whileHover={{
+                    scale: formData.formType === "enhanced" ? 1 : 1.05,
+                    y: formData.formType === "enhanced" ? 0 : -2,
+                  }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  🗓️ Com Agendamento
-                </button>
+                  {/* Efeito de brilho para estado ativo */}
+                  {formData.formType === "enhanced" && (
+                    <>
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-pink-400/20"
+                        animate={{
+                          opacity: [0.3, 0.6, 0.3],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      />
+
+                      {/* Partículas de calendário */}
+                      <div className="absolute inset-0">
+                        {[...Array(3)].map((_, i) => (
+                          <motion.div
+                            key={i}
+                            className="absolute w-1 h-1 bg-white rounded-full blur-sm"
+                            style={{
+                              right: `${20 + i * 30}%`,
+                              top: "20%",
+                            }}
+                            animate={{
+                              y: [0, 10, 0],
+                              opacity: [0, 1, 0],
+                            }}
+                            transition={{
+                              duration: 2 + i,
+                              repeat: Infinity,
+                              delay: i * 0.3,
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  )}
+
+                  {/* Efeito de brilho no hover para estado inativo */}
+                  {formData.formType !== "enhanced" && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  )}
+
+                  {/* Conteúdo do botão */}
+                  <div className="relative z-10 flex items-center gap-3 justify-center">
+                    <motion.div
+                      animate={{
+                        scale:
+                          formData.formType === "enhanced" ? [1, 1.1, 1] : 1,
+                        rotate:
+                          formData.formType === "enhanced" ? [0, -5, 5, 0] : 0,
+                      }}
+                      transition={{
+                        duration: formData.formType === "enhanced" ? 2 : 0.3,
+                        repeat: formData.formType === "enhanced" ? Infinity : 0,
+                      }}
+                      className="relative"
+                    >
+                      {/* Ícone de calendário high-tech */}
+                      <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                        {/* Indicador de data marcada */}
+                        {formData.formType === "enhanced" && (
+                          <motion.rect
+                            x="8"
+                            y="12"
+                            width="2"
+                            height="2"
+                            fill="#a855f7"
+                            initial={{ scale: 0 }}
+                            animate={{ scale: [0, 1, 0] }}
+                            transition={{
+                              duration: 2,
+                              repeat: Infinity,
+                              delay: 0.5,
+                            }}
+                          />
+                        )}
+                      </svg>
+                    </motion.div>
+
+                    <div className="flex flex-col items-start">
+                      <span
+                        className={`text-sm font-bold tracking-wide ${
+                          formData.formType === "enhanced"
+                            ? "text-white"
+                            : "text-gray-300 group-hover:text-purple-300"
+                        } transition-colors duration-300`}
+                      >
+                        COM AGENDAMENTO
+                      </span>
+                      <span
+                        className={`text-xs ${
+                          formData.formType === "enhanced"
+                            ? "text-purple-100"
+                            : "text-gray-400 group-hover:text-purple-400/80"
+                        } transition-colors duration-300`}
+                      >
+                        Reunião marcada
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Efeito de borda brilhante para estado ativo */}
+                  {formData.formType === "enhanced" && (
+                    <motion.div
+                      className="absolute inset-0 rounded-2xl border-2 border-purple-400/50"
+                      animate={{
+                        boxShadow: [
+                          "0 0 20px rgba(168, 85, 247, 0.3)",
+                          "0 0 30px rgba(168, 85, 247, 0.6)",
+                          "0 0 20px rgba(168, 85, 247, 0.3)",
+                        ],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                      }}
+                    />
+                  )}
+                </motion.button>
               </div>
             </div>
           </motion.div>
