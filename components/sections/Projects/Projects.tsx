@@ -17,10 +17,6 @@ import {
   ChevronUp,
   Star,
   Sparkles,
-  Target,
-  Award,
-  Clock,
-  Heart,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { projects } from "@/lib/project-data";
@@ -33,15 +29,10 @@ import Image from "next/image";
 import { useLockScroll, forceReleaseAll } from "@/hooks/useLockScroll";
 import ModalPortal from "@/components/ui/ModalPortal";
 import { NeonElements } from "@/components/layout/NeonElements";
+import { COLORS } from "@/lib/colors";
 
 interface ExtendedProject extends Project {
   demoVideo?: string;
-  techStack?: Array<{
-    name: string;
-    category: string;
-    description: string;
-    icon: any;
-  }>;
 }
 
 /* ---------------- OptimizedImage ---------------- */
@@ -72,7 +63,9 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   if (hasError) {
     return (
       <div
-        className={`bg-gray-800 flex items-center justify-center ${className} ${
+        className={`${
+          COLORS.classes.background.card
+        } flex items-center justify-center ${className} ${
           fill ? "w-full h-full" : ""
         }`}
       >
@@ -121,39 +114,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   );
 };
 
-/* ---------------- Dados Estáticos ---------------- */
-const staticProjectsData = {
-  stats: [
-    {
-      number: projects.length.toString(),
-      title: "Projetos",
-      subtitle: "Entregues com Excelência",
-      icon: Rocket,
-    },
-    {
-      number: `${Math.round(
-        (projects.filter((p) => p.liveUrl).length / projects.length) * 100
-      )}%`,
-      title: "Online",
-      subtitle: "Projetos em Produção",
-      icon: Eye,
-    },
-    {
-      number: "24/7",
-      title: "Disponível",
-      subtitle: "Para Novos Desafios",
-      icon: Star,
-    },
-    {
-      number: "5+",
-      title: "Anos Exp",
-      subtitle: "Experiência Comprovada",
-      icon: Code,
-    },
-  ],
-};
-
-/* ---------------- Componentes de Modal Corrigidos ---------------- */
+/* ---------------- Modal Components ---------------- */
 const TechnologiesModal: React.FC<{
   technologies: string[];
   onClose: () => void;
@@ -171,15 +132,15 @@ const TechnologiesModal: React.FC<{
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          className="modal-content bg-gray-900/95 backdrop-blur-xl rounded-2xl border border-cyan-500/20 shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden"
+          className={`${COLORS.classes.card} shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden`}
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center justify-between p-6 border-b border-cyan-500/20">
             <div>
-              <h3 className="text-2xl font-bold text-white">
+              <h3 className={COLORS.classes.text.primary}>
                 Todas as Tecnologias
               </h3>
-              <p className="text-cyan-300 text-sm">
+              <p className={COLORS.classes.text.accent}>
                 {technologies.length} tecnologias utilizadas
               </p>
             </div>
@@ -254,7 +215,7 @@ const ImageZoomModal: React.FC<{
   );
 };
 
-/* ---------------- Componente StatCard ---------------- */
+/* ---------------- StatCard ---------------- */
 const StatCard = ({ stat, index }: { stat: any; index: number }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.3 });
@@ -288,7 +249,7 @@ const StatCard = ({ stat, index }: { stat: any; index: number }) => {
     <LazyComponent animation="scale" delay={index * 100}>
       <motion.div
         ref={cardRef}
-        className="text-center p-6 bg-gray-900/40 backdrop-blur-2xl rounded-2xl border border-cyan-500/20 transition-all duration-400 cursor-pointer relative overflow-hidden hover:border-cyan-400/50 hover:bg-cyan-500/10 group"
+        className={`text-center p-6 ${COLORS.classes.card} ${COLORS.classes.cardHover} relative overflow-hidden group`}
         whileHover={{ y: -8, scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
@@ -300,13 +261,19 @@ const StatCard = ({ stat, index }: { stat: any; index: number }) => {
             <stat.icon className="w-5 h-5 text-cyan-400" />
           </motion.div>
         </div>
-        <div className="text-2xl lg:text-3xl font-black bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-2">
+        <div
+          className={`text-2xl lg:text-3xl font-black ${COLORS.classes.text.gradient} mb-2`}
+        >
           {stat.number}
         </div>
-        <div className="text-gray-400 font-medium text-sm tracking-wide transition-colors duration-300 group-hover:text-gray-200">
+        <div
+          className={`${COLORS.classes.text.secondary} font-medium text-sm tracking-wide transition-colors duration-300 group-hover:text-gray-200`}
+        >
           {stat.title}
         </div>
-        <div className="text-xs text-gray-500 transition-colors duration-300 group-hover:text-gray-400">
+        <div
+          className={`${COLORS.classes.text.tertiary} text-xs transition-colors duration-300 group-hover:text-gray-400`}
+        >
           {stat.subtitle}
         </div>
         <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/5 to-blue-400/5 opacity-0 transition-opacity duration-400 group-hover:opacity-100" />
@@ -331,8 +298,6 @@ const ProjectShowcase: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   usePerformanceMonitor("ProjectShowcase");
-
-  // Apply lock while any modal is open (centralized)
   useLockScroll(isModalLocked);
 
   useEffect(() => {
@@ -405,7 +370,9 @@ const ProjectShowcase: React.FC = () => {
                   className="group cursor-pointer"
                   onClick={() => setSelectedProject(project)}
                 >
-                  <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 overflow-hidden hover:border-cyan-400/50 transition-all duration-300 hover:scale-[1.02] h-full flex flex-col min-h-[500px]">
+                  <div
+                    className={`${COLORS.classes.card} ${COLORS.classes.cardHover} hover:scale-[1.02] h-full flex flex-col min-h-[500px]`}
+                  >
                     <div className="relative aspect-video overflow-hidden">
                       <OptimizedImage
                         src={project.image}
@@ -453,18 +420,22 @@ const ProjectShowcase: React.FC = () => {
 
                     <div className="p-5 flex-1 flex flex-col">
                       <div className="flex items-start justify-between mb-2">
-                        <h3 className="text-white font-bold text-lg flex-1 pr-2 line-clamp-2">
+                        <h3
+                          className={`${COLORS.classes.text.primary} font-bold text-lg flex-1 pr-2 line-clamp-2`}
+                        >
                           {project.title}
                         </h3>
                         <motion.div
                           whileHover={{ scale: 1.1, rotate: 15 }}
-                          className="text-cyan-400 mt-0.5 flex-shrink-0"
+                          className={COLORS.classes.text.accent}
                         >
                           <Rocket className="w-4 h-4" />
                         </motion.div>
                       </div>
 
-                      <p className="text-gray-300 text-sm line-clamp-3 flex-1 mb-4 leading-relaxed">
+                      <p
+                        className={`${COLORS.classes.text.secondary} text-sm line-clamp-3 flex-1 mb-4 leading-relaxed`}
+                      >
                         {project.description}
                       </p>
 
@@ -543,15 +514,15 @@ const ProjectShowcase: React.FC = () => {
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className="modal-content bg-gray-900/95 backdrop-blur-xl rounded-2xl border border-cyan-500/20 shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
+                className={`${COLORS.classes.card} shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden`}
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex items-center justify-between p-6 border-b border-cyan-500/20">
                   <div>
-                    <h3 className="text-2xl font-bold text-white">
+                    <h3 className={COLORS.classes.text.primary}>
                       {selectedProject.title}
                     </h3>
-                    <p className="text-cyan-300 text-sm">
+                    <p className={COLORS.classes.text.accent}>
                       {selectedProject.description}
                     </p>
                   </div>
@@ -604,7 +575,9 @@ const ProjectShowcase: React.FC = () => {
                   )}
 
                   <div className="mb-6">
-                    <h4 className="text-white font-semibold mb-3">
+                    <h4
+                      className={`${COLORS.classes.text.primary} font-semibold mb-3`}
+                    >
                       Tecnologias Utilizadas
                     </h4>
                     <div className="flex flex-wrap gap-2">
@@ -625,7 +598,7 @@ const ProjectShowcase: React.FC = () => {
                         href={selectedProject.liveUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 px-6 rounded-lg font-bold text-center hover:shadow-2xl hover:shadow-cyan-500/25 transition-all duration-300 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                        className={`${COLORS.classes.button.primary} flex-1 py-3 px-6 rounded-lg text-center flex items-center justify-center gap-2`}
                       >
                         <ExternalLink className="w-5 h-5" />
                         VISITAR SITE
@@ -635,7 +608,7 @@ const ProjectShowcase: React.FC = () => {
                       href={selectedProject.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 bg-gray-800/50 border border-cyan-500/20 text-cyan-400 py-3 px-6 rounded-lg font-bold text-center hover:bg-cyan-500/10 transition-all duration-300 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                      className={`${COLORS.classes.button.secondary} flex-1 py-3 px-6 rounded-lg text-center flex items-center justify-center gap-2`}
                     >
                       <Github className="w-5 h-5" />
                       VER CÓDIGO
@@ -669,15 +642,45 @@ const ProjectShowcase: React.FC = () => {
 
 /* ---------------- Componente Principal Projects ---------------- */
 const Projects: React.FC = () => {
-  const sectionRef = useRef<HTMLDivElement | null>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
   usePerformanceMonitor("ProjectsSection");
 
-  // Dados otimizados com useMemo
-  const projectsData = useMemo(() => staticProjectsData, []);
+  const projectsData = useMemo(
+    () => ({
+      stats: [
+        {
+          number: projects.length.toString(),
+          title: "Projetos",
+          subtitle: "Entregues com Excelência",
+          icon: Rocket,
+        },
+        {
+          number: `${Math.round(
+            (projects.filter((p) => p.liveUrl).length / projects.length) * 100
+          )}%`,
+          title: "Online",
+          subtitle: "Projetos em Produção",
+          icon: Eye,
+        },
+        {
+          number: "24/7",
+          title: "Disponível",
+          subtitle: "Para Novos Desafios",
+          icon: Star,
+        },
+        {
+          number: "5+",
+          title: "Anos Exp",
+          subtitle: "Experiência Comprovada",
+          icon: Code,
+        },
+      ],
+    }),
+    []
+  );
 
-  // GSAP Animations
   useEffect(() => {
     if (!isInView || !sectionRef.current) return;
 
@@ -715,11 +718,10 @@ const Projects: React.FC = () => {
     <section
       id="projects"
       ref={sectionRef}
-      className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 section-with-header"
+      className={`relative min-h-screen ${COLORS.classes.background.section} section-with-header`}
     >
       <LazyBackground priority="medium">
         <PremiumBackground intensity="medium">
-          {/* 🔥 NEON ELEMENTS GENÉRICO */}
           <NeonElements />
         </PremiumBackground>
       </LazyBackground>
@@ -753,11 +755,11 @@ const Projects: React.FC = () => {
           >
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
               PROJETOS QUE{" "}
-              <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                IMPACTAM
-              </span>
+              <span className={COLORS.classes.text.gradient}>IMPACTAM</span>
             </h1>
-            <p className="text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            <p
+              className={`${COLORS.classes.text.secondary} text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed`}
+            >
               Soluções reais, código limpo e resultados excepcionais. Conheça
               alguns dos projetos onde transformei ideias em experiências
               digitais memoráveis.
@@ -785,7 +787,7 @@ const Projects: React.FC = () => {
             className="mt-16 projects-cta"
           >
             <motion.div
-              className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-2xl p-6 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 relative overflow-hidden group"
+              className={`${COLORS.classes.card} ${COLORS.classes.cardHover} p-6 relative overflow-hidden group`}
               whileHover={{ y: -5 }}
             >
               <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-8 relative z-10">
@@ -800,10 +802,14 @@ const Projects: React.FC = () => {
                   <Rocket className="w-6 h-6 text-cyan-400" />
                 </motion.div>
                 <div className="text-center lg:text-left flex-1">
-                  <h3 className="text-xl lg:text-2xl font-black text-white mb-2">
+                  <h3
+                    className={`${COLORS.classes.text.primary} text-xl lg:text-2xl font-black mb-2`}
+                  >
                     Pronto para iniciar seu projeto?
                   </h3>
-                  <p className="text-gray-300 text-base lg:text-lg">
+                  <p
+                    className={`${COLORS.classes.text.secondary} text-base lg:text-lg`}
+                  >
                     Vamos criar algo incrível juntos usando as melhores
                     tecnologias do mercado
                   </p>
@@ -817,7 +823,7 @@ const Projects: React.FC = () => {
                 >
                   <a
                     href="#contact"
-                    className="inline-block bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl border-none shadow-2xl shadow-cyan-400/30 transition-all duration-500 hover:shadow-cyan-400/50 hover:scale-105 relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+                    className={`${COLORS.classes.button.primary} inline-block text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl relative overflow-hidden`}
                   >
                     <Sparkles className="w-4 h-4 mr-2 transition-transform duration-300" />
                     INICIAR PROJETO

@@ -22,28 +22,24 @@ import { OptimizedImage } from "@/components/optimization/OptimizedImage";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import LazyBackground from "@/components/optimization/LazyBackground";
 import { NeonElements } from "@/components/layout/NeonElements";
+import { COLORS } from "@/lib/colors";
 
-// Interfaces para tipagem
 interface SocialLink {
   icon: React.ComponentType<any>;
   href: string;
   label: string;
-  color: string;
 }
 
-// Configurações estáticas
 const SOCIAL_LINKS: SocialLink[] = [
   {
     icon: Github,
     href: "https://github.com/erickreisti",
     label: "GitHub",
-    color: "hover:text-cyan-400",
   },
   {
     icon: Instagram,
     href: "https://www.instagram.com/ereislimati/",
     label: "Instagram",
-    color: "hover:text-cyan-400",
   },
   {
     icon: () => (
@@ -53,7 +49,6 @@ const SOCIAL_LINKS: SocialLink[] = [
     ),
     href: "https://x.com/ereislima",
     label: "X",
-    color: "hover:text-cyan-400",
   },
 ];
 
@@ -64,40 +59,26 @@ const QUICK_LINKS = [
   { label: "Contato", href: "#contact", icon: MessageCircle },
 ];
 
-// Hook personalizado para animações GSAP
-const useGSAPAnimation = (
-  ref: React.RefObject<HTMLElement>,
-  isInView: boolean
-) => {
-  useEffect(() => {
-    if (!isInView || !ref.current) return;
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        ref.current,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: "power2.out",
-        }
-      );
-    }, ref);
-
-    return () => ctx.revert();
-  }, [isInView, ref]);
-};
-
-// Componente Social Link Otimizado
 const SocialLink = ({ link, index }: { link: SocialLink; index: number }) => {
   const linkRef = useRef<HTMLAnchorElement>(null);
   const isInView = useInView(linkRef, { once: true, amount: 0.5 });
 
-  useGSAPAnimation(linkRef as React.RefObject<HTMLElement>, isInView);
+  useEffect(() => {
+    if (!isInView || !linkRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        linkRef.current,
+        { opacity: 0, y: 50 },
+        { opacity: 1, y: 0, duration: 1, ease: "power2.out" }
+      );
+    }, linkRef);
+
+    return () => ctx.revert();
+  }, [isInView]);
 
   return (
-    <LazyComponent key={link.label} animation="scale" delay={index * 100}>
+    <LazyComponent animation="scale" delay={index * 100}>
       <motion.a
         ref={linkRef}
         href={link.href}
@@ -116,11 +97,12 @@ const SocialLink = ({ link, index }: { link: SocialLink; index: number }) => {
         }}
         viewport={{ once: true }}
       >
-        <div className="h-14 w-14 rounded-xl bg-gradient-to-br from-gray-900 to-gray-800 border border-cyan-500/20 flex items-center justify-center transition-all duration-500 group-hover:from-cyan-900/30 group-hover:to-blue-900/30 group-hover:border-cyan-400/50 group-hover:shadow-2xl group-hover:shadow-cyan-500/20">
+        <div
+          className={`h-14 w-14 rounded-xl ${COLORS.classes.background.card} border ${COLORS.borders.medium} flex items-center justify-center transition-all duration-500 group-hover:from-cyan-900/30 group-hover:to-blue-900/30 group-hover:border-cyan-400/50 group-hover:shadow-2xl group-hover:shadow-cyan-500/20`}
+        >
           <link.icon className="w-6 h-6 text-gray-400 group-hover:text-cyan-400 transition-colors duration-300" />
         </div>
 
-        {/* Tooltip elegante */}
         <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-900 border border-cyan-500/20 rounded-lg px-3 py-2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
           <span className="text-white text-sm font-semibold whitespace-nowrap">
             {link.label}
@@ -132,7 +114,6 @@ const SocialLink = ({ link, index }: { link: SocialLink; index: number }) => {
   );
 };
 
-// Componente Quick Link Otimizado
 const QuickLink = ({
   link,
   index,
@@ -142,16 +123,14 @@ const QuickLink = ({
 }) => {
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
+    element?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     <LazyComponent animation="fadeUp" delay={index * 100}>
       <motion.button
         onClick={() => scrollToSection(link.href)}
-        className="group flex items-center gap-3 p-3 rounded-xl bg-gray-900/40 border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-300 w-full text-left"
+        className={`group flex items-center gap-3 p-3 rounded-xl ${COLORS.classes.background.card} border ${COLORS.borders.medium} hover:border-cyan-400/50 transition-all duration-300 w-full text-left`}
         whileHover={{ x: 5, scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         initial={{ opacity: 0, x: -20 }}
@@ -159,7 +138,9 @@ const QuickLink = ({
         viewport={{ once: true }}
       >
         <link.icon className="w-4 h-4 text-cyan-400 group-hover:scale-110 transition-transform duration-300" />
-        <span className="text-gray-300 text-sm font-semibold group-hover:text-cyan-300 transition-colors duration-300">
+        <span
+          className={`${COLORS.classes.text.secondary} text-sm font-semibold group-hover:text-cyan-300 transition-colors duration-300`}
+        >
           {link.label}
         </span>
       </motion.button>
@@ -167,12 +148,23 @@ const QuickLink = ({
   );
 };
 
-// Componente Logo Area Otimizado
 const LogoArea = () => {
   const logoRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(logoRef, { once: true, amount: 0.3 });
 
-  useGSAPAnimation(logoRef, isInView);
+  useEffect(() => {
+    if (!isInView || !logoRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        logoRef.current,
+        { opacity: 0, y: 50 },
+        { opacity: 1, y: 0, duration: 1, ease: "power2.out" }
+      );
+    }, logoRef);
+
+    return () => ctx.revert();
+  }, [isInView]);
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -187,7 +179,9 @@ const LogoArea = () => {
         viewport={{ once: true }}
       >
         <button onClick={scrollToTop} className="group relative">
-          <div className="flex items-center gap-4 p-6 rounded-2xl bg-gradient-to-r from-gray-900/50 to-gray-800/30 backdrop-blur-xl border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-500 hover:scale-105 shadow-2xl shadow-cyan-400/10 hover:shadow-cyan-400/20">
+          <div
+            className={`flex items-center gap-4 p-6 rounded-2xl ${COLORS.classes.background.card} border ${COLORS.borders.medium} hover:border-cyan-400/50 transition-all duration-500 hover:scale-105 shadow-2xl shadow-cyan-400/10 hover:shadow-cyan-400/20`}
+          >
             <div className="relative">
               <motion.div
                 whileHover={{ rotate: 360 }}
@@ -207,7 +201,9 @@ const LogoArea = () => {
             </div>
 
             <div className="text-left">
-              <h3 className="text-2xl font-black bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent group-hover:from-cyan-300 group-hover:to-blue-300 transition-all duration-500">
+              <h3
+                className={`text-2xl font-black ${COLORS.classes.text.gradient} group-hover:from-cyan-300 group-hover:to-blue-300 transition-all duration-500`}
+              >
                 ÉRICK REIS
               </h3>
               <p className="text-xs font-mono text-gray-400 group-hover:text-cyan-300 tracking-widest bg-gray-800/50 px-2 py-1 rounded">
@@ -221,7 +217,6 @@ const LogoArea = () => {
   );
 };
 
-// Componente Social Links Otimizado
 const SocialLinksGrid = () => (
   <LazyComponent animation="fadeUp" delay={300}>
     <motion.div
@@ -237,7 +232,6 @@ const SocialLinksGrid = () => (
   </LazyComponent>
 );
 
-// Componente Quick Links Grid
 const QuickLinksGrid = () => (
   <LazyComponent animation="fadeUp" delay={400}>
     <motion.div
@@ -247,8 +241,12 @@ const QuickLinksGrid = () => (
       viewport={{ once: true }}
     >
       <div className="text-center mb-6">
-        <h3 className="text-lg font-bold text-white mb-2">NAVEGAÇÃO RÁPIDA</h3>
-        <p className="text-gray-400 text-sm">Acesse as seções principais</p>
+        <h3 className={`${COLORS.classes.text.primary} text-lg font-bold mb-2`}>
+          NAVEGAÇÃO RÁPIDA
+        </h3>
+        <p className={`${COLORS.classes.text.tertiary} text-sm`}>
+          Acesse as seções principais
+        </p>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto">
         {QUICK_LINKS.map((link, index) => (
@@ -259,30 +257,32 @@ const QuickLinksGrid = () => (
   </LazyComponent>
 );
 
-// Componente Tech Badge Otimizado
-const TechBadge = () => {
-  return (
-    <LazyComponent animation="scale" delay={500}>
-      <motion.div
-        className="flex justify-center"
-        initial={{ opacity: 0, scale: 0.8 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
+const TechBadge = () => (
+  <LazyComponent animation="scale" delay={500}>
+    <motion.div
+      className="flex justify-center"
+      initial={{ opacity: 0, scale: 0.8 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+    >
+      <div
+        className={`flex items-center gap-3 px-6 py-3 rounded-2xl ${COLORS.classes.background.card} border ${COLORS.borders.medium} hover:border-cyan-400/50 transition-all duration-500 group cursor-pointer`}
       >
-        <div className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-gradient-to-r from-gray-900/80 to-gray-800/60 backdrop-blur-xl border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-500 group cursor-pointer">
-          <Code2 className="w-5 h-5 text-cyan-400 group-hover:scale-110 transition-transform duration-300" />
-          <span className="text-gray-300 text-sm font-mono font-bold tracking-wider">
-            ENGINEERED WITH
-          </span>
-          <Heart className="w-5 h-5 text-cyan-400 animate-pulse" />
-          <span className="text-cyan-400 font-bold text-sm">BY ÉRICK</span>
-        </div>
-      </motion.div>
-    </LazyComponent>
-  );
-};
+        <Code2 className="w-5 h-5 text-cyan-400 group-hover:scale-110 transition-transform duration-300" />
+        <span
+          className={`${COLORS.classes.text.secondary} text-sm font-mono font-bold tracking-wider`}
+        >
+          ENGINEERED WITH
+        </span>
+        <Heart className="w-5 h-5 text-cyan-400 animate-pulse" />
+        <span className={`${COLORS.classes.text.accent} font-bold text-sm`}>
+          BY ÉRICK
+        </span>
+      </div>
+    </motion.div>
+  </LazyComponent>
+);
 
-// Componente Footer Info Otimizado
 const FooterInfo = () => {
   const currentYear = new Date().getFullYear();
 
@@ -291,23 +291,20 @@ const FooterInfo = () => {
   return (
     <LazyComponent animation="fadeUp" delay={400}>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
-        {/* Copyright */}
         <motion.div
           className="text-center lg:text-left"
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
         >
-          <p className="text-gray-400 font-mono text-sm">
+          <p className={`${COLORS.classes.text.tertiary} font-mono text-sm`}>
             © {currentYear} ÉRICK REIS
           </p>
           <p className="text-gray-500 text-xs mt-1">CÓDIGO & DESIGN</p>
         </motion.div>
 
-        {/* Tech Badge Central */}
         <TechBadge />
 
-        {/* Back to Top */}
         <motion.div
           className="text-center lg:text-right"
           initial={{ opacity: 0, x: 30 }}
@@ -324,31 +321,20 @@ const FooterInfo = () => {
             }}
             whileTap={{ scale: 0.95 }}
           >
-            {/* Efeito de brilho no fundo */}
             <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-            {/* Partículas animadas */}
             <div className="absolute inset-0 overflow-hidden rounded-2xl">
               <motion.div
                 className="absolute -inset-10 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent"
-                animate={{
-                  x: ["0%", "200%", "0%"],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
+                animate={{ x: ["0%", "200%", "0%"] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
               />
             </div>
 
-            {/* Conteúdo do botão */}
             <div className="relative z-10 flex items-center gap-3">
               <motion.div
                 className="relative"
-                animate={{
-                  y: [0, -4, 0],
-                }}
+                animate={{ y: [0, -4, 0] }}
                 transition={{
                   duration: 2,
                   repeat: Infinity,
@@ -356,14 +342,9 @@ const FooterInfo = () => {
                 }}
               >
                 <Rocket className="w-5 h-5 text-cyan-400" />
-
-                {/* Efeito de propulsão */}
                 <motion.div
                   className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-400 rounded-full blur-sm"
-                  animate={{
-                    scale: [1, 1.5, 1],
-                    opacity: [0.7, 1, 0.7],
-                  }}
+                  animate={{ scale: [1, 1.5, 1], opacity: [0.7, 1, 0.7] }}
                   transition={{
                     duration: 1.5,
                     repeat: Infinity,
@@ -381,12 +362,9 @@ const FooterInfo = () => {
                 </span>
               </div>
 
-              {/* Ícone de seta animada */}
               <motion.div
                 className="ml-2"
-                animate={{
-                  y: [0, -3, 0],
-                }}
+                animate={{ y: [0, -3, 0] }}
                 transition={{
                   duration: 1.5,
                   repeat: Infinity,
@@ -410,7 +388,6 @@ const FooterInfo = () => {
               </motion.div>
             </div>
 
-            {/* Efeito de brilho na borda */}
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-400/0 via-cyan-400/20 to-cyan-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
           </motion.button>
         </motion.div>
@@ -419,7 +396,6 @@ const FooterInfo = () => {
   );
 };
 
-// Componente Contact Info Mini
 const ContactInfoMini = () => (
   <LazyComponent animation="fadeUp" delay={500}>
     <motion.div
@@ -429,15 +405,23 @@ const ContactInfoMini = () => (
       viewport={{ once: true }}
     >
       <div className="text-center mb-6">
-        <h3 className="text-lg font-bold text-white mb-2">CONTATO RÁPIDO</h3>
-        <p className="text-gray-400 text-sm">Vamos trabalhar juntos</p>
+        <h3 className={`${COLORS.classes.text.primary} text-lg font-bold mb-2`}>
+          CONTATO RÁPIDO
+        </h3>
+        <p className={`${COLORS.classes.text.tertiary} text-sm`}>
+          Vamos trabalhar juntos
+        </p>
       </div>
       <div className="flex flex-col sm:flex-row justify-center gap-4 text-sm">
-        <div className="flex items-center gap-2 text-gray-300">
+        <div
+          className={`flex items-center gap-2 ${COLORS.classes.text.secondary}`}
+        >
           <Mail className="w-4 h-4 text-cyan-400" />
           <span>erickreisti@gmail.com</span>
         </div>
-        <div className="flex items-center gap-2 text-gray-300">
+        <div
+          className={`flex items-center gap-2 ${COLORS.classes.text.secondary}`}
+        >
           <MapPin className="w-4 h-4 text-cyan-400" />
           <span>Rio de Janeiro, Brasil</span>
         </div>
@@ -446,7 +430,6 @@ const ContactInfoMini = () => (
   </LazyComponent>
 );
 
-// Componente Divisor Premium Otimizado
 const PremiumDivider = () => (
   <LazyComponent animation="fadeIn" delay={350}>
     <div className="relative mb-12">
@@ -458,7 +441,6 @@ const PremiumDivider = () => (
   </LazyComponent>
 );
 
-// Componente Principal Footer
 export const Footer = () => {
   const footerRef = useRef<HTMLElement>(null);
   const isInView = useInView(footerRef, { once: true, amount: 0.1 });
@@ -466,7 +448,6 @@ export const Footer = () => {
 
   usePerformanceMonitor("Footer");
 
-  // GSAP Animations para entrada da seção
   useEffect(() => {
     if (!isInView || shouldReduceMotion || !footerRef.current) return;
 
@@ -484,16 +465,14 @@ export const Footer = () => {
   return (
     <footer
       ref={footerRef}
-      className="relative min-h-[500px] bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 border-t border-cyan-500/20 overflow-hidden"
+      className={`relative min-h-[500px] ${COLORS.classes.background.section} border-t ${COLORS.borders.medium} overflow-hidden`}
     >
       <LazyBackground priority="low">
         <PremiumBackground intensity="soft">
-          {/* 🔥 NEON ELEMENTS GENÉRICO */}
           <NeonElements />
         </PremiumBackground>
       </LazyBackground>
 
-      {/* Conteúdo Principal */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-16">
         <LogoArea />
         <ContactInfoMini />

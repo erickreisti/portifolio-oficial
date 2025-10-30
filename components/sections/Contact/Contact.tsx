@@ -35,8 +35,8 @@ import { LazyComponent } from "@/components/optimization/LazyComponent";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import LazyBackground from "@/components/optimization/LazyBackground";
 import { NeonElements } from "@/components/layout/NeonElements";
+import { COLORS } from "@/lib/colors";
 
-// Interfaces para Tipagem
 interface ContactFormData {
   name: string;
   email: string;
@@ -63,7 +63,6 @@ interface SubmissionState {
   lastSubmissionTime: number | null;
 }
 
-// Dados estáticos
 const STATIC_CONTACT_INFO = [
   {
     icon: Mail,
@@ -71,7 +70,7 @@ const STATIC_CONTACT_INFO = [
     content: "erickreisti@gmail.com",
     description: "Resposta em até 24 horas",
     gradient: "from-cyan-500/20 to-blue-500/20",
-    border: "border-cyan-400/30",
+    border: COLORS.borders.medium,
   },
   {
     icon: MapPin,
@@ -79,7 +78,7 @@ const STATIC_CONTACT_INFO = [
     content: "Rio de Janeiro, Brasil",
     description: "Disponível para projetos globais",
     gradient: "from-cyan-500/20 to-blue-500/20",
-    border: "border-cyan-400/30",
+    border: COLORS.borders.medium,
   },
   {
     icon: Phone,
@@ -87,11 +86,10 @@ const STATIC_CONTACT_INFO = [
     content: "Flexível & Comprometido",
     description: "Projetos de qualquer escala",
     gradient: "from-cyan-500/20 to-blue-500/20",
-    border: "border-cyan-400/30",
+    border: COLORS.borders.medium,
   },
 ];
 
-// Hook personalizado para gerenciamento de estado do formulário
 const useContactForm = () => {
   const [formData, setFormData] = useState<ContactFormData>({
     name: "",
@@ -112,16 +110,13 @@ const useContactForm = () => {
 
   const [formErrors, setFormErrors] = useState<FormErrors>({});
 
-  // Verificar se já houve um envio recente
   const hasRecentSubmission = useCallback(() => {
     const { lastSubmissionTime } = submissionState;
     if (!lastSubmissionTime) return false;
-
     const timeSinceLastSubmission = Date.now() - lastSubmissionTime;
-    return timeSinceLastSubmission < 30000; // 30 segundos
+    return timeSinceLastSubmission < 30000;
   }, [submissionState.lastSubmissionTime]);
 
-  // Validação robusta dos campos
   const validateField = useCallback(
     (name: keyof ContactFormData, value: string): string => {
       switch (name) {
@@ -132,14 +127,12 @@ const useContactForm = () => {
           if (value.trim().length > 50)
             return "Nome muito longo (máx. 50 caracteres)";
           break;
-
         case "email":
           if (!value.trim()) return "Email é obrigatório";
           if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
             return "Email inválido";
           if (value.length > 100) return "Email muito longo";
           break;
-
         case "subject":
           if (!value.trim()) return "Assunto é obrigatório";
           if (value.trim().length < 5)
@@ -147,7 +140,6 @@ const useContactForm = () => {
           if (value.trim().length > 100)
             return "Assunto muito longo (máx. 100 caracteres)";
           break;
-
         case "message":
           if (!value.trim()) return "Mensagem é obrigatória";
           if (value.trim().length < 10)
@@ -155,13 +147,11 @@ const useContactForm = () => {
           if (value.trim().length > 2000)
             return "Mensagem muito longa (máx. 2000 caracteres)";
           break;
-
         case "meetingDate":
           if (formData.formType === "enhanced" && !value.trim()) {
             return "Data da reunião é obrigatória para agendamento";
           }
           break;
-
         case "meetingTime":
           if (formData.formType === "enhanced" && !value.trim()) {
             return "Horário da reunião é obrigatório para agendamento";
@@ -173,19 +163,16 @@ const useContactForm = () => {
     [formData.formType]
   );
 
-  // Validar formulário completo
   const validateForm = useCallback((): boolean => {
     const errors: FormErrors = {};
     let isValid = true;
 
-    // Campos obrigatórios para ambos os formulários
     const requiredFields: (keyof FormErrors)[] = [
       "name",
       "email",
       "subject",
       "message",
     ];
-
     if (formData.formType === "enhanced") {
       requiredFields.push("meetingDate", "meetingTime");
     }
@@ -202,22 +189,15 @@ const useContactForm = () => {
     return isValid;
   }, [formData, validateField]);
 
-  // Atualizar campo individual
   const updateField = useCallback(
     (field: keyof ContactFormData, value: string) => {
       setFormData((prev) => ({ ...prev, [field]: value }));
-
-      // Validação em tempo real
       const error = validateField(field, value);
-      setFormErrors((prev) => ({
-        ...prev,
-        [field]: error,
-      }));
+      setFormErrors((prev) => ({ ...prev, [field]: error }));
     },
     [validateField]
   );
 
-  // Alterar tipo de formulário
   const setFormType = useCallback((type: "quick" | "enhanced") => {
     setFormData((prev) => ({
       ...prev,
@@ -227,9 +207,7 @@ const useContactForm = () => {
     setFormErrors({});
   }, []);
 
-  // Submissão do formulário
   const submitForm = useCallback(async () => {
-    // Verificar envio recente
     if (hasRecentSubmission()) {
       setSubmissionState((prev) => ({
         ...prev,
@@ -238,7 +216,6 @@ const useContactForm = () => {
       return false;
     }
 
-    // Validar formulário
     if (!validateForm()) {
       setSubmissionState((prev) => ({
         ...prev,
@@ -254,10 +231,8 @@ const useContactForm = () => {
     }));
 
     try {
-      // Simular envio para API
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      // Sucesso
       setSubmissionState((prev) => ({
         ...prev,
         isSubmitting: false,
@@ -265,7 +240,6 @@ const useContactForm = () => {
         lastSubmissionTime: Date.now(),
       }));
 
-      // Resetar formulário após sucesso
       setTimeout(() => {
         setFormData({
           name: "",
@@ -282,8 +256,6 @@ const useContactForm = () => {
 
       return true;
     } catch (error) {
-      console.error("Erro no envio:", error);
-
       setSubmissionState((prev) => ({
         ...prev,
         isSubmitting: false,
@@ -304,7 +276,6 @@ const useContactForm = () => {
   };
 };
 
-// Availability Calendar Component
 const AvailabilityCalendar = ({
   selectedDate,
   selectedTime,
@@ -319,35 +290,28 @@ const AvailabilityCalendar = ({
   errors: FormErrors;
 }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-
-  // Gerar dias do mês
-  const getDaysInMonth = useCallback((date: Date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-
-    const days = [];
-    for (let i = 1; i <= lastDay.getDate(); i++) {
-      days.push(new Date(year, month, i));
-    }
-
-    return days;
-  }, []);
-
-  // Horários disponíveis
   const availableSlots = useMemo(
     () => ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00"],
     []
   );
-
-  // Dias disponíveis (Segunda a Sexta)
   const availableDays = useMemo(() => [1, 2, 3, 4, 5], []);
+  const today = useMemo(() => new Date(), []);
+
+  const getDaysInMonth = useCallback((date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const lastDay = new Date(year, month + 1, 0);
+    const days = [];
+    for (let i = 1; i <= lastDay.getDate(); i++) {
+      days.push(new Date(year, month, i));
+    }
+    return days;
+  }, []);
+
   const days = useMemo(
     () => getDaysInMonth(currentMonth),
     [currentMonth, getDaysInMonth]
   );
-  const today = useMemo(() => new Date(), []);
 
   const isDateAvailable = useCallback(
     (date: Date) => {
@@ -371,21 +335,22 @@ const AvailabilityCalendar = ({
 
   return (
     <LazyComponent animation="fadeUp" delay={300}>
-      <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 p-6">
+      <div className={`${COLORS.classes.card} p-6`}>
         <div className="flex items-center gap-3 mb-6">
           <div className="p-2 bg-cyan-500/20 rounded-xl border border-cyan-400/30">
             <Calendar className="w-6 h-6 text-cyan-400" />
           </div>
           <div>
-            <h3 className="text-xl font-bold text-white">Agendar Reunião</h3>
-            <p className="text-cyan-300 text-sm">
+            <h3 className={`${COLORS.classes.text.primary} text-xl font-bold`}>
+              Agendar Reunião
+            </h3>
+            <p className={COLORS.classes.text.accent}>
               Encontre um horário perfeito
             </p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Calendário */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <button
@@ -403,7 +368,7 @@ const AvailabilityCalendar = ({
                 <Zap className="w-4 h-4 text-cyan-400 transform rotate-180" />
               </button>
 
-              <h4 className="text-white font-semibold">
+              <h4 className={COLORS.classes.text.primary}>
                 {currentMonth.toLocaleDateString("pt-BR", {
                   month: "long",
                   year: "numeric",
@@ -426,7 +391,6 @@ const AvailabilityCalendar = ({
               </button>
             </div>
 
-            {/* Dias da semana */}
             <div className="grid grid-cols-7 gap-1 mb-2">
               {["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"].map((day) => (
                 <div
@@ -438,7 +402,6 @@ const AvailabilityCalendar = ({
               ))}
             </div>
 
-            {/* Dias do mês */}
             <div className="grid grid-cols-7 gap-1">
               {days.map((date) => {
                 const isAvailable = isDateAvailable(date);
@@ -492,19 +455,20 @@ const AvailabilityCalendar = ({
             )}
           </div>
 
-          {/* Horários */}
           <div className="space-y-6">
             {selectedDate ? (
               <>
                 <div className="text-center">
-                  <h4 className="text-white font-semibold mb-2">
+                  <h4
+                    className={`${COLORS.classes.text.primary} font-semibold mb-2`}
+                  >
                     {new Date(selectedDate).toLocaleDateString("pt-BR", {
                       weekday: "long",
                       day: "numeric",
                       month: "long",
                     })}
                   </h4>
-                  <p className="text-cyan-300 text-sm">
+                  <p className={COLORS.classes.text.accent}>
                     Selecione um horário disponível
                   </p>
                 </div>
@@ -577,12 +541,11 @@ const AvailabilityCalendar = ({
           </div>
         </div>
 
-        {/* Timezone Info */}
         <div className="flex items-center justify-between mt-6 pt-4 border-t border-cyan-500/20">
-          <div className="text-gray-400 text-sm">
+          <div className={`${COLORS.classes.text.tertiary} text-sm`}>
             Fuso horário: {Intl.DateTimeFormat().resolvedOptions().timeZone}
           </div>
-          <div className="text-cyan-400 text-sm font-mono">
+          <div className={`${COLORS.classes.text.accent} text-sm font-mono`}>
             💡 Reuniões de 45-60 minutos
           </div>
         </div>
@@ -591,7 +554,6 @@ const AvailabilityCalendar = ({
   );
 };
 
-// Enhanced Contact Form
 const EnhancedContactForm = ({
   formData,
   formErrors,
@@ -615,7 +577,6 @@ const EnhancedContactForm = ({
     if (formData.formType === "enhanced") {
       fields.push("meetingDate", "meetingTime");
     }
-
     const filledFields = fields.filter((field) =>
       formData[field]?.toString().trim()
     ).length;
@@ -629,9 +590,8 @@ const EnhancedContactForm = ({
 
   return (
     <LazyComponent animation="fadeUp" delay={400}>
-      <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 p-6">
+      <div className={`${COLORS.classes.card} p-6`}>
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Progress Indicator */}
           <div className="flex items-center justify-between text-sm text-gray-400 mb-2">
             <span>PREENCIMENTO DO FORMULÁRIO</span>
             <span className="text-cyan-400 font-mono">
@@ -646,10 +606,12 @@ const EnhancedContactForm = ({
             />
           </div>
 
-          {/* Campos do Formulário */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="name" className="text-sm font-bold text-white">
+              <Label
+                htmlFor="name"
+                className={`${COLORS.classes.text.primary} text-sm font-bold`}
+              >
                 SEU NOME *
               </Label>
               <Input
@@ -659,7 +621,7 @@ const EnhancedContactForm = ({
                 onChange={(e) => updateField("name", e.target.value)}
                 disabled={submissionState.isSubmitting}
                 className={`w-full bg-gray-800/50 border ${
-                  formErrors.name ? "border-red-400/50" : "border-cyan-500/20"
+                  formErrors.name ? "border-red-400/50" : COLORS.borders.medium
                 } rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors duration-300`}
                 placeholder="Como prefere ser chamado?"
               />
@@ -679,7 +641,10 @@ const EnhancedContactForm = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-bold text-white">
+              <Label
+                htmlFor="email"
+                className={`${COLORS.classes.text.primary} text-sm font-bold`}
+              >
                 SEU EMAIL *
               </Label>
               <Input
@@ -689,7 +654,7 @@ const EnhancedContactForm = ({
                 onChange={(e) => updateField("email", e.target.value)}
                 disabled={submissionState.isSubmitting}
                 className={`w-full bg-gray-800/50 border ${
-                  formErrors.email ? "border-red-400/50" : "border-cyan-500/20"
+                  formErrors.email ? "border-red-400/50" : COLORS.borders.medium
                 } rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors duration-300`}
                 placeholder="seu.melhor@email.com"
               />
@@ -710,7 +675,10 @@ const EnhancedContactForm = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="subject" className="text-sm font-bold text-white">
+            <Label
+              htmlFor="subject"
+              className={`${COLORS.classes.text.primary} text-sm font-bold`}
+            >
               ASSUNTO DO PROJETO *
             </Label>
             <Input
@@ -720,7 +688,7 @@ const EnhancedContactForm = ({
               onChange={(e) => updateField("subject", e.target.value)}
               disabled={submissionState.isSubmitting}
               className={`w-full bg-gray-800/50 border ${
-                formErrors.subject ? "border-red-400/50" : "border-cyan-500/20"
+                formErrors.subject ? "border-red-400/50" : COLORS.borders.medium
               } rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors duration-300`}
               placeholder="Ex: Site Institucional, App Mobile, Sistema Web..."
             />
@@ -740,7 +708,10 @@ const EnhancedContactForm = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="message" className="text-sm font-bold text-white">
+            <Label
+              htmlFor="message"
+              className={`${COLORS.classes.text.primary} text-sm font-bold`}
+            >
               DETALHES DO PROJETO *
             </Label>
             <Textarea
@@ -750,7 +721,7 @@ const EnhancedContactForm = ({
               disabled={submissionState.isSubmitting}
               rows={5}
               className={`w-full bg-gray-800/50 border ${
-                formErrors.message ? "border-red-400/50" : "border-cyan-500/20"
+                formErrors.message ? "border-red-400/50" : COLORS.borders.medium
               } rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors duration-300 resize-none min-h-[120px]`}
               placeholder="Descreva sua visão, objetivos, tecnologias preferidas, prazo estimado..."
             />
@@ -774,7 +745,6 @@ const EnhancedContactForm = ({
             </div>
           </div>
 
-          {/* Availability Calendar */}
           {formData.formType === "enhanced" && (
             <AvailabilityCalendar
               selectedDate={formData.meetingDate || ""}
@@ -785,7 +755,6 @@ const EnhancedContactForm = ({
             />
           )}
 
-          {/* Status do Form */}
           <AnimatePresence>
             {submissionState.isSuccess && (
               <motion.div
@@ -828,13 +797,12 @@ const EnhancedContactForm = ({
             )}
           </AnimatePresence>
 
-          {/* Botão de Submit */}
           <motion.button
             type="submit"
             disabled={submissionState.isSubmitting || submissionState.isSuccess}
             className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 ${
               !submissionState.isSubmitting && !submissionState.isSuccess
-                ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:shadow-2xl hover:shadow-cyan-500/25 hover:scale-105"
+                ? `${COLORS.classes.button.primary} hover:scale-105`
                 : "bg-gray-800/50 text-gray-400 cursor-not-allowed"
             }`}
             whileTap={{ scale: 0.95 }}
@@ -864,7 +832,6 @@ const EnhancedContactForm = ({
   );
 };
 
-// Componente Principal Contact
 export const Contact = () => {
   const {
     formData,
@@ -881,10 +848,8 @@ export const Contact = () => {
 
   usePerformanceMonitor("ContactSection");
 
-  // Configurações - memoizadas
   const contactInfo = useMemo(() => STATIC_CONTACT_INFO, []);
 
-  // GSAP Animations
   useEffect(() => {
     if (!isInView || shouldReduceMotion) return;
 
@@ -908,7 +873,7 @@ export const Contact = () => {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
             viewport={{ once: true }}
-            className="flex items-start gap-4 p-4 rounded-xl border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-300 group cursor-pointer"
+            className={`flex items-start gap-4 p-4 rounded-xl border ${info.border} hover:border-cyan-400/50 transition-all duration-300 group cursor-pointer`}
           >
             <div
               className={`w-12 h-12 rounded-full bg-gradient-to-br ${info.gradient} flex items-center justify-center border ${info.border} group-hover:border-cyan-400/50 transition-all duration-300`}
@@ -916,9 +881,19 @@ export const Contact = () => {
               <info.icon className="w-6 h-6 text-cyan-400" />
             </div>
             <div className="flex-1">
-              <p className="text-sm font-bold text-white mb-1">{info.title}</p>
-              <p className="text-sm text-gray-300 font-mono">{info.content}</p>
-              <p className="text-xs text-gray-500 mt-1">{info.description}</p>
+              <p
+                className={`${COLORS.classes.text.primary} text-sm font-bold mb-1`}
+              >
+                {info.title}
+              </p>
+              <p
+                className={`${COLORS.classes.text.secondary} text-sm font-mono`}
+              >
+                {info.content}
+              </p>
+              <p className={`${COLORS.classes.text.tertiary} text-xs mt-1`}>
+                {info.description}
+              </p>
             </div>
           </motion.div>
         </LazyComponent>
@@ -930,17 +905,15 @@ export const Contact = () => {
     <section
       id="contact"
       ref={sectionRef}
-      className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 section-with-header"
+      className={`relative min-h-screen ${COLORS.classes.background.section} section-with-header`}
     >
       <LazyBackground priority="medium">
         <PremiumBackground intensity="medium">
-          {/* 🔥 NEON ELEMENTS GENÉRICO */}
           <NeonElements />
         </PremiumBackground>
       </LazyBackground>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
-        {/* Header */}
         <LazyComponent animation="fadeUp" delay={200}>
           <motion.div
             className="text-center mb-16 lg:mb-20 contact-header"
@@ -969,11 +942,11 @@ export const Contact = () => {
             >
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
                 VAMOS CRIAR{" "}
-                <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                  JUNTOS
-                </span>
+                <span className={COLORS.classes.text.gradient}>JUNTOS</span>
               </h1>
-              <p className="text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              <p
+                className={`${COLORS.classes.text.secondary} text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed`}
+              >
                 Pronto para transformar sua visão em realidade? Vamos conversar
                 sobre seu projeto e criar algo extraordinário
               </p>
@@ -981,7 +954,6 @@ export const Contact = () => {
           </motion.div>
         </LazyComponent>
 
-        {/* Seletor de Tipo de Formulário */}
         <LazyComponent animation="fadeUp" delay={300}>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -990,15 +962,16 @@ export const Contact = () => {
             viewport={{ once: true }}
             className="flex justify-center mb-12"
           >
-            <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl border border-cyan-500/20 p-3 shadow-2xl shadow-cyan-400/10">
+            <div
+              className={`${COLORS.classes.card} p-3 shadow-2xl shadow-cyan-400/10`}
+            >
               <div className="flex gap-3">
-                {/* Botão Mensagem Rápida */}
                 <motion.button
                   onClick={() => setFormType("quick")}
                   className={`group relative px-8 py-4 rounded-2xl font-bold transition-all duration-500 overflow-hidden min-w-[180px] ${
                     formData.formType === "quick"
-                      ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-2xl shadow-cyan-500/30"
-                      : "bg-gray-800/50 text-gray-300 hover:bg-gray-700/60 border border-cyan-500/20"
+                      ? `${COLORS.classes.button.primary} shadow-2xl shadow-cyan-500/30`
+                      : `${COLORS.classes.button.secondary}`
                   }`}
                   whileHover={{
                     scale: formData.formType === "quick" ? 1 : 1.05,
@@ -1006,35 +979,24 @@ export const Contact = () => {
                   }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {/* Efeito de brilho para estado ativo */}
                   {formData.formType === "quick" && (
                     <>
                       <motion.div
                         className="absolute inset-0 bg-gradient-to-r from-cyan-400/20 to-blue-400/20"
-                        animate={{
-                          opacity: [0.3, 0.6, 0.3],
-                        }}
+                        animate={{ opacity: [0.3, 0.6, 0.3] }}
                         transition={{
                           duration: 2,
                           repeat: Infinity,
                           ease: "easeInOut",
                         }}
                       />
-
-                      {/* Partículas de dados */}
                       <div className="absolute inset-0">
                         {[...Array(3)].map((_, i) => (
                           <motion.div
                             key={i}
                             className="absolute w-1 h-1 bg-white rounded-full blur-sm"
-                            style={{
-                              left: `${20 + i * 30}%`,
-                              top: "20%",
-                            }}
-                            animate={{
-                              y: [0, 10, 0],
-                              opacity: [0, 1, 0],
-                            }}
+                            style={{ left: `${20 + i * 30}%`, top: "20%" }}
+                            animate={{ y: [0, 10, 0], opacity: [0, 1, 0] }}
                             transition={{
                               duration: 2 + i,
                               repeat: Infinity,
@@ -1045,13 +1007,9 @@ export const Contact = () => {
                       </div>
                     </>
                   )}
-
-                  {/* Efeito de brilho no hover para estado inativo */}
                   {formData.formType !== "quick" && (
                     <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   )}
-
-                  {/* Conteúdo do botão */}
                   <div className="relative z-10 flex items-center gap-3 justify-center">
                     <motion.div
                       animate={{
@@ -1063,7 +1021,6 @@ export const Contact = () => {
                       }}
                       className="relative"
                     >
-                      {/* Ícone de mensagem instantânea */}
                       <svg
                         className="w-6 h-6"
                         fill="none"
@@ -1076,7 +1033,6 @@ export const Contact = () => {
                           strokeWidth={2}
                           d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
                         />
-                        {/* Efeito de notificação */}
                         {formData.formType === "quick" && (
                           <motion.circle
                             cx="18"
@@ -1090,7 +1046,6 @@ export const Contact = () => {
                         )}
                       </svg>
                     </motion.div>
-
                     <div className="flex flex-col items-start">
                       <span
                         className={`text-sm font-bold tracking-wide ${
@@ -1112,8 +1067,6 @@ export const Contact = () => {
                       </span>
                     </div>
                   </div>
-
-                  {/* Efeito de borda brilhante para estado ativo */}
                   {formData.formType === "quick" && (
                     <motion.div
                       className="absolute inset-0 rounded-2xl border-2 border-cyan-400/50"
@@ -1124,15 +1077,11 @@ export const Contact = () => {
                           "0 0 20px rgba(6, 182, 212, 0.3)",
                         ],
                       }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                      }}
+                      transition={{ duration: 2, repeat: Infinity }}
                     />
                   )}
                 </motion.button>
 
-                {/* Botão Com Agendamento */}
                 <motion.button
                   onClick={() => setFormType("enhanced")}
                   className={`group relative px-8 py-4 rounded-2xl font-bold transition-all duration-500 overflow-hidden min-w-[180px] ${
@@ -1146,35 +1095,24 @@ export const Contact = () => {
                   }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {/* Efeito de brilho para estado ativo */}
                   {formData.formType === "enhanced" && (
                     <>
                       <motion.div
                         className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-pink-400/20"
-                        animate={{
-                          opacity: [0.3, 0.6, 0.3],
-                        }}
+                        animate={{ opacity: [0.3, 0.6, 0.3] }}
                         transition={{
                           duration: 2,
                           repeat: Infinity,
                           ease: "easeInOut",
                         }}
                       />
-
-                      {/* Partículas de calendário */}
                       <div className="absolute inset-0">
                         {[...Array(3)].map((_, i) => (
                           <motion.div
                             key={i}
                             className="absolute w-1 h-1 bg-white rounded-full blur-sm"
-                            style={{
-                              right: `${20 + i * 30}%`,
-                              top: "20%",
-                            }}
-                            animate={{
-                              y: [0, 10, 0],
-                              opacity: [0, 1, 0],
-                            }}
+                            style={{ right: `${20 + i * 30}%`, top: "20%" }}
+                            animate={{ y: [0, 10, 0], opacity: [0, 1, 0] }}
                             transition={{
                               duration: 2 + i,
                               repeat: Infinity,
@@ -1185,13 +1123,9 @@ export const Contact = () => {
                       </div>
                     </>
                   )}
-
-                  {/* Efeito de brilho no hover para estado inativo */}
                   {formData.formType !== "enhanced" && (
                     <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   )}
-
-                  {/* Conteúdo do botão */}
                   <div className="relative z-10 flex items-center gap-3 justify-center">
                     <motion.div
                       animate={{
@@ -1206,7 +1140,6 @@ export const Contact = () => {
                       }}
                       className="relative"
                     >
-                      {/* Ícone de calendário high-tech */}
                       <svg
                         className="w-6 h-6"
                         fill="none"
@@ -1219,7 +1152,6 @@ export const Contact = () => {
                           strokeWidth={2}
                           d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                         />
-                        {/* Indicador de data marcada */}
                         {formData.formType === "enhanced" && (
                           <motion.rect
                             x="8"
@@ -1238,7 +1170,6 @@ export const Contact = () => {
                         )}
                       </svg>
                     </motion.div>
-
                     <div className="flex flex-col items-start">
                       <span
                         className={`text-sm font-bold tracking-wide ${
@@ -1260,8 +1191,6 @@ export const Contact = () => {
                       </span>
                     </div>
                   </div>
-
-                  {/* Efeito de borda brilhante para estado ativo */}
                   {formData.formType === "enhanced" && (
                     <motion.div
                       className="absolute inset-0 rounded-2xl border-2 border-purple-400/50"
@@ -1272,10 +1201,7 @@ export const Contact = () => {
                           "0 0 20px rgba(168, 85, 247, 0.3)",
                         ],
                       }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                      }}
+                      transition={{ duration: 2, repeat: Infinity }}
                     />
                   )}
                 </motion.button>
@@ -1284,7 +1210,6 @@ export const Contact = () => {
           </motion.div>
         </LazyComponent>
 
-        {/* Formulário Unificado */}
         <LazyComponent animation="fadeUp" delay={400}>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -1303,9 +1228,7 @@ export const Contact = () => {
           </motion.div>
         </LazyComponent>
 
-        {/* Grid de Informações */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16 lg:mb-20 contact-content">
-          {/* Informações de Contato */}
           <LazyComponent animation="fadeUp" delay={500}>
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -1313,23 +1236,29 @@ export const Contact = () => {
               transition={{ duration: 0.6 }}
               viewport={{ once: true, amount: 0.2 }}
             >
-              <Card className="bg-gray-900/60 backdrop-blur-xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 hover:shadow-cyan-400/20 hover:border-cyan-400/50 transition-all duration-500 group h-full">
+              <Card
+                className={`${COLORS.classes.card} ${COLORS.classes.cardHover} group h-full`}
+              >
                 <CardHeader className="pb-4 border-b border-cyan-400/20">
-                  <CardTitle className="text-xl lg:text-2xl font-black text-cyan-400 flex items-center">
+                  <CardTitle
+                    className={`${COLORS.classes.text.accent} text-xl lg:text-2xl font-black flex items-center`}
+                  >
                     <Cpu className="w-6 h-6 mr-3" />
                     CONECTE-SE
                   </CardTitle>
-                  <p className="text-sm lg:text-base text-gray-400">
+                  <p
+                    className={`${COLORS.classes.text.tertiary} text-sm lg:text-base`}
+                  >
                     Estou sempre disponível para novas oportunidades, desafios
                     inspiradores e parcerias inovadoras
                   </p>
                 </CardHeader>
-
                 <CardContent className="pt-6 space-y-6">
                   {contactInfoElements}
-
                   <div className="pt-6 border-t border-cyan-400/20">
-                    <p className="text-sm text-gray-400 flex items-start gap-2">
+                    <p
+                      className={`${COLORS.classes.text.tertiary} text-sm flex items-start gap-2`}
+                    >
                       <Sparkles className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0" />
                       Vamos transformar suas ideias em soluções digitais
                       extraordinárias com tecnologia de ponta e criatividade.
@@ -1340,7 +1269,6 @@ export const Contact = () => {
             </motion.div>
           </LazyComponent>
 
-          {/* Card de Status do Sistema */}
           <LazyComponent animation="fadeUp" delay={600}>
             <motion.div
               initial={{ opacity: 0, x: 30 }}
@@ -1348,22 +1276,29 @@ export const Contact = () => {
               transition={{ duration: 0.6, delay: 0.1 }}
               viewport={{ once: true, amount: 0.2 }}
             >
-              <Card className="bg-gray-900/60 backdrop-blur-xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 hover:shadow-cyan-400/20 hover:border-cyan-400/50 transition-all duration-500 group h-full">
+              <Card
+                className={`${COLORS.classes.card} ${COLORS.classes.cardHover} group h-full`}
+              >
                 <CardHeader className="pb-4 border-b border-cyan-400/20">
-                  <CardTitle className="text-xl lg:text-2xl font-black text-cyan-400 flex items-center">
+                  <CardTitle
+                    className={`${COLORS.classes.text.accent} text-xl lg:text-2xl font-black flex items-center`}
+                  >
                     <Send className="w-6 h-6 mr-3" />
                     STATUS DO SISTEMA
                   </CardTitle>
-                  <p className="text-sm lg:text-base text-gray-400">
+                  <p
+                    className={`${COLORS.classes.text.tertiary} text-sm lg:text-base`}
+                  >
                     Sistema unificado de contato com prevenção de envios
                     duplicados
                   </p>
                 </CardHeader>
-
                 <CardContent className="pt-6 space-y-4">
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-300">Tipo Ativo:</span>
+                      <span className={COLORS.classes.text.secondary}>
+                        Tipo Ativo:
+                      </span>
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-bold ${
                           formData.formType === "quick"
@@ -1376,9 +1311,10 @@ export const Contact = () => {
                           : "Com Agendamento"}
                       </span>
                     </div>
-
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-300">Status:</span>
+                      <span className={COLORS.classes.text.secondary}>
+                        Status:
+                      </span>
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-bold ${
                           submissionState.isSubmitting
@@ -1399,10 +1335,11 @@ export const Contact = () => {
                           : "Pronto"}
                       </span>
                     </div>
-
                     {submissionState.lastSubmissionTime && (
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-300">Último envio:</span>
+                        <span className={COLORS.classes.text.secondary}>
+                          Último envio:
+                        </span>
                         <span className="text-cyan-400 text-xs font-mono">
                           {Math.floor(
                             (Date.now() - submissionState.lastSubmissionTime) /
@@ -1413,9 +1350,8 @@ export const Contact = () => {
                       </div>
                     )}
                   </div>
-
                   <div className="pt-4 border-t border-cyan-400/20">
-                    <p className="text-sm text-gray-400">
+                    <p className={`${COLORS.classes.text.tertiary} text-sm`}>
                       💡 <strong>Sistema Anti-Duplicação:</strong> Bloqueia
                       envios consecutivos por 30 segundos para evitar spam.
                     </p>
@@ -1426,7 +1362,6 @@ export const Contact = () => {
           </LazyComponent>
         </div>
 
-        {/* CTA Final */}
         <LazyComponent animation="fadeUp" delay={700}>
           <motion.div
             className="text-center contact-cta"
@@ -1435,7 +1370,9 @@ export const Contact = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
             viewport={{ once: true }}
           >
-            <div className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-2xl p-8 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 relative overflow-hidden group">
+            <div
+              className={`${COLORS.classes.card} ${COLORS.classes.cardHover} p-8 relative overflow-hidden group`}
+            >
               <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-8 relative z-10">
                 <motion.div
                   initial={{ scale: 0, rotate: -180 }}
@@ -1448,10 +1385,14 @@ export const Contact = () => {
                   <Rocket className="w-6 h-6 text-cyan-400" />
                 </motion.div>
                 <div className="text-center lg:text-left flex-1">
-                  <h3 className="text-xl lg:text-2xl font-black text-white mb-2">
+                  <h3
+                    className={`${COLORS.classes.text.primary} text-xl lg:text-2xl font-black mb-2`}
+                  >
                     Pronto para o próximo nível?
                   </h3>
-                  <p className="text-gray-300 text-base lg:text-lg">
+                  <p
+                    className={`${COLORS.classes.text.secondary} text-base lg:text-lg`}
+                  >
                     Sua visão + minha expertise = Resultados extraordinários
                   </p>
                 </div>
@@ -1464,7 +1405,7 @@ export const Contact = () => {
                 >
                   <Button
                     onClick={() => setFormType("enhanced")}
-                    className="w-full lg:w-auto bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl border-none shadow-2xl shadow-cyan-400/30 transition-all duration-500 hover:shadow-cyan-400/50 hover:scale-105 relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+                    className={`${COLORS.classes.button.primary} w-full lg:w-auto text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl relative overflow-hidden`}
                   >
                     <Sparkles className="w-4 h-4 mr-2 transition-transform duration-300" />
                     AGENDAR CONVERSA
