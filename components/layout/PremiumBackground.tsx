@@ -1,4 +1,4 @@
-// components/layout/PremiumBackground.tsx
+// components/layout/PremiumBackground.tsx - CORRIGIDO
 "use client";
 
 import { motion } from "framer-motion";
@@ -31,9 +31,9 @@ export const PremiumBackground = ({
       {/* Gradiente base */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-950 to-gray-900" />
 
-      {/* Elementos orb animados */}
+      {/* Elementos orb animados - CORRIGIDO: usando cores hexadecimais */}
       <motion.div
-        className="absolute top-1/4 left-1/6 w-80 h-80 bg-tech-cyan rounded-full filter blur-3xl"
+        className="absolute top-1/4 left-1/6 w-80 h-80 bg-cyan-500 rounded-full filter blur-3xl"
         animate={{
           opacity: [primary * 0.7, primary, primary * 0.7],
           scale: [1, 1.3, 1],
@@ -42,7 +42,7 @@ export const PremiumBackground = ({
       />
 
       <motion.div
-        className="absolute bottom-1/3 right-1/5 w-72 h-72 bg-tech-purple rounded-full filter blur-3xl"
+        className="absolute bottom-1/3 right-1/5 w-72 h-72 bg-blue-500 rounded-full filter blur-3xl"
         animate={{
           opacity: [secondary * 0.7, secondary, secondary * 0.7],
           scale: [1, 1.25, 1],
@@ -56,7 +56,7 @@ export const PremiumBackground = ({
       />
 
       <motion.div
-        className="absolute top-2/3 left-1/3 w-64 h-64 bg-tech-blue rounded-full filter blur-3xl"
+        className="absolute top-2/3 left-1/3 w-64 h-64 bg-purple-500 rounded-full filter blur-3xl"
         animate={{
           opacity: [tertiary * 0.7, tertiary, tertiary * 0.7],
           scale: [1, 1.2, 1],

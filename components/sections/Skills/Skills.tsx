@@ -28,8 +28,8 @@ import { LazyComponent } from "@/components/optimization/LazyComponent";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import LazyBackground from "@/components/optimization/LazyBackground";
 
-// Dados estáticos - movidos para fora dos hooks
-const staticSkillsData = [
+// Dados estáticos
+const STATIC_SKILLS_DATA = [
   {
     id: "frontend",
     name: "Frontend",
@@ -134,7 +134,7 @@ const staticSkillsData = [
   },
 ];
 
-const staticStatsData = [
+const STATIC_STATS_DATA = [
   {
     number: "12+",
     title: "Tecnologias",
@@ -165,16 +165,14 @@ const staticStatsData = [
   },
 ];
 
-// Componente Skill Matrix 3D - FASE 2 - OTIMIZADO
+// Componente Skill Matrix 3D
 const SkillMatrix3D = () => {
   const [selectedCategory, setSelectedCategory] = useState("frontend");
   const [searchTerm, setSearchTerm] = useState("");
   const [hoveredSkill, setHoveredSkill] = useState<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // useMemo movido para dentro do componente
-  const skillsData = useMemo(() => staticSkillsData, []);
-
+  const skillsData = useMemo(() => STATIC_SKILLS_DATA, []);
   const currentCategory = skillsData.find((cat) => cat.id === selectedCategory);
   const filteredSkills = useMemo(
     () =>
@@ -184,7 +182,6 @@ const SkillMatrix3D = () => {
     [currentCategory, searchTerm]
   );
 
-  // Efeito de parallax no mouse - OTIMIZADO
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current) return;
@@ -391,73 +388,7 @@ const SkillMatrix3D = () => {
   );
 };
 
-// Componente Neon Element Harmonizado - OTIMIZADO
-const SkillsNeonElement = ({
-  Icon,
-  position,
-  color,
-  delay = 0,
-}: {
-  Icon: any;
-  position: string;
-  color: string;
-  delay?: number;
-}) => {
-  const elementRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!elementRef.current) return;
-
-    const element = elementRef.current;
-
-    const enterAnimation = gsap.fromTo(
-      element,
-      {
-        opacity: 0,
-        scale: 0,
-        y: 100,
-        rotation: -180,
-      },
-      {
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        rotation: 0,
-        duration: 1.5,
-        ease: "back.out(1.7)",
-        delay: delay * 0.2,
-      }
-    );
-
-    const floatAnimation = gsap.to(element, {
-      y: -15,
-      rotation: 5,
-      duration: 4,
-      ease: "sine.inOut",
-      repeat: -1,
-      yoyo: true,
-      delay: delay * 0.3,
-    });
-
-    return () => {
-      enterAnimation.kill();
-      floatAnimation.kill();
-    };
-  }, [delay]);
-
-  return (
-    <LazyComponent animation="fadeIn" delay={delay * 100}>
-      <div
-        ref={elementRef}
-        className={`absolute ${position} pointer-events-none`}
-      >
-        <Icon className={`${color} text-2xl opacity-70`} />
-      </div>
-    </LazyComponent>
-  );
-};
-
-// Componente Skill Bar Harmonizado - OTIMIZADO
+// Componente Skill Bar
 const SkillBar = ({
   name,
   level,
@@ -518,7 +449,7 @@ const SkillBar = ({
   );
 };
 
-// Componente Skill Card Harmonizado - OTIMIZADO
+// Componente Skill Card
 const SkillCard = ({ group, index }: { group: any; index: number }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.3 });
@@ -529,11 +460,7 @@ const SkillCard = ({ group, index }: { group: any; index: number }) => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
         cardRef.current,
-        {
-          opacity: 0,
-          y: 50,
-          scale: 0.9,
-        },
+        { opacity: 0, y: 50, scale: 0.9 },
         {
           opacity: 1,
           y: 0,
@@ -598,7 +525,7 @@ const SkillCard = ({ group, index }: { group: any; index: number }) => {
   );
 };
 
-// Componente Stat Card Harmonizado - OTIMIZADO
+// Componente Stat Card
 const SkillsStatCard = ({ stat, index }: { stat: any; index: number }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.3 });
@@ -609,11 +536,7 @@ const SkillsStatCard = ({ stat, index }: { stat: any; index: number }) => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
         cardRef.current,
-        {
-          opacity: 0,
-          scale: 0.8,
-          y: 30,
-        },
+        { opacity: 0, scale: 0.8, y: 30 },
         {
           opacity: 1,
           scale: 1,
@@ -649,14 +572,17 @@ const SkillsStatCard = ({ stat, index }: { stat: any; index: number }) => {
   );
 };
 
-// Componente Principal Skills - OTIMIZADO
+// Componente Principal Skills
 export const Skills = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
   usePerformanceMonitor("SkillsSection");
 
-  // Neon Elements Configuration - CORES HARMONIZADAS - memoizado
+  const skillsData = useMemo(() => STATIC_SKILLS_DATA, []);
+  const statsData = useMemo(() => STATIC_STATS_DATA, []);
+
+  // Neon Elements Configuration
   const neonElements = useMemo(
     () => [
       {
@@ -699,13 +625,7 @@ export const Skills = () => {
     []
   );
 
-  // Skills Data - useMemo movido para dentro do componente
-  const skillsData = useMemo(() => staticSkillsData, []);
-
-  // Stats Data - useMemo movido para dentro do componente
-  const statsData = useMemo(() => staticStatsData, []);
-
-  // GSAP Animations - OTIMIZADO
+  // GSAP Animations
   useEffect(() => {
     if (!isInView || !sectionRef.current) return;
 
@@ -715,38 +635,6 @@ export const Skills = () => {
         { opacity: 0 },
         { opacity: 1, duration: 1, ease: "power2.out" }
       );
-
-      const tl = gsap.timeline();
-
-      tl.fromTo(
-        ".skills-header",
-        { opacity: 0, y: 50 },
-        { opacity: 1, y: 0, duration: 0.8, ease: "back.out(1.7)" }
-      )
-        .fromTo(
-          ".skills-grid",
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: "power3.out" },
-          "-=0.3"
-        )
-        .fromTo(
-          ".skills-stats",
-          { opacity: 0, y: 20 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.5,
-            stagger: 0.05,
-            ease: "power2.out",
-          },
-          "-=0.2"
-        )
-        .fromTo(
-          ".skills-cta",
-          { opacity: 0, scale: 0.9 },
-          { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" },
-          "-=0.2"
-        );
     }, sectionRef);
 
     return () => ctx.revert();
@@ -756,23 +644,16 @@ export const Skills = () => {
     <section
       id="skills"
       ref={sectionRef}
-      className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 overflow-hidden flex items-center py-20 lg:py-28"
+      className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 section-with-header"
     >
       <LazyBackground priority="medium">
         <PremiumBackground intensity="medium" />
       </LazyBackground>
 
-      {/* Elementos Neon Harmonizados */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {neonElements.map((element, index) => (
-          <SkillsNeonElement key={index} {...element} />
-        ))}
-      </div>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        {/* Header Harmonizado */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+        {/* Header */}
         <motion.div
-          className="text-center mb-16 lg:mb-20 skills-header"
+          className="text-center mb-16 lg:mb-20"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
@@ -781,7 +662,7 @@ export const Skills = () => {
           <motion.div
             initial={{ scale: 0, rotate: -180 }}
             whileInView={{ scale: 1, rotate: 0 }}
-            transition={{ duration: 0.5, delay: 0.1, type: "spring" }}
+            transition={{ duration: 0.6, delay: 0.1, type: "spring" }}
             viewport={{ once: true }}
             className="inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-400/10 px-6 py-3 rounded-full border border-cyan-400/30 backdrop-blur-2xl mb-6 relative overflow-hidden group"
           >
@@ -809,7 +690,7 @@ export const Skills = () => {
           </motion.div>
         </motion.div>
 
-        {/* Skill Matrix 3D - FASE 2 */}
+        {/* Skill Matrix 3D */}
         <LazyComponent animation="fadeUp" delay={300}>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -822,17 +703,17 @@ export const Skills = () => {
           </motion.div>
         </LazyComponent>
 
-        {/* Grid de Skills Harmonizado */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 mb-16 lg:mb-20 skills-grid">
+        {/* Grid de Skills */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 mb-16 lg:mb-20">
           {skillsData.map((group, index) => (
             <SkillCard key={group.category} group={group} index={index} />
           ))}
         </div>
 
-        {/* Stats Harmonizado */}
+        {/* Stats */}
         <LazyComponent animation="fadeUp" delay={400}>
           <motion.div
-            className="mb-16 lg:mb-20 skills-stats"
+            className="mb-16 lg:mb-20"
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
@@ -846,10 +727,10 @@ export const Skills = () => {
           </motion.div>
         </LazyComponent>
 
-        {/* CTA Harmonizado */}
+        {/* CTA */}
         <LazyComponent animation="fadeUp" delay={600}>
           <motion.div
-            className="text-center skills-cta"
+            className="text-center"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}

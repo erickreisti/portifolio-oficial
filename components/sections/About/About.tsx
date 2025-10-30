@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState, useMemo } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import {
@@ -31,8 +31,8 @@ import { OptimizedImage } from "@/components/optimization/OptimizedImage";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import LazyBackground from "@/components/optimization/LazyBackground";
 
-// Dados estáticos - movidos para fora dos hooks
-const staticTimelineData = [
+// Dados estáticos
+const STATIC_TIMELINE_DATA = [
   {
     year: "2024",
     title: "Tech Lead & Arquitetura Cloud",
@@ -79,7 +79,7 @@ const staticTimelineData = [
   },
 ];
 
-const staticBioData = {
+const STATIC_BIO_DATA = {
   paragraph1:
     "Olá! Sou Érick Reis, um Desenvolvedor FullStack & Arquiteto de Sistemas apaixonado por transformar ideias em soluções digitais robustas e escaláveis. Minha jornada na tecnologia começou com formação em Tecnologia da Informação e Sistemas de Informação, seguida por especialização em Redes de Computadores. Essa base técnica diversificada me proporcionou uma visão holística de sistemas, que hoje aplico no desenvolvimento de aplicações modernas.",
   paragraph2:
@@ -131,22 +131,15 @@ const staticBioData = {
   stats: [
     { number: "50+", label: "Projetos Entregues", suffix: "", icon: Target },
     { number: "5", label: "Anos de Experiência", suffix: "+", icon: Award },
-    {
-      number: "100",
-      label: "Satisfação do Cliente",
-      suffix: "%",
-      icon: Heart,
-    },
+    { number: "100", label: "Satisfação do Cliente", suffix: "%", icon: Heart },
     { number: "24/7", label: "Suporte Técnico", suffix: "", icon: Clock },
   ],
 };
 
-// Componente Timeline Interativa - FASE 1 - OTIMIZADO
+// Componente Timeline Interativa
 const InteractiveTimeline = () => {
   const [activeItem, setActiveItem] = useState(0);
-
-  // useMemo movido para dentro do componente
-  const timelineData = useMemo(() => staticTimelineData, []);
+  const timelineData = useMemo(() => STATIC_TIMELINE_DATA, []);
 
   return (
     <LazyComponent animation="fadeUp" delay={200}>
@@ -170,7 +163,6 @@ const InteractiveTimeline = () => {
                 viewport={{ once: true }}
                 onMouseEnter={() => setActiveItem(index)}
               >
-                {/* Ponto na linha do tempo */}
                 <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
                   <motion.div
                     className={`w-6 h-6 rounded-full bg-gradient-to-r ${
@@ -182,7 +174,6 @@ const InteractiveTimeline = () => {
                   />
                 </div>
 
-                {/* Card de conteúdo */}
                 <div
                   className={`w-5/12 ${index % 2 === 0 ? "pr-12" : "pl-12"}`}
                 >
@@ -194,7 +185,6 @@ const InteractiveTimeline = () => {
                     } transition-all duration-300 cursor-pointer group`}
                     whileHover={{ y: -5, scale: 1.02 }}
                   >
-                    {/* Header */}
                     <div className="flex items-center gap-3 mb-4">
                       <div
                         className={`p-2 rounded-xl bg-gradient-to-r ${item.color}/20 border ${item.color}/30`}
@@ -211,12 +201,9 @@ const InteractiveTimeline = () => {
                       </div>
                     </div>
 
-                    {/* Descrição */}
                     <p className="text-gray-300 text-sm mb-4 leading-relaxed">
                       {item.description}
                     </p>
-
-                    {/* Empresa */}
                     <div className="text-cyan-300 font-mono text-xs mb-4">
                       {item.company}
                     </div>
@@ -229,7 +216,6 @@ const InteractiveTimeline = () => {
                           exit={{ opacity: 0, height: 0 }}
                           className="space-y-3"
                         >
-                          {/* Projetos */}
                           <div>
                             <div className="text-xs text-gray-400 font-semibold mb-2">
                               PROJETOS DESTAQUE:
@@ -249,7 +235,6 @@ const InteractiveTimeline = () => {
                             </div>
                           </div>
 
-                          {/* Skills */}
                           <div>
                             <div className="text-xs text-gray-400 font-semibold mb-2">
                               TECNOLOGIAS:
@@ -282,73 +267,7 @@ const InteractiveTimeline = () => {
   );
 };
 
-// Componente Neon Element - OTIMIZADO
-const NeonElement = ({
-  Icon,
-  position,
-  color,
-  delay = 0,
-}: {
-  Icon: any;
-  position: string;
-  color: string;
-  delay?: number;
-}) => {
-  const elementRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!elementRef.current) return;
-
-    const element = elementRef.current;
-
-    const enterAnimation = gsap.fromTo(
-      element,
-      {
-        opacity: 0,
-        scale: 0,
-        y: 100,
-        rotation: -180,
-      },
-      {
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        rotation: 0,
-        duration: 1.5,
-        ease: "back.out(1.7)",
-        delay: delay * 0.2,
-      }
-    );
-
-    const floatAnimation = gsap.to(element, {
-      y: -20,
-      rotation: 5,
-      duration: 4,
-      ease: "sine.inOut",
-      repeat: -1,
-      yoyo: true,
-      delay: delay * 0.3,
-    });
-
-    return () => {
-      enterAnimation.kill();
-      floatAnimation.kill();
-    };
-  }, [delay]);
-
-  return (
-    <LazyComponent animation="fadeIn" delay={delay * 100}>
-      <div
-        ref={elementRef}
-        className={`absolute ${position} pointer-events-none`}
-      >
-        <Icon className={`${color} text-2xl opacity-70`} />
-      </div>
-    </LazyComponent>
-  );
-};
-
-// Componente Stat Card - OTIMIZADO
+// Componente Stat Card
 const StatCard = ({ stat, index }: { stat: any; index: number }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.3 });
@@ -359,11 +278,7 @@ const StatCard = ({ stat, index }: { stat: any; index: number }) => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
         cardRef.current,
-        {
-          opacity: 0,
-          scale: 0.8,
-          y: 50,
-        },
+        { opacity: 0, scale: 0.8, y: 50 },
         {
           opacity: 1,
           scale: 1,
@@ -407,7 +322,7 @@ const StatCard = ({ stat, index }: { stat: any; index: number }) => {
   );
 };
 
-// Componente Passion Item - OTIMIZADO
+// Componente Passion Item
 const PassionItem = ({ item, index }: { item: any; index: number }) => {
   const itemRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(itemRef, { once: true, amount: 0.3 });
@@ -418,10 +333,7 @@ const PassionItem = ({ item, index }: { item: any; index: number }) => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
         itemRef.current,
-        {
-          opacity: 0,
-          x: -30,
-        },
+        { opacity: 0, x: -30 },
         {
           opacity: 1,
           x: 0,
@@ -468,17 +380,17 @@ const PassionItem = ({ item, index }: { item: any; index: number }) => {
   );
 };
 
-// Componente Principal About - OTIMIZADO
+// Componente Principal About
 export const About = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
   usePerformanceMonitor("AboutSection");
 
-  // Bio Data - useMemo movido para dentro do componente
-  const bioData = useMemo(() => staticBioData, []);
+  const bioData = useMemo(() => STATIC_BIO_DATA, []);
+  const timelineData = useMemo(() => STATIC_TIMELINE_DATA, []);
 
-  // Neon Elements Configuration - OTIMIZADO
+  // Neon Elements Configuration
   const neonElements = useMemo(
     () => [
       {
@@ -521,7 +433,6 @@ export const About = () => {
     []
   );
 
-  // GSAP Animations - OTIMIZADO
   useEffect(() => {
     if (!isInView || !sectionRef.current) return;
 
@@ -531,32 +442,6 @@ export const About = () => {
         { opacity: 0 },
         { opacity: 1, duration: 1, ease: "power2.out" }
       );
-
-      const tl = gsap.timeline();
-
-      tl.fromTo(
-        ".about-header",
-        { opacity: 0, y: 50 },
-        { opacity: 1, y: 0, duration: 0.8, ease: "back.out(1.7)" }
-      )
-        .fromTo(
-          ".about-stats",
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: "power3.out" },
-          "-=0.3"
-        )
-        .fromTo(
-          ".about-content-left",
-          { opacity: 0, x: -50 },
-          { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" },
-          "-=0.2"
-        )
-        .fromTo(
-          ".about-content-right",
-          { opacity: 0, x: 50 },
-          { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" },
-          "-=0.4"
-        );
     }, sectionRef);
 
     return () => ctx.revert();
@@ -566,23 +451,16 @@ export const About = () => {
     <section
       id="about"
       ref={sectionRef}
-      className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 overflow-hidden flex items-center py-20 lg:py-28"
+      className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 section-with-header"
     >
       <LazyBackground priority="medium">
         <PremiumBackground intensity="medium" />
       </LazyBackground>
 
-      {/* Elementos Neon Harmonizados */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {neonElements.map((element, index) => (
-          <NeonElement key={index} {...element} />
-        ))}
-      </div>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        {/* Header Harmonizado */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+        {/* Header */}
         <motion.div
-          className="text-center mb-16 lg:mb-20 about-header"
+          className="text-center mb-16 lg:mb-20"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
@@ -619,8 +497,8 @@ export const About = () => {
           </motion.div>
         </motion.div>
 
-        {/* Stats Harmonizados */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-16 lg:mb-20 about-stats">
+        {/* Stats */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-16 lg:mb-20">
           {bioData.stats.map((stat, index) => (
             <StatCard key={stat.label} stat={stat} index={index} />
           ))}
@@ -628,8 +506,8 @@ export const About = () => {
 
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
           {/* Coluna da Esquerda */}
-          <div className="w-full lg:w-7/12 flex flex-col gap-8 about-content-left">
-            {/* Foto Harmonizada */}
+          <div className="w-full lg:w-7/12 flex flex-col gap-8">
+            {/* Foto */}
             <LazyComponent animation="scale" delay={200}>
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
@@ -652,15 +530,6 @@ export const About = () => {
                     className="w-full h-full object-cover transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/10 to-blue-400/5 opacity-0 transition-opacity duration-500 hover:opacity-100" />
-                  <motion.div
-                    className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-20deg]"
-                    animate={{ x: ["-100%", "200%"] }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      repeatDelay: 3,
-                    }}
-                  />
                 </motion.div>
 
                 <motion.div
@@ -678,7 +547,7 @@ export const About = () => {
               </motion.div>
             </LazyComponent>
 
-            {/* Parágrafos Harmonizados */}
+            {/* Parágrafos */}
             <div className="flex flex-col gap-6">
               <LazyComponent animation="fadeUp" delay={300}>
                 <motion.div
@@ -697,11 +566,6 @@ export const About = () => {
                   <p className="text-gray-200 text-base lg:text-lg leading-relaxed font-light relative z-10">
                     {bioData.paragraph1}
                   </p>
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-br from-cyan-400/10 to-transparent"
-                    animate={{ opacity: [0.3, 0.6, 0.3] }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                  />
                 </motion.div>
               </LazyComponent>
 
@@ -722,19 +586,14 @@ export const About = () => {
                   <p className="text-gray-200 text-base lg:text-lg leading-relaxed font-light relative z-10">
                     {bioData.paragraph2}
                   </p>
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-br from-cyan-400/10 to-transparent"
-                    animate={{ opacity: [0.3, 0.6, 0.3] }}
-                    transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
-                  />
                 </motion.div>
               </LazyComponent>
             </div>
           </div>
 
           {/* Coluna da Direita */}
-          <div className="w-full lg:w-5/12 flex flex-col gap-6 about-content-right">
-            {/* Card de Paixões Harmonizado */}
+          <div className="w-full lg:w-5/12 flex flex-col gap-6">
+            {/* Card de Paixões */}
             <LazyComponent animation="fadeUp" delay={300}>
               <motion.div
                 initial={{ opacity: 0, x: 50, y: 20 }}
@@ -762,7 +621,7 @@ export const About = () => {
               </motion.div>
             </LazyComponent>
 
-            {/* Card de Destaques Harmonizado */}
+            {/* Card de Destaques */}
             <LazyComponent animation="fadeUp" delay={500}>
               <motion.div
                 initial={{ opacity: 0, x: 50, y: 20 }}
@@ -815,7 +674,7 @@ export const About = () => {
           </div>
         </div>
 
-        {/* Timeline Interativa - FASE 1 */}
+        {/* Timeline Interativa */}
         <LazyComponent animation="fadeUp" delay={600}>
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -853,7 +712,7 @@ export const About = () => {
           </motion.div>
         </LazyComponent>
 
-        {/* CTA Final Harmonizado */}
+        {/* CTA Final */}
         <LazyComponent animation="fadeUp" delay={800}>
           <motion.div
             initial={{ opacity: 0, y: 50 }}

@@ -3,7 +3,17 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
-import { Download, Mail, ArrowDown, Sparkles } from "lucide-react";
+import {
+  Download,
+  Mail,
+  ArrowDown,
+  Sparkles,
+  Rocket,
+  Target,
+  Award,
+  Clock,
+  Heart,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PremiumBackground } from "@/components/layout/PremiumBackground";
 import { LazyComponent } from "@/components/optimization/LazyComponent";
@@ -23,7 +33,7 @@ const TechParticles = () => {
     const createParticle = () => {
       const particle = document.createElement("div");
       particle.className =
-        "absolute text-xs font-mono text-cyan-400 opacity-40 pointer-events-none z-40";
+        "absolute text-xs font-mono text-cyan-400 opacity-40 pointer-events-none";
 
       const codeChars = [
         "{",
@@ -47,7 +57,6 @@ const TechParticles = () => {
       particle.style.top = `${Math.random() * 100}%`;
       particle.style.fontSize = `${Math.random() * 12 + 10}px`;
       particle.style.opacity = `${Math.random() * 0.6 + 0.2}`;
-      particle.style.zIndex = "40";
 
       particlesContainer.appendChild(particle);
       particles.push(particle);
@@ -86,89 +95,7 @@ const TechParticles = () => {
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 pointer-events-none overflow-hidden z-40"
-    />
-  );
-};
-
-// Grid Tecnológico Dinâmico
-const DynamicTechGrid = () => {
-  const gridRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!gridRef.current) return;
-
-    const grid = gridRef.current;
-
-    gsap.to(grid, {
-      backgroundPosition: "100px 100px",
-      duration: 20,
-      repeat: -1,
-      ease: "none",
-    });
-  }, []);
-
-  return (
-    <LazyComponent animation="fadeIn" delay={100}>
-      <div
-        ref={gridRef}
-        className="absolute inset-0 pointer-events-none opacity-5 z-30"
-        style={{
-          backgroundImage: `
-            linear-gradient(90deg, transparent 99%, rgba(6,182,212,0.1) 100%),
-            linear-gradient(180deg, transparent 99%, rgba(6,182,212,0.1) 100%)
-          `,
-          backgroundSize: "100px 100px",
-        }}
-      />
-    </LazyComponent>
-  );
-};
-
-// Background Interativo com Mouse
-const InteractiveBackground = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-
-      const { clientX, clientY } = e;
-      const x = (clientX / window.innerWidth) * 100;
-      const y = (clientY / window.innerHeight) * 100;
-
-      gsap.to(containerRef.current, {
-        background: `
-          radial-gradient(circle at ${x}% ${y}%, 
-            rgba(6, 182, 212, 0.1) 0%,
-            rgba(59, 130, 246, 0.05) 30%,
-            transparent 70%
-          )
-        `,
-        duration: 0.5,
-        ease: "power2.out",
-      });
-    };
-
-    let throttled = false;
-    const throttledMouseMove = (e: MouseEvent) => {
-      if (!throttled) {
-        handleMouseMove(e);
-        throttled = true;
-        setTimeout(() => {
-          throttled = false;
-        }, 16);
-      }
-    };
-
-    window.addEventListener("mousemove", throttledMouseMove);
-    return () => window.removeEventListener("mousemove", throttledMouseMove);
-  }, []);
-
-  return (
-    <div
-      ref={containerRef}
-      className="absolute inset-0 transition-all duration-1000 ease-out pointer-events-none z-20"
+      className="absolute inset-0 pointer-events-none overflow-hidden"
     />
   );
 };
@@ -225,16 +152,8 @@ const TypewriterHeroText = () => {
                 <motion.span
                   key={`${lineIndex}-${charIndex}`}
                   className="inline-block mx-0.5 sm:mx-1 transition-all duration-300 bg-gradient-to-b from-white to-gray-300 bg-clip-text text-transparent hover:scale-110 hover:text-cyan-300"
-                  initial={{
-                    y: 100,
-                    opacity: 0,
-                    scale: 0.8,
-                  }}
-                  animate={{
-                    y: 0,
-                    opacity: 1,
-                    scale: 1,
-                  }}
+                  initial={{ y: 100, opacity: 0, scale: 0.8 }}
+                  animate={{ y: 0, opacity: 1, scale: 1 }}
                   transition={{
                     duration: 0.6,
                     delay: 0.5 + lineIndex * 0.3 + charIndex * 0.03,
@@ -300,11 +219,7 @@ const AnimatedSubtitle = () => {
         className="text-lg sm:text-xl lg:text-2xl text-gray-300 font-light leading-relaxed max-w-3xl mx-auto mb-8"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{
-          duration: 1,
-          delay: 2.5,
-          ease: "easeOut",
-        }}
+        transition={{ duration: 1, delay: 2.5, ease: "easeOut" }}
       >
         {displayText}
         <motion.span
@@ -368,10 +283,7 @@ const LiveStats = () => {
         className="flex justify-center gap-6 sm:gap-8 mb-12"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{
-          delay: 3,
-          ease: "easeOut",
-        }}
+        transition={{ delay: 3, ease: "easeOut" }}
       >
         {stats.map((stat, index) => (
           <motion.div
@@ -400,7 +312,7 @@ const LiveStats = () => {
   );
 };
 
-// Botões de Ação com Animação Contínua
+// Botões de Ação
 const AnimatedActionButtons = ({
   onContactClick,
 }: {
@@ -412,21 +324,11 @@ const AnimatedActionButtons = ({
         className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{
-          duration: 0.8,
-          delay: 3.5,
-          ease: "easeOut",
-        }}
+        transition={{ duration: 0.8, delay: 3.5, ease: "easeOut" }}
       >
         <motion.div
-          animate={{
-            scale: [1, 1.02, 1],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
+          animate={{ scale: [1, 1.02, 1] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         >
           <Button
             onClick={onContactClick}
@@ -444,22 +346,14 @@ const AnimatedActionButtons = ({
             <motion.div
               className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12"
               animate={{ x: ["-100%", "200%"] }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             />
           </Button>
         </motion.div>
 
         <motion.div
           animate={{ y: [0, -5, 0] }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         >
           <Button
             variant="neon"
@@ -483,7 +377,7 @@ const AnimatedActionButtons = ({
   );
 };
 
-// Scroll Indicator com Animação Contínua
+// Scroll Indicator
 const AnimatedScrollIndicator = ({
   onExploreClick,
 }: {
@@ -495,11 +389,7 @@ const AnimatedScrollIndicator = ({
         className="flex flex-col items-center"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{
-          duration: 0.8,
-          delay: 4,
-          ease: "easeOut",
-        }}
+        transition={{ duration: 0.8, delay: 4, ease: "easeOut" }}
       >
         <motion.button
           onClick={onExploreClick}
@@ -510,16 +400,9 @@ const AnimatedScrollIndicator = ({
           <motion.span className="text-sm font-medium">
             Explorar Mais
           </motion.span>
-
           <motion.div
-            animate={{
-              y: [0, 8, 0],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             className="w-10 h-10 rounded-full border border-cyan-400/30 flex items-center justify-center group-hover:border-cyan-400/50 transition-colors relative"
           >
             <motion.div
@@ -528,58 +411,15 @@ const AnimatedScrollIndicator = ({
             >
               <ArrowDown className="w-4 h-4" />
             </motion.div>
-
             <motion.div
               className="absolute inset-0 rounded-full border border-cyan-400/20"
-              animate={{
-                scale: [1, 1.5, 1],
-                opacity: [0.5, 0, 0.5],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
+              animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             />
           </motion.div>
         </motion.button>
       </motion.div>
     </LazyComponent>
-  );
-};
-
-// Elementos Flutuantes Neon
-const FloatingNeonElements = () => {
-  const elements = [
-    { id: 1, x: "10%", y: "20%", delay: 0 },
-    { id: 2, x: "85%", y: "30%", delay: 1 },
-    { id: 3, x: "15%", y: "70%", delay: 2 },
-    { id: 4, x: "90%", y: "80%", delay: 3 },
-  ];
-
-  return (
-    <div className="absolute inset-0 pointer-events-none z-30">
-      {elements.map((element) => (
-        <motion.div
-          key={element.id}
-          className="absolute"
-          style={{ left: element.x, top: element.y }}
-          animate={{
-            y: [0, -20, 0],
-            rotate: [0, 5, -5, 0],
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            duration: 6,
-            delay: element.delay,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          <Sparkles className="w-6 h-6 text-cyan-400 opacity-50" />
-        </motion.div>
-      ))}
-    </div>
   );
 };
 
@@ -608,27 +448,8 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
       tl.fromTo(
         ".hero-content-element",
         { opacity: 0, y: 60 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          stagger: 0.2,
-          ease: "power2.out",
-        },
+        { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: "power2.out" },
         "-=0.5"
-      );
-
-      tl.fromTo(
-        ".hero-interactive-element",
-        { opacity: 0, scale: 0.9 },
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 0.8,
-          stagger: 0.15,
-          ease: "power2.out",
-        },
-        "-=0.3"
       );
     }, containerRef);
 
@@ -638,7 +459,13 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
   const handleContactClick = () => {
     const contactSection = document.getElementById("contact");
     if (contactSection) {
-      contactSection.scrollIntoView({ behavior: "smooth" });
+      const headerHeight = 80;
+      const elementPosition = contactSection.offsetTop - headerHeight;
+
+      window.scrollTo({
+        top: elementPosition,
+        behavior: "smooth",
+      });
     }
   };
 
@@ -646,7 +473,7 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
     <section
       id="hero"
       ref={containerRef}
-      className="relative min-h-screen overflow-hidden bg-gray-950"
+      className="relative min-h-screen overflow-hidden bg-gray-950 section-with-header"
     >
       <div className="hero-bg-element">
         <LazyBackground priority="high">
@@ -655,20 +482,10 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
       </div>
 
       <div className="hero-bg-element">
-        <DynamicTechGrid />
-      </div>
-
-      <div className="hero-bg-element">
         <TechParticles />
       </div>
 
-      <div className="hero-bg-element">
-        <InteractiveBackground />
-      </div>
-
-      <FloatingNeonElements />
-
-      <div className="relative z-50 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col justify-center min-h-screen">
+      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col justify-center min-h-screen">
         <div className="hero-content-element">
           <TypewriterHeroText />
         </div>
@@ -681,11 +498,11 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
           <LiveStats />
         </div>
 
-        <div className="hero-interactive-element">
+        <div className="hero-content-element">
           <AnimatedActionButtons onContactClick={handleContactClick} />
         </div>
 
-        <div className="hero-interactive-element">
+        <div className="hero-content-element">
           <AnimatedScrollIndicator onExploreClick={onExploreClick} />
         </div>
       </div>

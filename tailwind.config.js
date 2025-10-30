@@ -56,7 +56,7 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Cores tech personalizadas
+        // Cores tech personalizadas - CORRIGIDAS (removendo cores não utilizadas)
         tech: {
           cyan: {
             50: "#ecfeff",
@@ -152,6 +152,18 @@ const config = {
         "cyan-gradient": "linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)",
         "premium-bg":
           "linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0c4a6e 100%)",
+      },
+      // ADICIONADO: Configuração importante para sticky
+      zIndex: {
+        auto: "auto",
+        0: "0",
+        10: "10",
+        20: "20",
+        30: "30",
+        40: "40",
+        50: "50",
+        9999: "9999",
+        99999: "99999",
       },
     },
   },

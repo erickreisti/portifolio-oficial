@@ -1,82 +1,62 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Header from "@/components/sections/Header/Header";
 import Hero from "@/components/sections/Hero/Hero";
-import { About } from "@/components/sections/About/About";
-import { Skills } from "@/components/sections/Skills/Skills";
+import About from "@/components/sections/About/About";
+import Skills from "@/components/sections/Skills/Skills";
 import Projects from "@/components/sections/Projects/Projects";
-import { Contact } from "@/components/sections/Contact/Contact";
-import { Footer } from "@/components/sections/Footer/Footer";
+import Contact from "@/components/sections/Contact/Contact";
+import Footer from "@/components/sections/Footer/Footer";
 
-export default function HomePage() {
-  const [activeSection, setActiveSection] = useState("home");
-  const observerRef = useRef<IntersectionObserver | null>(null);
+export default function Home() {
+  const [activeSection, setActiveSection] = useState("hero");
 
-  // Observer para detectar seção ativa no scroll
   useEffect(() => {
-    const sections = ["hero", "about", "skills", "projects", "contact"];
+    const handleScroll = () => {
+      const sections = ["hero", "about", "skills", "projects", "contact"];
+      const scrollY = window.scrollY + 100;
 
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const { offsetTop, offsetHeight } = element;
+          if (scrollY >= offsetTop && scrollY < offsetTop + offsetHeight) {
+            setActiveSection(section);
+            break;
           }
-        });
-      },
-      {
-        threshold: 0.3,
-        rootMargin: "-20% 0px -60% 0px",
-      }
-    );
-
-    sections.forEach((section) => {
-      const element = document.getElementById(section);
-      if (element) {
-        observerRef.current?.observe(element);
-      }
-    });
-
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
+        }
       }
     };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleNavClick = (section: string) => {
-    setActiveSection(section);
-    const element = document.getElementById(section);
+  const handleNavClick = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
     if (element) {
-      // Scroll suave considerando o header sticky
-      const headerOffset = 80;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition =
-        elementPosition + window.pageYOffset - headerOffset;
+      const headerHeight = 80;
+      const elementPosition = element.offsetTop - headerHeight;
 
       window.scrollTo({
-        top: offsetPosition,
+        top: elementPosition,
         behavior: "smooth",
       });
     }
   };
 
-  const handleExploreClick = () => {
-    handleNavClick("about");
-  };
-
   return (
-    <>
+    <div className="min-h-screen bg-gray-950 relative">
       <Header activeSection={activeSection} onNavClick={handleNavClick} />
-      <Hero onExploreClick={handleExploreClick} />
-      <main className="min-h-screen">
+      <main className="relative z-10">
+        <Hero onExploreClick={() => handleNavClick("about")} />
         <About />
         <Skills />
         <Projects />
         <Contact />
       </main>
       <Footer />
-    </>
+    </div>
   );
 }
