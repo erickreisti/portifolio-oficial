@@ -13,10 +13,6 @@ import {
   Code,
   Shield,
   Cpu,
-  Globe,
-  Server,
-  Database,
-  Layers,
   Target,
   Award,
   Clock,
@@ -30,6 +26,7 @@ import { LazyComponent } from "@/components/optimization/LazyComponent";
 import { OptimizedImage } from "@/components/optimization/OptimizedImage";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import LazyBackground from "@/components/optimization/LazyBackground";
+import { NeonElements } from "@/components/layout/NeonElements";
 
 // Dados estáticos
 const STATIC_TIMELINE_DATA = [
@@ -390,49 +387,7 @@ export const About = () => {
   const bioData = useMemo(() => STATIC_BIO_DATA, []);
   const timelineData = useMemo(() => STATIC_TIMELINE_DATA, []);
 
-  // Neon Elements Configuration
-  const neonElements = useMemo(
-    () => [
-      {
-        Icon: Code2,
-        position: "top-20 left-10",
-        color: "text-cyan-400",
-        delay: 0,
-      },
-      {
-        Icon: Cpu,
-        position: "top-10 right-15",
-        color: "text-cyan-400",
-        delay: 1,
-      },
-      {
-        Icon: Database,
-        position: "bottom-40 left-15",
-        color: "text-cyan-400",
-        delay: 2,
-      },
-      {
-        Icon: Server,
-        position: "bottom-20 right-10",
-        color: "text-cyan-400",
-        delay: 3,
-      },
-      {
-        Icon: Globe,
-        position: "top-40 right-5",
-        color: "text-cyan-400",
-        delay: 4,
-      },
-      {
-        Icon: Layers,
-        position: "bottom-40 left-5",
-        color: "text-cyan-400",
-        delay: 5,
-      },
-    ],
-    []
-  );
-
+  // GSAP Animations
   useEffect(() => {
     if (!isInView || !sectionRef.current) return;
 
@@ -454,7 +409,10 @@ export const About = () => {
       className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 section-with-header"
     >
       <LazyBackground priority="medium">
-        <PremiumBackground intensity="medium" />
+        <PremiumBackground intensity="medium">
+          {/* 🔥 NEON ELEMENTS GENÉRICO */}
+          <NeonElements />
+        </PremiumBackground>
       </LazyBackground>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">

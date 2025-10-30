@@ -9,24 +9,19 @@ import {
   Sparkles,
   Code2,
   Cpu,
-  Zap,
   MessageCircle,
   Mail,
   MapPin,
 } from "lucide-react";
-import {
-  motion,
-  useInView,
-  useReducedMotion,
-  AnimatePresence,
-} from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import { gsap } from "gsap";
-import { useEffect, useRef, useMemo, useCallback } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import { PremiumBackground } from "@/components/layout/PremiumBackground";
 import { LazyComponent } from "@/components/optimization/LazyComponent";
 import { OptimizedImage } from "@/components/optimization/OptimizedImage";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import LazyBackground from "@/components/optimization/LazyBackground";
+import { NeonElements } from "@/components/layout/NeonElements";
 
 // Interfaces para tipagem
 interface SocialLink {
@@ -34,13 +29,6 @@ interface SocialLink {
   href: string;
   label: string;
   color: string;
-}
-
-interface FloatingElement {
-  Icon: React.ComponentType<any>;
-  position: string;
-  color: string;
-  size: string;
 }
 
 // Configurações estáticas
@@ -66,45 +54,6 @@ const SOCIAL_LINKS: SocialLink[] = [
     href: "https://x.com/ereislima",
     label: "X",
     color: "hover:text-cyan-400",
-  },
-];
-
-const FLOATING_ELEMENTS: FloatingElement[] = [
-  {
-    Icon: Rocket,
-    position: "top-20 left-20",
-    color: "text-cyan-400",
-    size: "text-3xl",
-  },
-  {
-    Icon: Sparkles,
-    position: "top-32 right-24",
-    color: "text-cyan-400",
-    size: "text-3xl",
-  },
-  {
-    Icon: Code2,
-    position: "bottom-40 left-24",
-    color: "text-cyan-400",
-    size: "text-2xl",
-  },
-  {
-    Icon: Cpu,
-    position: "bottom-32 right-20",
-    color: "text-cyan-400",
-    size: "text-2xl",
-  },
-  {
-    Icon: MessageCircle,
-    position: "top-1/3 left-1/4",
-    color: "text-cyan-400",
-    size: "text-xl",
-  },
-  {
-    Icon: Mail,
-    position: "bottom-1/3 right-1/4",
-    color: "text-cyan-400",
-    size: "text-xl",
   },
 ];
 
@@ -138,68 +87,6 @@ const useGSAPAnimation = (
 
     return () => ctx.revert();
   }, [isInView, ref]);
-};
-
-// Componente Floating Element Otimizado
-const FloatingElement = ({
-  Icon,
-  position,
-  color,
-  size,
-  index,
-}: {
-  Icon: React.ComponentType<any>;
-  position: string;
-  color: string;
-  size: string;
-  index: number;
-}) => {
-  const elementRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(elementRef, { once: true, amount: 0.3 });
-  const shouldReduceMotion = useReducedMotion();
-
-  useEffect(() => {
-    if (!isInView || shouldReduceMotion || !elementRef.current) return;
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        elementRef.current,
-        { opacity: 0, scale: 0, y: 100, rotation: -180 },
-        {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          rotation: 0,
-          duration: 1.5,
-          ease: "back.out(1.7)",
-          delay: index * 0.2,
-        }
-      );
-
-      gsap.to(elementRef.current, {
-        y: -15,
-        rotation: 5,
-        duration: 4,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-        delay: index * 0.3,
-      });
-    });
-
-    return () => ctx.revert();
-  }, [isInView, index, shouldReduceMotion]);
-
-  return (
-    <LazyComponent animation="fadeIn" delay={index * 100}>
-      <div
-        ref={elementRef}
-        className={`absolute ${position} pointer-events-none`}
-      >
-        <Icon className={`${color} ${size} opacity-70`} />
-      </div>
-    </LazyComponent>
-  );
 };
 
 // Componente Social Link Otimizado
@@ -374,8 +261,6 @@ const QuickLinksGrid = () => (
 
 // Componente Tech Badge Otimizado
 const TechBadge = () => {
-  const currentYear = new Date().getFullYear();
-
   return (
     <LazyComponent animation="scale" delay={500}>
       <motion.div
@@ -429,56 +314,110 @@ const FooterInfo = () => {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
         >
-          <button
+          <motion.button
             onClick={scrollToTop}
-            className="group flex items-center gap-2 text-gray-400 hover:text-cyan-400 transition-colors duration-300 mx-auto lg:ml-auto lg:mr-0"
+            className="group relative bg-gradient-to-r from-cyan-500/20 to-blue-500/20 backdrop-blur-xl border border-cyan-400/30 hover:border-cyan-400/50 px-6 py-3 rounded-2xl transition-all duration-500 overflow-hidden"
+            whileHover={{
+              scale: 1.05,
+              y: -2,
+              boxShadow: "0 20px 40px rgba(6, 182, 212, 0.3)",
+            }}
+            whileTap={{ scale: 0.95 }}
           >
-            <Rocket className="w-4 h-4 group-hover:-translate-y-1 transition-transform duration-300" />
-            <span className="text-sm font-mono font-bold tracking-wider">
-              BACK TO ORBIT
-            </span>
-          </button>
+            {/* Efeito de brilho no fundo */}
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+            {/* Partículas animadas */}
+            <div className="absolute inset-0 overflow-hidden rounded-2xl">
+              <motion.div
+                className="absolute -inset-10 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent"
+                animate={{
+                  x: ["0%", "200%", "0%"],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+              />
+            </div>
+
+            {/* Conteúdo do botão */}
+            <div className="relative z-10 flex items-center gap-3">
+              <motion.div
+                className="relative"
+                animate={{
+                  y: [0, -4, 0],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
+                <Rocket className="w-5 h-5 text-cyan-400" />
+
+                {/* Efeito de propulsão */}
+                <motion.div
+                  className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-400 rounded-full blur-sm"
+                  animate={{
+                    scale: [1, 1.5, 1],
+                    opacity: [0.7, 1, 0.7],
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
+              </motion.div>
+
+              <div className="flex flex-col items-start">
+                <span className="text-sm font-mono font-bold text-cyan-400 tracking-wider group-hover:text-cyan-300 transition-colors duration-300">
+                  VOLTAR AO TOPO
+                </span>
+                <span className="text-xs text-gray-400 group-hover:text-cyan-400/80 transition-colors duration-300 font-mono">
+                  BACK TO ORBIT
+                </span>
+              </div>
+
+              {/* Ícone de seta animada */}
+              <motion.div
+                className="ml-2"
+                animate={{
+                  y: [0, -3, 0],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
+                <motion.div
+                  className="w-4 h-4 text-cyan-400"
+                  whileHover={{ rotate: 360 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 10l7-7m0 0l7 7m-7-7v18"
+                    />
+                  </svg>
+                </motion.div>
+              </motion.div>
+            </div>
+
+            {/* Efeito de brilho na borda */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-400/0 via-cyan-400/20 to-cyan-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+          </motion.button>
         </motion.div>
       </div>
     </LazyComponent>
   );
 };
-
-// Componente Final Signature Otimizado
-const FinalSignature = () => {
-  const currentYear = new Date().getFullYear();
-
-  return (
-    <LazyComponent animation="fadeUp" delay={600}>
-      <motion.div
-        className="mt-12 text-center"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        viewport={{ once: true }}
-      >
-        <div className="inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-gray-900/40 border border-cyan-500/20">
-          <Zap className="w-4 h-4 text-cyan-400 animate-pulse" />
-          <span className="text-gray-400 text-xs font-mono font-bold tracking-widest">
-            READY FOR NEXT MISSION • {currentYear}
-          </span>
-        </div>
-      </motion.div>
-    </LazyComponent>
-  );
-};
-
-// Componente Divisor Premium Otimizado
-const PremiumDivider = () => (
-  <LazyComponent animation="fadeIn" delay={350}>
-    <div className="relative mb-12">
-      <div className="w-full h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent" />
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        <Sparkles className="w-6 h-6 text-cyan-400 animate-pulse" />
-      </div>
-    </div>
-  </LazyComponent>
-);
 
 // Componente Contact Info Mini
 const ContactInfoMini = () => (
@@ -507,6 +446,18 @@ const ContactInfoMini = () => (
   </LazyComponent>
 );
 
+// Componente Divisor Premium Otimizado
+const PremiumDivider = () => (
+  <LazyComponent animation="fadeIn" delay={350}>
+    <div className="relative mb-12">
+      <div className="w-full h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent" />
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <Sparkles className="w-6 h-6 text-cyan-400 animate-pulse" />
+      </div>
+    </div>
+  </LazyComponent>
+);
+
 // Componente Principal Footer
 export const Footer = () => {
   const footerRef = useRef<HTMLElement>(null);
@@ -514,15 +465,6 @@ export const Footer = () => {
   const shouldReduceMotion = useReducedMotion();
 
   usePerformanceMonitor("Footer");
-
-  // Elementos flutuantes memoizados
-  const neonElements = useMemo(
-    () =>
-      FLOATING_ELEMENTS.map((element, index) => (
-        <FloatingElement key={index} {...element} index={index} />
-      )),
-    []
-  );
 
   // GSAP Animations para entrada da seção
   useEffect(() => {
@@ -546,10 +488,8 @@ export const Footer = () => {
     >
       <LazyBackground priority="low">
         <PremiumBackground intensity="soft">
-          {/* Elementos flutuantes com performance */}
-          <div className="absolute inset-0 pointer-events-none">
-            {neonElements}
-          </div>
+          {/* 🔥 NEON ELEMENTS GENÉRICO */}
+          <NeonElements />
         </PremiumBackground>
       </LazyBackground>
 
@@ -561,7 +501,6 @@ export const Footer = () => {
         <QuickLinksGrid />
         <PremiumDivider />
         <FooterInfo />
-        <FinalSignature />
       </div>
     </footer>
   );

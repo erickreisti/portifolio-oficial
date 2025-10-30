@@ -27,6 +27,7 @@ import { PremiumBackground } from "@/components/layout/PremiumBackground";
 import { LazyComponent } from "@/components/optimization/LazyComponent";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import LazyBackground from "@/components/optimization/LazyBackground";
+import { NeonElements } from "@/components/layout/NeonElements";
 
 // Dados estáticos
 const STATIC_SKILLS_DATA = [
@@ -140,28 +141,24 @@ const STATIC_STATS_DATA = [
     title: "Tecnologias",
     subtitle: "Stack Completa",
     icon: Target,
-    color: "from-cyan-400 to-blue-400",
   },
   {
     number: "92%",
     title: "Proficiência",
     subtitle: "Média de Domínio",
     icon: Award,
-    color: "from-cyan-400 to-blue-400",
   },
   {
     number: "5+",
     title: "Anos Exp",
     subtitle: "Experiência Comprovada",
     icon: Clock,
-    color: "from-cyan-400 to-blue-400",
   },
   {
     number: "100%",
     title: "Qualidade",
     subtitle: "Padrão de Excelência",
     icon: Heart,
-    color: "from-cyan-400 to-blue-400",
   },
 ];
 
@@ -582,49 +579,6 @@ export const Skills = () => {
   const skillsData = useMemo(() => STATIC_SKILLS_DATA, []);
   const statsData = useMemo(() => STATIC_STATS_DATA, []);
 
-  // Neon Elements Configuration
-  const neonElements = useMemo(
-    () => [
-      {
-        Icon: Code2,
-        position: "top-20 left-10",
-        color: "text-cyan-400",
-        delay: 0,
-      },
-      {
-        Icon: Cpu,
-        position: "top-10 right-15",
-        color: "text-cyan-400",
-        delay: 1,
-      },
-      {
-        Icon: Zap,
-        position: "bottom-40 left-15",
-        color: "text-cyan-400",
-        delay: 2,
-      },
-      {
-        Icon: Sparkles,
-        position: "bottom-20 right-10",
-        color: "text-cyan-400",
-        delay: 3,
-      },
-      {
-        Icon: Server,
-        position: "top-40 right-5",
-        color: "text-cyan-400",
-        delay: 4,
-      },
-      {
-        Icon: Database,
-        position: "bottom-40 left-5",
-        color: "text-cyan-400",
-        delay: 5,
-      },
-    ],
-    []
-  );
-
   // GSAP Animations
   useEffect(() => {
     if (!isInView || !sectionRef.current) return;
@@ -647,7 +601,10 @@ export const Skills = () => {
       className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 section-with-header"
     >
       <LazyBackground priority="medium">
-        <PremiumBackground intensity="medium" />
+        <PremiumBackground intensity="medium">
+          {/* 🔥 NEON ELEMENTS GENÉRICO */}
+          <NeonElements />
+        </PremiumBackground>
       </LazyBackground>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">

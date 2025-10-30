@@ -20,7 +20,7 @@ import { LazyComponent } from "@/components/optimization/LazyComponent";
 import { LazyBackground } from "@/components/optimization/LazyBackground";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 
-// Componente de Partículas Otimizado
+// 🔥 PARTÍCULAS ESPETACULARES PARA O HERO
 const TechParticles = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -28,53 +28,88 @@ const TechParticles = () => {
     if (!containerRef.current) return;
 
     const particlesContainer = containerRef.current;
-    const particles: HTMLDivElement[] = [];
+    const particles: HTMLDivElement[] = []; // ✅ Tipo explícito adicionado
+
+    // Tipos de partículas tech
+    const particleTypes = [
+      {
+        type: "code",
+        content: [
+          "</>",
+          "{}",
+          "=>",
+          "()",
+          "[]",
+          "fn",
+          "const",
+          "let",
+          "export",
+          "import",
+        ],
+        color: "text-cyan-400",
+      },
+      {
+        type: "tech",
+        content: [
+          "React",
+          "Next.js",
+          "Node.js",
+          "TypeScript",
+          "Tailwind",
+          "PostgreSQL",
+        ],
+        color: "text-blue-400",
+      },
+      {
+        type: "symbols",
+        content: ["⚡", "🚀", "💻", "🎯", "🔥", "🌟", "💫", "✨"],
+        color: "text-yellow-400",
+      },
+    ];
 
     const createParticle = () => {
+      const particleType =
+        particleTypes[Math.floor(Math.random() * particleTypes.length)];
+      const content =
+        particleType.content[
+          Math.floor(Math.random() * particleType.content.length)
+        ];
+
       const particle = document.createElement("div");
-      particle.className =
-        "absolute text-xs font-mono text-cyan-400 opacity-40 pointer-events-none";
+      particle.className = `absolute font-mono pointer-events-none transition-all duration-1000 ${
+        particleType.type === "symbols"
+          ? "text-2xl opacity-70"
+          : "text-sm opacity-50 font-bold"
+      } ${particleType.color}`;
 
-      const codeChars = [
-        "{",
-        "}",
-        "<",
-        ">",
-        "/",
-        ";",
-        "=",
-        "()",
-        "=>",
-        "[]",
-        "fn",
-        "const",
-        "let",
-      ];
-      particle.textContent =
-        codeChars[Math.floor(Math.random() * codeChars.length)];
-
+      particle.textContent = content;
       particle.style.left = `${Math.random() * 100}%`;
       particle.style.top = `${Math.random() * 100}%`;
-      particle.style.fontSize = `${Math.random() * 12 + 10}px`;
+      particle.style.fontSize = `${Math.random() * 14 + 10}px`;
       particle.style.opacity = `${Math.random() * 0.6 + 0.2}`;
+      particle.style.zIndex = "1";
 
       particlesContainer.appendChild(particle);
       particles.push(particle);
 
-      const duration = Math.random() * 4 + 3;
+      // Configurações de animação únicas para cada partícula
+      const duration = Math.random() * 8 + 4;
       const rotation = Math.random() * 360 - 180;
+      const scale = Math.random() * 0.5 + 0.5;
 
+      // Animação principal
       gsap.to(particle, {
-        y: -200,
-        x: Math.random() * 100 - 50,
+        y: -Math.random() * 300 - 100,
+        x: Math.random() * 200 - 100,
         rotation: rotation,
+        scale: scale,
         opacity: 0.8,
         duration: duration,
         ease: "power1.out",
         onComplete: () => {
           gsap.to(particle, {
             opacity: 0,
-            duration: 0.8,
+            duration: 1,
             onComplete: () => {
               particle.remove();
               const index = particles.indexOf(particle);
@@ -83,11 +118,61 @@ const TechParticles = () => {
           });
         },
       });
+
+      // Animação de pulsação adicional
+      gsap.to(particle, {
+        scale: scale * 1.3,
+        duration: 2,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
     };
 
-    const interval = setInterval(createParticle, 150);
+    // Criar partículas em intervalos diferentes para densidade
+    const intervals = [
+      setInterval(createParticle, 80), // Partículas rápidas
+      setInterval(createParticle, 150), // Partículas médias
+      setInterval(createParticle, 300), // Partículas lentas
+    ];
+
+    // Partículas especiais (maiores e mais visíveis)
+    const createSpecialParticle = () => {
+      const specialParticle = document.createElement("div");
+      specialParticle.className =
+        "absolute text-cyan-300 text-xl font-bold font-mono pointer-events-none";
+      specialParticle.textContent = ["⚡", "🚀", "💻"][
+        Math.floor(Math.random() * 3)
+      ];
+      specialParticle.style.left = `${Math.random() * 100}%`;
+      specialParticle.style.top = `${Math.random() * 100}%`;
+      specialParticle.style.opacity = "0";
+      specialParticle.style.zIndex = "2";
+
+      particlesContainer.appendChild(specialParticle);
+      particles.push(specialParticle);
+
+      gsap.to(specialParticle, {
+        y: -400,
+        x: Math.random() * 200 - 100,
+        rotation: 360,
+        opacity: 1,
+        scale: 2,
+        duration: 6,
+        ease: "power2.out",
+        onComplete: () => {
+          specialParticle.remove();
+          const index = particles.indexOf(specialParticle);
+          if (index > -1) particles.splice(index, 1);
+        },
+      });
+    };
+
+    const specialInterval = setInterval(createSpecialParticle, 2000);
+
     return () => {
-      clearInterval(interval);
+      intervals.forEach((interval) => clearInterval(interval));
+      clearInterval(specialInterval);
       particles.forEach((particle) => particle.remove());
     };
   }, []);
@@ -96,6 +181,148 @@ const TechParticles = () => {
     <div
       ref={containerRef}
       className="absolute inset-0 pointer-events-none overflow-hidden"
+      style={{ zIndex: 1 }}
+    />
+  );
+};
+
+// 🔥 PARTÍCULAS DE CÓDIGO FLUTUANTE
+const FloatingCodeParticles = () => {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {/* Linhas de código flutuantes */}
+      {[...Array(8)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute text-cyan-400/30 font-mono text-sm whitespace-nowrap"
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+          }}
+          animate={{
+            y: [0, -100, 0],
+            x: [0, Math.random() * 100 - 50, 0],
+            opacity: [0.1, 0.4, 0.1],
+          }}
+          transition={{
+            duration: 15 + Math.random() * 10,
+            repeat: Infinity,
+            delay: i * 2,
+          }}
+        >
+          {
+            [
+              "const developer = new FullStackEngineer();",
+              "async function createMagic() { ... }",
+              "export default function AmazingProject() { ... }",
+              "interface Innovation { ideas: string[] }",
+              "type TechStack = 'Next.js' | 'React' | 'Node.js';",
+              "while(!success) { tryAgain(); }",
+              "const excellence = await achievePerfection();",
+              "export const creativity = infinite;",
+            ][i]
+          }
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
+// 🔥 EFEITO DE CONEXÕES ENTRE PARTÍCULAS
+const ParticleConnections = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // Configurar canvas
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    // Interface para as partículas
+    interface Particle {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      radius: number;
+    }
+
+    // Partículas para conexões
+    const particles: Particle[] = []; // ✅ Tipo explícito adicionado
+    const particleCount = 30;
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        radius: Math.random() * 2 + 1,
+      });
+    }
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Atualizar e desenhar partículas
+      particles.forEach((particle) => {
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+
+        // Rebater nas bordas
+        if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1;
+        if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1;
+
+        // Desenhar partícula
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(6, 182, 212, 0.3)";
+        ctx.fill();
+      });
+
+      // Desenhar conexões
+      ctx.strokeStyle = "rgba(6, 182, 212, 0.1)";
+      ctx.lineWidth = 0.5;
+
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 150) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      window.removeEventListener("resize", resizeCanvas);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 pointer-events-none"
+      style={{ zIndex: 0 }}
     />
   );
 };
@@ -439,18 +666,36 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline();
 
+      // Animação mais dramática para o background
       tl.fromTo(
         ".hero-bg-element",
-        { opacity: 0, scale: 0.8 },
-        { opacity: 1, scale: 1, duration: 1.5, ease: "power2.out" }
+        { opacity: 0, scale: 1.2 },
+        { opacity: 1, scale: 1, duration: 2, ease: "power2.out" }
       );
 
+      // Animação escalonada mais impressionante
       tl.fromTo(
         ".hero-content-element",
-        { opacity: 0, y: 60 },
-        { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: "power2.out" },
-        "-=0.5"
+        { opacity: 0, y: 80, scale: 0.9 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1.2,
+          stagger: 0.3,
+          ease: "back.out(1.7)",
+        },
+        "-=1.5"
       );
+
+      // Efeito de brilho pulsante no background
+      gsap.to(".hero-bg-element", {
+        opacity: 0.8,
+        duration: 3,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
     }, containerRef);
 
     return () => ctx.revert();
@@ -475,17 +720,31 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
       ref={containerRef}
       className="relative min-h-screen overflow-hidden bg-gray-950 section-with-header"
     >
+      {/* 🔥 BACKGROUND COM MULTIPLAS CAMADAS DE PARTÍCULAS */}
       <div className="hero-bg-element">
         <LazyBackground priority="high">
           <PremiumBackground intensity="high" />
         </LazyBackground>
       </div>
 
+      {/* 🔥 CAMADAS DE PARTÍCULAS */}
+      <div className="hero-bg-element">
+        <ParticleConnections />
+      </div>
+
       <div className="hero-bg-element">
         <TechParticles />
       </div>
 
-      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col justify-center min-h-screen">
+      <div className="hero-bg-element">
+        <FloatingCodeParticles />
+      </div>
+
+      {/* 🔥 EFEITO DE GRADIENTE DINÂMICO */}
+      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-blue-500/5 animate-pulse" />
+
+      {/* CONTEÚDO PRINCIPAL */}
+      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col justify-center min-h-screen z-10">
         <div className="hero-content-element">
           <TypewriterHeroText />
         </div>
@@ -506,6 +765,9 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
           <AnimatedScrollIndicator onExploreClick={onExploreClick} />
         </div>
       </div>
+
+      {/* 🔥 EFEITO DE BRILHO NAS BORDAS */}
+      <div className="absolute inset-0 border-2 border-cyan-500/10 rounded-none pointer-events-none" />
     </section>
   );
 };

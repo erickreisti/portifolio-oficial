@@ -34,6 +34,7 @@ import { PremiumBackground } from "@/components/layout/PremiumBackground";
 import { LazyComponent } from "@/components/optimization/LazyComponent";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import LazyBackground from "@/components/optimization/LazyBackground";
+import { NeonElements } from "@/components/layout/NeonElements";
 
 // Interfaces para Tipagem
 interface ContactFormData {
@@ -87,45 +88,6 @@ const STATIC_CONTACT_INFO = [
     description: "Projetos de qualquer escala",
     gradient: "from-cyan-500/20 to-blue-500/20",
     border: "border-cyan-400/30",
-  },
-];
-
-const STATIC_NEON_ELEMENTS_CONFIG = [
-  {
-    Icon: MessageCircle,
-    position: "top-20 left-20",
-    color: "text-cyan-400",
-    size: "text-3xl",
-  },
-  {
-    Icon: Send,
-    position: "top-32 right-24",
-    color: "text-cyan-400",
-    size: "text-3xl",
-  },
-  {
-    Icon: Mail,
-    position: "bottom-40 left-24",
-    color: "text-cyan-400",
-    size: "text-2xl",
-  },
-  {
-    Icon: MapPin,
-    position: "bottom-32 right-20",
-    color: "text-cyan-400",
-    size: "text-2xl",
-  },
-  {
-    Icon: Phone,
-    position: "top-40 right-16",
-    color: "text-cyan-400",
-    size: "text-xl",
-  },
-  {
-    Icon: Rocket,
-    position: "bottom-48 left-16",
-    color: "text-cyan-400",
-    size: "text-xl",
   },
 ];
 
@@ -902,65 +864,6 @@ const EnhancedContactForm = ({
   );
 };
 
-// Componente Neon Element
-const ContactNeonElement = ({
-  Icon,
-  position,
-  color,
-  delay = 0,
-}: {
-  Icon: React.ComponentType<any>;
-  position: string;
-  color: string;
-  delay?: number;
-}) => {
-  const elementRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(elementRef, { once: true, amount: 0.3 });
-
-  useEffect(() => {
-    if (!isInView || !elementRef.current) return;
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        elementRef.current,
-        { opacity: 0, scale: 0, y: 100, rotation: -180 },
-        {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          rotation: 0,
-          duration: 1.5,
-          ease: "back.out(1.7)",
-          delay: delay * 0.2,
-        }
-      );
-
-      gsap.to(elementRef.current, {
-        y: -15,
-        rotation: 5,
-        duration: 4,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-        delay: delay * 0.3,
-      });
-    });
-
-    return () => ctx.revert();
-  }, [isInView, delay]);
-
-  return (
-    <LazyComponent animation="fadeIn" delay={delay * 100}>
-      <div
-        ref={elementRef}
-        className={`absolute ${position} pointer-events-none`}
-      >
-        <Icon className={`${color} text-2xl opacity-70`} />
-      </div>
-    </LazyComponent>
-  );
-};
-
 // Componente Principal Contact
 export const Contact = () => {
   const {
@@ -979,7 +882,6 @@ export const Contact = () => {
   usePerformanceMonitor("ContactSection");
 
   // Configurações - memoizadas
-  const neonElementsConfig = useMemo(() => STATIC_NEON_ELEMENTS_CONFIG, []);
   const contactInfo = useMemo(() => STATIC_CONTACT_INFO, []);
 
   // GSAP Animations
@@ -996,20 +898,6 @@ export const Contact = () => {
 
     return () => ctx.revert();
   }, [isInView, shouldReduceMotion]);
-
-  const neonElements = useMemo(
-    () =>
-      neonElementsConfig.map(({ Icon, position, color }, index) => (
-        <ContactNeonElement
-          key={index}
-          Icon={Icon}
-          position={position}
-          color={color}
-          delay={index}
-        />
-      )),
-    [neonElementsConfig]
-  );
 
   const contactInfoElements = useMemo(
     () =>
@@ -1046,9 +934,8 @@ export const Contact = () => {
     >
       <LazyBackground priority="medium">
         <PremiumBackground intensity="medium">
-          <div className="absolute inset-0 pointer-events-none">
-            {neonElements}
-          </div>
+          {/* 🔥 NEON ELEMENTS GENÉRICO */}
+          <NeonElements />
         </PremiumBackground>
       </LazyBackground>
 

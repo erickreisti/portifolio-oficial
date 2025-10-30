@@ -10,10 +10,6 @@ import {
   Code,
   ExternalLink,
   X,
-  Globe,
-  Database,
-  Server,
-  Smartphone,
   Play,
   Square,
   ZoomIn,
@@ -36,6 +32,7 @@ import LazyBackground from "@/components/optimization/LazyBackground";
 import Image from "next/image";
 import { useLockScroll, forceReleaseAll } from "@/hooks/useLockScroll";
 import ModalPortal from "@/components/ui/ModalPortal";
+import { NeonElements } from "@/components/layout/NeonElements";
 
 interface ExtendedProject extends Project {
   demoVideo?: string;
@@ -154,44 +151,6 @@ const staticProjectsData = {
       icon: Code,
     },
   ],
-  neonElements: [
-    {
-      Icon: Rocket,
-      position: "top-20 left-20",
-      color: "text-cyan-400",
-      delay: 0,
-    },
-    {
-      Icon: Code,
-      position: "top-32 right-24",
-      color: "text-cyan-400",
-      delay: 1,
-    },
-    {
-      Icon: Globe,
-      position: "bottom-40 left-24",
-      color: "text-cyan-400",
-      delay: 2,
-    },
-    {
-      Icon: Database,
-      position: "bottom-32 right-20",
-      color: "text-cyan-400",
-      delay: 3,
-    },
-    {
-      Icon: Server,
-      position: "top-40 right-16",
-      color: "text-cyan-400",
-      delay: 4,
-    },
-    {
-      Icon: Smartphone,
-      position: "bottom-48 left-16",
-      color: "text-cyan-400",
-      delay: 5,
-    },
-  ],
 };
 
 /* ---------------- Componentes de Modal Corrigidos ---------------- */
@@ -292,59 +251,6 @@ const ImageZoomModal: React.FC<{
         </motion.div>
       </motion.div>
     </ModalPortal>
-  );
-};
-
-/* ---------------- Componente NeonElement ---------------- */
-const ProjectsNeonElement: React.FC<{
-  Icon: any;
-  position: string;
-  color: string;
-  delay?: number;
-}> = ({ Icon, position, color, delay = 0 }) => {
-  const elementRef = useRef<HTMLDivElement | null>(null);
-  const isInView = useInView(elementRef, { once: true, amount: 0.3 });
-
-  useEffect(() => {
-    if (!isInView || !elementRef.current) return;
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        elementRef.current!,
-        { opacity: 0, scale: 0, y: 100, rotation: -180 },
-        {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          rotation: 0,
-          duration: 1.2,
-          ease: "back.out(1.7)",
-          delay: delay * 0.15,
-        }
-      );
-      gsap.to(elementRef.current!, {
-        y: -12,
-        rotation: 5,
-        duration: 4,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-        delay: delay * 0.2,
-      });
-    }, elementRef);
-
-    return () => ctx.revert();
-  }, [isInView, delay]);
-
-  return (
-    <LazyComponent animation="fadeIn" delay={delay * 80}>
-      <div
-        ref={elementRef}
-        className={`absolute ${position} pointer-events-none`}
-      >
-        <Icon className={`${color} text-2xl opacity-70`} />
-      </div>
-    </LazyComponent>
   );
 };
 
@@ -813,14 +719,8 @@ const Projects: React.FC = () => {
     >
       <LazyBackground priority="medium">
         <PremiumBackground intensity="medium">
-          <div className="absolute inset-0 pointer-events-none">
-            {projectsData.neonElements.map((element, idx) => (
-              <ProjectsNeonElement
-                key={`${element.position}-${idx}`}
-                {...element}
-              />
-            ))}
-          </div>
+          {/* 🔥 NEON ELEMENTS GENÉRICO */}
+          <NeonElements />
         </PremiumBackground>
       </LazyBackground>
 
