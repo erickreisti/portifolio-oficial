@@ -9,8 +9,122 @@ import { PremiumBackground } from "@/components/layout/PremiumBackground";
 import { LazyComponent } from "@/components/optimization/LazyComponent";
 import { LazyBackground } from "@/components/optimization/LazyBackground";
 import { HeroNeonElements } from "@/components/layout/HeroNeonElements";
+import { getSafeColors } from "@/lib/colors";
 
-// 🔥 PARTÍCULAS VISUAIS COM GSAP CORRIGIDO
+// 🔥 TEXTO HERO COM TYPEWRITER APENAS NO SUBTÍTULO
+const HeroText = () => {
+  const colors = getSafeColors();
+
+  // Typewriter para o subtítulo
+  const [subtitleText, setSubtitleText] = useState("");
+  const [currentSubtitle, setCurrentSubtitle] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const subtitles = useMemo(
+    () => [
+      "Transformo visões ambiciosas em soluções digitais",
+      "Desenvolvo experiências web de alto impacto",
+      "Crio sistemas escaláveis com tecnologia de ponta",
+      "Entregando excelência em cada linha de código",
+    ],
+    []
+  );
+
+  useEffect(() => {
+    const currentSubtitleText = subtitles[currentSubtitle];
+    let timeout: NodeJS.Timeout;
+
+    if (!isDeleting && subtitleText.length === currentSubtitleText.length) {
+      // Esperar antes de deletar
+      timeout = setTimeout(() => setIsDeleting(true), 2000);
+    } else if (isDeleting && subtitleText.length === 0) {
+      // Mudar para próximo subtítulo
+      setIsDeleting(false);
+      setCurrentSubtitle((prev) => (prev + 1) % subtitles.length);
+    } else {
+      // Digitar ou deletar
+      const speed = isDeleting ? 30 : 50;
+      const nextText = isDeleting
+        ? currentSubtitleText.slice(0, subtitleText.length - 1)
+        : currentSubtitleText.slice(0, subtitleText.length + 1);
+
+      timeout = setTimeout(() => setSubtitleText(nextText), speed);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [subtitleText, isDeleting, currentSubtitle, subtitles]);
+
+  return (
+    <LazyComponent animation="fadeUp" delay={200}>
+      <div className="text-center w-full mb-8">
+        {/* TEXTO PRINCIPAL FIXO (MANTIDO EXATAMENTE COMO ESTAVA) */}
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white leading-tight">
+          {[
+            "IDEIAS EXTRAORDINÁRIAS",
+            "CÓDIGO EXCEPCIONAL",
+            "RESULTADOS REAIS",
+          ].map((line, lineIndex) => (
+            <motion.div
+              key={lineIndex}
+              className="overflow-hidden mb-2 sm:mb-4"
+              initial={{ y: 100, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{
+                duration: 0.8,
+                delay: 0.3 + lineIndex * 0.2,
+                ease: "easeOut",
+              }}
+            >
+              {line.split("").map((char, charIndex) => (
+                <motion.span
+                  key={`${lineIndex}-${charIndex}`}
+                  className="inline-block mx-0.5 sm:mx-1 transition-all duration-300 bg-gradient-to-b from-white to-gray-300 bg-clip-text text-transparent hover:scale-110 hover:text-cyan-300"
+                  initial={{ y: 100, opacity: 0, scale: 0.8 }}
+                  animate={{ y: 0, opacity: 1, scale: 1 }}
+                  transition={{
+                    duration: 0.6,
+                    delay: 0.5 + lineIndex * 0.3 + charIndex * 0.03,
+                    ease: "easeOut",
+                  }}
+                  whileHover={{
+                    scale: 1.2,
+                    y: -5,
+                    transition: { duration: 0.2 },
+                  }}
+                >
+                  {char === " " ? "\u00A0" : char}
+                </motion.span>
+              ))}
+            </motion.div>
+          ))}
+        </h1>
+
+        {/* SUBTÍTULO COM TYPEWRITER */}
+        <motion.div
+          className="mt-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2 }}
+        >
+          <p
+            className={`text-xl sm:text-2xl lg:text-3xl font-light min-h-[60px] flex items-center justify-center ${colors.classes.text.gradient}`}
+          >
+            {subtitleText}
+            <motion.span
+              animate={{ opacity: [1, 0, 1] }}
+              transition={{ duration: 1, repeat: Infinity }}
+              className="ml-1"
+            >
+              |
+            </motion.span>
+          </p>
+        </motion.div>
+      </div>
+    </LazyComponent>
+  );
+};
+
+// 🔥 PARTÍCULAS VISUAIS OTIMIZADAS
 const TechParticles = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -18,15 +132,12 @@ const TechParticles = () => {
     if (!containerRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Criar partículas
       const particles: HTMLElement[] = [];
       const particleTypes = [
         { content: "</>", color: "text-cyan-300", size: "text-lg" },
         { content: "{}", color: "text-blue-300", size: "text-lg" },
-        { content: "=>", color: "text-green-400", size: "text-sm" },
       ];
 
-      // Função para criar uma partícula
       const createParticle = () => {
         const type =
           particleTypes[Math.floor(Math.random() * particleTypes.length)];
@@ -40,7 +151,7 @@ const TechParticles = () => {
         containerRef.current?.appendChild(particle);
         particles.push(particle);
 
-        // Animação GSAP corrigida
+        // Animação GSAP
         const timeline = gsap.timeline();
 
         timeline.fromTo(
@@ -49,15 +160,11 @@ const TechParticles = () => {
             opacity: 0,
             scale: 0,
             rotation: -180,
-            x: Math.random() * 100 - 50,
-            y: Math.random() * 100 - 50,
           },
           {
             opacity: 0.8,
             scale: 1,
             rotation: 0,
-            x: 0,
-            y: 0,
             duration: 1.5,
             ease: "back.out(1.7)",
           }
@@ -86,7 +193,7 @@ const TechParticles = () => {
           },
         });
 
-        // Pulsação contínua
+        // Pulsação
         gsap.to(particle, {
           scale: 1.2,
           duration: 2,
@@ -97,12 +204,12 @@ const TechParticles = () => {
       };
 
       // Criar partículas iniciais
-      for (let i = 0; i < 12; i++) {
-        gsap.delayedCall(i * 0.3, createParticle);
+      for (let i = 0; i < 10; i++) {
+        gsap.delayedCall(i * 0.4, createParticle);
       }
 
       // Criar partículas continuamente
-      const interval = setInterval(createParticle, 800);
+      const interval = setInterval(createParticle, 1000);
 
       return () => {
         clearInterval(interval);
@@ -122,71 +229,7 @@ const TechParticles = () => {
   );
 };
 
-// 🔥 PARTÍCULAS DE CÓDIGO FLUTUANTE - GSAP CORRIGIDO
-const FloatingCodeParticles = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const ctx = gsap.context(() => {
-      const texts = [
-        "FULLSTACK",
-        "NEXT.JS",
-        "REACT",
-        "TYPESCRIPT",
-        "NODE.JS",
-        "TAILWIND",
-        "INNOVATION",
-        "CREATIVE",
-      ];
-
-      texts.forEach((text, i) => {
-        const element = document.createElement("div");
-        element.className =
-          "absolute text-cyan-400/60 font-mono text-sm font-bold whitespace-nowrap pointer-events-none";
-        element.textContent = text;
-        element.style.left = `${Math.random() * 100}%`;
-        element.style.top = `${Math.random() * 100}%`;
-        element.style.opacity = "0";
-
-        containerRef.current?.appendChild(element);
-
-        const timeline = gsap.timeline({ repeat: -1 });
-
-        timeline.fromTo(
-          element,
-          { opacity: 0, y: 0, x: 0 },
-          {
-            opacity: 0.8,
-            y: -200,
-            x: Math.random() * 100 - 50,
-            duration: 15 + Math.random() * 10,
-            ease: "power1.out",
-          }
-        );
-
-        timeline.to(element, {
-          opacity: 0,
-          duration: 2,
-          ease: "power1.in",
-        });
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  return (
-    <div
-      ref={containerRef}
-      className="absolute inset-0 pointer-events-none overflow-hidden"
-      style={{ zIndex: 1 }}
-    />
-  );
-};
-
-// 🔥 CONEXÕES ENTRE PARTÍCULAS - CORRIGIDO
+// 🔥 CONEXÕES ENTRE PARTÍCULAS - OTIMIZADO
 const ParticleConnections = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -207,7 +250,7 @@ const ParticleConnections = () => {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    const particles = Array.from({ length: 25 }, () => ({
+    const particles = Array.from({ length: 20 }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
       vx: (Math.random() - 0.5) * 0.8,
@@ -270,76 +313,8 @@ const ParticleConnections = () => {
     <canvas
       ref={canvasRef}
       className="absolute inset-0 pointer-events-none"
-      style={{ zIndex: 0 }}
+      style={{ zIndex: 1 }}
     />
-  );
-};
-
-// 🔥 TEXTO HERO
-const HeroText = () => {
-  return (
-    <LazyComponent animation="fadeUp" delay={200}>
-      <div className="text-center w-full mb-8">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white leading-tight">
-          {[
-            "IDEIAS EXTRAORDINÁRIAS",
-            "CÓDIGO EXCEPCIONAL",
-            "RESULTADOS REAIS",
-          ].map((line, lineIndex) => (
-            <motion.div
-              key={lineIndex}
-              className="overflow-hidden mb-2 sm:mb-4"
-              initial={{ y: 100, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{
-                duration: 0.8,
-                delay: 0.3 + lineIndex * 0.2,
-                ease: "easeOut",
-              }}
-            >
-              {line.split("").map((char, charIndex) => (
-                <motion.span
-                  key={`${lineIndex}-${charIndex}`}
-                  className="inline-block mx-0.5 sm:mx-1 transition-all duration-300 bg-gradient-to-b from-white to-gray-300 bg-clip-text text-transparent hover:scale-110 hover:text-cyan-300"
-                  initial={{ y: 100, opacity: 0, scale: 0.8 }}
-                  animate={{ y: 0, opacity: 1, scale: 1 }}
-                  transition={{
-                    duration: 0.6,
-                    delay: 0.5 + lineIndex * 0.3 + charIndex * 0.03,
-                    ease: "easeOut",
-                  }}
-                  whileHover={{
-                    scale: 1.2,
-                    y: -5,
-                    transition: { duration: 0.2 },
-                  }}
-                >
-                  {char === " " ? "\u00A0" : char}
-                </motion.span>
-              ))}
-            </motion.div>
-          ))}
-        </h1>
-
-        <motion.div
-          className="mt-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-        >
-          <p className="text-xl sm:text-2xl lg:text-3xl text-cyan-400 font-light min-h-[60px] flex items-center justify-center">
-            Transformo visões ambiciosas em soluções digitais
-            <motion.span
-              animate={{ opacity: [1, 0, 1] }}
-              transition={{ duration: 1, repeat: Infinity }}
-              className="ml-1"
-            >
-              |
-            </motion.span>
-          </p>
-        </motion.div>
-      </div>
-    </LazyComponent>
   );
 };
 
@@ -463,6 +438,8 @@ const ScrollIndicator = ({
 }: {
   onExploreClick: () => void;
 }) => {
+  const colors = getSafeColors();
+
   return (
     <LazyComponent animation="fadeUp" delay={600}>
       <motion.div
@@ -481,7 +458,7 @@ const ScrollIndicator = ({
           <motion.div
             animate={{ y: [0, 8, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="w-10 h-10 rounded-full border border-cyan-400/30 flex items-center justify-center group-hover:border-cyan-400/50 transition-colors relative"
+            className={`w-10 h-10 rounded-full border ${colors.borders.medium} flex items-center justify-center group-hover:border-cyan-400/50 transition-colors relative`}
           >
             <ArrowDown className="w-4 h-4" />
           </motion.div>
@@ -498,6 +475,7 @@ interface HeroProps {
 
 export const Hero = ({ onExploreClick }: HeroProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const colors = getSafeColors();
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -549,27 +527,22 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
         </LazyBackground>
       </div>
 
-      {/* 2. Elementos Neon */}
+      {/* 2. Elementos Neon (JÁ INCLUI partículas de código e conexões) */}
       <div className="absolute inset-0">
         <HeroNeonElements />
       </div>
 
-      {/* 3. Conexões entre Partículas */}
-      <div className="absolute inset-0">
-        <ParticleConnections />
-      </div>
-
-      {/* 4. Partículas Visuais (Ícones/Símbolos) */}
+      {/* 3. Partículas Visuais (Ícones/Símbolos) - APENAS ESTA É EXTRA */}
       <div className="absolute inset-0">
         <TechParticles />
       </div>
 
-      {/* 5. Partículas de Código (Texto) */}
+      {/* 4. Conexões entre Partículas - APENAS ESTA É EXTRA */}
       <div className="absolute inset-0">
-        <FloatingCodeParticles />
+        <ParticleConnections />
       </div>
 
-      {/* 6. Gradiente Dinâmico */}
+      {/* 5. Gradiente Dinâmico */}
       <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-blue-500/10" />
 
       {/* CONTEÚDO PRINCIPAL */}
@@ -592,7 +565,9 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
       </div>
 
       {/* BORDA DE BRILHO */}
-      <div className="absolute inset-0 border-2 border-cyan-500/20 rounded-none pointer-events-none" />
+      <div
+        className={`absolute inset-0 border-2 ${colors.borders.light} rounded-none pointer-events-none`}
+      />
     </section>
   );
 };

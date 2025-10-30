@@ -13,7 +13,6 @@ import {
   Sparkles,
   Binary,
   CircuitBoard,
-  Satellite,
   Atom,
   CpuIcon,
 } from "lucide-react";
@@ -385,14 +384,6 @@ export const HeroNeonElements: React.FC = () => {
       position: "bottom-40 left-20",
       color: "text-purple-400",
       delay: 2,
-      size: "lg" as const,
-      pulseIntensity: "high" as const,
-    },
-    {
-      Icon: Satellite,
-      position: "bottom-32 right-24",
-      color: "text-cyan-400",
-      delay: 3,
       size: "lg" as const,
       pulseIntensity: "high" as const,
     },
