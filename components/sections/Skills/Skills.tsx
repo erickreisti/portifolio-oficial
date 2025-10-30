@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState, useMemo } from "react";
+import { useRef, useEffect, useState, useMemo, useCallback } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import {
@@ -18,6 +18,7 @@ import {
   Clock,
   Heart,
   Search,
+  Code,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,166 +29,33 @@ import { LazyComponent } from "@/components/optimization/LazyComponent";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import LazyBackground from "@/components/optimization/LazyBackground";
 import { NeonElements } from "@/components/layout/NeonElements";
+import { COLORS } from "@/lib/colors";
+import {
+  STATIC_SKILLS_DATA,
+  STATIC_STATS_DATA,
+  type SkillCategory,
+  type SkillItem,
+} from "@/lib/skills-data";
 
-// Dados estáticos
-const STATIC_SKILLS_DATA = [
-  {
-    id: "frontend",
-    name: "Frontend",
-    category: "FRONTEND & MOBILE",
-    icon: Smartphone,
-    description: "Experiências digitais imersivas e responsivas",
-    color: "from-cyan-500 to-blue-500",
-    skills: [
-      {
-        name: "Next.js 14+",
-        level: 96,
-        popularity: 95,
-        description: "SSR, App Router, Server Actions",
-      },
-      {
-        name: "TypeScript",
-        level: 94,
-        popularity: 90,
-        description: "Type Safety & Advanced Patterns",
-      },
-      {
-        name: "React",
-        level: 92,
-        popularity: 88,
-        description: "Hooks, Context & Performance",
-      },
-      {
-        name: "Tailwind CSS",
-        level: 98,
-        popularity: 85,
-        description: "Utility-first & Design Systems",
-      },
-    ],
-  },
-  {
-    id: "backend",
-    name: "Backend",
-    category: "BACKEND & DATABASE",
-    icon: Server,
-    description: "APIs robustas e arquiteturas escaláveis",
-    color: "from-purple-500 to-pink-500",
-    skills: [
-      {
-        name: "Node.js & Express",
-        level: 92,
-        popularity: 90,
-        description: "REST & GraphQL APIs",
-      },
-      {
-        name: "Prisma & ORM",
-        level: 85,
-        popularity: 82,
-        description: "Data Modeling & Migrations",
-      },
-      {
-        name: "PostgreSQL",
-        level: 88,
-        popularity: 85,
-        description: "Complex Queries & Optimization",
-      },
-      {
-        name: "Supabase & MongoDB",
-        level: 82,
-        popularity: 80,
-        description: "Realtime & NoSQL Databases",
-      },
-    ],
-  },
-  {
-    id: "cloud",
-    name: "Cloud",
-    category: "CLOUD & DEVOPS",
-    icon: Cloud,
-    description: "Infraestrutura moderna e CI/CD",
-    color: "from-orange-500 to-red-500",
-    skills: [
-      {
-        name: "AWS & Vercel",
-        level: 84,
-        popularity: 82,
-        description: "Serverless & Edge Computing",
-      },
-      {
-        name: "Docker & Kubernetes",
-        level: 78,
-        popularity: 75,
-        description: "Containerization & Orchestration",
-      },
-      {
-        name: "CI/CD Pipelines",
-        level: 87,
-        popularity: 80,
-        description: "GitHub Actions & Automation",
-      },
-      {
-        name: "Git & GitHub",
-        level: 96,
-        popularity: 92,
-        description: "Advanced Git Workflows",
-      },
-    ],
-  },
-];
+// 🔧 CONSTANTES E TIPOS OTIMIZADOS
+const ANIMATION_CONFIG = {
+  matrix: { duration: 0.6, stagger: 0.1 },
+  card: { duration: 0.8, ease: "back.out(1.7)" },
+  bar: { duration: 1.5, ease: "power3.out" },
+} as const;
 
-const STATIC_STATS_DATA = [
-  {
-    number: "12+",
-    title: "Tecnologias",
-    subtitle: "Stack Completa",
-    icon: Target,
-  },
-  {
-    number: "92%",
-    title: "Proficiência",
-    subtitle: "Média de Domínio",
-    icon: Award,
-  },
-  {
-    number: "5+",
-    title: "Anos Exp",
-    subtitle: "Experiência Comprovada",
-    icon: Clock,
-  },
-  {
-    number: "100%",
-    title: "Qualidade",
-    subtitle: "Padrão de Excelência",
-    icon: Heart,
-  },
-];
-
-// Componente Skill Matrix 3D
-const SkillMatrix3D = () => {
-  const [selectedCategory, setSelectedCategory] = useState("frontend");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [hoveredSkill, setHoveredSkill] = useState<any>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const skillsData = useMemo(() => STATIC_SKILLS_DATA, []);
-  const currentCategory = skillsData.find((cat) => cat.id === selectedCategory);
-  const filteredSkills = useMemo(
-    () =>
-      currentCategory?.skills.filter((skill) =>
-        skill.name.toLowerCase().includes(searchTerm.toLowerCase())
-      ) || [],
-    [currentCategory, searchTerm]
-  );
-
+// 🎯 HOOK PERSONALIZADO PARA 3D EFFECT
+const use3DMouseEffect = (ref: React.RefObject<HTMLElement>) => {
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
+    const element = ref.current;
+    if (!element) return;
 
+    const handleMouseMove = (e: MouseEvent) => {
       const { clientX, clientY } = e;
       const x = (clientX / window.innerWidth) * 50 - 25;
       const y = (clientY / window.innerHeight) * 50 - 25;
 
-      containerRef.current.style.transform = `perspective(1000px) rotateY(${x}deg) rotateX(${-y}deg)`;
+      element.style.transform = `perspective(1000px) rotateY(${x}deg) rotateX(${-y}deg)`;
     };
 
     let throttled = false;
@@ -203,37 +71,139 @@ const SkillMatrix3D = () => {
 
     window.addEventListener("mousemove", throttledMouseMove);
     return () => window.removeEventListener("mousemove", throttledMouseMove);
-  }, []);
+  }, [ref]);
+};
+
+// 🎨 COMPONENTE SKILL MATRIX 3D REFATORADO
+const SkillMatrix3D = () => {
+  const [selectedCategory, setSelectedCategory] = useState("frontend");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [hoveredSkill, setHoveredSkill] = useState<SkillItem | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  use3DMouseEffect(containerRef);
+
+  const { currentCategory, filteredSkills } = useMemo(() => {
+    const currentCategory = STATIC_SKILLS_DATA.find(
+      (cat) => cat.id === selectedCategory
+    );
+    const filteredSkills =
+      currentCategory?.skills.filter((skill) =>
+        skill.name.toLowerCase().includes(searchTerm.toLowerCase())
+      ) || [];
+
+    return { currentCategory, filteredSkills };
+  }, [selectedCategory, searchTerm]);
+
+  const SkillLevelBadge = useCallback(
+    ({ level }: { level: number }) => (
+      <div className="absolute top-3 right-3">
+        <div className="text-cyan-400 font-mono font-bold text-sm">
+          {level}%
+        </div>
+      </div>
+    ),
+    []
+  );
+
+  const SkillProgressBar = useCallback(
+    ({
+      level,
+      color,
+      index,
+    }: {
+      level: number;
+      color: string;
+      index: number;
+    }) => (
+      <div className="relative">
+        <div className="w-full bg-gray-800/50 rounded-full h-2 overflow-hidden">
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${level}%` }}
+            transition={{
+              duration: ANIMATION_CONFIG.bar.duration,
+              delay: index * 0.2,
+            }}
+            className={`h-full bg-gradient-to-r ${color} rounded-full relative`}
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-30 animate-pulse" />
+          </motion.div>
+        </div>
+        <div className="flex justify-between text-xs text-gray-400 mt-1">
+          <span>Proficiência</span>
+          <span>Popularidade: {level}%</span>
+        </div>
+      </div>
+    ),
+    []
+  );
+
+  const SkillTooltip = useCallback(
+    ({ skill }: { skill: SkillItem }) => (
+      <motion.div
+        initial={{ opacity: 0, y: 10, scale: 0.8 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 10, scale: 0.8 }}
+        className="absolute z-10 top-full left-1/2 transform -translate-x-1/2 mt-2 w-64 bg-gray-900/95 backdrop-blur-xl rounded-xl border border-cyan-500/20 p-4 shadow-2xl"
+      >
+        <div className="text-white font-bold text-sm mb-2">{skill.name}</div>
+        <div className="space-y-2 text-xs">
+          <div className="flex justify-between">
+            <span className="text-gray-400">Proficiência:</span>
+            <span className="text-cyan-400 font-mono">{skill.level}%</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-400">Demanda:</span>
+            <span className="text-green-400 font-mono">
+              {skill.popularity}%
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-400">Experiência:</span>
+            <span className="text-yellow-400">
+              {skill.level >= 90
+                ? "Expert"
+                : skill.level >= 80
+                ? "Avançado"
+                : skill.level >= 70
+                ? "Intermediário"
+                : "Básico"}
+            </span>
+          </div>
+          <div className="pt-2 border-t border-gray-700">
+            <span className="text-gray-400 text-xs">{skill.description}</span>
+          </div>
+        </div>
+      </motion.div>
+    ),
+    []
+  );
 
   return (
     <LazyComponent animation="fadeUp" delay={200}>
       <div className="space-y-8">
-        {/* Filtros e Search */}
+        {/* 🎛️ FILTROS E BUSCA */}
         <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-          {/* Categorias */}
           <div className="flex flex-wrap gap-2">
-            {skillsData.map((category) => {
-              const Icon = category.icon;
-              return (
-                <motion.button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all duration-300 ${
-                    selectedCategory === category.id
-                      ? `bg-gradient-to-r ${category.color} text-white border-transparent shadow-lg`
-                      : "bg-gray-800/50 border-cyan-500/20 text-gray-300 hover:border-cyan-400/50"
-                  }`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span className="font-semibold">{category.name}</span>
-                </motion.button>
-              );
-            })}
+            {STATIC_SKILLS_DATA.map((category) => (
+              <motion.button
+                key={category.id}
+                onClick={() => setSelectedCategory(category.id)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all duration-300 ${
+                  selectedCategory === category.id
+                    ? `bg-gradient-to-r ${category.color} text-white border-transparent shadow-lg`
+                    : "bg-gray-800/50 border-cyan-500/20 text-gray-300 hover:border-cyan-400/50"
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <category.icon className="w-4 h-4" />
+                <span className="font-semibold">{category.name}</span>
+              </motion.button>
+            ))}
           </div>
 
-          {/* Search */}
           <LazyComponent animation="fadeIn" delay={100}>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -248,7 +218,7 @@ const SkillMatrix3D = () => {
           </LazyComponent>
         </div>
 
-        {/* Matrix 3D */}
+        {/* 🎪 MATRIX 3D */}
         <LazyComponent animation="scale" delay={300}>
           <div className="relative">
             <motion.div
@@ -261,113 +231,60 @@ const SkillMatrix3D = () => {
                   key={skill.name}
                   initial={{ opacity: 0, scale: 0.8, rotateY: -180 }}
                   animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  transition={{
+                    duration: ANIMATION_CONFIG.matrix.duration,
+                    delay: index * ANIMATION_CONFIG.matrix.stagger,
+                  }}
                   className="relative group cursor-pointer"
                   onMouseEnter={() => setHoveredSkill(skill)}
                   onMouseLeave={() => setHoveredSkill(null)}
                   style={{ transformStyle: "preserve-3d" as const }}
                 >
-                  {/* Card de Skill */}
+                  {/* 🃏 CARD DE SKILL */}
                   <div
-                    className={`bg-gray-900/60 backdrop-blur-xl rounded-2xl p-4 border ${
+                    className={`
+                    bg-gray-900/60 backdrop-blur-xl rounded-2xl p-4 border h-32 flex flex-col justify-between 
+                    relative overflow-hidden transition-all duration-300
+                    ${
                       hoveredSkill?.name === skill.name
                         ? "border-cyan-400/50 shadow-2xl shadow-cyan-400/20 scale-110"
                         : "border-cyan-500/20"
-                    } transition-all duration-300 h-32 flex flex-col justify-between relative overflow-hidden`}
+                    }
+                  `}
                   >
-                    {/* Nível de Proficiência */}
-                    <div className="absolute top-3 right-3">
-                      <div className="text-cyan-400 font-mono font-bold text-sm">
-                        {skill.level}%
-                      </div>
-                    </div>
+                    <SkillLevelBadge level={skill.level} />
 
-                    {/* Nome da Skill */}
-                    <div className="text-white font-bold text-lg mb-2">
+                    <div className="text-white font-bold text-lg mb-2 line-clamp-1">
                       {skill.name}
                     </div>
 
-                    {/* Barra de Progresso 3D */}
-                    <div className="relative">
-                      <div className="w-full bg-gray-800/50 rounded-full h-2 overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${skill.level}%` }}
-                          transition={{ duration: 1.5, delay: index * 0.2 }}
-                          className={`h-full bg-gradient-to-r ${currentCategory?.color} rounded-full relative`}
-                        >
-                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-30 animate-pulse" />
-                        </motion.div>
-                      </div>
+                    <SkillProgressBar
+                      level={skill.level}
+                      color={
+                        currentCategory?.color || "from-cyan-500 to-blue-500"
+                      }
+                      index={index}
+                    />
 
-                      {/* Popularidade */}
-                      <div className="flex justify-between text-xs text-gray-400 mt-1">
-                        <span>Proficiência</span>
-                        <span>Popularidade: {skill.popularity}%</span>
-                      </div>
-                    </div>
-
-                    {/* Efeito de Glow no Hover */}
                     <div
                       className={`absolute inset-0 bg-gradient-to-r ${currentCategory?.color} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-300`}
                     />
                   </div>
 
-                  {/* Tooltip Detalhado */}
                   <AnimatePresence>
                     {hoveredSkill?.name === skill.name && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10, scale: 0.8 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 10, scale: 0.8 }}
-                        className="absolute z-10 top-full left-1/2 transform -translate-x-1/2 mt-2 w-64 bg-gray-900/95 backdrop-blur-xl rounded-xl border border-cyan-500/20 p-4 shadow-2xl"
-                      >
-                        <div className="text-white font-bold text-sm mb-2">
-                          {skill.name}
-                        </div>
-                        <div className="space-y-2 text-xs">
-                          <div className="flex justify-between">
-                            <span className="text-gray-400">Proficiência:</span>
-                            <span className="text-cyan-400 font-mono">
-                              {skill.level}%
-                            </span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-400">Demanda:</span>
-                            <span className="text-green-400 font-mono">
-                              {skill.popularity}%
-                            </span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-400">Experiência:</span>
-                            <span className="text-yellow-400">
-                              {skill.level >= 90
-                                ? "Expert"
-                                : skill.level >= 80
-                                ? "Avançado"
-                                : skill.level >= 70
-                                ? "Intermediário"
-                                : "Básico"}
-                            </span>
-                          </div>
-                          <div className="pt-2 border-t border-gray-700">
-                            <span className="text-gray-400 text-xs">
-                              {skill.description}
-                            </span>
-                          </div>
-                        </div>
-                      </motion.div>
+                      <SkillTooltip skill={skill} />
                     )}
                   </AnimatePresence>
                 </motion.div>
               ))}
             </motion.div>
 
-            {/* Legenda */}
+            {/* 📊 LEGENDA */}
             <LazyComponent animation="fadeUp" delay={500}>
               <div className="flex justify-center mt-8">
                 <div className="flex items-center gap-6 text-sm text-gray-400">
-                  {skillsData.map((category) => (
+                  {STATIC_SKILLS_DATA.map((category) => (
                     <div key={category.id} className="flex items-center gap-2">
                       <div
                         className={`w-3 h-3 bg-gradient-to-r ${category.color} rounded-full`}
@@ -385,18 +302,13 @@ const SkillMatrix3D = () => {
   );
 };
 
-// Componente Skill Bar
+// 📊 COMPONENTE SKILL BAR OTIMIZADO
 const SkillBar = ({
   name,
   level,
   description,
   index,
-}: {
-  name: string;
-  level: number;
-  description: string;
-  index: number;
-}) => {
+}: SkillItem & { index: number }) => {
   const barRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(barRef, { once: true, amount: 0.3 });
 
@@ -404,8 +316,8 @@ const SkillBar = ({
     if (isInView && barRef.current) {
       gsap.to(barRef.current, {
         width: `${level}%`,
-        duration: 1.5,
-        ease: "power3.out",
+        duration: ANIMATION_CONFIG.bar.duration,
+        ease: ANIMATION_CONFIG.bar.ease,
         delay: index * 0.1,
       });
     }
@@ -423,7 +335,7 @@ const SkillBar = ({
             <span className="block text-sm lg:text-base font-semibold text-white group-hover:text-cyan-400 transition-colors duration-300 mb-1">
               {name}
             </span>
-            <span className="block text-xs lg:text-sm text-gray-400 leading-relaxed">
+            <span className="block text-xs lg:text-sm text-gray-400 leading-relaxed line-clamp-2">
               {description}
             </span>
           </div>
@@ -446,8 +358,14 @@ const SkillBar = ({
   );
 };
 
-// Componente Skill Card
-const SkillCard = ({ group, index }: { group: any; index: number }) => {
+// 🃏 COMPONENTE SKILL CARD REFATORADO
+const SkillCard = ({
+  group,
+  index,
+}: {
+  group: SkillCategory;
+  index: number;
+}) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.3 });
 
@@ -462,8 +380,8 @@ const SkillCard = ({ group, index }: { group: any; index: number }) => {
           opacity: 1,
           y: 0,
           scale: 1,
-          duration: 0.8,
-          ease: "back.out(1.7)",
+          duration: ANIMATION_CONFIG.card.duration,
+          ease: ANIMATION_CONFIG.card.ease,
           delay: index * 0.2,
         }
       );
@@ -479,7 +397,9 @@ const SkillCard = ({ group, index }: { group: any; index: number }) => {
         whileHover={{ y: -5, scale: 1.02 }}
         transition={{ type: "spring", stiffness: 300 }}
       >
-        <Card className="bg-gray-900/60 backdrop-blur-xl border border-cyan-500/20 shadow-2xl hover:shadow-cyan-400/20 hover:border-cyan-400/50 transition-all duration-500 group h-full">
+        <Card
+          className={`${COLORS.classes.card} ${COLORS.classes.cardHover} group h-full`}
+        >
           <CardHeader className="pb-4 border-b border-cyan-400/20">
             <div className="flex items-center gap-4 mb-3">
               <motion.div
@@ -489,17 +409,21 @@ const SkillCard = ({ group, index }: { group: any; index: number }) => {
               >
                 <group.icon className="w-6 h-6 text-cyan-400" />
               </motion.div>
-              <CardTitle className="text-xl lg:text-2xl font-black text-cyan-400">
+              <CardTitle
+                className={`text-xl lg:text-2xl font-black ${COLORS.classes.text.accent}`}
+              >
                 {group.category}
               </CardTitle>
             </div>
-            <p className="text-sm lg:text-base text-gray-400">
+            <p
+              className={`text-sm lg:text-base ${COLORS.classes.text.secondary}`}
+            >
               {group.description}
             </p>
           </CardHeader>
 
           <CardContent className="pt-6 space-y-6 lg:space-y-8">
-            {group.skills.map((skill: any, skillIndex: number) => (
+            {group.skills.map((skill, skillIndex) => (
               <LazyComponent
                 key={skill.name}
                 animation="fadeIn"
@@ -522,8 +446,14 @@ const SkillCard = ({ group, index }: { group: any; index: number }) => {
   );
 };
 
-// Componente Stat Card
-const SkillsStatCard = ({ stat, index }: { stat: any; index: number }) => {
+// 🎯 COMPONENTE STAT CARD UNIFICADO
+const SkillsStatCard = ({
+  stat,
+  index,
+}: {
+  stat: (typeof STATIC_STATS_DATA)[number];
+  index: number;
+}) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.3 });
 
@@ -569,17 +499,13 @@ const SkillsStatCard = ({ stat, index }: { stat: any; index: number }) => {
   );
 };
 
-// Componente Principal Skills
+// 🚀 COMPONENTE PRINCIPAL SKILLS
 export const Skills = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
   usePerformanceMonitor("SkillsSection");
 
-  const skillsData = useMemo(() => STATIC_SKILLS_DATA, []);
-  const statsData = useMemo(() => STATIC_STATS_DATA, []);
-
-  // GSAP Animations
   useEffect(() => {
     if (!isInView || !sectionRef.current) return;
 
@@ -598,17 +524,16 @@ export const Skills = () => {
     <section
       id="skills"
       ref={sectionRef}
-      className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 section-with-header"
+      className={`relative min-h-screen ${COLORS.classes.background.section} section-with-header`}
     >
       <LazyBackground priority="medium">
         <PremiumBackground intensity="medium">
-          {/* 🔥 NEON ELEMENTS GENÉRICO */}
           <NeonElements />
         </PremiumBackground>
       </LazyBackground>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
-        {/* Header */}
+        {/* 🎪 HEADER */}
         <motion.div
           className="text-center mb-16 lg:mb-20"
           initial={{ opacity: 0, y: 50 }}
@@ -621,7 +546,7 @@ export const Skills = () => {
             whileInView={{ scale: 1, rotate: 0 }}
             transition={{ duration: 0.6, delay: 0.1, type: "spring" }}
             viewport={{ once: true }}
-            className="inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-400/10 px-6 py-3 rounded-full border border-cyan-400/30 backdrop-blur-2xl mb-6 relative overflow-hidden group"
+            className={`inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider ${COLORS.classes.text.accent} bg-cyan-400/10 px-6 py-3 rounded-full ${COLORS.borders.medium} backdrop-blur-2xl mb-6 relative overflow-hidden group`}
           >
             <Zap className="w-4 h-4 mr-3 animate-pulse" />
             DOMÍNIO TECNOLÓGICO
@@ -634,40 +559,32 @@ export const Skills = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
+            <h1
+              className={`text-4xl sm:text-5xl lg:text-6xl font-black ${COLORS.classes.text.primary} mb-6 leading-tight`}
+            >
               EXPERTISE EM{" "}
-              <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                FULL STACK
-              </span>
+              <span className={COLORS.classes.text.gradient}>FULL STACK</span>
             </h1>
-            <p className="text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            <p
+              className={`text-lg lg:text-xl ${COLORS.classes.text.secondary} max-w-3xl mx-auto leading-relaxed`}
+            >
               Domínio completo do ecossistema moderno de desenvolvimento, desde
               interfaces imersivas até infraestrutura escalável
             </p>
           </motion.div>
         </motion.div>
 
-        {/* Skill Matrix 3D */}
-        <LazyComponent animation="fadeUp" delay={300}>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            viewport={{ once: true }}
-            className="mb-16 lg:mb-20"
-          >
-            <SkillMatrix3D />
-          </motion.div>
-        </LazyComponent>
+        {/* 🎨 SKILL MATRIX 3D */}
+        <SkillMatrix3D />
 
-        {/* Grid de Skills */}
+        {/* 🃏 GRID DE SKILLS */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 mb-16 lg:mb-20">
-          {skillsData.map((group, index) => (
-            <SkillCard key={group.category} group={group} index={index} />
+          {STATIC_SKILLS_DATA.map((group, index) => (
+            <SkillCard key={group.id} group={group} index={index} />
           ))}
         </div>
 
-        {/* Stats */}
+        {/* 📊 STATS */}
         <LazyComponent animation="fadeUp" delay={400}>
           <motion.div
             className="mb-16 lg:mb-20"
@@ -677,14 +594,14 @@ export const Skills = () => {
             viewport={{ once: true }}
           >
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-              {statsData.map((stat, index) => (
+              {STATIC_STATS_DATA.map((stat, index) => (
                 <SkillsStatCard key={stat.title} stat={stat} index={index} />
               ))}
             </div>
           </motion.div>
         </LazyComponent>
 
-        {/* CTA */}
+        {/* 🚀 CTA FINAL */}
         <LazyComponent animation="fadeUp" delay={600}>
           <motion.div
             className="text-center"
@@ -693,7 +610,9 @@ export const Skills = () => {
             transition={{ duration: 0.6, delay: 0.6 }}
             viewport={{ once: true }}
           >
-            <div className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-2xl p-8 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 relative overflow-hidden group">
+            <div
+              className={`bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-2xl p-8 rounded-2xl ${COLORS.borders.light} shadow-2xl shadow-cyan-400/10 relative overflow-hidden group`}
+            >
               <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-8 relative z-10">
                 <motion.div
                   initial={{ scale: 0, rotate: -180 }}
@@ -706,10 +625,14 @@ export const Skills = () => {
                   <GitBranch className="w-6 h-6 text-cyan-400" />
                 </motion.div>
                 <div className="text-center lg:text-left flex-1">
-                  <h3 className="text-xl lg:text-2xl font-black text-white mb-2">
+                  <h3
+                    className={`text-xl lg:text-2xl font-black ${COLORS.classes.text.primary} mb-2`}
+                  >
                     Pronto para elevar seu projeto?
                   </h3>
-                  <p className="text-gray-300 text-base lg:text-lg">
+                  <p
+                    className={`${COLORS.classes.text.secondary} text-base lg:text-lg`}
+                  >
                     Vamos aplicar essa expertise técnica no seu próximo desafio
                   </p>
                 </div>
@@ -720,11 +643,8 @@ export const Skills = () => {
                   viewport={{ once: true }}
                   className="w-full lg:w-auto"
                 >
-                  <Button asChild className="w-full lg:w-auto">
-                    <a
-                      href="#contact"
-                      className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl border-none shadow-2xl shadow-cyan-400/30 transition-all duration-500 hover:shadow-cyan-400/50 hover:scale-105 relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900"
-                    >
+                  <Button asChild className={COLORS.classes.button.primary}>
+                    <a href="#contact">
                       <Sparkles className="w-4 h-4 mr-2 transition-transform duration-300" />
                       INICIAR COLABORAÇÃO
                     </a>
@@ -734,6 +654,11 @@ export const Skills = () => {
             </div>
           </motion.div>
         </LazyComponent>
+      </div>
+
+      {/* 🔗 ÍCONE PARA O HEADER */}
+      <div className="hidden">
+        <Code id="skills-icon" />
       </div>
     </section>
   );

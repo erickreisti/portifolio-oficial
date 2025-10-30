@@ -18,6 +18,7 @@ import {
   Clock,
   Heart,
   Calendar,
+  User,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,6 +28,7 @@ import { OptimizedImage } from "@/components/optimization/OptimizedImage";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import LazyBackground from "@/components/optimization/LazyBackground";
 import { NeonElements } from "@/components/layout/NeonElements";
+import { COLORS } from "@/lib/colors";
 
 // Dados estáticos
 const STATIC_TIMELINE_DATA = [
@@ -175,7 +177,7 @@ const InteractiveTimeline = () => {
                   className={`w-5/12 ${index % 2 === 0 ? "pr-12" : "pl-12"}`}
                 >
                   <motion.div
-                    className={`bg-gray-900/60 backdrop-blur-xl p-6 rounded-2xl border ${
+                    className={`${COLORS.classes.card} ${
                       isActive
                         ? "border-cyan-400/50 shadow-2xl shadow-cyan-400/20"
                         : "border-gray-700/30"
@@ -294,7 +296,7 @@ const StatCard = ({ stat, index }: { stat: any; index: number }) => {
     <LazyComponent animation="scale" delay={index * 100}>
       <motion.div
         ref={cardRef}
-        className="text-center p-6 bg-gray-900/40 backdrop-blur-2xl rounded-2xl border border-cyan-500/20 transition-all duration-400 cursor-pointer relative overflow-hidden hover:border-cyan-400/50 hover:bg-cyan-500/10 group"
+        className={`text-center p-6 bg-gray-900/40 backdrop-blur-2xl rounded-2xl ${COLORS.borders.light} transition-all duration-400 cursor-pointer relative overflow-hidden hover:border-cyan-400/50 hover:bg-cyan-500/10 group`}
         whileHover={{ y: -8, scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
@@ -406,11 +408,10 @@ export const About = () => {
     <section
       id="about"
       ref={sectionRef}
-      className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 section-with-header"
+      className={`relative min-h-screen ${COLORS.classes.background.section} section-with-header`}
     >
       <LazyBackground priority="medium">
         <PremiumBackground intensity="medium">
-          {/* 🔥 NEON ELEMENTS GENÉRICO */}
           <NeonElements />
         </PremiumBackground>
       </LazyBackground>
@@ -429,7 +430,7 @@ export const About = () => {
             whileInView={{ scale: 1, rotate: 0 }}
             transition={{ duration: 0.6, delay: 0.1, type: "spring" }}
             viewport={{ once: true }}
-            className="inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-400/10 px-6 py-3 rounded-full border border-cyan-400/30 backdrop-blur-2xl mb-6 relative overflow-hidden group"
+            className={`inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider ${COLORS.classes.text.accent} bg-cyan-400/10 px-6 py-3 rounded-full ${COLORS.borders.medium} backdrop-blur-2xl mb-6 relative overflow-hidden group`}
           >
             <Sparkles className="w-4 h-4 mr-3 animate-pulse" />
             JORNADA & EXPERTISE
@@ -442,13 +443,17 @@ export const About = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
+            <h1
+              className={`text-4xl sm:text-5xl lg:text-6xl font-black ${COLORS.classes.text.primary} mb-6 leading-tight`}
+            >
               MAIS DO QUE CÓDIGO,{" "}
-              <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+              <span className={COLORS.classes.text.gradient}>
                 UMA VISÃO ESTRATÉGICA
               </span>
             </h1>
-            <p className="text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            <p
+              className={`text-lg lg:text-xl ${COLORS.classes.text.secondary} max-w-3xl mx-auto leading-relaxed`}
+            >
               Conheça a mente por trás das soluções inovadoras e a paixão que
               impulsiona cada linha de código
             </p>
@@ -513,7 +518,7 @@ export const About = () => {
                   whileInView={{ opacity: 1, y: 0, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
                   viewport={{ once: true }}
-                  className="bg-gray-900/60 backdrop-blur-2xl p-6 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 transition-all duration-400 relative overflow-hidden hover:border-cyan-400/50 hover:shadow-cyan-400/20 group"
+                  className={`${COLORS.classes.card} ${COLORS.classes.cardHover} relative overflow-hidden group`}
                   whileHover={{ y: -5 }}
                 >
                   <motion.div
@@ -521,7 +526,9 @@ export const About = () => {
                     animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   />
-                  <p className="text-gray-200 text-base lg:text-lg leading-relaxed font-light relative z-10">
+                  <p
+                    className={`text-gray-200 text-base lg:text-lg leading-relaxed font-light relative z-10`}
+                  >
                     {bioData.paragraph1}
                   </p>
                 </motion.div>
@@ -533,7 +540,7 @@ export const About = () => {
                   whileInView={{ opacity: 1, y: 0, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
                   viewport={{ once: true }}
-                  className="bg-gray-900/60 backdrop-blur-2xl p-6 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 transition-all duration-400 relative overflow-hidden hover:border-cyan-400/50 hover:shadow-cyan-400/20 group"
+                  className={`${COLORS.classes.card} ${COLORS.classes.cardHover} relative overflow-hidden group`}
                   whileHover={{ y: -5 }}
                 >
                   <motion.div
@@ -541,7 +548,9 @@ export const About = () => {
                     animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
                     transition={{ duration: 2, repeat: Infinity, delay: 1 }}
                   />
-                  <p className="text-gray-200 text-base lg:text-lg leading-relaxed font-light relative z-10">
+                  <p
+                    className={`text-gray-200 text-base lg:text-lg leading-relaxed font-light relative z-10`}
+                  >
                     {bioData.paragraph2}
                   </p>
                 </motion.div>
@@ -559,13 +568,17 @@ export const About = () => {
                 transition={{ duration: 0.7, delay: 0.3 }}
                 viewport={{ once: true }}
               >
-                <Card className="bg-gray-900/60 backdrop-blur-2xl border-cyan-400/20 shadow-2xl shadow-cyan-400/10 transition-all duration-400 hover:shadow-cyan-400/20">
+                <Card
+                  className={`${COLORS.classes.card} ${COLORS.classes.cardHover}`}
+                >
                   <CardHeader className="pb-4 border-b border-cyan-400/20 relative z-10">
-                    <CardTitle className="text-xl font-black text-cyan-400 flex items-center mb-2">
+                    <CardTitle
+                      className={`text-xl font-black ${COLORS.classes.text.accent} flex items-center mb-2`}
+                    >
                       <Brain className="w-5 h-5 mr-3" />
                       ESPECIALIZAÇÕES
                     </CardTitle>
-                    <p className="text-gray-400 text-sm">
+                    <p className={`${COLORS.classes.text.secondary} text-sm`}>
                       Áreas onde minha expertise faz a diferença
                     </p>
                   </CardHeader>
@@ -587,13 +600,17 @@ export const About = () => {
                 transition={{ duration: 0.7, delay: 0.5 }}
                 viewport={{ once: true }}
               >
-                <Card className="bg-gray-900/60 backdrop-blur-2xl border-cyan-400/20 shadow-2xl shadow-cyan-400/10 transition-all duration-400 hover:shadow-cyan-400/20">
+                <Card
+                  className={`${COLORS.classes.card} ${COLORS.classes.cardHover}`}
+                >
                   <CardHeader className="pb-4 border-b border-cyan-400/20 relative z-10">
-                    <CardTitle className="text-xl font-black text-cyan-400 flex items-center mb-2">
+                    <CardTitle
+                      className={`text-xl font-black ${COLORS.classes.text.accent} flex items-center mb-2`}
+                    >
                       <Shield className="w-5 h-5 mr-3" />
                       COMPROMISSO
                     </CardTitle>
-                    <p className="text-gray-400 text-sm">
+                    <p className={`${COLORS.classes.text.secondary} text-sm`}>
                       Meu padrão de excelência em cada projeto
                     </p>
                   </CardHeader>
@@ -613,7 +630,9 @@ export const About = () => {
                           >
                             <highlight.icon className="w-3 h-3 text-cyan-400" />
                           </motion.div>
-                          <span className="text-white font-medium text-sm group-hover:text-cyan-400">
+                          <span
+                            className={`text-white font-medium text-sm group-hover:text-cyan-400`}
+                          >
                             {highlight.text}
                           </span>
                         </div>
@@ -647,20 +666,24 @@ export const About = () => {
                 whileInView={{ scale: 1, rotate: 0 }}
                 transition={{ duration: 0.6, delay: 0.1, type: "spring" }}
                 viewport={{ once: true }}
-                className="inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-400/10 px-6 py-3 rounded-full border border-cyan-400/30 backdrop-blur-2xl mb-6 relative overflow-hidden group"
+                className={`inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider ${COLORS.classes.text.accent} bg-cyan-400/10 px-6 py-3 rounded-full ${COLORS.borders.medium} backdrop-blur-2xl mb-6 relative overflow-hidden group`}
               >
                 <Calendar className="w-4 h-4 mr-3 animate-pulse" />
                 MINHA JORNADA
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-600" />
               </motion.div>
 
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-6">
+              <h2
+                className={`text-3xl sm:text-4xl lg:text-5xl font-black ${COLORS.classes.text.primary} mb-6`}
+              >
                 Linha do Tempo{" "}
-                <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                <span className={COLORS.classes.text.gradient}>
                   Profissional
                 </span>
               </h2>
-              <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+              <p
+                className={`text-lg ${COLORS.classes.text.secondary} max-w-2xl mx-auto`}
+              >
                 Da paixão inicial pela tecnologia até a expertise em
                 desenvolvimento fullstack
               </p>
@@ -680,7 +703,7 @@ export const About = () => {
             className="mt-16 lg:mt-20"
           >
             <motion.div
-              className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-2xl p-6 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/10 relative overflow-hidden group"
+              className={`bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-2xl p-6 rounded-2xl ${COLORS.borders.light} shadow-2xl shadow-cyan-400/10 relative overflow-hidden group`}
               whileHover={{ y: -5 }}
             >
               <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-8 relative z-10">
@@ -695,10 +718,14 @@ export const About = () => {
                   <Rocket className="w-6 h-6 text-cyan-400" />
                 </motion.div>
                 <div className="text-center lg:text-left flex-1">
-                  <h3 className="text-xl lg:text-2xl font-black text-white mb-2">
+                  <h3
+                    className={`text-xl lg:text-2xl font-black ${COLORS.classes.text.primary} mb-2`}
+                  >
                     Pronto para o próximo nível?
                   </h3>
-                  <p className="text-gray-300 text-base lg:text-lg">
+                  <p
+                    className={`${COLORS.classes.text.secondary} text-base lg:text-lg`}
+                  >
                     Vamos transformar sua visão em realidade com tecnologia de
                     ponta
                   </p>
@@ -713,7 +740,7 @@ export const About = () => {
                   <Button asChild className="w-full lg:w-auto">
                     <a
                       href="#contact"
-                      className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl border-none shadow-2xl shadow-cyan-400/30 transition-all duration-500 hover:shadow-cyan-400/50 hover:scale-105 relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+                      className={COLORS.classes.button.primary}
                     >
                       <Sparkles className="w-4 h-4 mr-2 transition-transform duration-300" />
                       INICIAR PROJETO
@@ -724,6 +751,11 @@ export const About = () => {
             </motion.div>
           </motion.div>
         </LazyComponent>
+      </div>
+
+      {/* ÍCONE PARA O HEADER - ADICIONADO NO FINAL */}
+      <div className="hidden">
+        <User id="about-icon" />
       </div>
     </section>
   );
