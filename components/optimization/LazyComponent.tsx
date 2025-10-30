@@ -26,23 +26,23 @@ export const LazyComponent = ({
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (priority !== "high") {
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-            observer.disconnect();
-          }
-        },
-        { threshold, rootMargin }
-      );
+    if (priority === "high") return;
 
-      if (ref.current) {
-        observer.observe(ref.current);
-      }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold, rootMargin }
+    );
 
-      return () => observer.disconnect();
+    if (ref.current) {
+      observer.observe(ref.current);
     }
+
+    return () => observer.disconnect();
   }, [threshold, rootMargin, priority]);
 
   const animations = {
@@ -77,7 +77,7 @@ export const LazyComponent = ({
       transition={{
         duration: 0.6,
         ease: "easeOut",
-        delay: delay / 1000,
+        delay: isVisible ? delay / 1000 : 0,
       }}
     >
       {children}

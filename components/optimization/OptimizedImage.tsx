@@ -27,16 +27,19 @@ export const OptimizedImage = ({
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
+  // Fallback melhorado
   if (hasError) {
     return (
       <div
         className={`bg-gray-800 flex items-center justify-center ${className} ${
           fill ? "w-full h-full" : ""
         }`}
+        role="img"
+        aria-label={alt}
       >
         <div className="text-gray-500 text-center p-4">
           <div className="w-8 h-8 mx-auto mb-2 bg-gray-600 rounded-full flex items-center justify-center">
-            <span className="text-white text-xs">?</span>
+            <span className="text-white text-xs">📷</span>
           </div>
           <span className="text-sm">Imagem não disponível</span>
         </div>
@@ -64,14 +67,20 @@ export const OptimizedImage = ({
           ${fill ? "w-full h-full" : ""}
         `}
         priority={priority}
+        quality={80}
         onLoad={() => setIsLoading(false)}
         onError={() => {
           setIsLoading(false);
           setHasError(true);
         }}
       />
+
+      {/* Loading state melhorado */}
       {isLoading && (
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-700 to-gray-900 animate-pulse flex items-center justify-center">
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-gray-700 to-gray-900 animate-pulse flex items-center justify-center"
+          aria-hidden="true"
+        >
           <div className="w-8 h-8 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
         </div>
       )}

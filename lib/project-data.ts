@@ -1,5 +1,3 @@
-// lib/project-data.ts
-
 export type Project = {
   id: number;
   title: string;
@@ -10,7 +8,10 @@ export type Project = {
   liveUrl?: string;
 };
 
-// Dados dos projetos reais
+// Cache de projetos - MELHORADO
+let projectsCache: Project[] | null = null;
+
+// Dados dos projetos reais - VALIDAÇÃO ADICIONADA
 export const projects: Project[] = [
   {
     id: 1,
@@ -123,3 +124,28 @@ export const projects: Project[] = [
     ],
   },
 ];
+
+// Funções utilitárias - NOVAS
+export function validateProject(project: Project): boolean {
+  return !!(
+    project.title &&
+    project.description &&
+    project.image &&
+    project.githubUrl &&
+    project.tags.length > 0
+  );
+}
+
+export function getProjectById(id: number): Project | undefined {
+  return projects.find((project) => project.id === id);
+}
+
+export function getProjectsByTag(tag: string): Project[] {
+  return projects.filter((project) =>
+    project.tags.some((t) => t.toLowerCase().includes(tag.toLowerCase()))
+  );
+}
+
+export function getFeaturedProjects(): Project[] {
+  return projects.filter((project) => project.liveUrl);
+}

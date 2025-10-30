@@ -194,7 +194,7 @@ const staticProjectsData = {
   ],
 };
 
-/* ---------------- Componentes de Modal ---------------- */
+/* ---------------- Componentes de Modal Corrigidos ---------------- */
 const TechnologiesModal: React.FC<{
   technologies: string[];
   onClose: () => void;
@@ -205,14 +205,14 @@ const TechnologiesModal: React.FC<{
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[9990] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+        className="modal-overlay fixed inset-0 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
         onClick={onClose}
       >
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          className="bg-gray-900/95 backdrop-blur-xl rounded-2xl border border-cyan-500/20 shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden"
+          className="modal-content bg-gray-900/95 backdrop-blur-xl rounded-2xl border border-cyan-500/20 shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center justify-between p-6 border-b border-cyan-500/20">
@@ -263,14 +263,14 @@ const ImageZoomModal: React.FC<{
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[9990] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm"
+        className="modal-overlay fixed inset-0 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm"
         onClick={onClose}
       >
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          className="relative max-w-6xl w-full max-h-[90vh]"
+          className="modal-content relative max-w-6xl w-full max-h-[90vh]"
           onClick={(e) => e.stopPropagation()}
         >
           <button
@@ -627,7 +627,7 @@ const ProjectShowcase: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[9990] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+              className="modal-overlay fixed inset-0 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
               onClick={() => {
                 setSelectedProject(null);
                 setIsPlaying(false);
@@ -637,7 +637,7 @@ const ProjectShowcase: React.FC = () => {
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className="bg-gray-900/95 backdrop-blur-xl rounded-2xl border border-cyan-500/20 shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
+                className="modal-content bg-gray-900/95 backdrop-blur-xl rounded-2xl border border-cyan-500/20 shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex items-center justify-between p-6 border-b border-cyan-500/20">
@@ -809,8 +809,7 @@ const Projects: React.FC = () => {
     <section
       id="projects"
       ref={sectionRef}
-      className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 py-16 sm:py-20"
-      style={{ overflow: "visible" }}
+      className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 section-with-header"
     >
       <LazyBackground priority="medium">
         <PremiumBackground intensity="medium">
@@ -825,7 +824,7 @@ const Projects: React.FC = () => {
         </PremiumBackground>
       </LazyBackground>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
         {/* Header */}
         <motion.div
           className="text-center mb-16 projects-header"

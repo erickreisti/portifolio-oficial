@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Header from "@/components/sections/Header/Header";
 import Hero from "@/components/sections/Hero/Hero";
 import About from "@/components/sections/About/About";
@@ -8,9 +9,11 @@ import Skills from "@/components/sections/Skills/Skills";
 import Projects from "@/components/sections/Projects/Projects";
 import Contact from "@/components/sections/Contact/Contact";
 import Footer from "@/components/sections/Footer/Footer";
+import { TechLoading } from "@/components/layout/TechLoading";
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState("hero");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,17 +49,33 @@ export default function Home() {
     }
   };
 
+  const handleLoadingComplete = () => {
+    setIsLoading(false);
+  };
+
   return (
     <div className="min-h-screen bg-gray-950 relative">
-      <Header activeSection={activeSection} onNavClick={handleNavClick} />
-      <main className="relative z-10">
-        <Hero onExploreClick={() => handleNavClick("about")} />
-        <About />
-        <Skills />
-        <Projects />
-        <Contact />
-      </main>
-      <Footer />
+      <TechLoading onLoadingComplete={handleLoadingComplete} />
+
+      <AnimatePresence>
+        {!isLoading && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <Header activeSection={activeSection} onNavClick={handleNavClick} />
+            <main className="relative z-10">
+              <Hero onExploreClick={() => handleNavClick("about")} />
+              <About />
+              <Skills />
+              <Projects />
+              <Contact />
+            </main>
+            <Footer />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -16,12 +16,18 @@ import {
   Cpu,
   Package,
   Play,
+  Globe,
+  CpuIcon,
 } from "lucide-react";
 import { LazyComponent } from "@/components/optimization/LazyComponent";
-import { LazyBackground } from "@/components/optimization/LazyBackground";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
+import { useLockScroll } from "@/hooks/useLockScroll";
 
-export const TechLoading = () => {
+interface TechLoadingProps {
+  onLoadingComplete?: () => void;
+}
+
+export const TechLoading = ({ onLoadingComplete }: TechLoadingProps) => {
   const [progress, setProgress] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
   const [currentSystem, setCurrentSystem] = useState(0);
@@ -31,6 +37,7 @@ export const TechLoading = () => {
   const progressRef = useRef(0);
 
   usePerformanceMonitor("TechLoading");
+  useLockScroll(!isComplete);
 
   const systems = useMemo(
     () => [
@@ -118,9 +125,12 @@ export const TechLoading = () => {
     }
 
     if (progress >= 100) {
-      setTimeout(() => setIsComplete(true), 800);
+      setTimeout(() => {
+        setIsComplete(true);
+        onLoadingComplete?.();
+      }, 800);
     }
-  }, [progress, showDeploy]);
+  }, [progress, showDeploy, onLoadingComplete]);
 
   useEffect(() => {
     const progressInterval = setInterval(() => {
@@ -152,17 +162,30 @@ export const TechLoading = () => {
   const CurrentDeployStage = deployStages[deployStage] || deployStages[0];
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 z-50 overflow-hidden">
-      <LazyBackground priority="high" className="absolute inset-0">
-        <div className="absolute inset-0 pointer-events-none opacity-10">
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_99%,rgba(6,182,212,0.1)_100%)] bg-[length:100px_100px]" />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_99%,rgba(6,182,212,0.1)_100%)] bg-[length:100px_100px]" />
+    <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 z-[9999] overflow-hidden">
+      {/* Background Animado */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-blue-900/50 to-purple-900/50" />
+
+        {/* Partículas Tech */}
+        <ParticleEffects progress={progress} />
+
+        {/* Grid Tech */}
+        <div className="absolute inset-0 opacity-[0.15]">
+          <div
+            className="w-full h-full"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px)
+              `,
+              backgroundSize: "50px 50px",
+            }}
+          />
         </div>
-      </LazyBackground>
+      </div>
 
-      <ParticleEffects progress={progress} />
-
-      {/* Container principal sem nenhuma rolagem */}
+      {/* Container principal */}
       <div className="h-screen w-screen flex items-center justify-center p-4 overflow-hidden">
         <LazyComponent animation="scale" delay={200}>
           <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-2xl xl:max-w-4xl overflow-hidden">
@@ -171,7 +194,7 @@ export const TechLoading = () => {
               <div className="flex justify-center mb-3 sm:mb-4">
                 <div className="relative">
                   <div className="absolute inset-0 bg-cyan-500 rounded-2xl blur-xl opacity-30 animate-pulse" />
-                  <div className="relative bg-gray-900/60 backdrop-blur-xl p-3 sm:p-6 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/20">
+                  <div className="relative bg-gray-900/80 backdrop-blur-xl p-3 sm:p-6 rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-400/20">
                     <div className="relative">
                       <AnimatePresence mode="wait">
                         <motion.div
@@ -229,14 +252,12 @@ export const TechLoading = () => {
               <div className="space-y-3 sm:space-y-4 overflow-hidden">
                 {/* Sistema Ativo / Pipeline de Deploy */}
                 <LazyComponent animation="fadeUp" delay={300}>
-                  <div className="bg-gray-900/60 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-cyan-500/20 shadow-xl shadow-cyan-400/10 overflow-hidden">
+                  <div className="bg-gray-900/80 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-cyan-500/20 shadow-xl shadow-cyan-400/10 overflow-hidden">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-0 mb-2 sm:mb-3">
                       <span className="text-gray-300 font-mono text-xs font-semibold tracking-wide truncate">
                         {showDeploy ? "PIPELINE DE DEPLOY" : "SISTEMA ATIVO"}
                       </span>
-                      <span
-                        className={`font-mono text-xs font-bold px-2 py-1 rounded-full border truncate`}
-                      >
+                      <span className="font-mono text-xs font-bold px-2 py-1 rounded-full border border-cyan-400/30 text-cyan-400 truncate">
                         {showDeploy ? "PRODUCTION_ENV" : "DEV_ENV: ACTIVE"}
                       </span>
                     </div>
@@ -284,7 +305,13 @@ export const TechLoading = () => {
                                   initial={{ opacity: 0, scale: 0.8 }}
                                   animate={{ opacity: 1, scale: 1 }}
                                   transition={{ delay: index * 0.1 }}
-                                  className={`flex items-center space-x-1 sm:space-x-2 p-2 rounded-xl border transition-all duration-300 min-w-0`}
+                                  className={`flex items-center space-x-1 sm:space-x-2 p-2 rounded-xl border transition-all duration-300 min-w-0 ${
+                                    isCompleted
+                                      ? "bg-green-500/10 border-green-400/30 text-green-400"
+                                      : isActive
+                                      ? "bg-cyan-500/10 border-cyan-400/30 text-cyan-400"
+                                      : "bg-gray-800/50 border-gray-600/30 text-gray-400"
+                                  }`}
                                 >
                                   <div className="relative flex-shrink-0">
                                     <Icon
@@ -300,9 +327,7 @@ export const TechLoading = () => {
                                       <CheckCircle2 className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 sm:w-2 sm:h-2 text-green-400" />
                                     )}
                                   </div>
-                                  <span
-                                    className={`font-mono text-xs font-semibold truncate`}
-                                  >
+                                  <span className="font-mono text-xs font-semibold truncate">
                                     {stage.name}
                                   </span>
                                 </motion.div>
@@ -339,7 +364,7 @@ export const TechLoading = () => {
 
                 {/* Barra de Progresso Principal */}
                 <LazyComponent animation="fadeUp" delay={400}>
-                  <div className="bg-gray-900/60 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-cyan-500/20 shadow-xl shadow-cyan-400/10 overflow-hidden">
+                  <div className="bg-gray-900/80 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-cyan-500/20 shadow-xl shadow-cyan-400/10 overflow-hidden">
                     <div className="flex justify-between items-center text-xs font-mono mb-2 sm:mb-3">
                       <span className="text-gray-300 font-semibold truncate">
                         {showDeploy
@@ -379,7 +404,11 @@ export const TechLoading = () => {
                             </div>
                             <div className="flex-1 bg-gray-800/30 rounded-full h-1 sm:h-1.5 overflow-hidden min-w-0">
                               <div
-                                className={`h-full rounded-full transition-all duration-500`}
+                                className={`h-full rounded-full transition-all duration-500 ${
+                                  deployProgress[index] >= 100
+                                    ? "bg-gradient-to-r from-green-500 to-emerald-500"
+                                    : "bg-gradient-to-r from-cyan-500 to-blue-500"
+                                }`}
                                 style={{ width: `${deployProgress[index]}%` }}
                               />
                             </div>
@@ -482,7 +511,7 @@ const ParticleEffects = ({ progress }: { progress: number }) => {
     <LazyComponent animation="fadeIn" delay={150}>
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {[...Array(Math.min(20, Math.floor(progress / 5)))].map((_, i) => (
-          <div
+          <motion.div
             key={i}
             className="absolute w-1 h-1 bg-cyan-400 rounded-full animate-float hidden sm:block"
             style={{
@@ -493,6 +522,29 @@ const ParticleEffects = ({ progress }: { progress: number }) => {
               animationDuration: `${Math.random() * 10 + 5}s`,
             }}
           />
+        ))}
+
+        {/* Código flutuante */}
+        {[...Array(Math.min(8, Math.floor(progress / 12)))].map((_, i) => (
+          <motion.div
+            key={`code-${i}`}
+            className="absolute text-cyan-400/40 font-mono text-sm hidden sm:block"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -20, 0],
+              opacity: [0.3, 0.7, 0.3],
+            }}
+            transition={{
+              duration: 4 + Math.random() * 2,
+              repeat: Infinity,
+              delay: i * 0.5,
+            }}
+          >
+            {["<Code/>", "{}", "=>", "()", "[]", "${ }", "import", "export"][i]}
+          </motion.div>
         ))}
       </div>
     </LazyComponent>
@@ -527,10 +579,6 @@ const styles = `
   
   .animate-shimmer {
     animation: shimmer 2s ease-in-out infinite;
-  }
-    
-  body:has(.fixed.inset-0.bg-gradient) {
-    overflow: hidden !important;
   }
 `;
 

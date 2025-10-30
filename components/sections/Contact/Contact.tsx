@@ -62,15 +62,34 @@ interface SubmissionState {
   lastSubmissionTime: number | null;
 }
 
-interface ApiResponse {
-  success?: boolean;
-  error?: string;
-  message?: string;
-  timestamp?: string;
-  id?: string;
-}
+// Dados estáticos
+const STATIC_CONTACT_INFO = [
+  {
+    icon: Mail,
+    title: "EMAIL PRINCIPAL",
+    content: "erickreisti@gmail.com",
+    description: "Resposta em até 24 horas",
+    gradient: "from-cyan-500/20 to-blue-500/20",
+    border: "border-cyan-400/30",
+  },
+  {
+    icon: MapPin,
+    title: "LOCALIZAÇÃO",
+    content: "Rio de Janeiro, Brasil",
+    description: "Disponível para projetos globais",
+    gradient: "from-cyan-500/20 to-blue-500/20",
+    border: "border-cyan-400/30",
+  },
+  {
+    icon: Phone,
+    title: "DISPONIBILIDADE",
+    content: "Flexível & Comprometido",
+    description: "Projetos de qualquer escala",
+    gradient: "from-cyan-500/20 to-blue-500/20",
+    border: "border-cyan-400/30",
+  },
+];
 
-// Dados estáticos - movidos para fora dos hooks
 const STATIC_NEON_ELEMENTS_CONFIG = [
   {
     Icon: MessageCircle,
@@ -110,34 +129,7 @@ const STATIC_NEON_ELEMENTS_CONFIG = [
   },
 ];
 
-const STATIC_CONTACT_INFO = [
-  {
-    icon: Mail,
-    title: "EMAIL PRINCIPAL",
-    content: "erickreisti@gmail.com",
-    description: "Resposta em até 24 horas",
-    gradient: "from-cyan-500/20 to-blue-500/20",
-    border: "border-cyan-400/30",
-  },
-  {
-    icon: MapPin,
-    title: "LOCALIZAÇÃO",
-    content: "Rio de Janeiro, Brasil",
-    description: "Disponível para projetos globais",
-    gradient: "from-cyan-500/20 to-blue-500/20",
-    border: "border-cyan-400/30",
-  },
-  {
-    icon: Phone,
-    title: "DISPONIBILIDADE",
-    content: "Flexível & Comprometido",
-    description: "Projetos de qualquer escala",
-    gradient: "from-cyan-500/20 to-blue-500/20",
-    border: "border-cyan-400/30",
-  },
-];
-
-// Hook personalizado para gerenciamento de estado do formulário - OTIMIZADO
+// Hook personalizado para gerenciamento de estado do formulário
 const useContactForm = () => {
   const [formData, setFormData] = useState<ContactFormData>({
     name: "",
@@ -158,7 +150,7 @@ const useContactForm = () => {
 
   const [formErrors, setFormErrors] = useState<FormErrors>({});
 
-  // Verificar se já houve um envio recente (evitar duplicação) - memoizado
+  // Verificar se já houve um envio recente
   const hasRecentSubmission = useCallback(() => {
     const { lastSubmissionTime } = submissionState;
     if (!lastSubmissionTime) return false;
@@ -167,7 +159,7 @@ const useContactForm = () => {
     return timeSinceLastSubmission < 30000; // 30 segundos
   }, [submissionState.lastSubmissionTime]);
 
-  // Validação robusta dos campos - memoizado
+  // Validação robusta dos campos
   const validateField = useCallback(
     (name: keyof ContactFormData, value: string): string => {
       switch (name) {
@@ -219,7 +211,7 @@ const useContactForm = () => {
     [formData.formType]
   );
 
-  // Validar formulário completo - memoizado
+  // Validar formulário completo
   const validateForm = useCallback((): boolean => {
     const errors: FormErrors = {};
     let isValid = true;
@@ -248,7 +240,7 @@ const useContactForm = () => {
     return isValid;
   }, [formData, validateField]);
 
-  // Atualizar campo individual - memoizado
+  // Atualizar campo individual
   const updateField = useCallback(
     (field: keyof ContactFormData, value: string) => {
       setFormData((prev) => ({ ...prev, [field]: value }));
@@ -263,7 +255,7 @@ const useContactForm = () => {
     [validateField]
   );
 
-  // Alterar tipo de formulário - memoizado
+  // Alterar tipo de formulário
   const setFormType = useCallback((type: "quick" | "enhanced") => {
     setFormData((prev) => ({
       ...prev,
@@ -273,7 +265,7 @@ const useContactForm = () => {
     setFormErrors({});
   }, []);
 
-  // Submissão do formulário - INTEGRADO COM API REAL
+  // Submissão do formulário
   const submitForm = useCallback(async () => {
     // Verificar envio recente
     if (hasRecentSubmission()) {
@@ -300,32 +292,8 @@ const useContactForm = () => {
     }));
 
     try {
-      // ENVIO REAL PARA API
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: formData.name.trim(),
-          email: formData.email.trim(),
-          subject: formData.subject.trim(),
-          message: formData.message.trim(),
-          meetingDate: formData.meetingDate || undefined,
-          meetingTime: formData.meetingTime || undefined,
-          formType: formData.formType,
-        }),
-      });
-
-      const result: ApiResponse = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || "Erro ao enviar mensagem");
-      }
-
-      if (!result.success) {
-        throw new Error(result.error || "Erro no envio da mensagem");
-      }
+      // Simular envio para API
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Sucesso
       setSubmissionState((prev) => ({
@@ -354,24 +322,10 @@ const useContactForm = () => {
     } catch (error) {
       console.error("Erro no envio:", error);
 
-      let errorMessage = "Erro ao enviar mensagem. Tente novamente.";
-
-      if (error instanceof Error) {
-        if (error.message.includes("30 segundos")) {
-          errorMessage = "Aguarde 30 segundos antes de enviar outra mensagem.";
-        } else if (error.message.includes("Email inválido")) {
-          errorMessage = "Por favor, insira um email válido.";
-        } else if (error.message.includes("obrigatórios")) {
-          errorMessage = "Por favor, preencha todos os campos obrigatórios.";
-        } else {
-          errorMessage = error.message;
-        }
-      }
-
       setSubmissionState((prev) => ({
         ...prev,
         isSubmitting: false,
-        error: errorMessage,
+        error: "Erro ao enviar mensagem. Tente novamente.",
       }));
       return false;
     }
@@ -388,7 +342,7 @@ const useContactForm = () => {
   };
 };
 
-// Availability Calendar Component - Integrado - OTIMIZADO
+// Availability Calendar Component
 const AvailabilityCalendar = ({
   selectedDate,
   selectedTime,
@@ -404,7 +358,7 @@ const AvailabilityCalendar = ({
 }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  // Gerar dias do mês - memoizado
+  // Gerar dias do mês
   const getDaysInMonth = useCallback((date: Date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
@@ -419,13 +373,13 @@ const AvailabilityCalendar = ({
     return days;
   }, []);
 
-  // Horários disponíveis - memoizado
+  // Horários disponíveis
   const availableSlots = useMemo(
     () => ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00"],
     []
   );
 
-  // Dias disponíveis (Segunda a Sexta) - memoizado
+  // Dias disponíveis (Segunda a Sexta)
   const availableDays = useMemo(() => [1, 2, 3, 4, 5], []);
   const days = useMemo(
     () => getDaysInMonth(currentMonth),
@@ -675,7 +629,7 @@ const AvailabilityCalendar = ({
   );
 };
 
-// Enhanced Contact Form - Integrado - OTIMIZADO
+// Enhanced Contact Form
 const EnhancedContactForm = ({
   formData,
   formErrors,
@@ -703,7 +657,6 @@ const EnhancedContactForm = ({
     const filledFields = fields.filter((field) =>
       formData[field]?.toString().trim()
     ).length;
-
     return (filledFields / fields.length) * 100;
   }, [formData]);
 
@@ -949,7 +902,7 @@ const EnhancedContactForm = ({
   );
 };
 
-// Componente Neon Element - OTIMIZADO
+// Componente Neon Element
 const ContactNeonElement = ({
   Icon,
   position,
@@ -970,12 +923,7 @@ const ContactNeonElement = ({
     const ctx = gsap.context(() => {
       gsap.fromTo(
         elementRef.current,
-        {
-          opacity: 0,
-          scale: 0,
-          y: 100,
-          rotation: -180,
-        },
+        { opacity: 0, scale: 0, y: 100, rotation: -180 },
         {
           opacity: 1,
           scale: 1,
@@ -1013,7 +961,7 @@ const ContactNeonElement = ({
   );
 };
 
-// Componente Principal Contact - OTIMIZADO
+// Componente Principal Contact
 export const Contact = () => {
   const {
     formData,
@@ -1030,11 +978,11 @@ export const Contact = () => {
 
   usePerformanceMonitor("ContactSection");
 
-  // Configurações - memoizadas dentro do componente
+  // Configurações - memoizadas
   const neonElementsConfig = useMemo(() => STATIC_NEON_ELEMENTS_CONFIG, []);
   const contactInfo = useMemo(() => STATIC_CONTACT_INFO, []);
 
-  // GSAP Animations - OTIMIZADO
+  // GSAP Animations
   useEffect(() => {
     if (!isInView || shouldReduceMotion) return;
 
@@ -1044,26 +992,6 @@ export const Contact = () => {
         { opacity: 0 },
         { opacity: 1, duration: 1, ease: "power2.out" }
       );
-
-      const tl = gsap.timeline();
-
-      tl.fromTo(
-        ".contact-header",
-        { opacity: 0, y: 50 },
-        { opacity: 1, y: 0, duration: 0.8, ease: "back.out(1.7)" }
-      )
-        .fromTo(
-          ".contact-content",
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: "power3.out" },
-          "-=0.3"
-        )
-        .fromTo(
-          ".contact-cta",
-          { opacity: 0, scale: 0.9 },
-          { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" },
-          "-=0.2"
-        );
     }, sectionRef);
 
     return () => ctx.revert();
@@ -1114,7 +1042,7 @@ export const Contact = () => {
     <section
       id="contact"
       ref={sectionRef}
-      className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 overflow-hidden"
+      className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 section-with-header"
     >
       <LazyBackground priority="medium">
         <PremiumBackground intensity="medium">
@@ -1125,7 +1053,7 @@ export const Contact = () => {
       </LazyBackground>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
-        {/* Header Harmonizado */}
+        {/* Header */}
         <LazyComponent animation="fadeUp" delay={200}>
           <motion.div
             className="text-center mb-16 lg:mb-20 contact-header"

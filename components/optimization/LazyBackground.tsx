@@ -34,7 +34,7 @@ export const LazyBackground = ({
           observer.disconnect();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.01 }
     );
 
     const element = document.getElementById("lazy-background-container");
@@ -51,7 +51,10 @@ export const LazyBackground = ({
   if (!isVisible && priority !== "high") {
     return (
       fallback || (
-        <div className={`bg-gray-900 animate-pulse rounded-lg ${className}`} />
+        <div
+          className={`bg-gray-900 animate-pulse rounded-lg ${className}`}
+          aria-hidden="true"
+        />
       )
     );
   }

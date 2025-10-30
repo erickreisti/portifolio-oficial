@@ -179,3 +179,14 @@ body {
   background-color: rgba(6, 182, 212, 0.3);
   color: white;
 }
+
+/* Adicione no final do arquivo */
+.no-transition * {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Garantir que o loading ocupe toda a tela */
+html:has(.fixed.inset-0.bg-gradient) {
+  overflow: hidden !important;
+}

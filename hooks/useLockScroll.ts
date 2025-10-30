@@ -3,72 +3,52 @@
 import { useEffect } from "react";
 
 type SavedStyles = {
-  overflow?: string;
-  overscrollBehavior?: string;
+  overflow: string;
+  paddingRight: string;
+  overscrollBehavior: string;
 };
 
 let lockCount = 0;
 let savedBodyStyles: SavedStyles | null = null;
-let savedHtmlStyles: SavedStyles | null = null;
+
+function getScrollbarWidth(): number {
+  if (typeof window === "undefined") return 0;
+  return window.innerWidth - document.documentElement.clientWidth;
+}
 
 function applyLock() {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined" || !document.body) return;
 
   if (lockCount === 1) {
+    const scrollbarWidth = getScrollbarWidth();
+
     savedBodyStyles = {
       overflow: document.body.style.overflow,
+      paddingRight: document.body.style.paddingRight,
       overscrollBehavior: (document.body.style as any).overscrollBehavior,
     };
 
-    savedHtmlStyles = {
-      overflow: document.documentElement.style.overflow,
-      overscrollBehavior: (document.documentElement.style as any)
-        .overscrollBehavior,
-    };
-
-    try {
-      document.body.style.overflow = "hidden";
-      (document.body.style as any).overscrollBehavior = "none";
-    } catch {}
-
-    try {
-      document.documentElement.style.overflow = "hidden";
-      (document.documentElement.style as any).overscrollBehavior = "none";
-    } catch {}
+    document.body.style.overflow = "hidden";
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
+    (document.body.style as any).overscrollBehavior = "none";
   }
 }
 
 function restoreStyles() {
-  try {
-    if (savedBodyStyles) {
-      document.body.style.overflow = savedBodyStyles.overflow || "";
-      (document.body.style as any).overscrollBehavior =
-        savedBodyStyles.overscrollBehavior || "";
-    } else {
-      document.body.style.overflow = "";
-      (document.body.style as any).overscrollBehavior = "";
-    }
-  } catch {}
+  if (!savedBodyStyles || !document.body) return;
 
-  try {
-    if (savedHtmlStyles) {
-      document.documentElement.style.overflow = savedHtmlStyles.overflow || "";
-      (document.documentElement.style as any).overscrollBehavior =
-        savedHtmlStyles.overscrollBehavior || "";
-    } else {
-      document.documentElement.style.overflow = "";
-      (document.documentElement.style as any).overscrollBehavior = "";
-    }
-  } catch {}
+  document.body.style.overflow = savedBodyStyles.overflow;
+  document.body.style.paddingRight = savedBodyStyles.paddingRight;
+  (document.body.style as any).overscrollBehavior =
+    savedBodyStyles.overscrollBehavior;
 }
 
 function releaseLock() {
   if (typeof window === "undefined") return;
 
-  if (lockCount === 0) {
+  if (lockCount === 0 && savedBodyStyles) {
     restoreStyles();
     savedBodyStyles = null;
-    savedHtmlStyles = null;
   }
 }
 
