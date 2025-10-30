@@ -8,8 +8,8 @@ export const COLORS = {
     100: "#cffafe",
     200: "#a5f3fc",
     300: "#67e8f9",
-    400: "#22d3ee", // Ciano principal
-    500: "#06b6d4", // Ciano base
+    400: "#22d3ee",
+    500: "#06b6d4",
     600: "#0891b2",
     700: "#0e7490",
     800: "#155e75",
@@ -72,5 +72,19 @@ export const COLORS = {
   },
 } as const;
 
-// Tipo para autocomplete
-export type ColorTheme = typeof COLORS;
+// Fallback seguro para quando COLORS não estiver disponível
+export const getSafeColors = () => {
+  return {
+    classes: {
+      text: {
+        gradient:
+          "bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent",
+        accent: "text-cyan-400",
+      },
+    },
+    borders: {
+      light: "border-cyan-500/20",
+      medium: "border-cyan-400/30",
+    },
+  };
+};

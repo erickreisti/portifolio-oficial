@@ -9,10 +9,8 @@ import {
   Globe,
   Database,
   Server,
-  Smartphone,
   Zap,
   Sparkles,
-  Cpu,
   Binary,
   CircuitBoard,
   Satellite,
@@ -225,18 +223,18 @@ const FloatingCodeParticles: React.FC = () => {
         >
           {
             [
-              "⚡ FULLSTACK",
-              "🚀 NEXT.JS",
-              "💻 REACT",
-              "🔷 TYPESCRIPT",
-              "📱 NODE.JS",
-              "🎯 TAILWIND",
-              "⚛️ INNOVATION",
-              "🌟 CREATIVE",
-              "🚀 PERFORMANCE",
-              "💫 EXCELLENCE",
-              "🔥 PASSION",
-              "🎨 DESIGN",
+              "FULLSTACK",
+              "NEXT.JS",
+              "REACT",
+              "TYPESCRIPT",
+              "NODE.JS",
+              "TAILWIND",
+              "INNOVATION",
+              "CREATIVE",
+              "PERFORMANCE",
+              "EXCELLENCE",
+              "PASSION",
+              "DESIGN",
             ][i]
           }
         </motion.div>
