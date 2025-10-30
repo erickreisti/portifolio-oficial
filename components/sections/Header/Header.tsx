@@ -2,17 +2,29 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Download, Menu, X, Rocket, Sparkles } from "lucide-react";
+import {
+  Download,
+  Menu,
+  X,
+  Rocket,
+  Sparkles,
+  User,
+  Code,
+  Briefcase,
+  Mail,
+  Home,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { OptimizedImage } from "@/components/optimization/OptimizedImage";
+import { getSafeColors } from "@/lib/colors";
 
-// Dados padronizados
+// Dados padronizados com ícones
 const NAV_ITEMS = [
-  { name: "Início", href: "#hero" },
-  { name: "Sobre", href: "#about" },
-  { name: "Habilidades", href: "#skills" },
-  { name: "Projetos", href: "#projects" },
-  { name: "Contato", href: "#contact" },
+  { name: "Início", href: "#hero", icon: Home },
+  { name: "Sobre", href: "#about", icon: User },
+  { name: "Habilidades", href: "#skills", icon: Code },
+  { name: "Projetos", href: "#projects", icon: Briefcase },
+  { name: "Contato", href: "#contact", icon: Mail },
 ];
 
 interface HeaderProps {
@@ -24,6 +36,8 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [headerOpacity, setHeaderOpacity] = useState(0.3);
+  const [hasInteracted, setHasInteracted] = useState(false);
+  const colors = getSafeColors();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,27 +47,41 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
       const opacity = Math.min(0.95, 0.3 + (scrollY / heroHeight) * 0.8);
       setHeaderOpacity(opacity);
       setIsScrolled(scrollY > 50);
+
+      // Marcar que o usuário interagiu após o primeiro scroll
+      if (scrollY > 100 && !hasInteracted) {
+        setHasInteracted(true);
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [hasInteracted]);
 
   const handleNavClick = (sectionId: string) => {
     onNavClick(sectionId);
     setIsMobileMenuOpen(false);
+    setHasInteracted(true);
+  };
+
+  // Função para verificar se deve mostrar o ícone
+  const shouldShowIcon = (sectionName: string) => {
+    // Sempre mostrar na primeira vez (Início ativo)
+    if (!hasInteracted && sectionName === "hero") return true;
+    // Mostrar apenas quando a seção estiver ativa após interação
+    return hasInteracted && activeSection === sectionName;
   };
 
   return (
     <motion.header
-      className="fixed-header" // Classe CSS global
+      className="fixed-header"
       style={{
         background: `rgba(15, 23, 42, ${headerOpacity})`,
         backdropFilter: `blur(${isScrolled ? "20px" : "12px"}) saturate(180%)`,
         borderBottom: isScrolled
-          ? "1px solid rgba(6, 182, 212, 0.15)"
+          ? `1px solid rgba(6, 182, 212, 0.15)`
           : "1px solid transparent",
       }}
       initial={{ y: -100, opacity: 0 }}
@@ -63,21 +91,40 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
         ease: [0.25, 0.46, 0.45, 0.94],
       }}
     >
+      {/* Brilho sutil na borda quando scrolled */}
+      <motion.div
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent"
+        initial={{ opacity: 0, scaleX: 0 }}
+        animate={{
+          opacity: isScrolled ? 1 : 0,
+          scaleX: isScrolled ? 1 : 0.5,
+        }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Logo */}
+        {/* Logo - SEM ROTAÇÃO, COM BRILHO SUTIL */}
         <motion.button
           onClick={() => handleNavClick("hero")}
-          className="flex items-center gap-2 group focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded-lg p-1"
+          className="flex items-center gap-2 group focus:outline-none rounded-lg p-1 relative"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <div className="flex items-center gap-2 p-2 rounded-xl bg-gradient-to-r from-gray-900/10 to-gray-800/5 backdrop-blur-sm border border-cyan-500/10 group-hover:border-cyan-400/20 transition-all duration-300">
+          <div className="flex items-center gap-2 p-2 rounded-xl bg-gradient-to-r from-gray-900/10 to-gray-800/5 backdrop-blur-sm border border-cyan-500/10 group-hover:border-cyan-400/20 transition-all duration-300 relative overflow-hidden">
+            {/* Brilho sutil no logo container */}
             <motion.div
-              whileHover={{ rotate: 360, scale: 1.1 }}
-              transition={{ duration: 0.6 }}
+              className="absolute inset-0 bg-gradient-to-r from-cyan-400/5 via-transparent to-blue-400/5"
+              initial={{ opacity: 0 }}
+              whileHover={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            />
+
+            <motion.div
+              whileHover={{ scale: 1.1 }} // Apenas scale, sem rotation
+              transition={{ duration: 0.3, ease: "easeOut" }}
               className="relative"
             >
               <OptimizedImage
@@ -86,7 +133,14 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                 width={32}
                 height={32}
                 priority={true}
-                className="brightness-125"
+                className="brightness-125 drop-shadow-lg"
+              />
+              {/* Brilho sutil na logo */}
+              <motion.div
+                className="absolute inset-0 bg-cyan-400/10 rounded-lg"
+                initial={{ opacity: 0 }}
+                whileHover={{ opacity: 1 }}
+                transition={{ duration: 0.2 }}
               />
             </motion.div>
             <div className="text-left hidden sm:block">
@@ -115,6 +169,8 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
           {NAV_ITEMS.map((item, index) => {
             const sectionName = item.href.replace("#", "");
             const isActive = activeSection === sectionName;
+            const Icon = item.icon;
+            const showIcon = shouldShowIcon(sectionName);
 
             return (
               <motion.button
@@ -122,13 +178,13 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                 onClick={() => handleNavClick(sectionName)}
                 className={`
                   relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300
-                  group overflow-hidden
+                  group overflow-hidden min-w-[100px] flex items-center justify-center
                   ${
                     isActive
                       ? "text-cyan-400"
                       : "text-gray-300 hover:text-white"
                   }
-                  focus:outline-none focus:ring-2 focus:ring-cyan-500
+                  focus:outline-none
                 `}
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.95 }}
@@ -145,30 +201,75 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                   transition={{ duration: 0.3 }}
                 />
 
-                <span className="relative z-10 font-semibold tracking-wide flex items-center gap-2">
-                  {isActive && (
-                    <motion.div
-                      initial={{ scale: 0, rotate: -180 }}
-                      animate={{ scale: 1, rotate: 0 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 200,
-                        delay: 0.1,
-                      }}
-                    >
-                      <Sparkles className="w-3 h-3 text-cyan-400" />
-                    </motion.div>
-                  )}
-                  {item.name}
+                <span className="relative z-10 font-semibold tracking-wide flex items-center gap-2 justify-center w-full">
+                  {/* Container do ícone com largura fixa */}
+                  <div className="w-6 h-6 flex items-center justify-center flex-shrink-0">
+                    <AnimatePresence mode="wait">
+                      {showIcon && (
+                        <motion.div
+                          key={`icon-${sectionName}`}
+                          initial={{
+                            scale: 0,
+                            rotate: -180,
+                            opacity: 0,
+                          }}
+                          animate={{
+                            scale: isActive ? 1.2 : 1,
+                            rotate: isActive ? 5 : 0,
+                            opacity: 1,
+                          }}
+                          exit={{
+                            scale: 0,
+                            rotate: 180,
+                            opacity: 0,
+                          }}
+                          transition={{
+                            duration: 0.4,
+                            ease: "backOut",
+                            scale: { duration: 0.3 },
+                            rotate: { duration: 0.5 },
+                          }}
+                          className="flex-shrink-0"
+                        >
+                          <Icon className="w-4 h-4" />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    {/* Espaço reservado quando não há ícone (transparente) */}
+                    {!showIcon && (
+                      <div className="w-4 h-4 opacity-0">
+                        <Icon className="w-4 h-4" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Texto do link */}
+                  <span className="flex-shrink-0">{item.name}</span>
                 </span>
 
+                {/* Underline Dinâmico */}
                 <motion.div
-                  className={`
-                    absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full
-                  `}
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full origin-left"
                   initial={{ scaleX: 0 }}
-                  animate={{ scaleX: isActive ? 1 : 0 }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  animate={{
+                    scaleX: isActive ? 1 : 0,
+                    opacity: isActive ? 1 : 0.8,
+                  }}
+                  whileHover={{ scaleX: 1 }}
+                  transition={{
+                    duration: 0.4,
+                    ease: [0.4, 0, 0.2, 1],
+                    scaleX: { duration: 0.3 },
+                  }}
+                />
+
+                {/* Efeito de brilho no hover */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-cyan-400/5 to-blue-400/5 rounded-lg"
+                  initial={{ opacity: 0 }}
+                  whileHover={{ opacity: 1 }}
+                  transition={{ duration: 0.2 }}
                 />
               </motion.button>
             );
@@ -182,15 +283,39 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
           animate={{ opacity: 1, x: 0, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.8 }}
         >
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="relative"
+          >
             <Button
               variant="neon"
               size="sm"
-              className="gap-2 backdrop-blur-sm relative overflow-hidden group"
+              className="gap-2 backdrop-blur-sm relative overflow-hidden group px-4"
               onClick={() =>
                 window.open("/docs/curriculo-erick-reis.pdf", "_blank")
               }
             >
+              {/* Efeito de brilho interno CONTÍNUO */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent transform -skew-x-12"
+                animate={{ x: ["-100%", "200%"] }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  repeatDelay: 2,
+                }}
+              />
+
+              {/* Efeito de brilho extra no HOVER */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent transform -skew-x-12"
+                initial={{ x: "-100%" }}
+                whileHover={{ x: "200%" }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+              />
+
               <motion.div
                 className="relative"
                 whileHover={{
@@ -200,12 +325,16 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
               >
                 <Download className="w-4 h-4" />
               </motion.div>
+
               <motion.span
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2 }}
               >
                 BAIXAR CV
               </motion.span>
+
+              {/* Reflexo na borda */}
+              <div className="absolute inset-0 rounded-lg border border-cyan-400/20 group-hover:border-cyan-400/40 transition-all duration-300" />
             </Button>
           </motion.div>
         </motion.div>
@@ -221,11 +350,22 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
             <Button
               variant="neon"
               size="sm"
-              className="gap-2 backdrop-blur-sm"
+              className="gap-2 backdrop-blur-sm relative overflow-hidden group px-3"
               onClick={() =>
                 window.open("/docs/curriculo-erick-reis.pdf", "_blank")
               }
             >
+              {/* Efeito de brilho interno CONTÍNUO */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent transform -skew-x-12"
+                animate={{ x: ["-100%", "200%"] }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  repeatDelay: 2,
+                }}
+              />
               <Download className="w-4 h-4" />
               CV
             </Button>
@@ -236,7 +376,7 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
               variant="ghost"
               size="icon"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="w-9 h-9 rounded-xl text-white/80 hover:text-white bg-white/5 backdrop-blur-xl border border-white/10 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300 relative overflow-hidden"
+              className="w-9 h-9 rounded-xl text-white/80 hover:text-white bg-white/5 backdrop-blur-xl border border-white/10 hover:bg-white/10 transition-all duration-300 relative overflow-hidden"
             >
               <motion.div
                 animate={{
@@ -274,6 +414,8 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
               {NAV_ITEMS.map((item, index) => {
                 const sectionName = item.href.replace("#", "");
                 const isActive = activeSection === sectionName;
+                const Icon = item.icon;
+                const showIcon = shouldShowIcon(sectionName);
 
                 return (
                   <motion.button
@@ -286,7 +428,7 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                           ? "text-cyan-400 bg-gradient-to-r from-cyan-400/10 to-blue-400/5 border-cyan-400/20"
                           : "text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-white/5 hover:to-cyan-400/5 border-transparent"
                       }
-                      focus:outline-none focus:ring-2 focus:ring-cyan-500
+                      focus:outline-none
                     `}
                     initial={{ x: -30, opacity: 0, scale: 0.9 }}
                     animate={{ x: 0, opacity: 1, scale: 1 }}
@@ -308,19 +450,47 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                     />
 
                     <span className="relative z-10 font-semibold ml-6 flex items-center gap-3">
-                      {isActive && (
-                        <motion.div
-                          initial={{ scale: 0, rotate: -180 }}
-                          animate={{ scale: 1, rotate: 0 }}
-                          transition={{
-                            type: "spring",
-                            stiffness: 200,
-                            delay: 0.2,
-                          }}
-                        >
-                          <Sparkles className="w-3 h-3 text-cyan-400" />
-                        </motion.div>
-                      )}
+                      {/* Container do ícone com largura fixa no mobile também */}
+                      <div className="w-6 h-6 flex items-center justify-center flex-shrink-0">
+                        <AnimatePresence mode="wait">
+                          {showIcon && (
+                            <motion.div
+                              key={`mobile-icon-${sectionName}`}
+                              initial={{
+                                scale: 0,
+                                rotate: -180,
+                                opacity: 0,
+                              }}
+                              animate={{
+                                scale: isActive ? 1.2 : 1,
+                                rotate: isActive ? 5 : 0,
+                                opacity: 1,
+                              }}
+                              exit={{
+                                scale: 0,
+                                rotate: 180,
+                                opacity: 0,
+                              }}
+                              transition={{
+                                duration: 0.4,
+                                ease: "backOut",
+                                scale: { duration: 0.3 },
+                                rotate: { duration: 0.5 },
+                              }}
+                              className="flex-shrink-0"
+                            >
+                              <Icon className="w-4 h-4" />
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+
+                        {/* Espaço reservado quando não há ícone (transparente) */}
+                        {!showIcon && (
+                          <div className="w-4 h-4 opacity-0">
+                            <Icon className="w-4 h-4" />
+                          </div>
+                        )}
+                      </div>
                       {item.name}
                     </span>
 
@@ -349,14 +519,26 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                 <motion.div
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
+                  className="relative"
                 >
                   <Button
                     variant="neon"
-                    className="w-full justify-center gap-2 backdrop-blur-sm"
+                    className="w-full justify-center gap-2 backdrop-blur-sm relative overflow-hidden group"
                     onClick={() =>
                       window.open("/docs/curriculo-erick-reis.pdf", "_blank")
                     }
                   >
+                    {/* Efeito de brilho interno CONTÍNUO */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent transform -skew-x-12"
+                      animate={{ x: ["-100%", "200%"] }}
+                      transition={{
+                        duration: 4,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        repeatDelay: 2,
+                      }}
+                    />
                     <Download className="w-4 h-4" />
                     BAIXAR CV
                   </Button>
