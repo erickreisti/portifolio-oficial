@@ -1,4 +1,4 @@
-// components/layout/Header.tsx
+// components/sections/Header/Header.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -12,6 +12,8 @@ import {
   Briefcase,
   Mail,
   Home,
+  Eye,
+  ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedActionButton } from "@/components/ui/AnimatedActionButton";
@@ -19,7 +21,6 @@ import { OptimizedImage } from "@/components/optimization/OptimizedImage";
 import { usePDFDownload } from "@/hooks/usePDFDowload";
 import { getSafeColors } from "@/lib/colors";
 
-// Dados padronizados com ícones
 const NAV_ITEMS = [
   { name: "Início", href: "#hero", icon: Home },
   { name: "Sobre", href: "#about", icon: User },
@@ -38,10 +39,18 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [headerOpacity, setHeaderOpacity] = useState(0.3);
   const [hasInteracted, setHasInteracted] = useState(false);
+  const [showPDFActions, setShowPDFActions] = useState(false);
   const colors = getSafeColors();
 
-  // Usando o hook personalizado para download
-  const { downloadPDF, isDownloading, progress } = usePDFDownload();
+  const {
+    downloadPDF,
+    previewPDF,
+    isDownloading,
+    isPreviewing,
+    progress,
+    error,
+    resetError,
+  } = usePDFDownload();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -72,11 +81,18 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
   const handleDownloadCV = async () => {
     try {
       await downloadPDF({
-        fileName: "Erick-Reis-Portfolio.pdf",
+        fileName: "Erick-Reis-Curriculo.pdf",
       });
     } catch (error) {
       console.error("Erro no download:", error);
-      // Fallback já está implementado no pdf-generator
+    }
+  };
+
+  const handlePreviewCV = async () => {
+    try {
+      await previewPDF();
+    } catch (error) {
+      console.error("Erro na visualização:", error);
     }
   };
 
@@ -102,7 +118,6 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
         ease: [0.25, 0.46, 0.45, 0.94],
       }}
     >
-      {/* Brilho sutil na borda quando scrolled */}
       <motion.div
         className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent"
         initial={{ opacity: 0, scaleX: 0 }}
@@ -113,7 +128,6 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
         transition={{ duration: 0.5, ease: "easeOut" }}
       />
 
-      {/* Header com altura aumentada */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         {/* Logo */}
         <motion.button
@@ -281,25 +295,144 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
           })}
         </nav>
 
-        {/* Desktop CTA - BOTÃO COM MESMO ESTILO DO FOOTER */}
+        {/* Desktop CTA - ÚNICO BOTÃO COM DROPDOWN */}
         <motion.div
-          className="hidden lg:flex items-center gap-3"
+          className="hidden lg:flex items-center gap-2 relative"
           initial={{ opacity: 0, x: 20, scale: 0.9 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.8 }}
+          onMouseEnter={() => setShowPDFActions(true)}
+          onMouseLeave={() => setShowPDFActions(false)}
         >
+          {/* Botão Principal */}
           <AnimatedActionButton
-            title="BAIXAR CV"
-            subtitle="DOWNLOAD PDF"
+            title={
+              isDownloading || isPreviewing ? "PROCESSANDO..." : "BAIXAR CV"
+            }
+            subtitle={
+              isDownloading || isPreviewing ? `${progress}%` : "DOWNLOAD PDF"
+            }
             icon={Download}
             size="sm"
-            onClick={handleDownloadCV}
-            loading={isDownloading}
+            onClick={() => setShowPDFActions(!showPDFActions)}
+            loading={isDownloading || isPreviewing}
             progress={progress}
-            disabled={isDownloading}
-            className="hover:scale-105"
+            disabled={isDownloading || isPreviewing}
+            className="hover:scale-105 transition-transform duration-200 pr-3"
             showArrow={false}
-          />
+          >
+            {/* Ícone de seta */}
+            <motion.div
+              animate={{ rotate: showPDFActions ? 180 : 0 }}
+              transition={{ duration: 0.2 }}
+              className="ml-1"
+            >
+              <ChevronDown className="w-4 h-4 text-cyan-400" />
+            </motion.div>
+          </AnimatedActionButton>
+
+          {/* Menu Dropdown */}
+          <AnimatePresence>
+            {showPDFActions && (
+              <motion.div
+                initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 10, scale: 0.9 }}
+                transition={{ duration: 0.2 }}
+                className="absolute top-full right-0 mt-2 w-48 bg-gray-900/95 backdrop-blur-xl border border-cyan-500/20 rounded-lg shadow-xl z-50"
+                onMouseEnter={() => setShowPDFActions(true)}
+                onMouseLeave={() => setShowPDFActions(false)}
+              >
+                <div className="p-2 space-y-1">
+                  {/* Visualizar PDF */}
+                  <motion.button
+                    onClick={async () => {
+                      setShowPDFActions(false);
+                      try {
+                        await previewPDF();
+                      } catch (error) {
+                        console.error("Preview error:", error);
+                      }
+                    }}
+                    disabled={isPreviewing}
+                    className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-cyan-500/10 rounded-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    whileHover={{ x: 4 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <motion.div
+                      animate={{ rotate: isPreviewing ? 360 : 0 }}
+                      transition={{
+                        duration: 2,
+                        repeat: isPreviewing ? Infinity : 0,
+                      }}
+                    >
+                      <Eye className="w-4 h-4" />
+                    </motion.div>
+                    <span className="flex-1 text-left">
+                      {isPreviewing ? "Abrindo..." : "Visualizar PDF"}
+                    </span>
+                    {isPreviewing && (
+                      <motion.div
+                        className="w-2 h-2 bg-cyan-400 rounded-full"
+                        animate={{ scale: [1, 1.5, 1] }}
+                        transition={{ duration: 1, repeat: Infinity }}
+                      />
+                    )}
+                  </motion.button>
+
+                  {/* Download PDF */}
+                  <motion.button
+                    onClick={async () => {
+                      setShowPDFActions(false);
+                      try {
+                        await downloadPDF({
+                          fileName: "Erick-Reis-Curriculo.pdf",
+                        });
+                      } catch (error) {
+                        console.error("Download error:", error);
+                      }
+                    }}
+                    disabled={isDownloading}
+                    className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-cyan-500/10 rounded-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    whileHover={{ x: 4 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Download className="w-4 h-4" />
+                    <span className="flex-1 text-left">
+                      {isDownloading ? "Baixando..." : "Baixar PDF"}
+                    </span>
+                    {isDownloading && (
+                      <motion.div
+                        className="w-2 h-2 bg-cyan-400 rounded-full"
+                        animate={{ scale: [1, 1.5, 1] }}
+                        transition={{ duration: 1, repeat: Infinity }}
+                      />
+                    )}
+                  </motion.button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Feedback de erro */}
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.9 }}
+                className="absolute top-full mt-2 right-0 p-3 bg-red-500/10 border border-red-500/20 rounded-lg backdrop-blur-sm z-50"
+              >
+                <p className="text-red-400 text-sm">{error}</p>
+                <button
+                  onClick={() => resetError()}
+                  className="text-red-300 text-xs hover:text-white mt-1"
+                >
+                  Fechar
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
 
         {/* Mobile Menu Button */}
@@ -309,7 +442,7 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.5, duration: 0.5 }}
         >
-          {/* Botão Download Mobile - COM MESMO ESTILO DO FOOTER */}
+          {/* Botão Download Mobile */}
           <AnimatedActionButton
             title="CV"
             subtitle="PDF"
@@ -467,18 +600,32 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.4 }}
               >
-                <AnimatedActionButton
-                  title="BAIXAR CV"
-                  subtitle="DOWNLOAD PDF"
-                  icon={Download}
-                  size="sm"
-                  onClick={handleDownloadCV}
-                  loading={isDownloading}
-                  progress={progress}
-                  disabled={isDownloading}
-                  className="w-full justify-center hover:scale-105"
-                  showArrow={false}
-                />
+                <div className="grid grid-cols-2 gap-2">
+                  <AnimatedActionButton
+                    title="VISUALIZAR"
+                    subtitle="VER PDF"
+                    icon={Eye}
+                    size="sm"
+                    onClick={handlePreviewCV}
+                    loading={isPreviewing}
+                    progress={progress}
+                    disabled={isPreviewing}
+                    className="w-full justify-center hover:scale-105"
+                    showArrow={false}
+                  />
+                  <AnimatedActionButton
+                    title="BAIXAR"
+                    subtitle="PDF"
+                    icon={Download}
+                    size="sm"
+                    onClick={handleDownloadCV}
+                    loading={isDownloading}
+                    progress={progress}
+                    disabled={isDownloading}
+                    className="w-full justify-center hover:scale-105"
+                    showArrow={false}
+                  />
+                </div>
               </motion.div>
             </nav>
           </motion.div>

@@ -1,15 +1,17 @@
+// components/ui/AnimatedActionButton.tsx
 "use client";
 
 import { motion } from "framer-motion";
 import { LucideIcon } from "lucide-react";
+import { ReactNode } from "react";
 
 interface AnimatedActionButtonProps {
   // Conteúdo
   title: string;
   subtitle?: string;
 
-  // Ícone
-  icon: LucideIcon;
+  // Ícone (agora opcional)
+  icon?: LucideIcon;
 
   // Ação
   onClick: () => void;
@@ -25,6 +27,9 @@ interface AnimatedActionButtonProps {
 
   // Controles
   showArrow?: boolean;
+
+  // Children para conteúdo adicional
+  children?: ReactNode;
 }
 
 export const AnimatedActionButton = ({
@@ -38,8 +43,9 @@ export const AnimatedActionButton = ({
   loading = false,
   progress = 0,
   showArrow = true,
+  children,
 }: AnimatedActionButtonProps) => {
-  // Configurações de tamanho baseadas no botão do footer
+  // Configurações de tamanho
   const sizeConfig = {
     sm: {
       padding: "px-4 py-2",
@@ -95,7 +101,7 @@ export const AnimatedActionButton = ({
           !disabled && !loading ? "0 10px 30px rgba(6, 182, 212, 0.3)" : "none",
       }}
     >
-      {/* Barra de progresso (igual ao conceito do footer) */}
+      {/* Barra de progresso */}
       {loading && progress > 0 && (
         <motion.div
           className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-b-2xl"
@@ -106,10 +112,10 @@ export const AnimatedActionButton = ({
         />
       )}
 
-      {/* Efeito de fundo gradiente no hover (IGUAL AO FOOTER) */}
+      {/* Efeito de fundo gradiente no hover */}
       <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-      {/* Animação de brilho contínuo (IGUAL AO FOOTER) */}
+      {/* Animação de brilho contínuo */}
       <div className="absolute inset-0 overflow-hidden rounded-2xl">
         <motion.div
           className="absolute -inset-10 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent"
@@ -120,31 +126,33 @@ export const AnimatedActionButton = ({
 
       {/* Conteúdo do botão */}
       <div className={`relative z-10 flex items-center ${config.gap}`}>
-        {/* Ícone animado (IGUAL AO FOOTER) */}
-        <motion.div
-          className="relative"
-          animate={loading ? { rotate: 360 } : { y: [0, -4, 0] }}
-          transition={
-            loading
-              ? { duration: 1, repeat: Infinity, ease: "linear" }
-              : { duration: 2, repeat: Infinity, ease: "easeInOut" }
-          }
-        >
-          <Icon className={`${config.iconSize} text-cyan-400`} />
-          {!loading && (
-            <motion.div
-              className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-cyan-400 rounded-full blur-sm"
-              animate={{ scale: [1, 1.5, 1], opacity: [0.7, 1, 0.7] }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
-          )}
-        </motion.div>
+        {/* Ícone animado - Só mostra se Icon estiver definido */}
+        {Icon && (
+          <motion.div
+            className="relative"
+            animate={loading ? { rotate: 360 } : { y: [0, -4, 0] }}
+            transition={
+              loading
+                ? { duration: 1, repeat: Infinity, ease: "linear" }
+                : { duration: 2, repeat: Infinity, ease: "easeInOut" }
+            }
+          >
+            <Icon className={`${config.iconSize} text-cyan-400`} />
+            {!loading && (
+              <motion.div
+                className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-cyan-400 rounded-full blur-sm"
+                animate={{ scale: [1, 1.5, 1], opacity: [0.7, 1, 0.7] }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+            )}
+          </motion.div>
+        )}
 
-        {/* Textos (IGUAL AO FOOTER) */}
+        {/* Textos */}
         <div className="flex flex-col items-start">
           <span
             className={`${config.textSize} font-mono font-bold text-cyan-400 tracking-wider group-hover:text-cyan-300 transition-colors duration-300`}
@@ -158,8 +166,11 @@ export const AnimatedActionButton = ({
           )}
         </div>
 
-        {/* Seta animada (IGUAL AO FOOTER) - CONDICIONAL */}
-        {!loading && showArrow && (
+        {/* Children (conteúdo adicional como seta) */}
+        {children}
+
+        {/* Seta animada - CONDICIONAL */}
+        {!loading && showArrow && !children && (
           <motion.div
             className="ml-2"
             animate={{ y: [0, -3, 0] }}
@@ -187,13 +198,13 @@ export const AnimatedActionButton = ({
         )}
       </div>
 
-      {/* REFLEXO NA BORDA (IGUAL AO FOOTER) */}
+      {/* REFLEXO NA BORDA */}
       <div className="absolute inset-0 rounded-2xl border border-cyan-400/20 group-hover:border-cyan-400/40 transition-all duration-300" />
 
-      {/* Efeito de brilho na borda no hover (IGUAL AO FOOTER) */}
+      {/* Efeito de brilho na borda no hover */}
       <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-400/0 via-cyan-400/20 to-cyan-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
 
-      {/* Loading overlay (IGUAL AO FOOTER) */}
+      {/* Loading overlay */}
       {loading && (
         <div className="absolute inset-0 bg-black/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
           <motion.div
