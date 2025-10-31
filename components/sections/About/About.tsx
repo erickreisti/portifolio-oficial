@@ -19,9 +19,12 @@ import {
   Heart,
   Calendar,
   User,
+  Laptop,
+  HeadphonesIcon,
+  Server,
+  Smartphone,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { PremiumBackground } from "@/components/layout/PremiumBackground";
 import { LazyComponent } from "@/components/optimization/LazyComponent";
 import { OptimizedImage } from "@/components/optimization/OptimizedImage";
@@ -29,97 +32,164 @@ import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import LazyBackground from "@/components/optimization/LazyBackground";
 import { NeonElements } from "@/components/layout/NeonElements";
 import { COLORS } from "@/lib/colors";
+import { AnimatedActionButton } from "@/components/ui/AnimatedActionButton";
 
-// Dados estáticos
+// Dados atualizados com suas experiências reais
 const STATIC_TIMELINE_DATA = [
   {
-    year: "2024",
-    title: "Tech Lead & Arquitetura Cloud",
+    year: "Atual",
+    title: "Desenvolvedor FullStack",
     company: "Projetos Freelance",
     description:
-      "Liderança técnica em projetos de grande escala, arquitetura microservices e implementação de soluções AWS",
-    icon: Rocket,
-    color: "from-cyan-500 to-blue-500",
-    projects: ["Sistema de E-commerce", "Plataforma SaaS", "App Mobile"],
-    skills: ["AWS", "Microservices", "Node.js", "React Native"],
-  },
-  {
-    year: "2022-2023",
-    title: "Desenvolvedor FullStack Sênior",
-    company: "Startups & Empresas",
-    description:
-      "Desenvolvimento de aplicações web e mobile com foco em performance e escalabilidade",
+      "Desenvolvimento de aplicativos web e websites de diferentes segmentos com tecnologias modernas",
     icon: Code2,
+    color: "from-cyan-500 to-blue-500",
+    projects: [
+      "Aplicativos Web",
+      "Websites Corporativos",
+      "Sistemas Personalizados",
+    ],
+    skills: ["React", "Next.js", "TypeScript", "Node.js", "Tailwind CSS"],
+  },
+  {
+    year: "2017-2018",
+    title: "Suporte em Tecnologia da Informação",
+    company: "EMERJ - Escola da Magistratura do Estado do Rio de Janeiro",
+    description:
+      "Suporte técnico completo aos usuários, gerenciamento de documentos e infraestrutura de TI",
+    icon: Server,
     color: "from-purple-500 to-pink-500",
-    projects: ["Dashboard Analytics", "API REST", "PWA"],
-    skills: ["Next.js", "TypeScript", "PostgreSQL", "Docker"],
+    projects: [
+      "Controle de Documentos",
+      "Relatórios Gerenciais",
+      "Suporte ao Usuário",
+    ],
+    skills: ["Suporte Técnico", "Redes", "Windows", "Office", "Impressoras"],
   },
   {
-    year: "2020-2021",
-    title: "Desenvolvedor FullStack Pleno",
-    company: "Agências & Clientes",
+    year: "2014-2016",
+    title: "Suporte em Tecnologia da Informação",
+    company: "PRODERJ - Centro de Tecnologia do Estado do Rio de Janeiro",
     description:
-      "Implementação de sistemas completos e mentoria de desenvolvedores juniores",
-    icon: Users,
+      "Configuração e suporte de infraestrutura de TI com foco em sistemas Linux e redes",
+    icon: Laptop,
     color: "from-green-500 to-emerald-500",
-    projects: ["Sites Institucionais", "E-commerce", "Sistemas Internos"],
-    skills: ["React", "Node.js", "MongoDB", "Express"],
+    projects: ["Configuração de Redes", "Suporte Linux", "Atendimento Remoto"],
+    skills: ["Linux", "Redes", "Shell Script", "Impressoras", "Suporte Remoto"],
   },
   {
-    year: "2019",
-    title: "Início da Jornada Tech",
-    company: "Primeiros Projetos",
+    year: "2011",
+    title: "Suporte Técnico",
+    company: "Orange (Contrato pela HL Consultoria)",
     description:
-      "Transição de carreira e primeiras experiências com desenvolvimento web moderno",
-    icon: Award,
+      "Atendimento técnico remoto e presencial para configuração e manutenção de sistemas",
+    icon: HeadphonesIcon,
     color: "from-orange-500 to-red-500",
-    projects: ["Landing Pages", "Blogs", "Sistemas Básicos"],
-    skills: ["HTML/CSS", "JavaScript", "PHP", "MySQL"],
+    projects: [
+      "Suporte Remoto",
+      "Configuração Outlook",
+      "Manutenção de Micros",
+    ],
+    skills: ["Outlook Exchange", "VoIP", "Backup", "Manutenção", "Windows"],
   },
 ];
 
 const STATIC_BIO_DATA = {
-  paragraph1:
-    "Olá! Sou Érick Reis, um Desenvolvedor FullStack & Arquiteto de Sistemas apaixonado por transformar ideias em soluções digitais robustas e escaláveis. Minha jornada na tecnologia começou com formação em Tecnologia da Informação e Sistemas de Informação, seguida por especialização em Redes de Computadores. Essa base técnica diversificada me proporcionou uma visão holística de sistemas, que hoje aplico no desenvolvimento de aplicações modernas.",
-  paragraph2:
-    "Acredito que código bem escrito resolve problemas reais. Minha abordagem combina arquitetura limpa, performance como prioridade, segurança desde a concepção e escalabilidade pensada para o crescimento. Minha experiência multidisciplinar em TI me permite entregar soluções completas — desde a modelagem do banco de dados até a experiência do usuário final. Não apenas codifico features, mas orquestro sistemas que funcionam em harmonia.",
+  paragraph1: (
+    <>
+      <span className="block mb-4 text-lg leading-relaxed text-gray-200">
+        Olá! Sou <strong className="text-cyan-400">Erick Reis</strong>, um{" "}
+        <strong className="text-cyan-400">Desenvolvedor FullStack</strong> com
+        sólida base em tecnologia da informação.
+      </span>
+
+      <span className="block mb-4 text-lg leading-relaxed text-gray-200">
+        Minha jornada começou no{" "}
+        <strong className="text-cyan-400">suporte técnico</strong>, onde
+        desenvolvi uma compreensão profunda de{" "}
+        <strong className="text-cyan-400">
+          infraestrutura e resolução de problemas
+        </strong>
+        .
+      </span>
+
+      <span className="block text-lg leading-relaxed text-gray-200">
+        Com formação em{" "}
+        <strong className="text-cyan-400">Sistemas de Informação</strong> e
+        pós-graduação em{" "}
+        <strong className="text-cyan-400">Redes de Computadores</strong>, possuo
+        uma{" "}
+        <strong className="text-cyan-400">
+          visão completa do ecossistema tecnológico
+        </strong>{" "}
+        - desde a infraestrutura até o desenvolvimento de aplicações modernas.
+      </span>
+    </>
+  ),
+
+  paragraph2: (
+    <>
+      <span className="block mb-4 text-lg leading-relaxed text-gray-200">
+        Minha transição do{" "}
+        <strong className="text-cyan-400">
+          suporte técnico para o desenvolvimento fullstack
+        </strong>{" "}
+        me proporcionou uma{" "}
+        <strong className="text-cyan-400">perspectiva única</strong>: entendo
+        não apenas como o código funciona, mas também como ele se integra com a
+        infraestrutura e atende às necessidades reais dos usuários.
+      </span>
+
+      <span className="block text-lg leading-relaxed text-gray-200">
+        Esta experiência me permite criar soluções que são não apenas{" "}
+        <strong className="text-cyan-400">tecnicamente sólidas</strong>, mas
+        também{" "}
+        <strong className="text-cyan-400">
+          práticas, escaláveis e alinhadas com os objetivos de negócio
+        </strong>
+        .
+      </span>
+    </>
+  ),
+
   passions: [
     {
       icon: Brain,
-      text: "Arquitetura de Sistemas & Clean Code",
-      description: "DDD, Clean Architecture e princípios SOLID",
+      text: "Desenvolvimento FullStack Moderno",
+      description: "React, Next.js, TypeScript e Node.js",
     },
     {
       icon: Zap,
-      text: "Performance & Otimização Web",
-      description: "Lighthouse 90%+, Core Web Vitals otimizados",
+      text: "Performance & Experiência do Usuário",
+      description: "Aplicações rápidas e interfaces intuitivas",
     },
     {
       icon: Users,
-      text: "Visão Holística de Sistemas",
+      text: "Visão Completa de Sistemas",
       description: "Do backend à experiência do usuário final",
     },
     {
       icon: Rocket,
-      text: "Soluções Escaláveis",
-      description: "Arquitetura preparada para crescimento",
+      text: "Soluções Práticas e Eficientes",
+      description: "Foco em resolver problemas reais",
     },
   ],
+
   highlights: [
     {
       icon: Zap,
-      text: "Performance",
-      value: "95%+ Lighthouse",
+      text: "Versatilidade",
+      value: "FullStack",
     },
     {
       icon: Code2,
-      text: "Arquitetura Limpa",
-      value: "Código Sólido",
+      text: "Base Sólida",
+      value: "Infra + Dev",
     },
     {
       icon: Shield,
-      text: "Segurança",
-      value: "Desde a Concepção",
+      text: "Confiabilidade",
+      value: "Soluções Estáveis",
     },
     {
       icon: Cpu,
@@ -127,11 +197,12 @@ const STATIC_BIO_DATA = {
       value: "Stack Moderna",
     },
   ],
+
   stats: [
-    { number: "50+", label: "Projetos Entregues", suffix: "", icon: Target },
-    { number: "5", label: "Anos de Experiência", suffix: "+", icon: Award },
-    { number: "100", label: "Satisfação do Cliente", suffix: "%", icon: Heart },
-    { number: "24/7", label: "Suporte Técnico", suffix: "", icon: Clock },
+    { number: "10+", label: "Projetos Entregues", suffix: "", icon: Target },
+    { number: "5", label: "Anos em TI", suffix: "+", icon: Award },
+    { number: "100", label: "Comprometimento", suffix: "%", icon: Heart },
+    { number: "24/7", label: "Dedicação", suffix: "", icon: Clock },
   ],
 };
 
@@ -181,7 +252,7 @@ const InteractiveTimeline = () => {
                       isActive
                         ? "border-cyan-400/50 shadow-2xl shadow-cyan-400/20"
                         : "border-gray-700/30"
-                    } transition-all duration-300 cursor-pointer group`}
+                    } transition-all duration-300 cursor-pointer group p-6`}
                     whileHover={{ y: -5, scale: 1.02 }}
                   >
                     <div className="flex items-center gap-3 mb-4">
@@ -217,7 +288,7 @@ const InteractiveTimeline = () => {
                         >
                           <div>
                             <div className="text-xs text-gray-400 font-semibold mb-2">
-                              PROJETOS DESTAQUE:
+                              ATIVIDADES PRINCIPAIS:
                             </div>
                             <div className="flex flex-wrap gap-2">
                               {item.projects.map((project, i) => (
@@ -236,7 +307,7 @@ const InteractiveTimeline = () => {
 
                           <div>
                             <div className="text-xs text-gray-400 font-semibold mb-2">
-                              TECNOLOGIAS:
+                              HABILIDADES:
                             </div>
                             <div className="flex flex-wrap gap-1">
                               {item.skills.map((skill, i) => (
@@ -404,6 +475,20 @@ export const About = () => {
     return () => ctx.revert();
   }, [isInView]);
 
+  // Função para navegar até a seção de contato
+  const handleContactClick = () => {
+    const contactSection = document.getElementById("contact");
+    if (contactSection) {
+      const headerHeight = 80;
+      const elementPosition = contactSection.offsetTop - headerHeight;
+
+      window.scrollTo({
+        top: elementPosition,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <section
       id="about"
@@ -486,7 +571,7 @@ export const About = () => {
                 >
                   <OptimizedImage
                     src="/images/avatar.webp"
-                    alt="Erick Reis - Full Stack Developer & Tech Leader"
+                    alt="Erick Reis - Full Stack Developer"
                     width={320}
                     height={320}
                     priority={true}
@@ -505,32 +590,30 @@ export const About = () => {
                   whileTap={{ scale: 0.9 }}
                 >
                   <Code className="w-3 h-3 inline mr-2" />
-                  FULLSTACK ENGINEER
+                  FULLSTACK DEVELOPER
                 </motion.div>
               </motion.div>
             </LazyComponent>
 
             {/* Parágrafos */}
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-8">
               <LazyComponent animation="fadeUp" delay={300}>
                 <motion.div
                   initial={{ opacity: 0, y: 30, x: -20 }}
                   whileInView={{ opacity: 1, y: 0, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
                   viewport={{ once: true }}
-                  className={`${COLORS.classes.card} ${COLORS.classes.cardHover} relative overflow-hidden group`}
+                  className={`${COLORS.classes.card} ${COLORS.classes.cardHover} relative overflow-hidden group p-8`}
                   whileHover={{ y: -5 }}
                 >
                   <motion.div
-                    className="absolute top-4 left-4 w-2 h-2 bg-cyan-400 rounded-full shadow-lg shadow-cyan-400"
+                    className="absolute top-6 left-6 w-3 h-3 bg-cyan-400 rounded-full shadow-lg shadow-cyan-400"
                     animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   />
-                  <p
-                    className={`text-gray-200 text-base lg:text-lg leading-relaxed font-light relative z-10`}
-                  >
+                  <div className="relative z-10 space-y-6">
                     {bioData.paragraph1}
-                  </p>
+                  </div>
                 </motion.div>
               </LazyComponent>
 
@@ -540,19 +623,17 @@ export const About = () => {
                   whileInView={{ opacity: 1, y: 0, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
                   viewport={{ once: true }}
-                  className={`${COLORS.classes.card} ${COLORS.classes.cardHover} relative overflow-hidden group`}
+                  className={`${COLORS.classes.card} ${COLORS.classes.cardHover} relative overflow-hidden group p-8`}
                   whileHover={{ y: -5 }}
                 >
                   <motion.div
-                    className="absolute top-4 right-4 w-2 h-2 bg-cyan-400 rounded-full shadow-lg shadow-cyan-400"
+                    className="absolute top-6 right-6 w-3 h-3 bg-cyan-400 rounded-full shadow-lg shadow-cyan-400"
                     animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
                     transition={{ duration: 2, repeat: Infinity, delay: 1 }}
                   />
-                  <p
-                    className={`text-gray-200 text-base lg:text-lg leading-relaxed font-light relative z-10`}
-                  >
+                  <div className="relative z-10 space-y-6">
                     {bioData.paragraph2}
-                  </p>
+                  </div>
                 </motion.div>
               </LazyComponent>
             </div>
@@ -684,8 +765,8 @@ export const About = () => {
               <p
                 className={`text-lg ${COLORS.classes.text.secondary} max-w-2xl mx-auto`}
               >
-                Da paixão inicial pela tecnologia até a expertise em
-                desenvolvimento fullstack
+                Do suporte técnico ao desenvolvimento fullstack - uma jornada de
+                aprendizado contínuo
               </p>
             </div>
 
@@ -693,7 +774,7 @@ export const About = () => {
           </motion.div>
         </LazyComponent>
 
-        {/* CTA Final */}
+        {/* CTA Final - COM BOTÃO ATUALIZADO */}
         <LazyComponent animation="fadeUp" delay={800}>
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -737,15 +818,15 @@ export const About = () => {
                   viewport={{ once: true }}
                   className="w-full lg:w-auto"
                 >
-                  <Button asChild className="w-full lg:w-auto">
-                    <a
-                      href="#contact"
-                      className={COLORS.classes.button.primary}
-                    >
-                      <Sparkles className="w-4 h-4 mr-2 transition-transform duration-300" />
-                      INICIAR PROJETO
-                    </a>
-                  </Button>
+                  <AnimatedActionButton
+                    title="INICIAR PROJETO"
+                    subtitle="VAMOS CONVERSAR"
+                    icon={Rocket}
+                    size="lg"
+                    onClick={handleContactClick}
+                    className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-cyan-400/50 hover:border-cyan-300/70"
+                    showArrow={true}
+                  />
                 </motion.div>
               </div>
             </motion.div>
