@@ -79,26 +79,22 @@ export const AnimatedActionButton = ({
           config.padding
         } rounded-2xl 
         transition-all duration-500 overflow-hidden
-        ${
-          disabled
-            ? "opacity-50 cursor-not-allowed"
-            : "cursor-pointer hover:shadow-2xl"
-        }
+        ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
         ${className}
       `}
+      // Removemos a animação do boxShadow do whileHover e usamos classes CSS
       whileHover={
         !disabled && !loading
           ? {
               scale: 1.05,
               y: -2,
-              boxShadow: "0 20px 40px rgba(6, 182, 212, 0.3)",
             }
           : {}
       }
       whileTap={!disabled && !loading ? { scale: 0.95 } : {}}
+      // Aplicamos a sombra via CSS classes para evitar problemas de animação
       style={{
-        boxShadow:
-          !disabled && !loading ? "0 10px 30px rgba(6, 182, 212, 0.3)" : "none",
+        boxShadow: "0 10px 30px rgba(6, 182, 212, 0.3)",
       }}
     >
       {/* Barra de progresso */}

@@ -2,7 +2,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Download, ExternalLink, Loader2 } from "lucide-react";
+import { X, Download, ExternalLink } from "lucide-react";
 import { ModalPortal } from "./ModalPortal";
 import { Button } from "@/components/ui/button";
 
@@ -12,6 +12,8 @@ interface PDFModalProps {
   pdfUrl: string | null;
   onDownload: () => void;
   isLoading?: boolean;
+  isGenerating?: boolean;
+  progress?: number;
 }
 
 export const PDFModal = ({
@@ -20,6 +22,8 @@ export const PDFModal = ({
   pdfUrl,
   onDownload,
   isLoading = false,
+  isGenerating = false,
+  progress = 0,
 }: PDFModalProps) => {
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -38,7 +42,7 @@ export const PDFModal = ({
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4" // z-index aumentado para 100
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -55,7 +59,7 @@ export const PDFModal = ({
 
             {/* Modal Content */}
             <motion.div
-              className="relative bg-gray-900 rounded-2xl border border-cyan-500/20 shadow-2xl w-full max-w-6xl h-[95vh] flex flex-col z-[101]" // z-index ainda mais alto
+              className="relative bg-gray-900 rounded-2xl border border-cyan-500/20 shadow-2xl w-full max-w-6xl h-[95vh] flex flex-col z-[101]"
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
@@ -72,23 +76,27 @@ export const PDFModal = ({
                     Visualizar Currículo
                   </h2>
                   <p className="text-cyan-400 text-sm mt-1">
-                    Prévia do seu PDF profissional
+                    {isGenerating
+                      ? "Gerando PDF..."
+                      : "Prévia do seu PDF profissional"}
                   </p>
                 </div>
 
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={onClose}
-                  className="text-gray-400 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
-                >
-                  <X className="w-5 h-5" />
-                </Button>
+                {!isGenerating && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={onClose}
+                    className="text-gray-400 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
+                  >
+                    <X className="w-5 h-5" />
+                  </Button>
+                )}
               </div>
 
               {/* PDF Viewer */}
               <div className="flex-1 p-6 overflow-hidden">
-                {isLoading ? (
+                {isGenerating ? (
                   <div className="flex items-center justify-center h-full">
                     <div className="text-center">
                       <motion.div
@@ -101,16 +109,43 @@ export const PDFModal = ({
                         className="w-12 h-12 border-4 border-cyan-400 border-t-transparent rounded-full mx-auto mb-4"
                       />
                       <p className="text-cyan-400 font-medium">
-                        Gerando PDF...
+                        Gerando PDF... {progress}%
                       </p>
                       <p className="text-gray-400 text-sm mt-2">
                         Preparando sua visualização
+                      </p>
+                      <div className="w-64 h-2 bg-gray-700 rounded-full mt-4 mx-auto overflow-hidden">
+                        <motion.div
+                          className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full"
+                          initial={{ width: "0%" }}
+                          animate={{ width: `${progress}%` }}
+                          transition={{ duration: 0.3 }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ) : isLoading ? (
+                  <div className="flex items-center justify-center h-full">
+                    <div className="text-center">
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{
+                          duration: 1,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
+                        className="w-12 h-12 border-4 border-cyan-400 border-t-transparent rounded-full mx-auto mb-4"
+                      />
+                      <p className="text-cyan-400 font-medium">
+                        Carregando PDF...
+                      </p>
+                      <p className="text-gray-400 text-sm mt-2">
+                        Finalizando preparação
                       </p>
                     </div>
                   </div>
                 ) : pdfUrl ? (
                   <div className="h-full flex flex-col">
-                    {/* PDF Frame */}
                     <div className="flex-1 bg-white rounded-lg overflow-hidden border border-cyan-500/20 shadow-lg">
                       <iframe
                         src={pdfUrl}
@@ -120,7 +155,6 @@ export const PDFModal = ({
                       />
                     </div>
 
-                    {/* Actions */}
                     <div className="flex gap-3 mt-4">
                       <Button
                         onClick={onDownload}
@@ -164,13 +198,14 @@ export const PDFModal = ({
                 )}
               </div>
 
-              {/* Footer */}
-              <div className="p-4 border-t border-cyan-500/20 bg-gray-800/50 rounded-b-2xl">
-                <p className="text-gray-400 text-sm text-center">
-                  💡 Dica: Use "Abrir em Nova Aba" para uma visualização melhor
-                  em dispositivos móveis
-                </p>
-              </div>
+              {!isGenerating && (
+                <div className="p-4 border-t border-cyan-500/20 bg-gray-800/50 rounded-b-2xl">
+                  <p className="text-gray-400 text-sm text-center">
+                    💡 Dica: Use "Abrir em Nova Aba" para uma visualização
+                    melhor em dispositivos móveis
+                  </p>
+                </div>
+              )}
             </motion.div>
           </motion.div>
         )}

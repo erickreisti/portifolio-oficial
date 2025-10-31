@@ -13,7 +13,6 @@ import {
   Mail,
   Home,
   Eye,
-  ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedActionButton } from "@/components/ui/AnimatedActionButton";
@@ -40,7 +39,6 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [headerOpacity, setHeaderOpacity] = useState(0.3);
   const [hasInteracted, setHasInteracted] = useState(false);
-  const [showPDFActions, setShowPDFActions] = useState(false);
   const colors = getSafeColors();
 
   const {
@@ -119,7 +117,7 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
   return (
     <>
       <motion.header
-        className="fixed-header"
+        className="fixed top-0 left-0 right-0 z-40"
         style={{
           background: `rgba(15, 23, 42, ${headerOpacity})`,
           backdropFilter: `blur(${
@@ -313,125 +311,32 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
             })}
           </nav>
 
-          {/* Desktop CTA - ÚNICO BOTÃO COM DROPDOWN */}
+          {/* Desktop CTA - BOTÃO ÚNICO QUE ABRE MODAL */}
           <motion.div
             className="hidden lg:flex items-center gap-2 relative"
             initial={{ opacity: 0, x: 20, scale: 0.9 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.8 }}
-            onMouseEnter={() => setShowPDFActions(true)}
-            onMouseLeave={() => setShowPDFActions(false)}
           >
-            {/* Botão Principal */}
+            {/* Botão Principal que abre o modal de preview */}
             <AnimatedActionButton
               title={
-                isDownloading || isPreviewing ? "PROCESSANDO..." : "BAIXAR CV"
+                isDownloading || isPreviewing
+                  ? "PROCESSANDO..."
+                  : "VISUALIZAR CV"
               }
               subtitle={
-                isDownloading || isPreviewing ? `${progress}%` : "DOWNLOAD PDF"
+                isDownloading || isPreviewing ? `${progress}%` : "ABRIR PREVIEW"
               }
-              icon={Download}
+              icon={Eye}
               size="sm"
-              onClick={() => setShowPDFActions(!showPDFActions)}
+              onClick={handlePreviewCV}
               loading={isDownloading || isPreviewing}
               progress={progress}
               disabled={isDownloading || isPreviewing}
-              className="hover:scale-105 transition-transform duration-200 pr-3"
+              className="hover:scale-105 transition-transform duration-200"
               showArrow={false}
-            >
-              {/* Ícone de seta */}
-              <motion.div
-                animate={{ rotate: showPDFActions ? 180 : 0 }}
-                transition={{ duration: 0.2 }}
-                className="ml-1"
-              >
-                <ChevronDown className="w-4 h-4 text-cyan-400" />
-              </motion.div>
-            </AnimatedActionButton>
-
-            {/* Menu Dropdown */}
-            <AnimatePresence>
-              {showPDFActions && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.9 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.9 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute top-full right-0 mt-2 w-48 bg-gray-900/95 backdrop-blur-xl border border-cyan-500/20 rounded-lg shadow-xl z-50"
-                  onMouseEnter={() => setShowPDFActions(true)}
-                  onMouseLeave={() => setShowPDFActions(false)}
-                >
-                  <div className="p-2 space-y-1">
-                    {/* Visualizar PDF */}
-                    <motion.button
-                      onClick={async () => {
-                        setShowPDFActions(false);
-                        try {
-                          await previewPDF();
-                        } catch (error) {
-                          console.error("Preview error:", error);
-                        }
-                      }}
-                      disabled={isPreviewing}
-                      className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-cyan-500/10 rounded-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                      whileHover={{ x: 4 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <motion.div
-                        animate={{ rotate: isPreviewing ? 360 : 0 }}
-                        transition={{
-                          duration: 2,
-                          repeat: isPreviewing ? Infinity : 0,
-                        }}
-                      >
-                        <Eye className="w-4 h-4" />
-                      </motion.div>
-                      <span className="flex-1 text-left">
-                        {isPreviewing ? "Abrindo..." : "Visualizar PDF"}
-                      </span>
-                      {isPreviewing && (
-                        <motion.div
-                          className="w-2 h-2 bg-cyan-400 rounded-full"
-                          animate={{ scale: [1, 1.5, 1] }}
-                          transition={{ duration: 1, repeat: Infinity }}
-                        />
-                      )}
-                    </motion.button>
-
-                    {/* Download PDF */}
-                    <motion.button
-                      onClick={async () => {
-                        setShowPDFActions(false);
-                        try {
-                          // Download direto sem preview
-                          await downloadPDF({
-                            fileName: "Erick-Reis-Curriculo.pdf",
-                          });
-                        } catch (error) {
-                          console.error("Download error:", error);
-                        }
-                      }}
-                      disabled={isDownloading}
-                      className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-cyan-500/10 rounded-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                      whileHover={{ x: 4 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <Download className="w-4 h-4" />
-                      <span className="flex-1 text-left">
-                        {isDownloading ? "Baixando..." : "Baixar PDF"}
-                      </span>
-                      {isDownloading && (
-                        <motion.div
-                          className="w-2 h-2 bg-cyan-400 rounded-full"
-                          animate={{ scale: [1, 1.5, 1] }}
-                          transition={{ duration: 1, repeat: Infinity }}
-                        />
-                      )}
-                    </motion.button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            />
 
             {/* Feedback de erro */}
             <AnimatePresence>
@@ -467,10 +372,10 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
               subtitle="PDF"
               icon={Download}
               size="sm"
-              onClick={handleDownloadCV}
-              loading={isDownloading}
+              onClick={handlePreviewCV}
+              loading={isDownloading || isPreviewing}
               progress={progress}
-              disabled={isDownloading}
+              disabled={isDownloading || isPreviewing}
               className="hover:scale-105"
               showArrow={false}
             />
@@ -652,13 +557,15 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
         </AnimatePresence>
       </motion.header>
 
-      {/* Modal de Visualização do PDF com z-index mais alto */}
+      {/* Modal de Visualização do PDF */}
       <PDFModal
         isOpen={isModalOpen}
         onClose={closeModal}
         pdfUrl={pdfUrl}
         onDownload={handleModalDownload}
-        isLoading={isPreviewing}
+        isLoading={isPreviewing && !pdfUrl}
+        isGenerating={isPreviewing}
+        progress={progress}
       />
     </>
   );

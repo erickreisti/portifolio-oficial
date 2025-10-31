@@ -35,23 +35,24 @@ export const usePDFDownload = (): UsePDFDownloadReturn => {
     setError(null);
 
     try {
-      // Download direto sem preview - mais rápido
+      console.log("📥 Iniciando download do PDF...");
       await generatePortfolioPDF({
         ...options,
-        preview: false, // Garante que é apenas download
+        preview: false,
         onProgress: (currentProgress) => {
+          console.log(`📊 Progresso: ${currentProgress}%`);
           setProgress(currentProgress);
         },
       });
 
       setProgress(100);
-      // Pequeno delay para mostrar 100% antes de resetar
       await new Promise((resolve) => setTimeout(resolve, 300));
+      console.log("✅ Download concluído");
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Erro ao gerar PDF";
       setError(errorMessage);
-      console.error("PDF Download Error:", err);
+      console.error("❌ PDF Download Error:", err);
       throw err;
     } finally {
       setIsDownloading(false);
@@ -64,19 +65,24 @@ export const usePDFDownload = (): UsePDFDownloadReturn => {
     setProgress(0);
     setError(null);
     setPdfUrl(null);
+    // NÃO definir isModalOpen como true aqui - só depois que o PDF estiver pronto
 
     try {
+      console.log("👀 Iniciando preview do PDF...");
       const result = await generatePDFForPreview((currentProgress) => {
+        console.log(`📊 Progresso do preview: ${currentProgress}%`);
         setProgress(currentProgress);
       });
 
+      console.log("✅ Preview gerado, abrindo modal...");
       setPdfUrl(result.url);
+      // SÓ AGORA abrir o modal quando tudo estiver pronto
       setIsModalOpen(true);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Erro ao gerar preview do PDF";
       setError(errorMessage);
-      console.error("PDF Preview Generation Error:", err);
+      console.error("❌ PDF Preview Generation Error:", err);
       throw err;
     } finally {
       setIsPreviewing(false);
@@ -85,6 +91,7 @@ export const usePDFDownload = (): UsePDFDownloadReturn => {
   }, []);
 
   const closeModal = useCallback(() => {
+    console.log("🔒 Fechando modal...");
     setIsModalOpen(false);
     // Revoke the object URL to avoid memory leaks
     if (pdfUrl) {
