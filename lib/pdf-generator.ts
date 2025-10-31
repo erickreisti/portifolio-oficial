@@ -25,7 +25,7 @@ const delay = (ms: number): Promise<void> =>
 
 export const generatePortfolioPDF = async (
   options: PDFOptions = {}
-): Promise<Blob | void> => {
+): Promise<{ blob: Blob; url: string } | void> => {
   const {
     fileName = "Erick-Reis-Curriculo.pdf",
     openInNewTab = false,
@@ -39,18 +39,17 @@ export const generatePortfolioPDF = async (
     await waitForFrame();
 
     const pdfBlob = await generateDynamicPDF(onProgress);
+    const pdfUrl = URL.createObjectURL(pdfBlob);
 
     if (preview) {
       onProgress?.(100);
       console.log("📄 Portfolio PDF generated for preview");
-      return pdfBlob;
+      return { blob: pdfBlob, url: pdfUrl };
     }
 
     onProgress?.(90);
     await waitForFrame();
 
-    // Criar URL para o blob
-    const pdfUrl = URL.createObjectURL(pdfBlob);
     onProgress?.(95);
 
     // Criar link e disparar download
@@ -76,7 +75,6 @@ export const generatePortfolioPDF = async (
     }
   } catch (error) {
     console.error("❌ Error generating portfolio PDF:", error);
-    // Fallback para PDF simples
     if (!preview) {
       await downloadSimplePDF(fileName);
     }
@@ -141,9 +139,9 @@ const generateDynamicPDF = async (
 
     // Capturar screenshot com configurações otimizadas
     const canvas = await html2canvas(tempContainer, {
-      scale: 2, // Aumentado para melhor qualidade
+      scale: 2,
       useCORS: true,
-      logging: true, // Ativar para debug
+      logging: false,
       width: tempContainer.scrollWidth,
       height: tempContainer.scrollHeight,
       scrollX: 0,
@@ -153,19 +151,6 @@ const generateDynamicPDF = async (
       allowTaint: false,
       foreignObjectRendering: false,
       imageTimeout: 10000,
-      onclone: (clonedDoc, element) => {
-        console.log("🔧 Clonando elemento para captura...");
-        // Garantir que o elemento clonado tenha os mesmos estilos
-        const body = clonedDoc.body;
-        body.style.cssText = `
-          margin: 0;
-          padding: 0;
-          background: white;
-          width: 210mm;
-          min-height: 297mm;
-          overflow: visible;
-        `;
-      },
     });
 
     console.log("✅ Screenshot capturado com sucesso");
@@ -193,7 +178,7 @@ const generateDynamicPDF = async (
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = pdf.internal.pageSize.getHeight();
 
-    // Converter canvas para imagem com boa qualidade
+    // Converter canvas para imagem
     const imgData = canvas.toDataURL("image/jpeg", 1.0);
     const imgWidth = pdfWidth;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
@@ -214,7 +199,7 @@ const generateDynamicPDF = async (
     // Adicionar páginas adicionais se necessário
     let pageCount = 1;
     while (heightLeft > 0) {
-      await waitForFrame(); // Não bloquear UI
+      await waitForFrame();
 
       position = heightLeft - imgHeight;
       pdf.addPage();
@@ -236,65 +221,19 @@ const generateDynamicPDF = async (
   }
 };
 
-export const previewPortfolioPDF = async (): Promise<void> => {
-  try {
-    console.log("👀 Iniciando visualização do PDF...");
-
-    const pdfBlob = (await generatePortfolioPDF({
-      preview: true,
-      onProgress: (progress) => {
-        console.log(`📊 Progresso do preview: ${progress}%`);
-      },
-    })) as Blob;
-
-    console.log("✅ PDF gerado para preview:", pdfBlob.size, "bytes");
-
-    // Criar URL para o blob
-    const pdfUrl = URL.createObjectURL(pdfBlob);
-    console.log("🔗 URL do PDF criada:", pdfUrl);
-
-    // Abrir em nova aba
-    const previewWindow = window.open(pdfUrl, "_blank");
-
-    if (previewWindow) {
-      console.log("🪟 Nova janela aberta para preview");
-      previewWindow.onbeforeunload = () => {
-        console.log("🧹 Limpando URL do preview...");
-        URL.revokeObjectURL(pdfUrl);
-      };
-    } else {
-      console.log("⚠️ Popup bloqueado, usando fallback...");
-      // Fallback se popup for bloqueado
-      const link = document.createElement("a");
-      link.href = pdfUrl;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      link.style.display = "none";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      // Cleanup após um tempo
-      setTimeout(() => {
-        URL.revokeObjectURL(pdfUrl);
-        console.log("🧹 URL do preview limpa após timeout");
-      }, 30000);
-    }
-  } catch (error) {
-    console.error("❌ Erro ao visualizar PDF:", error);
-    throw error;
-  }
+export const generatePDFForPreview = async (
+  onProgress?: (progress: number) => void
+): Promise<{ blob: Blob; url: string }> => {
+  const pdfBlob = await generateDynamicPDF(onProgress);
+  const pdfUrl = URL.createObjectURL(pdfBlob);
+  return { blob: pdfBlob, url: pdfUrl };
 };
-
-// ... (mantenha o generatePDFContent, downloadSimplePDF, generateSimplePDFContent igual)
 
 const generatePDFContent = (): string => {
   const currentDate = new Date().toLocaleDateString("pt-BR");
   const stats = calculateSkillStats();
   const topSkills = getTopSkills(8);
   const featuredProjects = getFeaturedProjects().slice(0, 2);
-
-  console.log("📝 Gerando conteúdo do PDF...");
 
   return `
     <!DOCTYPE html>
@@ -717,6 +656,4 @@ export const PDFDownloads = {
       fileName: "Erick-Reis-Curriculo.pdf",
       trackingEvent: "resume_download",
     }),
-
-  preview: () => previewPortfolioPDF(),
 };

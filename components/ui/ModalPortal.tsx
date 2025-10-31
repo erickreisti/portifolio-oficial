@@ -1,3 +1,4 @@
+// components/ui/ModalPortal.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -19,7 +20,6 @@ export const ModalPortal = ({ children, isOpen = true }: ModalPortalProps) => {
     return () => setMounted(false);
   }, []);
 
-  // Prevenir SSR issues
   if (!mounted) return null;
 
   return createPortal(

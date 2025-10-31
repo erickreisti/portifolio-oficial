@@ -4,7 +4,7 @@
 import { useState, useCallback } from "react";
 import {
   generatePortfolioPDF,
-  previewPortfolioPDF,
+  generatePDFForPreview,
   type PDFOptions,
 } from "@/lib/pdf-generator";
 
@@ -16,6 +16,9 @@ interface UsePDFDownloadReturn {
   progress: number;
   error: string | null;
   resetError: () => void;
+  pdfUrl: string | null;
+  isModalOpen: boolean;
+  closeModal: () => void;
 }
 
 export const usePDFDownload = (): UsePDFDownloadReturn => {
@@ -23,6 +26,8 @@ export const usePDFDownload = (): UsePDFDownloadReturn => {
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const downloadPDF = useCallback(async (options: PDFOptions = {}) => {
     setIsDownloading(true);
@@ -30,18 +35,18 @@ export const usePDFDownload = (): UsePDFDownloadReturn => {
     setError(null);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
+      // Download direto sem preview - mais rápido
       await generatePortfolioPDF({
         ...options,
+        preview: false, // Garante que é apenas download
         onProgress: (currentProgress) => {
           setProgress(currentProgress);
-          options.onProgress?.(currentProgress);
         },
       });
 
       setProgress(100);
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      // Pequeno delay para mostrar 100% antes de resetar
+      await new Promise((resolve) => setTimeout(resolve, 300));
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Erro ao gerar PDF";
@@ -54,22 +59,39 @@ export const usePDFDownload = (): UsePDFDownloadReturn => {
     }
   }, []);
 
-  const previewPDF = useCallback(async () => {
+  const previewPDF = useCallback(async (): Promise<void> => {
     setIsPreviewing(true);
+    setProgress(0);
     setError(null);
+    setPdfUrl(null);
 
     try {
-      await previewPortfolioPDF();
+      const result = await generatePDFForPreview((currentProgress) => {
+        setProgress(currentProgress);
+      });
+
+      setPdfUrl(result.url);
+      setIsModalOpen(true);
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "Erro ao visualizar PDF";
+        err instanceof Error ? err.message : "Erro ao gerar preview do PDF";
       setError(errorMessage);
-      console.error("PDF Preview Error:", err);
+      console.error("PDF Preview Generation Error:", err);
       throw err;
     } finally {
       setIsPreviewing(false);
+      setProgress(0);
     }
   }, []);
+
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false);
+    // Revoke the object URL to avoid memory leaks
+    if (pdfUrl) {
+      URL.revokeObjectURL(pdfUrl);
+      setPdfUrl(null);
+    }
+  }, [pdfUrl]);
 
   const resetError = useCallback(() => {
     setError(null);
@@ -83,5 +105,8 @@ export const usePDFDownload = (): UsePDFDownloadReturn => {
     progress,
     error,
     resetError,
+    pdfUrl,
+    isModalOpen,
+    closeModal,
   };
 };
