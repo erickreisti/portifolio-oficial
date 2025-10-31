@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useEffect, useRef, useState, useMemo } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import {
@@ -30,6 +36,7 @@ import { useLockScroll, forceReleaseAll } from "@/hooks/useLockScroll";
 import ModalPortal from "@/components/ui/ModalPortal";
 import { NeonElements } from "@/components/layout/NeonElements";
 import { COLORS } from "@/lib/colors";
+import { AnimatedActionButton } from "@/components/ui/AnimatedActionButton";
 
 interface ExtendedProject extends Project {
   demoVideo?: string;
@@ -306,45 +313,54 @@ const ProjectShowcase: React.FC = () => {
     }
   }, [selectedProject, zoomImage, showAllTechnologies]);
 
-  const handlePlayPause = () => {
+  const handlePlayPause = useCallback(() => {
     if (videoRef.current) {
       if (isPlaying) videoRef.current.pause();
       else videoRef.current.play();
       setIsPlaying(!isPlaying);
     }
-  };
+  }, [isPlaying]);
 
-  const toggleProjectExpansion = (projectId: number, e: React.MouseEvent) => {
-    e.stopPropagation();
-    const idStr = projectId.toString();
-    const newExpanded = new Set(expandedProjects);
-    if (newExpanded.has(idStr)) newExpanded.delete(idStr);
-    else newExpanded.add(idStr);
-    setExpandedProjects(newExpanded);
-  };
+  const toggleProjectExpansion = useCallback(
+    (projectId: number, e: React.MouseEvent) => {
+      e.stopPropagation();
+      const idStr = projectId.toString();
+      const newExpanded = new Set(expandedProjects);
+      if (newExpanded.has(idStr)) newExpanded.delete(idStr);
+      else newExpanded.add(idStr);
+      setExpandedProjects(newExpanded);
+    },
+    [expandedProjects]
+  );
 
-  const showTechnologiesModal = (
-    technologies: string[],
-    e: React.MouseEvent
-  ) => {
-    e.stopPropagation();
-    setShowAllTechnologies(technologies);
-  };
+  const showTechnologiesModal = useCallback(
+    (technologies: string[], e: React.MouseEvent) => {
+      e.stopPropagation();
+      setShowAllTechnologies(technologies);
+    },
+    []
+  );
 
-  const handleImageZoom = (imageSrc: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setZoomImage(imageSrc);
-  };
+  const handleImageZoom = useCallback(
+    (imageSrc: string, e: React.MouseEvent) => {
+      e.stopPropagation();
+      setZoomImage(imageSrc);
+    },
+    []
+  );
 
-  const handleLiveDemo = (liveUrl: string, e: React.MouseEvent) => {
+  const handleLiveDemo = useCallback((liveUrl: string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (liveUrl) window.open(liveUrl, "_blank", "noopener,noreferrer");
-  };
+  }, []);
 
-  const handleGithubClick = (githubUrl: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    window.open(githubUrl, "_blank", "noopener,noreferrer");
-  };
+  const handleGithubClick = useCallback(
+    (githubUrl: string, e: React.MouseEvent) => {
+      e.stopPropagation();
+      window.open(githubUrl, "_blank", "noopener,noreferrer");
+    },
+    []
+  );
 
   return (
     <>
@@ -714,12 +730,27 @@ const Projects: React.FC = () => {
     return () => ctx.revert();
   }, [isInView]);
 
+  // Função para navegar até a seção de contato (igual ao About)
+  const handleContactClick = () => {
+    const contactSection = document.getElementById("contact");
+    if (contactSection) {
+      const headerHeight = 80;
+      const elementPosition = contactSection.offsetTop - headerHeight;
+
+      window.scrollTo({
+        top: elementPosition,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <section
       id="projects"
       ref={sectionRef}
       className={`relative min-h-screen ${COLORS.classes.background.section} section-with-header`}
     >
+      {/* MESMO BACKGROUND DO ABOUT - PremiumBackground com NeonElements */}
       <LazyBackground priority="medium">
         <PremiumBackground intensity="medium">
           <NeonElements />
@@ -777,7 +808,7 @@ const Projects: React.FC = () => {
           ))}
         </div>
 
-        {/* CTA */}
+        {/* CTA Section - ATUALIZADO igual ao About */}
         <LazyComponent animation="fadeUp" delay={800}>
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -801,6 +832,7 @@ const Projects: React.FC = () => {
                 >
                   <Rocket className="w-6 h-6 text-cyan-400" />
                 </motion.div>
+
                 <div className="text-center lg:text-left flex-1">
                   <h3
                     className={`${COLORS.classes.text.primary} text-xl lg:text-2xl font-black mb-2`}
@@ -814,6 +846,7 @@ const Projects: React.FC = () => {
                     tecnologias do mercado
                   </p>
                 </div>
+
                 <motion.div
                   initial={{ opacity: 0, x: 20, scale: 0.9 }}
                   whileInView={{ opacity: 1, x: 0, scale: 1 }}
@@ -821,13 +854,15 @@ const Projects: React.FC = () => {
                   viewport={{ once: true }}
                   className="w-full lg:w-auto"
                 >
-                  <a
-                    href="#contact"
-                    className={`${COLORS.classes.button.primary} inline-block text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl relative overflow-hidden`}
-                  >
-                    <Sparkles className="w-4 h-4 mr-2 transition-transform duration-300" />
-                    INICIAR PROJETO
-                  </a>
+                  <AnimatedActionButton
+                    title="INICIAR PROJETO"
+                    subtitle="VAMOS CONVERSAR"
+                    icon={Rocket}
+                    size="lg"
+                    onClick={handleContactClick}
+                    className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-cyan-400/50 hover:border-cyan-300/70"
+                    showArrow={true}
+                  />
                 </motion.div>
               </div>
             </motion.div>
