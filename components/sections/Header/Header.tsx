@@ -1,3 +1,4 @@
+// components/layout/Header.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -6,8 +7,6 @@ import {
   Download,
   Menu,
   X,
-  Rocket,
-  Sparkles,
   User,
   Code,
   Briefcase,
@@ -15,7 +14,9 @@ import {
   Home,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AnimatedActionButton } from "@/components/ui/AnimatedActionButton";
 import { OptimizedImage } from "@/components/optimization/OptimizedImage";
+import { usePDFDownload } from "@/hooks/usePDFDowload";
 import { getSafeColors } from "@/lib/colors";
 
 // Dados padronizados com ícones
@@ -39,6 +40,9 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
   const [hasInteracted, setHasInteracted] = useState(false);
   const colors = getSafeColors();
 
+  // Usando o hook personalizado para download
+  const { downloadPDF, isDownloading, progress } = usePDFDownload();
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
@@ -48,7 +52,6 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
       setHeaderOpacity(opacity);
       setIsScrolled(scrollY > 50);
 
-      // Marcar que o usuário interagiu após o primeiro scroll
       if (scrollY > 100 && !hasInteracted) {
         setHasInteracted(true);
       }
@@ -66,11 +69,19 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
     setHasInteracted(true);
   };
 
-  // Função para verificar se deve mostrar o ícone
+  const handleDownloadCV = async () => {
+    try {
+      await downloadPDF({
+        fileName: "Erick-Reis-Portfolio.pdf",
+      });
+    } catch (error) {
+      console.error("Erro no download:", error);
+      // Fallback já está implementado no pdf-generator
+    }
+  };
+
   const shouldShowIcon = (sectionName: string) => {
-    // Sempre mostrar na primeira vez (Início ativo)
     if (!hasInteracted && sectionName === "hero") return true;
-    // Mostrar apenas quando a seção estiver ativa após interação
     return hasInteracted && activeSection === sectionName;
   };
 
@@ -102,8 +113,9 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
         transition={{ duration: 0.5, ease: "easeOut" }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Logo - SEM ROTAÇÃO, COM BRILHO SUTIL */}
+      {/* Header com altura aumentada */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        {/* Logo */}
         <motion.button
           onClick={() => handleNavClick("hero")}
           className="flex items-center gap-2 group focus:outline-none rounded-lg p-1 relative"
@@ -114,7 +126,6 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           <div className="flex items-center gap-2 p-2 rounded-xl bg-gradient-to-r from-gray-900/10 to-gray-800/5 backdrop-blur-sm border border-cyan-500/10 group-hover:border-cyan-400/20 transition-all duration-300 relative overflow-hidden">
-            {/* Brilho sutil no logo container */}
             <motion.div
               className="absolute inset-0 bg-gradient-to-r from-cyan-400/5 via-transparent to-blue-400/5"
               initial={{ opacity: 0 }}
@@ -123,7 +134,7 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
             />
 
             <motion.div
-              whileHover={{ scale: 1.1 }} // Apenas scale, sem rotation
+              whileHover={{ scale: 1.1 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
               className="relative"
             >
@@ -135,7 +146,6 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                 priority={true}
                 className="brightness-125 drop-shadow-lg"
               />
-              {/* Brilho sutil na logo */}
               <motion.div
                 className="absolute inset-0 bg-cyan-400/10 rounded-lg"
                 initial={{ opacity: 0 }}
@@ -202,7 +212,6 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                 />
 
                 <span className="relative z-10 font-semibold tracking-wide flex items-center gap-2 justify-center w-full">
-                  {/* Container do ícone com largura fixa */}
                   <div className="w-6 h-6 flex items-center justify-center flex-shrink-0">
                     <AnimatePresence mode="wait">
                       {showIcon && (
@@ -236,7 +245,6 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                       )}
                     </AnimatePresence>
 
-                    {/* Espaço reservado quando não há ícone (transparente) */}
                     {!showIcon && (
                       <div className="w-4 h-4 opacity-0">
                         <Icon className="w-4 h-4" />
@@ -244,11 +252,9 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                     )}
                   </div>
 
-                  {/* Texto do link */}
                   <span className="flex-shrink-0">{item.name}</span>
                 </span>
 
-                {/* Underline Dinâmico */}
                 <motion.div
                   className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full origin-left"
                   initial={{ scaleX: 0 }}
@@ -264,7 +270,6 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                   }}
                 />
 
-                {/* Efeito de brilho no hover */}
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-cyan-400/5 to-blue-400/5 rounded-lg"
                   initial={{ opacity: 0 }}
@@ -276,67 +281,25 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
           })}
         </nav>
 
-        {/* Desktop CTA */}
+        {/* Desktop CTA - BOTÃO COM MESMO ESTILO DO FOOTER */}
         <motion.div
           className="hidden lg:flex items-center gap-3"
           initial={{ opacity: 0, x: 20, scale: 0.9 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.8 }}
         >
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="relative"
-          >
-            <Button
-              variant="neon"
-              size="sm"
-              className="gap-2 backdrop-blur-sm relative overflow-hidden group px-4"
-              onClick={() =>
-                window.open("/docs/curriculo-erick-reis.pdf", "_blank")
-              }
-            >
-              {/* Efeito de brilho interno CONTÍNUO */}
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent transform -skew-x-12"
-                animate={{ x: ["-100%", "200%"] }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  repeatDelay: 2,
-                }}
-              />
-
-              {/* Efeito de brilho extra no HOVER */}
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent transform -skew-x-12"
-                initial={{ x: "-100%" }}
-                whileHover={{ x: "200%" }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-              />
-
-              <motion.div
-                className="relative"
-                whileHover={{
-                  y: [0, -2, 0],
-                  transition: { duration: 0.6, repeat: Infinity },
-                }}
-              >
-                <Download className="w-4 h-4" />
-              </motion.div>
-
-              <motion.span
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
-              >
-                BAIXAR CV
-              </motion.span>
-
-              {/* Reflexo na borda */}
-              <div className="absolute inset-0 rounded-lg border border-cyan-400/20 group-hover:border-cyan-400/40 transition-all duration-300" />
-            </Button>
-          </motion.div>
+          <AnimatedActionButton
+            title="BAIXAR CV"
+            subtitle="DOWNLOAD PDF"
+            icon={Download}
+            size="sm"
+            onClick={handleDownloadCV}
+            loading={isDownloading}
+            progress={progress}
+            disabled={isDownloading}
+            className="hover:scale-105"
+            showArrow={false}
+          />
         </motion.div>
 
         {/* Mobile Menu Button */}
@@ -346,37 +309,27 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.5, duration: 0.5 }}
         >
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button
-              variant="neon"
-              size="sm"
-              className="gap-2 backdrop-blur-sm relative overflow-hidden group px-3"
-              onClick={() =>
-                window.open("/docs/curriculo-erick-reis.pdf", "_blank")
-              }
-            >
-              {/* Efeito de brilho interno CONTÍNUO */}
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent transform -skew-x-12"
-                animate={{ x: ["-100%", "200%"] }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  repeatDelay: 2,
-                }}
-              />
-              <Download className="w-4 h-4" />
-              CV
-            </Button>
-          </motion.div>
+          {/* Botão Download Mobile - COM MESMO ESTILO DO FOOTER */}
+          <AnimatedActionButton
+            title="CV"
+            subtitle="PDF"
+            icon={Download}
+            size="sm"
+            onClick={handleDownloadCV}
+            loading={isDownloading}
+            progress={progress}
+            disabled={isDownloading}
+            className="hover:scale-105"
+            showArrow={false}
+          />
 
+          {/* Botão Menu Mobile */}
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="w-9 h-9 rounded-xl text-white/80 hover:text-white bg-white/5 backdrop-blur-xl border border-white/10 hover:bg-white/10 transition-all duration-300 relative overflow-hidden"
+              className="w-10 h-10 rounded-xl text-white/80 hover:text-white bg-white/5 backdrop-blur-xl border border-white/10 hover:bg-white/10 transition-all duration-300 relative overflow-hidden"
             >
               <motion.div
                 animate={{
@@ -450,7 +403,6 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                     />
 
                     <span className="relative z-10 font-semibold ml-6 flex items-center gap-3">
-                      {/* Container do ícone com largura fixa no mobile também */}
                       <div className="w-6 h-6 flex items-center justify-center flex-shrink-0">
                         <AnimatePresence mode="wait">
                           {showIcon && (
@@ -484,7 +436,6 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                           )}
                         </AnimatePresence>
 
-                        {/* Espaço reservado quando não há ícone (transparente) */}
                         {!showIcon && (
                           <div className="w-4 h-4 opacity-0">
                             <Icon className="w-4 h-4" />
@@ -516,33 +467,18 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.4 }}
               >
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="relative"
-                >
-                  <Button
-                    variant="neon"
-                    className="w-full justify-center gap-2 backdrop-blur-sm relative overflow-hidden group"
-                    onClick={() =>
-                      window.open("/docs/curriculo-erick-reis.pdf", "_blank")
-                    }
-                  >
-                    {/* Efeito de brilho interno CONTÍNUO */}
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent transform -skew-x-12"
-                      animate={{ x: ["-100%", "200%"] }}
-                      transition={{
-                        duration: 4,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        repeatDelay: 2,
-                      }}
-                    />
-                    <Download className="w-4 h-4" />
-                    BAIXAR CV
-                  </Button>
-                </motion.div>
+                <AnimatedActionButton
+                  title="BAIXAR CV"
+                  subtitle="DOWNLOAD PDF"
+                  icon={Download}
+                  size="sm"
+                  onClick={handleDownloadCV}
+                  loading={isDownloading}
+                  progress={progress}
+                  disabled={isDownloading}
+                  className="w-full justify-center hover:scale-105"
+                  showArrow={false}
+                />
               </motion.div>
             </nav>
           </motion.div>

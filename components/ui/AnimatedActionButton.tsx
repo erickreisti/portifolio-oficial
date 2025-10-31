@@ -1,9 +1,7 @@
-// components/ui/AnimatedActionButton.tsx
 "use client";
 
 import { motion } from "framer-motion";
 import { LucideIcon } from "lucide-react";
-import { BUTTON_PRESETS, type ButtonPreset } from "@/lib/button-presets";
 
 interface AnimatedActionButtonProps {
   // Conteúdo
@@ -12,11 +10,6 @@ interface AnimatedActionButtonProps {
 
   // Ícone
   icon: LucideIcon;
-
-  // Sistema de cores - Agora com presets
-  variant?: "primary" | "secondary" | "accent" | "custom";
-  preset?: keyof typeof BUTTON_PRESETS; // "cyan" | "purple" | "green" | "orange" | "yellow"
-  colors?: ButtonPreset; // Para uso customizado
 
   // Ação
   onClick: () => void;
@@ -28,22 +21,25 @@ interface AnimatedActionButtonProps {
   // Estados
   disabled?: boolean;
   loading?: boolean;
+  progress?: number;
+
+  // Controles
+  showArrow?: boolean;
 }
 
 export const AnimatedActionButton = ({
   title,
   subtitle,
   icon: Icon,
-  variant = "primary",
-  preset,
-  colors,
   onClick,
   size = "md",
   className = "",
   disabled = false,
   loading = false,
+  progress = 0,
+  showArrow = true,
 }: AnimatedActionButtonProps) => {
-  // Configurações de tamanho
+  // Configurações de tamanho baseadas no botão do footer
   const sizeConfig = {
     sm: {
       padding: "px-4 py-2",
@@ -65,28 +61,6 @@ export const AnimatedActionButton = ({
     },
   };
 
-  // Sistema de cores unificado
-  const getColorConfig = (): ButtonPreset => {
-    // Se fornecer cores customizadas, use-as
-    if (colors) return colors;
-
-    // Se fornecer um preset, use-o (tem prioridade sobre variant)
-    if (preset && BUTTON_PRESETS[preset]) {
-      return BUTTON_PRESETS[preset];
-    }
-
-    // Fallback para variantes padrão
-    const variantPresets: Record<string, ButtonPreset> = {
-      primary: BUTTON_PRESETS.cyan,
-      secondary: BUTTON_PRESETS.purple,
-      accent: BUTTON_PRESETS.green,
-      custom: BUTTON_PRESETS.cyan, // Fallback para custom
-    };
-
-    return variantPresets[variant] || BUTTON_PRESETS.cyan;
-  };
-
-  const colorConfig = getColorConfig();
   const config = sizeConfig[size];
 
   return (
@@ -94,8 +68,10 @@ export const AnimatedActionButton = ({
       onClick={onClick}
       disabled={disabled || loading}
       className={`
-        group relative ${colorConfig.background} backdrop-blur-xl 
-        ${colorConfig.border} ${config.padding} rounded-2xl 
+        group relative bg-gradient-to-r from-cyan-500/20 to-blue-500/20 backdrop-blur-xl 
+        border border-cyan-400/30 hover:border-cyan-400/50 ${
+          config.padding
+        } rounded-2xl 
         transition-all duration-500 overflow-hidden
         ${
           disabled
@@ -109,31 +85,34 @@ export const AnimatedActionButton = ({
           ? {
               scale: 1.05,
               y: -2,
-              boxShadow: `0 20px 40px ${colorConfig.glow}`,
+              boxShadow: "0 20px 40px rgba(6, 182, 212, 0.3)",
             }
           : {}
       }
       whileTap={!disabled && !loading ? { scale: 0.95 } : {}}
       style={{
         boxShadow:
-          !disabled && !loading ? `0 10px 30px ${colorConfig.glow}` : "none",
+          !disabled && !loading ? "0 10px 30px rgba(6, 182, 212, 0.3)" : "none",
       }}
     >
-      {/* Efeito de fundo gradiente no hover */}
-      <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-        style={{
-          background: `linear-gradient(to right, ${colorConfig.glow}10, ${colorConfig.glow}05)`,
-        }}
-      />
+      {/* Barra de progresso (igual ao conceito do footer) */}
+      {loading && progress > 0 && (
+        <motion.div
+          className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-b-2xl"
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: progress / 100 }}
+          transition={{ duration: 0.3 }}
+          style={{ originX: 0 }}
+        />
+      )}
 
-      {/* Animação de brilho contínuo */}
+      {/* Efeito de fundo gradiente no hover (IGUAL AO FOOTER) */}
+      <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+      {/* Animação de brilho contínuo (IGUAL AO FOOTER) */}
       <div className="absolute inset-0 overflow-hidden rounded-2xl">
         <motion.div
-          className="absolute -inset-10 opacity-30"
-          style={{
-            background: `linear-gradient(to right, transparent, ${colorConfig.particle}, transparent)`,
-          }}
+          className="absolute -inset-10 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent"
           animate={{ x: ["0%", "200%", "0%"] }}
           transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
         />
@@ -141,7 +120,7 @@ export const AnimatedActionButton = ({
 
       {/* Conteúdo do botão */}
       <div className={`relative z-10 flex items-center ${config.gap}`}>
-        {/* Ícone animado */}
+        {/* Ícone animado (IGUAL AO FOOTER) */}
         <motion.div
           className="relative"
           animate={loading ? { rotate: 360 } : { y: [0, -4, 0] }}
@@ -151,10 +130,10 @@ export const AnimatedActionButton = ({
               : { duration: 2, repeat: Infinity, ease: "easeInOut" }
           }
         >
-          <Icon className={`${config.iconSize} ${colorConfig.icon}`} />
+          <Icon className={`${config.iconSize} text-cyan-400`} />
           {!loading && (
             <motion.div
-              className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 ${colorConfig.particle} rounded-full blur-sm`}
+              className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-cyan-400 rounded-full blur-sm"
               animate={{ scale: [1, 1.5, 1], opacity: [0.7, 1, 0.7] }}
               transition={{
                 duration: 1.5,
@@ -165,27 +144,24 @@ export const AnimatedActionButton = ({
           )}
         </motion.div>
 
-        {/* Textos */}
+        {/* Textos (IGUAL AO FOOTER) */}
         <div className="flex flex-col items-start">
           <span
-            className={`${config.textSize} font-mono font-bold ${colorConfig.text} tracking-wider transition-colors duration-300`}
+            className={`${config.textSize} font-mono font-bold text-cyan-400 tracking-wider group-hover:text-cyan-300 transition-colors duration-300`}
           >
             {loading ? "PROCESSANDO..." : title}
           </span>
           {subtitle && (
-            <span
-              className="text-xs transition-colors duration-300 font-mono opacity-80"
-              style={{ color: colorConfig.glow }}
-            >
-              {subtitle}
+            <span className="text-xs text-gray-400 group-hover:text-cyan-400/80 transition-colors duration-300 font-mono">
+              {loading ? `${progress}%` : subtitle}
             </span>
           )}
         </div>
 
-        {/* Seta animada */}
-        {!loading && (
+        {/* Seta animada (IGUAL AO FOOTER) - CONDICIONAL */}
+        {!loading && showArrow && (
           <motion.div
-            className="ml-1"
+            className="ml-2"
             animate={{ y: [0, -3, 0] }}
             transition={{
               duration: 1.5,
@@ -194,7 +170,7 @@ export const AnimatedActionButton = ({
             }}
           >
             <motion.div
-              className={`${config.iconSize} ${colorConfig.icon}`}
+              className="w-4 h-4 text-cyan-400"
               whileHover={{ rotate: 360 }}
               transition={{ duration: 0.5 }}
             >
@@ -211,23 +187,17 @@ export const AnimatedActionButton = ({
         )}
       </div>
 
-      {/* Efeito de brilho na borda no hover */}
-      <div
-        className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm"
-        style={{
-          background: `linear-gradient(to right, ${colorConfig.glow}00, ${colorConfig.glow}40, ${colorConfig.glow}00)`,
-        }}
-      />
+      {/* REFLEXO NA BORDA (IGUAL AO FOOTER) */}
+      <div className="absolute inset-0 rounded-2xl border border-cyan-400/20 group-hover:border-cyan-400/40 transition-all duration-300" />
 
-      {/* Loading overlay */}
+      {/* Efeito de brilho na borda no hover (IGUAL AO FOOTER) */}
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-400/0 via-cyan-400/20 to-cyan-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+
+      {/* Loading overlay (IGUAL AO FOOTER) */}
       {loading && (
         <div className="absolute inset-0 bg-black/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
           <motion.div
-            className="w-6 h-6 border-2 rounded-full"
-            style={{
-              borderColor: colorConfig.glow,
-              borderTopColor: "transparent",
-            }}
+            className="w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full"
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
           />
