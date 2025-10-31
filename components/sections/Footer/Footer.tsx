@@ -12,6 +12,12 @@ import {
   MessageCircle,
   Mail,
   MapPin,
+  Home,
+  User,
+  Code,
+  Briefcase,
+  ExternalLink,
+  ArrowUp,
 } from "lucide-react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { gsap } from "gsap";
@@ -23,6 +29,7 @@ import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import LazyBackground from "@/components/optimization/LazyBackground";
 import { NeonElements } from "@/components/layout/NeonElements";
 import { COLORS } from "@/lib/colors";
+import { AnimatedActionButton } from "@/components/ui/AnimatedActionButton";
 
 interface SocialLink {
   icon: React.ComponentType<any>;
@@ -52,10 +59,12 @@ const SOCIAL_LINKS: SocialLink[] = [
   },
 ];
 
+// MESMOS ÍCONES DO HEADER
 const QUICK_LINKS = [
-  { label: "Início", href: "#hero", icon: Rocket },
-  { label: "Projetos", href: "#projects", icon: Code2 },
-  { label: "Sobre", href: "#about", icon: Cpu },
+  { label: "Início", href: "#hero", icon: Home },
+  { label: "Sobre", href: "#about", icon: User },
+  { label: "Habilidades", href: "#skills", icon: Code },
+  { label: "Projetos", href: "#projects", icon: Briefcase },
   { label: "Contato", href: "#contact", icon: MessageCircle },
 ];
 
@@ -130,19 +139,27 @@ const QuickLink = ({
     <LazyComponent animation="fadeUp" delay={index * 100}>
       <motion.button
         onClick={() => scrollToSection(link.href)}
-        className={`group flex items-center gap-3 p-3 rounded-xl ${COLORS.classes.background.card} border ${COLORS.borders.medium} hover:border-cyan-400/50 transition-all duration-300 w-full text-left`}
+        className={`group flex items-center gap-3 p-4 rounded-xl ${COLORS.classes.background.card} border ${COLORS.borders.medium} hover:border-cyan-400/50 transition-all duration-300 w-full text-left hover:bg-gradient-to-r hover:from-cyan-500/5 hover:to-blue-500/5`}
         whileHover={{ x: 5, scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         initial={{ opacity: 0, x: -20 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
       >
-        <link.icon className="w-4 h-4 text-cyan-400 group-hover:scale-110 transition-transform duration-300" />
-        <span
-          className={`${COLORS.classes.text.secondary} text-sm font-semibold group-hover:text-cyan-300 transition-colors duration-300`}
-        >
-          {link.label}
-        </span>
+        <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-400/30 group-hover:border-cyan-400/50 transition-all duration-300">
+          <link.icon className="w-5 h-5 text-cyan-400 group-hover:scale-110 transition-transform duration-300" />
+        </div>
+        <div className="flex-1">
+          <span
+            className={`${COLORS.classes.text.primary} text-sm font-semibold group-hover:text-cyan-300 transition-colors duration-300 block`}
+          >
+            {link.label}
+          </span>
+          <span className="text-gray-500 text-xs group-hover:text-cyan-400/80 transition-colors duration-300">
+            Navegar para seção
+          </span>
+        </div>
+        <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-cyan-400 transition-colors duration-300" />
       </motion.button>
     </LazyComponent>
   );
@@ -220,14 +237,19 @@ const LogoArea = () => {
 const SocialLinksGrid = () => (
   <LazyComponent animation="fadeUp" delay={300}>
     <motion.div
-      className="flex justify-center gap-6 mb-12"
+      className="text-center mb-12"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
     >
-      {SOCIAL_LINKS.map((link, index) => (
-        <SocialLink key={link.label} link={link} index={index} />
-      ))}
+      <h3 className={`${COLORS.classes.text.primary} text-xl font-bold mb-6`}>
+        CONECTE-SE COMIGO
+      </h3>
+      <div className="flex justify-center gap-6">
+        {SOCIAL_LINKS.map((link, index) => (
+          <SocialLink key={link.label} link={link} index={index} />
+        ))}
+      </div>
     </motion.div>
   </LazyComponent>
 );
@@ -240,15 +262,15 @@ const QuickLinksGrid = () => (
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
     >
-      <div className="text-center mb-6">
-        <h3 className={`${COLORS.classes.text.primary} text-lg font-bold mb-2`}>
+      <div className="text-center mb-8">
+        <h3 className={`${COLORS.classes.text.primary} text-xl font-bold mb-2`}>
           NAVEGAÇÃO RÁPIDA
         </h3>
         <p className={`${COLORS.classes.text.tertiary} text-sm`}>
-          Acesse as seções principais
+          Acesse rapidamente as principais seções do portfólio
         </p>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
         {QUICK_LINKS.map((link, index) => (
           <QuickLink key={link.href} link={link} index={index} />
         ))}
@@ -260,7 +282,7 @@ const QuickLinksGrid = () => (
 const TechBadge = () => (
   <LazyComponent animation="scale" delay={500}>
     <motion.div
-      className="flex justify-center"
+      className="flex justify-center mb-8"
       initial={{ opacity: 0, scale: 0.8 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
@@ -289,7 +311,7 @@ const FooterInfo = () => {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
-    <LazyComponent animation="fadeUp" delay={400}>
+    <LazyComponent animation="fadeUp" delay={600}>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
         <motion.div
           className="text-center lg:text-left"
@@ -300,7 +322,9 @@ const FooterInfo = () => {
           <p className={`${COLORS.classes.text.tertiary} font-mono text-sm`}>
             © {currentYear} ÉRICK REIS
           </p>
-          <p className="text-gray-500 text-xs mt-1">CÓDIGO & DESIGN</p>
+          <p className="text-gray-500 text-xs mt-1">
+            DESENVOLVIDO COM TECNOLOGIA DE PONTA
+          </p>
         </motion.div>
 
         <TechBadge />
@@ -311,85 +335,15 @@ const FooterInfo = () => {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
         >
-          <motion.button
+          <AnimatedActionButton
+            title="VOLTAR AO TOPO"
+            subtitle="BACK TO ORBIT"
+            icon={ArrowUp}
+            size="sm"
             onClick={scrollToTop}
-            className="group relative bg-gradient-to-r from-cyan-500/20 to-blue-500/20 backdrop-blur-xl border border-cyan-400/30 hover:border-cyan-400/50 px-6 py-3 rounded-2xl transition-all duration-500 overflow-hidden"
-            whileHover={{
-              scale: 1.05,
-              y: -2,
-              boxShadow: "0 20px 40px rgba(6, 182, 212, 0.3)",
-            }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-            <div className="absolute inset-0 overflow-hidden rounded-2xl">
-              <motion.div
-                className="absolute -inset-10 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent"
-                animate={{ x: ["0%", "200%", "0%"] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-              />
-            </div>
-
-            <div className="relative z-10 flex items-center gap-3">
-              <motion.div
-                className="relative"
-                animate={{ y: [0, -4, 0] }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              >
-                <Rocket className="w-5 h-5 text-cyan-400" />
-                <motion.div
-                  className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-400 rounded-full blur-sm"
-                  animate={{ scale: [1, 1.5, 1], opacity: [0.7, 1, 0.7] }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                />
-              </motion.div>
-
-              <div className="flex flex-col items-start">
-                <span className="text-sm font-mono font-bold text-cyan-400 tracking-wider group-hover:text-cyan-300 transition-colors duration-300">
-                  VOLTAR AO TOPO
-                </span>
-                <span className="text-xs text-gray-400 group-hover:text-cyan-400/80 transition-colors duration-300 font-mono">
-                  BACK TO ORBIT
-                </span>
-              </div>
-
-              <motion.div
-                className="ml-2"
-                animate={{ y: [0, -3, 0] }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              >
-                <motion.div
-                  className="w-4 h-4 text-cyan-400"
-                  whileHover={{ rotate: 360 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 10l7-7m0 0l7 7m-7-7v18"
-                    />
-                  </svg>
-                </motion.div>
-              </motion.div>
-            </div>
-
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-400/0 via-cyan-400/20 to-cyan-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
-          </motion.button>
+            className="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border-cyan-400/30 hover:border-cyan-400/50"
+            showArrow={false}
+          />
         </motion.div>
       </div>
     </LazyComponent>
@@ -399,31 +353,45 @@ const FooterInfo = () => {
 const ContactInfoMini = () => (
   <LazyComponent animation="fadeUp" delay={500}>
     <motion.div
-      className="mb-8"
+      className="mb-12"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
     >
-      <div className="text-center mb-6">
-        <h3 className={`${COLORS.classes.text.primary} text-lg font-bold mb-2`}>
+      <div className="text-center mb-8">
+        <h3 className={`${COLORS.classes.text.primary} text-xl font-bold mb-2`}>
           CONTATO RÁPIDO
         </h3>
         <p className={`${COLORS.classes.text.tertiary} text-sm`}>
-          Vamos trabalhar juntos
+          Pronto para iniciar seu próximo projeto
         </p>
       </div>
-      <div className="flex flex-col sm:flex-row justify-center gap-4 text-sm">
+      <div className="flex flex-col sm:flex-row justify-center gap-6 text-sm">
         <div
-          className={`flex items-center gap-2 ${COLORS.classes.text.secondary}`}
+          className={`flex items-center gap-3 p-3 rounded-xl ${COLORS.classes.background.card} border ${COLORS.borders.medium} hover:border-cyan-400/50 transition-all duration-300`}
         >
-          <Mail className="w-4 h-4 text-cyan-400" />
-          <span>erickreisti@gmail.com</span>
+          <Mail className="w-5 h-5 text-cyan-400" />
+          <div className="text-left">
+            <p className={`${COLORS.classes.text.primary} font-semibold`}>
+              Email
+            </p>
+            <p className={`${COLORS.classes.text.secondary} text-sm`}>
+              erickreisti@gmail.com
+            </p>
+          </div>
         </div>
         <div
-          className={`flex items-center gap-2 ${COLORS.classes.text.secondary}`}
+          className={`flex items-center gap-3 p-3 rounded-xl ${COLORS.classes.background.card} border ${COLORS.borders.medium} hover:border-cyan-400/50 transition-all duration-300`}
         >
-          <MapPin className="w-4 h-4 text-cyan-400" />
-          <span>Rio de Janeiro, Brasil</span>
+          <MapPin className="w-5 h-5 text-cyan-400" />
+          <div className="text-left">
+            <p className={`${COLORS.classes.text.primary} font-semibold`}>
+              Localização
+            </p>
+            <p className={`${COLORS.classes.text.secondary} text-sm`}>
+              Rio de Janeiro, Brasil
+            </p>
+          </div>
         </div>
       </div>
     </motion.div>
@@ -432,12 +400,50 @@ const ContactInfoMini = () => (
 
 const PremiumDivider = () => (
   <LazyComponent animation="fadeIn" delay={350}>
-    <div className="relative mb-12">
+    <div className="relative my-12">
       <div className="w-full h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent" />
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <Sparkles className="w-6 h-6 text-cyan-400 animate-pulse" />
       </div>
     </div>
+  </LazyComponent>
+);
+
+const CallToAction = () => (
+  <LazyComponent animation="fadeUp" delay={700}>
+    <motion.div
+      className="text-center mb-12"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+    >
+      <div
+        className={`${COLORS.classes.card} p-8 rounded-2xl border-cyan-400/20`}
+      >
+        <h3
+          className={`${COLORS.classes.text.primary} text-2xl font-black mb-4`}
+        >
+          PRONTO PARA INICIAR SEU PROJETO?
+        </h3>
+        <p
+          className={`${COLORS.classes.text.secondary} text-lg mb-6 max-w-2xl mx-auto`}
+        >
+          Vamos transformar suas ideias em soluções digitais extraordinárias
+        </p>
+        <AnimatedActionButton
+          title="INICIAR PROJETO"
+          subtitle="VAMOS CONVERSAR"
+          icon={Rocket}
+          size="lg"
+          onClick={() => {
+            const contactSection = document.getElementById("contact");
+            contactSection?.scrollIntoView({ behavior: "smooth" });
+          }}
+          className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white border-cyan-400/50 hover:border-cyan-300/70 mx-auto"
+          showArrow={true}
+        />
+      </div>
+    </motion.div>
   </LazyComponent>
 );
 
@@ -465,7 +471,7 @@ export const Footer = () => {
   return (
     <footer
       ref={footerRef}
-      className={`relative min-h-[500px] ${COLORS.classes.background.section} border-t ${COLORS.borders.medium} overflow-hidden`}
+      className={`relative min-h-screen ${COLORS.classes.background.section} border-t ${COLORS.borders.medium} overflow-hidden`}
     >
       <LazyBackground priority="low">
         <PremiumBackground intensity="soft">
@@ -473,8 +479,9 @@ export const Footer = () => {
         </PremiumBackground>
       </LazyBackground>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 py-16">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 py-20">
         <LogoArea />
+        <CallToAction />
         <ContactInfoMini />
         <SocialLinksGrid />
         <QuickLinksGrid />
