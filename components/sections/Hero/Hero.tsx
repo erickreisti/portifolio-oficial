@@ -1,15 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState, useMemo } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import { Download, Rocket, ArrowDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { PremiumBackground } from "@/components/layout/PremiumBackground";
 import { LazyComponent } from "@/components/optimization/LazyComponent";
 import { LazyBackground } from "@/components/optimization/LazyBackground";
 import { HeroNeonElements } from "@/components/layout/HeroNeonElements";
 import { getSafeColors } from "@/lib/colors";
+import { AnimatedActionButton } from "@/components/ui/AnimatedActionButton";
+import { usePDFDownload } from "@/hooks/usePDFDowload";
 
 /**
  * COMPONENTE DE TEXTO HERO COM MICRO-SHAKE + TYPEWRITER
@@ -562,12 +563,23 @@ const LiveStats = () => {
 
 /**
  * COMPONENTE DOS BOTÕES DE AÇÃO
- * - Botão "Iniciar Projeto" com ícone de foguete
- * - Botão "Baixar CV" com ícone de download
- * - Reflexos contínuos e no hover
- * - Animações de interação
+ * - Botão "Iniciar Projeto" com AnimatedActionButton em azul gradiente
+ * - Botão "Baixar CV" com AnimatedActionButton
  */
 const ActionButtons = ({ onContactClick }: { onContactClick: () => void }) => {
+  const { downloadPDF, isDownloading, progress, error, resetError } =
+    usePDFDownload();
+
+  const handleDownloadCV = async () => {
+    try {
+      await downloadPDF({
+        fileName: "Erick-Reis-Curriculo.pdf",
+      });
+    } catch (error) {
+      console.error("Erro no download:", error);
+    }
+  };
+
   return (
     <LazyComponent animation="fadeUp" delay={500}>
       <motion.div
@@ -576,108 +588,50 @@ const ActionButtons = ({ onContactClick }: { onContactClick: () => void }) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 1.6, ease: "easeOut" }}
       >
-        {/* BOTÃO "INICIAR PROJETO" - COM FOGUETE ANIMADO */}
-        <motion.div
-          whileHover={{ scale: 1.05, y: -2 }}
-          whileTap={{ scale: 0.98 }}
-          transition={{ type: "spring", stiffness: 400, damping: 17 }}
-        >
-          <Button
-            onClick={onContactClick}
-            variant="premium"
-            size="xl"
-            className="gap-3 relative overflow-hidden group px-8"
-          >
-            {/* Efeito de brilho interno CONTÍNUO - passa a cada 4 segundos */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12"
-              animate={{ x: ["-100%", "200%"] }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-                repeatDelay: 2, // Pausa entre ciclos
-              }}
-            />
-            {/* Efeito de brilho extra no HOVER - mais rápido e intenso */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent transform -skew-x-12"
-              initial={{ x: "-100%" }}
-              whileHover={{ x: "200%" }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-            />
-            {/* Ícone do foguete com animações */}
-            <motion.div
-              className="relative"
-              whileHover={{ scale: 1.2, rotate: 10 }}
-              transition={{ type: "spring", stiffness: 400 }}
-            >
-              <Rocket className="w-5 h-5" />
-              {/* Efeito de propulsão - partícula amarela pulsante */}
-              <motion.div
-                className="absolute -bottom-1 -right-1 w-2 h-1 bg-yellow-400 rounded-full blur-sm"
-                animate={{ scale: [1, 1.5, 1], opacity: [0.7, 1, 0.7] }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
-            </motion.div>
-            INICIAR PROJETO
-            {/* Reflexo na borda - muda opacidade no hover */}
-            <div className="absolute inset-0 rounded-xl border border-white/30 group-hover:border-white/50 transition-all duration-300" />
-          </Button>
-        </motion.div>
+        {/* BOTÃO "INICIAR PROJETO" - COM ANIMATEDACTIONBUTTON AZUL GRADIENTE */}
+        <AnimatedActionButton
+          title="INICIAR PROJETO"
+          subtitle="VAMOS TRABALHAR JUNTOS"
+          icon={Rocket}
+          size="lg"
+          onClick={onContactClick}
+          className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-cyan-400/50 hover:border-cyan-300/70"
+          showArrow={false}
+        />
 
-        {/* BOTÃO "BAIXAR CV" - COM ÍCONE DE DOWNLOAD */}
-        <motion.div
-          whileHover={{ scale: 1.05, y: -2 }}
-          whileTap={{ scale: 0.98 }}
-          transition={{ type: "spring", stiffness: 400, damping: 17 }}
-        >
-          <Button
-            variant="neon"
-            size="xl"
-            className="gap-3 relative overflow-hidden group px-8 border-2"
-          >
-            {/* Efeito de brilho pulsante na borda */}
+        {/* BOTÃO "BAIXAR CV" - COM ANIMATEDACTIONBUTTON */}
+        <AnimatedActionButton
+          title={isDownloading ? "BAIXANDO..." : "BAIXAR CV"}
+          subtitle={isDownloading ? `${progress}%` : "PDF FORMATO ABNT"}
+          icon={Download}
+          size="lg"
+          onClick={handleDownloadCV}
+          loading={isDownloading}
+          progress={progress}
+          disabled={isDownloading}
+          className="hover:scale-105 transition-transform duration-200"
+          showArrow={false}
+        />
+
+        {/* Feedback de erro */}
+        <AnimatePresence>
+          {error && (
             <motion.div
-              className="absolute inset-0 rounded-xl border border-cyan-400/50"
-              animate={{ opacity: [0.3, 0.7, 0.3] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            />
-            {/* Efeito de brilho interno CONTÍNUO */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent transform -skew-x-12"
-              animate={{ x: ["-100%", "200%"] }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-                repeatDelay: 2,
-              }}
-            />
-            {/* Efeito de brilho extra no HOVER */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent transform -skew-x-12"
-              initial={{ x: "-100%" }}
-              whileHover={{ x: "200%" }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-            />
-            {/* Ícone de download com animação */}
-            <motion.div
-              className="relative"
-              whileHover={{ scale: 1.2, y: -2 }}
-              transition={{ type: "spring", stiffness: 400 }}
+              initial={{ opacity: 0, y: -10, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.9 }}
+              className="absolute top-full mt-2 p-3 bg-red-500/10 border border-red-500/20 rounded-lg backdrop-blur-sm z-50"
             >
-              <Download className="w-5 h-5" />
+              <p className="text-red-400 text-sm">{error}</p>
+              <button
+                onClick={() => resetError()}
+                className="text-red-300 text-xs hover:text-white mt-1"
+              >
+                Fechar
+              </button>
             </motion.div>
-            BAIXAR CV
-            {/* Reflexo na borda */}
-            <div className="absolute inset-0 rounded-xl border border-cyan-400/20 group-hover:border-cyan-400/40 transition-all duration-300" />
-          </Button>
-        </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </LazyComponent>
   );
