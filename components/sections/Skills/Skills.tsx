@@ -26,8 +26,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { AnimatedActionButton } from "@/components/ui/AnimatedActionButton";
 import { PremiumBackground } from "@/components/layout/PremiumBackground";
 import { LazyComponent } from "@/components/optimization/LazyComponent";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
@@ -90,7 +89,7 @@ const use3DMouseEffect = (ref: React.RefObject<HTMLElement>) => {
   }, [ref]);
 };
 
-// 🎨 COMPONENTE SKILL MATRIX 3D REFATORADO
+// 🎨 COMPONENTE SKILL MATRIX 3D REFATORADO - COM ANIMAÇÕES NOS BOTÕES
 const SkillMatrix3D = () => {
   const [selectedCategory, setSelectedCategory] = useState("frontend");
   const [searchTerm, setSearchTerm] = useState("");
@@ -271,33 +270,38 @@ const SkillMatrix3D = () => {
   return (
     <LazyComponent animation="fadeUp" delay={200}>
       <div className="space-y-6 lg:space-y-8">
-        {/* 🎛️ FILTROS E BUSCA - RESPONSIVO */}
+        {/* 🎛️ FILTROS E BUSCA - RESPONSIVO COM ANIMAÇÕES */}
         <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
           <div className="flex flex-wrap gap-2 justify-center lg:justify-start w-full lg:w-auto">
-            {STATIC_SKILLS_DATA.map((category) => (
-              <motion.button
+            {STATIC_SKILLS_DATA.map((category, index) => (
+              <LazyComponent
                 key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`flex items-center gap-2 px-3 py-2 lg:px-4 lg:py-2 rounded-xl border transition-all duration-300 text-sm lg:text-base ${
-                  selectedCategory === category.id
-                    ? `bg-gradient-to-r ${category.color} text-white border-transparent shadow-lg`
-                    : "bg-gray-800/50 border-cyan-500/20 text-gray-300 hover:border-cyan-400/50"
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                animation="fadeIn"
+                delay={100 + index * 50}
               >
-                <category.icon className="w-3 h-3 lg:w-4 lg:h-4" />
-                <span className="font-semibold whitespace-nowrap">
-                  {category.name}
-                </span>
-              </motion.button>
+                <motion.button
+                  onClick={() => setSelectedCategory(category.id)}
+                  className={`flex items-center gap-2 px-3 py-2 lg:px-4 lg:py-2 rounded-xl border transition-all duration-300 text-sm lg:text-base ${
+                    selectedCategory === category.id
+                      ? `bg-gradient-to-r ${category.color} text-white border-transparent shadow-lg`
+                      : "bg-gray-800/50 border-cyan-500/20 text-gray-300 hover:border-cyan-400/50"
+                  }`}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <category.icon className="w-3 h-3 lg:w-4 lg:h-4" />
+                  <span className="font-semibold whitespace-nowrap">
+                    {category.name}
+                  </span>
+                </motion.button>
+              </LazyComponent>
             ))}
           </div>
 
-          <LazyComponent animation="fadeIn" delay={100}>
+          <LazyComponent animation="fadeIn" delay={300}>
             <div className="relative w-full lg:w-64">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <Input
+              <input
                 type="text"
                 placeholder="Buscar tecnologia..."
                 value={searchTerm}
@@ -309,7 +313,7 @@ const SkillMatrix3D = () => {
         </div>
 
         {/* 🎪 MATRIX 3D - RESPONSIVO */}
-        <LazyComponent animation="scale" delay={300}>
+        <LazyComponent animation="scale" delay={400}>
           <div className="relative">
             <motion.div
               ref={containerRef}
@@ -371,7 +375,7 @@ const SkillMatrix3D = () => {
             </motion.div>
 
             {/* 📊 LEGENDA */}
-            <LazyComponent animation="fadeUp" delay={500}>
+            <LazyComponent animation="fadeUp" delay={600}>
               <div className="flex justify-center mt-6 lg:mt-8">
                 <div className="flex flex-wrap justify-center gap-4 lg:gap-6 text-xs lg:text-sm text-gray-400">
                   {STATIC_SKILLS_DATA.map((category) => (
@@ -451,7 +455,7 @@ const SkillBar = ({
   );
 };
 
-// 🃏 COMPONENTE SKILL CARD REFATORADO COM RESPONSIVIDADE
+// 🃏 COMPONENTE SKILL CARD REFATORADO COM RESPONSIVIDADE E CENTRALIZAÇÃO
 const SkillCard = ({
   group,
   index,
@@ -483,13 +487,21 @@ const SkillCard = ({
     return () => ctx.revert();
   }, [isInView, index]);
 
+  // Identificar cards que devem ser centralizados em telas largas
+  const shouldCenterOnLargeScreens =
+    group.id === "cloud" || group.id === "tools";
+
   return (
     <LazyComponent animation="fadeUp" delay={index * 100}>
       <motion.div
         ref={cardRef}
         whileHover={{ y: -5, scale: 1.02 }}
         transition={{ type: "spring", stiffness: 300 }}
-        className="h-full"
+        className={`h-full ${
+          shouldCenterOnLargeScreens
+            ? "lg:col-start-2" // Centraliza na segunda coluna do grid (meio)
+            : ""
+        }`}
       >
         <Card
           className={`${COLORS.classes.card} ${COLORS.classes.cardHover} group h-full`}
@@ -677,7 +689,7 @@ export const Skills = () => {
           <SkillMatrix3D />
         </div>
 
-        {/* 🃏 GRID DE SKILLS - RESPONSIVO */}
+        {/* 🃏 GRID DE SKILLS - RESPONSIVO COM CENTRALIZAÇÃO */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8 mb-12 lg:mb-20">
           {STATIC_SKILLS_DATA.map((group, index) => (
             <SkillCard key={group.id} group={group} index={index} />
@@ -701,7 +713,7 @@ export const Skills = () => {
           </motion.div>
         </LazyComponent>
 
-        {/* 🚀 CTA FINAL - RESPONSIVO */}
+        {/* 🚀 CTA FINAL - RESPONSIVO COM ANIMATEDACTIONBUTTON */}
         <LazyComponent animation="fadeUp" delay={600}>
           <motion.div
             className="text-center"
@@ -743,15 +755,26 @@ export const Skills = () => {
                   viewport={{ once: true }}
                   className="w-full lg:w-auto"
                 >
-                  <Button
-                    asChild
-                    className={`${COLORS.classes.button.primary} text-sm lg:text-base`}
-                  >
-                    <a href="#contact">
-                      <Sparkles className="w-3 h-3 lg:w-4 lg:h-4 mr-2 transition-transform duration-300" />
-                      INICIAR COLABORAÇÃO
-                    </a>
-                  </Button>
+                  <AnimatedActionButton
+                    title="INICIAR COLABORAÇÃO"
+                    subtitle="VAMOS CONVERSAR"
+                    icon={Rocket}
+                    size="lg"
+                    onClick={() => {
+                      const contactSection = document.getElementById("contact");
+                      if (contactSection) {
+                        const headerHeight = 80;
+                        const elementPosition =
+                          contactSection.offsetTop - headerHeight;
+                        window.scrollTo({
+                          top: elementPosition,
+                          behavior: "smooth",
+                        });
+                      }
+                    }}
+                    className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-cyan-400/50 hover:border-cyan-300/70"
+                    showArrow={true}
+                  />
                 </motion.div>
               </div>
             </div>
