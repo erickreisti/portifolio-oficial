@@ -25,7 +25,6 @@ import {
   Zap,
   Loader2,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,6 +35,7 @@ import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import LazyBackground from "@/components/optimization/LazyBackground";
 import { NeonElements } from "@/components/layout/NeonElements";
 import { COLORS } from "@/lib/colors";
+import { AnimatedActionButton } from "@/components/ui/AnimatedActionButton";
 
 interface ContactFormData {
   name: string;
@@ -353,7 +353,9 @@ const AvailabilityCalendar = ({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <button
+              <AnimatedActionButton
+                title=""
+                icon={Zap}
                 onClick={() =>
                   setCurrentMonth(
                     new Date(
@@ -362,11 +364,12 @@ const AvailabilityCalendar = ({
                     )
                   )
                 }
-                className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
-                type="button"
+                size="sm"
+                className="p-2 min-w-0"
+                showArrow={false}
               >
                 <Zap className="w-4 h-4 text-cyan-400 transform rotate-180" />
-              </button>
+              </AnimatedActionButton>
 
               <h4 className={COLORS.classes.text.primary}>
                 {currentMonth.toLocaleDateString("pt-BR", {
@@ -375,7 +378,9 @@ const AvailabilityCalendar = ({
                 })}
               </h4>
 
-              <button
+              <AnimatedActionButton
+                title=""
+                icon={Zap}
                 onClick={() =>
                   setCurrentMonth(
                     new Date(
@@ -384,11 +389,12 @@ const AvailabilityCalendar = ({
                     )
                   )
                 }
-                className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
-                type="button"
+                size="sm"
+                className="p-2 min-w-0"
+                showArrow={false}
               >
                 <Zap className="w-4 h-4 text-cyan-400" />
-              </button>
+              </AnimatedActionButton>
             </div>
 
             <div className="grid grid-cols-7 gap-1 mb-2">
@@ -475,24 +481,19 @@ const AvailabilityCalendar = ({
 
                 <div className="grid grid-cols-2 gap-3">
                   {availableSlots.map((time) => (
-                    <motion.button
+                    <AnimatedActionButton
                       key={time}
+                      title={time}
+                      icon={Clock}
                       onClick={() => onTimeSelect(time)}
-                      className={`
-                        p-3 rounded-xl border transition-all duration-300 text-center
-                        ${
-                          selectedTime === time
-                            ? "bg-cyan-500 text-white border-cyan-400 shadow-lg shadow-cyan-500/25"
-                            : "bg-gray-800/50 text-white border-cyan-500/20 hover:border-cyan-400/50"
-                        }
-                      `}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      type="button"
-                    >
-                      <Clock className="w-4 h-4 inline mr-2" />
-                      {time}
-                    </motion.button>
+                      size="sm"
+                      className={`text-center ${
+                        selectedTime === time
+                          ? "bg-cyan-500 text-white border-cyan-400"
+                          : "bg-gray-800/50 text-white border-cyan-500/20"
+                      }`}
+                      showArrow={false}
+                    />
                   ))}
                 </div>
 
@@ -583,15 +584,22 @@ const EnhancedContactForm = ({
     return (filledFields / fields.length) * 100;
   }, [formData]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // CORREÇÃO: Criar uma função handleSubmit sem parâmetros para o botão
+  const handleButtonSubmit = useCallback(async () => {
     await submitForm();
+  }, [submitForm]);
+
+  // Manter o handleSubmit do form para prevenir o comportamento padrão
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await handleButtonSubmit();
   };
 
   return (
     <LazyComponent animation="fadeUp" delay={400}>
       <div className={`${COLORS.classes.card} p-6`}>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        {/* CORREÇÃO: Usar handleFormSubmit no form */}
+        <form onSubmit={handleFormSubmit} className="space-y-6">
           <div className="flex items-center justify-between text-sm text-gray-400 mb-2">
             <span>PREENCIMENTO DO FORMULÁRIO</span>
             <span className="text-cyan-400 font-mono">
@@ -797,35 +805,39 @@ const EnhancedContactForm = ({
             )}
           </AnimatePresence>
 
-          <motion.button
-            type="submit"
+          {/* CORREÇÃO: Usar handleButtonSubmit (sem parâmetros) no botão */}
+          <AnimatedActionButton
+            title={
+              submissionState.isSubmitting
+                ? "ENVIANDO..."
+                : submissionState.isSuccess
+                ? "ENVIADO COM SUCESSO!"
+                : formData.formType === "enhanced"
+                ? "AGENDAR E ENVIAR"
+                : "ENVIAR MENSAGEM"
+            }
+            subtitle={
+              submissionState.isSubmitting
+                ? `${Math.round(progress)}%`
+                : formData.formType === "enhanced"
+                ? "CONFIRMAR AGENDAMENTO"
+                : "ENVIAR PROPOSTA"
+            }
+            icon={
+              submissionState.isSubmitting
+                ? Loader2
+                : submissionState.isSuccess
+                ? CheckCircle
+                : Send
+            }
+            onClick={handleButtonSubmit}
+            loading={submissionState.isSubmitting}
+            progress={progress}
+            size="lg"
             disabled={submissionState.isSubmitting || submissionState.isSuccess}
-            className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 ${
-              !submissionState.isSubmitting && !submissionState.isSuccess
-                ? `${COLORS.classes.button.primary} hover:scale-105`
-                : "bg-gray-800/50 text-gray-400 cursor-not-allowed"
-            }`}
-            whileTap={{ scale: 0.95 }}
-          >
-            {submissionState.isSubmitting ? (
-              <div className="flex items-center justify-center gap-2">
-                <Loader2 className="w-5 h-5 animate-spin" />
-                ENVIANDO...
-              </div>
-            ) : submissionState.isSuccess ? (
-              <div className="flex items-center justify-center gap-2">
-                <CheckCircle className="w-5 h-5" />
-                ENVIADO COM SUCESSO!
-              </div>
-            ) : (
-              <div className="flex items-center justify-center gap-2">
-                <Send className="w-5 h-5" />
-                {formData.formType === "enhanced"
-                  ? "AGENDAR E ENVIAR"
-                  : "ENVIAR MENSAGEM"}
-              </div>
-            )}
-          </motion.button>
+            className="w-full"
+            showArrow={false}
+          />
         </form>
       </div>
     </LazyComponent>
@@ -966,245 +978,33 @@ export const Contact = () => {
               className={`${COLORS.classes.card} p-3 shadow-2xl shadow-cyan-400/10`}
             >
               <div className="flex gap-3">
-                <motion.button
+                <AnimatedActionButton
+                  title="MENSAGEM RÁPIDA"
+                  subtitle="ENVIO DIRETO"
+                  icon={MessageCircle}
                   onClick={() => setFormType("quick")}
-                  className={`group relative px-8 py-4 rounded-2xl font-bold transition-all duration-500 overflow-hidden min-w-[180px] ${
+                  size="md"
+                  className={`${
                     formData.formType === "quick"
-                      ? `${COLORS.classes.button.primary} shadow-2xl shadow-cyan-500/30`
-                      : `${COLORS.classes.button.secondary}`
-                  }`}
-                  whileHover={{
-                    scale: formData.formType === "quick" ? 1 : 1.05,
-                    y: formData.formType === "quick" ? 0 : -2,
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {formData.formType === "quick" && (
-                    <>
-                      <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-cyan-400/20 to-blue-400/20"
-                        animate={{ opacity: [0.3, 0.6, 0.3] }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: "easeInOut",
-                        }}
-                      />
-                      <div className="absolute inset-0">
-                        {[...Array(3)].map((_, i) => (
-                          <motion.div
-                            key={i}
-                            className="absolute w-1 h-1 bg-white rounded-full blur-sm"
-                            style={{ left: `${20 + i * 30}%`, top: "20%" }}
-                            animate={{ y: [0, 10, 0], opacity: [0, 1, 0] }}
-                            transition={{
-                              duration: 2 + i,
-                              repeat: Infinity,
-                              delay: i * 0.3,
-                            }}
-                          />
-                        ))}
-                      </div>
-                    </>
-                  )}
-                  {formData.formType !== "quick" && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  )}
-                  <div className="relative z-10 flex items-center gap-3 justify-center">
-                    <motion.div
-                      animate={{
-                        scale: formData.formType === "quick" ? [1, 1.1, 1] : 1,
-                      }}
-                      transition={{
-                        duration: formData.formType === "quick" ? 2 : 0.3,
-                        repeat: formData.formType === "quick" ? Infinity : 0,
-                      }}
-                      className="relative"
-                    >
-                      <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                        />
-                        {formData.formType === "quick" && (
-                          <motion.circle
-                            cx="18"
-                            cy="6"
-                            r="3"
-                            fill="#22d3ee"
-                            initial={{ scale: 0 }}
-                            animate={{ scale: [0, 1, 0] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                          />
-                        )}
-                      </svg>
-                    </motion.div>
-                    <div className="flex flex-col items-start">
-                      <span
-                        className={`text-sm font-bold tracking-wide ${
-                          formData.formType === "quick"
-                            ? "text-white"
-                            : "text-gray-300 group-hover:text-cyan-300"
-                        } transition-colors duration-300`}
-                      >
-                        MENSAGEM RÁPIDA
-                      </span>
-                      <span
-                        className={`text-xs ${
-                          formData.formType === "quick"
-                            ? "text-cyan-100"
-                            : "text-gray-400 group-hover:text-cyan-400/80"
-                        } transition-colors duration-300`}
-                      >
-                        Envio direto
-                      </span>
-                    </div>
-                  </div>
-                  {formData.formType === "quick" && (
-                    <motion.div
-                      className="absolute inset-0 rounded-2xl border-2 border-cyan-400/50"
-                      animate={{
-                        boxShadow: [
-                          "0 0 20px rgba(6, 182, 212, 0.3)",
-                          "0 0 30px rgba(6, 182, 212, 0.6)",
-                          "0 0 20px rgba(6, 182, 212, 0.3)",
-                        ],
-                      }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    />
-                  )}
-                </motion.button>
+                      ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white border-cyan-400/50"
+                      : "bg-gray-800/50 text-gray-300 border-gray-600/30 hover:border-cyan-400/30"
+                  } min-w-[180px]`}
+                  showArrow={false}
+                />
 
-                <motion.button
+                <AnimatedActionButton
+                  title="COM AGENDAMENTO"
+                  subtitle="REUNIÃO MARCADA"
+                  icon={Calendar}
                   onClick={() => setFormType("enhanced")}
-                  className={`group relative px-8 py-4 rounded-2xl font-bold transition-all duration-500 overflow-hidden min-w-[180px] ${
+                  size="md"
+                  className={`${
                     formData.formType === "enhanced"
-                      ? "bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-2xl shadow-purple-500/30"
-                      : "bg-gray-800/50 text-gray-300 hover:bg-gray-700/60 border border-purple-500/20"
-                  }`}
-                  whileHover={{
-                    scale: formData.formType === "enhanced" ? 1 : 1.05,
-                    y: formData.formType === "enhanced" ? 0 : -2,
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {formData.formType === "enhanced" && (
-                    <>
-                      <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-pink-400/20"
-                        animate={{ opacity: [0.3, 0.6, 0.3] }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: "easeInOut",
-                        }}
-                      />
-                      <div className="absolute inset-0">
-                        {[...Array(3)].map((_, i) => (
-                          <motion.div
-                            key={i}
-                            className="absolute w-1 h-1 bg-white rounded-full blur-sm"
-                            style={{ right: `${20 + i * 30}%`, top: "20%" }}
-                            animate={{ y: [0, 10, 0], opacity: [0, 1, 0] }}
-                            transition={{
-                              duration: 2 + i,
-                              repeat: Infinity,
-                              delay: i * 0.3,
-                            }}
-                          />
-                        ))}
-                      </div>
-                    </>
-                  )}
-                  {formData.formType !== "enhanced" && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  )}
-                  <div className="relative z-10 flex items-center gap-3 justify-center">
-                    <motion.div
-                      animate={{
-                        scale:
-                          formData.formType === "enhanced" ? [1, 1.1, 1] : 1,
-                        rotate:
-                          formData.formType === "enhanced" ? [0, -5, 5, 0] : 0,
-                      }}
-                      transition={{
-                        duration: formData.formType === "enhanced" ? 2 : 0.3,
-                        repeat: formData.formType === "enhanced" ? Infinity : 0,
-                      }}
-                      className="relative"
-                    >
-                      <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
-                        {formData.formType === "enhanced" && (
-                          <motion.rect
-                            x="8"
-                            y="12"
-                            width="2"
-                            height="2"
-                            fill="#a855f7"
-                            initial={{ scale: 0 }}
-                            animate={{ scale: [0, 1, 0] }}
-                            transition={{
-                              duration: 2,
-                              repeat: Infinity,
-                              delay: 0.5,
-                            }}
-                          />
-                        )}
-                      </svg>
-                    </motion.div>
-                    <div className="flex flex-col items-start">
-                      <span
-                        className={`text-sm font-bold tracking-wide ${
-                          formData.formType === "enhanced"
-                            ? "text-white"
-                            : "text-gray-300 group-hover:text-purple-300"
-                        } transition-colors duration-300`}
-                      >
-                        COM AGENDAMENTO
-                      </span>
-                      <span
-                        className={`text-xs ${
-                          formData.formType === "enhanced"
-                            ? "text-purple-100"
-                            : "text-gray-400 group-hover:text-purple-400/80"
-                        } transition-colors duration-300`}
-                      >
-                        Reunião marcada
-                      </span>
-                    </div>
-                  </div>
-                  {formData.formType === "enhanced" && (
-                    <motion.div
-                      className="absolute inset-0 rounded-2xl border-2 border-purple-400/50"
-                      animate={{
-                        boxShadow: [
-                          "0 0 20px rgba(168, 85, 247, 0.3)",
-                          "0 0 30px rgba(168, 85, 247, 0.6)",
-                          "0 0 20px rgba(168, 85, 247, 0.3)",
-                        ],
-                      }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    />
-                  )}
-                </motion.button>
+                      ? "bg-gradient-to-r from-purple-500 to-pink-600 text-white border-purple-400/50 shadow-2xl shadow-purple-500/30"
+                      : "bg-gray-800/50 text-white border-gray-600/30 hover:border-purple-400/30"
+                  } min-w-[180px] font-bold`}
+                  showArrow={false}
+                />
               </div>
             </div>
           </motion.div>
@@ -1403,13 +1203,15 @@ export const Contact = () => {
                   viewport={{ once: true }}
                   className="w-full lg:w-auto"
                 >
-                  <Button
+                  <AnimatedActionButton
+                    title="AGENDAR CONVERSA"
+                    subtitle="VAMOS CONVERSAR"
+                    icon={Rocket}
+                    size="lg"
                     onClick={() => setFormType("enhanced")}
-                    className={`${COLORS.classes.button.primary} w-full lg:w-auto text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl relative overflow-hidden`}
-                  >
-                    <Sparkles className="w-4 h-4 mr-2 transition-transform duration-300" />
-                    AGENDAR CONVERSA
-                  </Button>
+                    className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-cyan-400/50 hover:border-cyan-300/70"
+                    showArrow={true}
+                  />
                 </motion.div>
               </div>
             </div>
