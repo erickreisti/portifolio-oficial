@@ -609,7 +609,6 @@ const ActionButtons = ({ onContactClick }: { onContactClick: () => void }) => {
           loading={isDownloading}
           progress={progress}
           disabled={isDownloading}
-          className="hover:scale-105 transition-transform duration-200"
           showArrow={false}
         />
 
