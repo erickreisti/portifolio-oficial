@@ -190,3 +190,9 @@ body {
 html:has(.fixed.inset-0.bg-gradient) {
   overflow: hidden !important;
 }
+
+img[src*="hashblue.svg"] {
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
