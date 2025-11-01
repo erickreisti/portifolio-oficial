@@ -27,7 +27,7 @@ export interface SkillCategory {
   id: string;
   name: string;
   category: string;
-  icon: any; // Componente Lucide
+  icon: any;
   description: string;
   color: string;
   skills: SkillItem[];
@@ -42,7 +42,6 @@ export interface StatItem {
 
 /**
  * 📊 DADOS ESTÁTICOS DAS SKILLS
- * Contém todas as informações sobre habilidades técnicas organizadas por categoria
  */
 export const STATIC_SKILLS_DATA: SkillCategory[] = [
   {
@@ -218,36 +217,34 @@ export const STATIC_SKILLS_DATA: SkillCategory[] = [
 ];
 
 /**
- * 🔍 FUNÇÃO: getSkillById
- * Busca uma categoria de skill pelo ID
- * @param id - ID da categoria a ser buscada
- * @returns Categoria de skill ou undefined se não encontrada
+ * 📈 DADOS ESTÁTICOS DAS ESTATÍSTICAS
  */
-export function getSkillById(id: string): SkillCategory | undefined {
-  return STATIC_SKILLS_DATA.find((category) => category.id === id);
-}
-
-/**
- * 🏆 FUNÇÃO: getTopSkills
- * Retorna as skills com maior nível de proficiência
- * @param limit - Número máximo de skills a retornar (padrão: 6)
- * @returns Array de skills ordenadas por nível (decrescente)
- */
-export function getTopSkills(limit: number = 6): SkillItem[] {
-  const allSkills = STATIC_SKILLS_DATA.flatMap((category) => category.skills);
-  return allSkills.sort((a, b) => b.level - a.level).slice(0, limit);
-}
-
-/**
- * 📈 FUNÇÃO: getSkillsByLevel
- * Filtra skills por nível mínimo de proficiência
- * @param minLevel - Nível mínimo de proficiência (padrão: 80)
- * @returns Array de skills que atendem ao critério de nível
- */
-export function getSkillsByLevel(minLevel: number = 80): SkillItem[] {
-  const allSkills = STATIC_SKILLS_DATA.flatMap((category) => category.skills);
-  return allSkills.filter((skill) => skill.level >= minLevel);
-}
+export const STATIC_STATS_DATA: StatItem[] = [
+  {
+    number: "50+",
+    title: "Projetos",
+    subtitle: "Concluídos",
+    icon: Target,
+  },
+  {
+    number: "2+",
+    title: "Anos",
+    subtitle: "de Experiência",
+    icon: Clock,
+  },
+  {
+    number: "98%",
+    title: "Satisfação",
+    subtitle: "dos Clientes",
+    icon: Heart,
+  },
+  {
+    number: "24/7",
+    title: "Suporte",
+    subtitle: "Disponível",
+    icon: Award,
+  },
+];
 
 // Interface para estatísticas calculadas
 export interface SkillStats {
@@ -259,9 +256,34 @@ export interface SkillStats {
 }
 
 /**
+ * 🔍 FUNÇÃO: getSkillById
+ * Busca uma categoria de skill pelo ID
+ */
+export function getSkillById(id: string): SkillCategory | undefined {
+  return STATIC_SKILLS_DATA.find((category) => category.id === id);
+}
+
+/**
+ * 🏆 FUNÇÃO: getTopSkills
+ * Retorna as skills com maior nível de proficiência
+ */
+export function getTopSkills(limit: number = 6): SkillItem[] {
+  const allSkills = STATIC_SKILLS_DATA.flatMap((category) => category.skills);
+  return allSkills.sort((a, b) => b.level - a.level).slice(0, limit);
+}
+
+/**
+ * 📈 FUNÇÃO: getSkillsByLevel
+ * Filtra skills por nível mínimo de proficiência
+ */
+export function getSkillsByLevel(minLevel: number = 80): SkillItem[] {
+  const allSkills = STATIC_SKILLS_DATA.flatMap((category) => category.skills);
+  return allSkills.filter((skill) => skill.level >= minLevel);
+}
+
+/**
  * 📊 FUNÇÃO: calculateSkillStats
  * Calcula estatísticas gerais sobre todas as skills
- * @returns Objeto com estatísticas consolidadas
  */
 export function calculateSkillStats(): SkillStats {
   const allSkills = STATIC_SKILLS_DATA.flatMap((category) => category.skills);
@@ -285,8 +307,6 @@ export function calculateSkillStats(): SkillStats {
 /**
  * 🔎 FUNÇÃO: searchSkills
  * Busca skills por termo de pesquisa no nome ou descrição
- * @param query - Termo de pesquisa
- * @returns Array de skills que correspondem à pesquisa
  */
 export function searchSkills(query: string): SkillItem[] {
   if (!query.trim()) return [];
@@ -311,8 +331,6 @@ export function searchSkills(query: string): SkillItem[] {
 /**
  * 🗂️ FUNÇÃO: getSkillsByCategory
  * Retorna todas as skills de uma categoria específica
- * @param categoryId - ID da categoria
- * @returns Array de skills da categoria ou array vazio se não encontrada
  */
 export function getSkillsByCategory(categoryId: string): SkillItem[] {
   const category = STATIC_SKILLS_DATA.find((cat) => cat.id === categoryId);
@@ -322,7 +340,6 @@ export function getSkillsByCategory(categoryId: string): SkillItem[] {
 /**
  * 🏷️ FUNÇÃO: getAllSkillTags
  * Extrai tags únicas de todas as skills baseado no nome e descrição
- * @returns Array de tags únicas ordenadas alfabeticamente
  */
 export function getAllSkillTags(): string[] {
   const allTags = new Set<string>();
@@ -344,4 +361,23 @@ export function getAllSkillTags(): string[] {
   });
 
   return Array.from(allTags).sort();
+}
+
+/**
+ * 📋 FUNÇÃO: getAllCategories
+ * Retorna todas as categorias disponíveis
+ */
+export function getAllCategories(): SkillCategory[] {
+  return STATIC_SKILLS_DATA;
+}
+
+/**
+ * 🔢 FUNÇÃO: getSkillsCount
+ * Retorna o número total de skills
+ */
+export function getSkillsCount(): number {
+  return STATIC_SKILLS_DATA.reduce(
+    (total, category) => total + category.skills.length,
+    0
+  );
 }
