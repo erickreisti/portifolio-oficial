@@ -24,6 +24,8 @@ import {
   CheckCircle2,
   Zap,
   Loader2,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -231,7 +233,20 @@ const useContactForm = () => {
     }));
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Enviar para a API
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Erro ao enviar mensagem");
+      }
 
       setSubmissionState((prev) => ({
         ...prev,
@@ -256,10 +271,14 @@ const useContactForm = () => {
 
       return true;
     } catch (error) {
+      console.error("Erro no envio:", error);
       setSubmissionState((prev) => ({
         ...prev,
         isSubmitting: false,
-        error: "Erro ao enviar mensagem. Tente novamente.",
+        error:
+          error instanceof Error
+            ? error.message
+            : "Erro ao enviar mensagem. Tente novamente.",
       }));
       return false;
     }
@@ -294,17 +313,21 @@ const AvailabilityCalendar = ({
     () => ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00"],
     []
   );
-  const availableDays = useMemo(() => [1, 2, 3, 4, 5], []);
+  const availableDays = useMemo(() => [1, 2, 3, 4, 5], []); // Segunda a Sexta
   const today = useMemo(() => new Date(), []);
 
   const getDaysInMonth = useCallback((date: Date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
+
+    // Dias do mês atual
     const days = [];
     for (let i = 1; i <= lastDay.getDate(); i++) {
       days.push(new Date(year, month, i));
     }
+
     return days;
   }, []);
 
@@ -316,9 +339,9 @@ const AvailabilityCalendar = ({
   const isDateAvailable = useCallback(
     (date: Date) => {
       return (
-        availableDays.includes(date.getDay()) &&
-        date >= today &&
-        date <= new Date(today.getFullYear(), today.getMonth() + 1, 0)
+        availableDays.includes(date.getDay()) && // Dia da semana disponível
+        date >= today && // Data não é no passado
+        date <= new Date(today.getFullYear(), today.getMonth() + 1, 0) // Limite de 1 mês
       );
     },
     [availableDays, today]
@@ -333,15 +356,44 @@ const AvailabilityCalendar = ({
     [isDateAvailable, onDateSelect]
   );
 
+  // CORREÇÃO: Função para prevenir submit do formulário ao clicar em horários
+  const handleTimeSelect = useCallback(
+    (time: string) => {
+      onTimeSelect(time);
+    },
+    [onTimeSelect]
+  );
+
+  const navigateMonth = useCallback((direction: "prev" | "next") => {
+    setCurrentMonth((prev) => {
+      const newMonth = new Date(prev);
+      if (direction === "prev") {
+        newMonth.setMonth(prev.getMonth() - 1);
+      } else {
+        newMonth.setMonth(prev.getMonth() + 1);
+      }
+      return newMonth;
+    });
+  }, []);
+
+  const getFirstDayOfMonth = useCallback((date: Date) => {
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    return firstDay.getDay();
+  }, []);
+
+  const firstDayOfMonth = getFirstDayOfMonth(currentMonth);
+
   return (
     <LazyComponent animation="fadeUp" delay={300}>
-      <div className={`${COLORS.classes.card} p-6`}>
-        <div className="flex items-center gap-3 mb-6">
+      <div className={`${COLORS.classes.card} p-4 sm:p-6`}>
+        <div className="flex items-center gap-3 mb-4 sm:mb-6">
           <div className="p-2 bg-cyan-500/20 rounded-xl border border-cyan-400/30">
-            <Calendar className="w-6 h-6 text-cyan-400" />
+            <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-400" />
           </div>
           <div>
-            <h3 className={`${COLORS.classes.text.primary} text-xl font-bold`}>
+            <h3
+              className={`${COLORS.classes.text.primary} text-lg sm:text-xl font-bold`}
+            >
               Agendar Reunião
             </h3>
             <p className={COLORS.classes.text.accent}>
@@ -350,26 +402,16 @@ const AvailabilityCalendar = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 gap-4 sm:gap-8">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <AnimatedActionButton
-                title=""
-                icon={Zap}
-                onClick={() =>
-                  setCurrentMonth(
-                    new Date(
-                      currentMonth.getFullYear(),
-                      currentMonth.getMonth() - 1
-                    )
-                  )
-                }
-                size="sm"
-                className="p-2 min-w-0"
-                showArrow={false}
+              <button
+                type="button" // CORREÇÃO: Adicionado type="button"
+                onClick={() => navigateMonth("prev")}
+                className="p-2 rounded-lg bg-gray-800/50 border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-300 hover:bg-cyan-500/10"
               >
-                <Zap className="w-4 h-4 text-cyan-400 transform rotate-180" />
-              </AnimatedActionButton>
+                <ChevronLeft className="w-4 h-4 text-cyan-400" />
+              </button>
 
               <h4 className={COLORS.classes.text.primary}>
                 {currentMonth.toLocaleDateString("pt-BR", {
@@ -378,30 +420,20 @@ const AvailabilityCalendar = ({
                 })}
               </h4>
 
-              <AnimatedActionButton
-                title=""
-                icon={Zap}
-                onClick={() =>
-                  setCurrentMonth(
-                    new Date(
-                      currentMonth.getFullYear(),
-                      currentMonth.getMonth() + 1
-                    )
-                  )
-                }
-                size="sm"
-                className="p-2 min-w-0"
-                showArrow={false}
+              <button
+                type="button" // CORREÇÃO: Adicionado type="button"
+                onClick={() => navigateMonth("next")}
+                className="p-2 rounded-lg bg-gray-800/50 border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-300 hover:bg-cyan-500/10"
               >
-                <Zap className="w-4 h-4 text-cyan-400" />
-              </AnimatedActionButton>
+                <ChevronRight className="w-4 h-4 text-cyan-400" />
+              </button>
             </div>
 
             <div className="grid grid-cols-7 gap-1 mb-2">
-              {["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"].map((day) => (
+              {["D", "S", "T", "Q", "Q", "S", "S"].map((day) => (
                 <div
                   key={day}
-                  className="text-center text-gray-400 text-sm font-semibold py-2"
+                  className="text-center text-gray-400 text-xs font-semibold py-1 sm:py-2"
                 >
                   {day}
                 </div>
@@ -409,6 +441,11 @@ const AvailabilityCalendar = ({
             </div>
 
             <div className="grid grid-cols-7 gap-1">
+              {/* Preencher dias vazios no início do mês */}
+              {Array.from({ length: firstDayOfMonth }).map((_, index) => (
+                <div key={`empty-${index}`} className="p-1 sm:p-2" />
+              ))}
+
               {days.map((date) => {
                 const isAvailable = isDateAvailable(date);
                 const isSelected =
@@ -418,10 +455,11 @@ const AvailabilityCalendar = ({
                 return (
                   <motion.button
                     key={date.toISOString()}
+                    type="button" // CORREÇÃO: Adicionado type="button"
                     onClick={() => handleDateSelect(date)}
                     disabled={!isAvailable}
                     className={`
-                      relative p-2 rounded-lg text-sm font-semibold transition-all duration-300
+                      relative p-1 sm:p-2 rounded text-xs font-semibold transition-all duration-300
                       ${
                         isSelected
                           ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/25"
@@ -434,12 +472,11 @@ const AvailabilityCalendar = ({
                     `}
                     whileHover={isAvailable ? { scale: 1.05 } : {}}
                     whileTap={isAvailable ? { scale: 0.95 } : {}}
-                    type="button"
                   >
                     {date.getDate()}
                     {isAvailable && !isSelected && (
                       <motion.div
-                        className="absolute top-1 right-1 w-2 h-2 bg-green-400 rounded-full"
+                        className="absolute top-0.5 right-0.5 w-1 h-1 sm:w-2 sm:h-2 bg-green-400 rounded-full"
                         animate={{ scale: [1, 1.2, 1] }}
                         transition={{ duration: 2, repeat: Infinity }}
                       />
@@ -461,12 +498,12 @@ const AvailabilityCalendar = ({
             )}
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {selectedDate ? (
               <>
                 <div className="text-center">
                   <h4
-                    className={`${COLORS.classes.text.primary} font-semibold mb-2`}
+                    className={`${COLORS.classes.text.primary} font-semibold mb-1 sm:mb-2`}
                   >
                     {new Date(selectedDate).toLocaleDateString("pt-BR", {
                       weekday: "long",
@@ -479,21 +516,24 @@ const AvailabilityCalendar = ({
                   </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
                   {availableSlots.map((time) => (
-                    <AnimatedActionButton
+                    <button
                       key={time}
-                      title={time}
-                      icon={Clock}
-                      onClick={() => onTimeSelect(time)}
-                      size="sm"
-                      className={`text-center ${
-                        selectedTime === time
-                          ? "bg-cyan-500 text-white border-cyan-400"
-                          : "bg-gray-800/50 text-white border-cyan-500/20"
-                      }`}
-                      showArrow={false}
-                    />
+                      type="button" // CORREÇÃO: Adicionado type="button"
+                      onClick={() => handleTimeSelect(time)}
+                      className={`
+                        flex items-center justify-center gap-2 p-3 rounded-lg border transition-all duration-300 text-sm font-semibold
+                        ${
+                          selectedTime === time
+                            ? "bg-cyan-500 text-white border-cyan-400 shadow-lg shadow-cyan-500/25"
+                            : "bg-gray-800/50 text-white border-cyan-500/20 hover:border-cyan-400/50 hover:bg-cyan-500/10"
+                        }
+                      `}
+                    >
+                      <Clock className="w-3 h-3" />
+                      {time}
+                    </button>
                   ))}
                 </div>
 
@@ -514,14 +554,14 @@ const AvailabilityCalendar = ({
                     animate={{ opacity: 1, y: 0 }}
                     className="space-y-4"
                   >
-                    <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4">
-                      <div className="flex items-center gap-3 text-green-400">
-                        <CheckCircle2 className="w-5 h-5" />
+                    <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-3 sm:p-4">
+                      <div className="flex items-center gap-2 sm:gap-3 text-green-400">
+                        <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
                         <div>
-                          <div className="font-semibold">
+                          <div className="font-semibold text-sm sm:text-base">
                             Horário disponível!
                           </div>
-                          <div className="text-sm text-green-300">
+                          <div className="text-green-300 text-xs sm:text-sm">
                             {new Date(selectedDate).toLocaleDateString("pt-BR")}{" "}
                             às {selectedTime}
                           </div>
@@ -532,21 +572,25 @@ const AvailabilityCalendar = ({
                 )}
               </>
             ) : (
-              <div className="flex items-center justify-center h-48 text-gray-400">
+              <div className="flex items-center justify-center h-32 sm:h-48 text-gray-400">
                 <div className="text-center">
-                  <Calendar className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                  <p>Selecione uma data disponível</p>
+                  <Calendar className="w-8 h-8 sm:w-12 sm:h-12 mx-auto mb-2 sm:mb-3 opacity-50" />
+                  <p className="text-sm">Selecione uma data disponível</p>
                 </div>
               </div>
             )}
           </div>
         </div>
 
-        <div className="flex items-center justify-between mt-6 pt-4 border-t border-cyan-500/20">
-          <div className={`${COLORS.classes.text.tertiary} text-sm`}>
+        <div className="flex flex-col sm:flex-row items-center justify-between mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-cyan-500/20">
+          <div
+            className={`${COLORS.classes.text.tertiary} text-xs sm:text-sm mb-2 sm:mb-0`}
+          >
             Fuso horário: {Intl.DateTimeFormat().resolvedOptions().timeZone}
           </div>
-          <div className={`${COLORS.classes.text.accent} text-sm font-mono`}>
+          <div
+            className={`${COLORS.classes.text.accent} text-xs sm:text-sm font-mono`}
+          >
             💡 Reuniões de 45-60 minutos
           </div>
         </div>
@@ -584,23 +628,24 @@ const EnhancedContactForm = ({
     return (filledFields / fields.length) * 100;
   }, [formData]);
 
-  // CORREÇÃO: Criar uma função handleSubmit sem parâmetros para o botão
   const handleButtonSubmit = useCallback(async () => {
     await submitForm();
   }, [submitForm]);
 
-  // Manter o handleSubmit do form para prevenir o comportamento padrão
-  const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await handleButtonSubmit();
-  };
+  // CORREÇÃO: Removido o handleFormSubmit para evitar submit automático
+  const handleFormKeyDown = useCallback((e: React.KeyboardEvent) => {
+    // Prevenir submit do formulário ao pressionar Enter em campos
+    if (e.key === "Enter" && e.target instanceof HTMLInputElement) {
+      e.preventDefault();
+    }
+  }, []);
 
   return (
     <LazyComponent animation="fadeUp" delay={400}>
-      <div className={`${COLORS.classes.card} p-6`}>
-        {/* CORREÇÃO: Usar handleFormSubmit no form */}
-        <form onSubmit={handleFormSubmit} className="space-y-6">
-          <div className="flex items-center justify-between text-sm text-gray-400 mb-2">
+      <div className={`${COLORS.classes.card} p-4 sm:p-6`}>
+        {/* CORREÇÃO: Removido o form onSubmit e adicionado onKeyDown */}
+        <div onKeyDown={handleFormKeyDown} className="space-y-4 sm:space-y-6">
+          <div className="flex items-center justify-between text-xs sm:text-sm text-gray-400 mb-2">
             <span>PREENCIMENTO DO FORMULÁRIO</span>
             <span className="text-cyan-400 font-mono">
               {Math.round(progress)}%
@@ -614,11 +659,11 @@ const EnhancedContactForm = ({
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-2">
               <Label
                 htmlFor="name"
-                className={`${COLORS.classes.text.primary} text-sm font-bold`}
+                className={`${COLORS.classes.text.primary} text-xs sm:text-sm font-bold`}
               >
                 SEU NOME *
               </Label>
@@ -630,8 +675,11 @@ const EnhancedContactForm = ({
                 disabled={submissionState.isSubmitting}
                 className={`w-full bg-gray-800/50 border ${
                   formErrors.name ? "border-red-400/50" : COLORS.borders.medium
-                } rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors duration-300`}
+                } rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors duration-300 text-sm sm:text-base`}
                 placeholder="Como prefere ser chamado?"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") e.preventDefault();
+                }}
               />
               <AnimatePresence>
                 {formErrors.name && (
@@ -651,7 +699,7 @@ const EnhancedContactForm = ({
             <div className="space-y-2">
               <Label
                 htmlFor="email"
-                className={`${COLORS.classes.text.primary} text-sm font-bold`}
+                className={`${COLORS.classes.text.primary} text-xs sm:text-sm font-bold`}
               >
                 SEU EMAIL *
               </Label>
@@ -663,8 +711,11 @@ const EnhancedContactForm = ({
                 disabled={submissionState.isSubmitting}
                 className={`w-full bg-gray-800/50 border ${
                   formErrors.email ? "border-red-400/50" : COLORS.borders.medium
-                } rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors duration-300`}
+                } rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors duration-300 text-sm sm:text-base`}
                 placeholder="seu.melhor@email.com"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") e.preventDefault();
+                }}
               />
               <AnimatePresence>
                 {formErrors.email && (
@@ -685,7 +736,7 @@ const EnhancedContactForm = ({
           <div className="space-y-2">
             <Label
               htmlFor="subject"
-              className={`${COLORS.classes.text.primary} text-sm font-bold`}
+              className={`${COLORS.classes.text.primary} text-xs sm:text-sm font-bold`}
             >
               ASSUNTO DO PROJETO *
             </Label>
@@ -697,8 +748,11 @@ const EnhancedContactForm = ({
               disabled={submissionState.isSubmitting}
               className={`w-full bg-gray-800/50 border ${
                 formErrors.subject ? "border-red-400/50" : COLORS.borders.medium
-              } rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors duration-300`}
+              } rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors duration-300 text-sm sm:text-base`}
               placeholder="Ex: Site Institucional, App Mobile, Sistema Web..."
+              onKeyDown={(e) => {
+                if (e.key === "Enter") e.preventDefault();
+              }}
             />
             <AnimatePresence>
               {formErrors.subject && (
@@ -718,7 +772,7 @@ const EnhancedContactForm = ({
           <div className="space-y-2">
             <Label
               htmlFor="message"
-              className={`${COLORS.classes.text.primary} text-sm font-bold`}
+              className={`${COLORS.classes.text.primary} text-xs sm:text-sm font-bold`}
             >
               DETALHES DO PROJETO *
             </Label>
@@ -727,11 +781,16 @@ const EnhancedContactForm = ({
               value={formData.message}
               onChange={(e) => updateField("message", e.target.value)}
               disabled={submissionState.isSubmitting}
-              rows={5}
+              rows={4}
               className={`w-full bg-gray-800/50 border ${
                 formErrors.message ? "border-red-400/50" : COLORS.borders.medium
-              } rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors duration-300 resize-none min-h-[120px]`}
+              } rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors duration-300 resize-none min-h-[100px] sm:min-h-[120px] text-sm sm:text-base`}
               placeholder="Descreva sua visão, objetivos, tecnologias preferidas, prazo estimado..."
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                }
+              }}
             />
             <div className="flex justify-between items-center">
               <AnimatePresence>
@@ -769,14 +828,14 @@ const EnhancedContactForm = ({
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="p-4 bg-green-500/10 border border-green-500/30 rounded-xl flex items-center gap-3"
+                className="p-3 sm:p-4 bg-green-500/10 border border-green-500/30 rounded-xl flex items-center gap-2 sm:gap-3"
               >
-                <CheckCircle className="w-5 h-5 text-green-400" />
+                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
                 <div>
-                  <div className="text-green-400 font-semibold">
+                  <div className="text-green-400 font-semibold text-sm sm:text-base">
                     Mensagem enviada com sucesso!
                   </div>
-                  <div className="text-green-400/80 text-sm">
+                  <div className="text-green-400/80 text-xs sm:text-sm">
                     {formData.formType === "enhanced"
                       ? "Reunião agendada! Entrarei em contato para confirmação."
                       : "Entrarei em contato em até 24 horas."}
@@ -790,14 +849,14 @@ const EnhancedContactForm = ({
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="p-4 bg-red-500/10 border border-red-500/30 rounded-xl flex items-center gap-3"
+                className="p-3 sm:p-4 bg-red-500/10 border border-red-500/30 rounded-xl flex items-center gap-2 sm:gap-3"
               >
-                <AlertCircle className="w-5 h-5 text-red-400" />
+                <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-400" />
                 <div>
-                  <div className="text-red-400 font-semibold">
+                  <div className="text-red-400 font-semibold text-sm sm:text-base">
                     Erro no envio
                   </div>
-                  <div className="text-red-400/80 text-sm">
+                  <div className="text-red-400/80 text-xs sm:text-sm">
                     {submissionState.error}
                   </div>
                 </div>
@@ -805,7 +864,7 @@ const EnhancedContactForm = ({
             )}
           </AnimatePresence>
 
-          {/* CORREÇÃO: Usar handleButtonSubmit (sem parâmetros) no botão */}
+          {/* CORREÇÃO: Botão agora é o único responsável pelo submit */}
           <AnimatedActionButton
             title={
               submissionState.isSubmitting
@@ -838,7 +897,7 @@ const EnhancedContactForm = ({
             className="w-full"
             showArrow={false}
           />
-        </form>
+        </div>
       </div>
     </LazyComponent>
   );
@@ -885,21 +944,21 @@ export const Contact = () => {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
             viewport={{ once: true }}
-            className={`flex items-start gap-4 p-4 rounded-xl border ${info.border} hover:border-cyan-400/50 transition-all duration-300 group cursor-pointer`}
+            className={`flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg sm:rounded-xl border ${info.border} hover:border-cyan-400/50 transition-all duration-300 group cursor-pointer`}
           >
             <div
-              className={`w-12 h-12 rounded-full bg-gradient-to-br ${info.gradient} flex items-center justify-center border ${info.border} group-hover:border-cyan-400/50 transition-all duration-300`}
+              className={`w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full bg-gradient-to-br ${info.gradient} flex items-center justify-center border ${info.border} group-hover:border-cyan-400/50 transition-all duration-300 flex-shrink-0`}
             >
-              <info.icon className="w-6 h-6 text-cyan-400" />
+              <info.icon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-cyan-400" />
             </div>
-            <div className="flex-1">
+            <div className="flex-1 min-w-0">
               <p
-                className={`${COLORS.classes.text.primary} text-sm font-bold mb-1`}
+                className={`${COLORS.classes.text.primary} text-xs sm:text-sm font-bold mb-1`}
               >
                 {info.title}
               </p>
               <p
-                className={`${COLORS.classes.text.secondary} text-sm font-mono`}
+                className={`${COLORS.classes.text.secondary} text-xs sm:text-sm font-mono truncate`}
               >
                 {info.content}
               </p>
@@ -925,10 +984,10 @@ export const Contact = () => {
         </PremiumBackground>
       </LazyBackground>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 lg:py-28">
         <LazyComponent animation="fadeUp" delay={200}>
           <motion.div
-            className="text-center mb-16 lg:mb-20 contact-header"
+            className="text-center mb-12 sm:mb-16 lg:mb-20 contact-header"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
@@ -939,9 +998,9 @@ export const Contact = () => {
               whileInView={{ scale: 1, rotate: 0 }}
               transition={{ duration: 0.6, delay: 0.1, type: "spring" }}
               viewport={{ once: true }}
-              className="inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-400/10 px-6 py-3 rounded-full border border-cyan-400/30 backdrop-blur-2xl mb-6 relative overflow-hidden group"
+              className="inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-400/10 px-4 sm:px-6 py-2 sm:py-3 rounded-full border border-cyan-400/30 backdrop-blur-2xl mb-4 sm:mb-6 relative overflow-hidden group"
             >
-              <MessageCircle className="w-4 h-4 mr-3 animate-pulse" />
+              <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-2 sm:mr-3 animate-pulse" />
               CONEXÃO TECH
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-600" />
             </motion.div>
@@ -952,12 +1011,12 @@ export const Contact = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
+              <h1 className="text-2xl sm:text-4xl lg:text-6xl font-black text-white mb-4 sm:mb-6 leading-tight px-2">
                 VAMOS CRIAR{" "}
                 <span className={COLORS.classes.text.gradient}>JUNTOS</span>
               </h1>
               <p
-                className={`${COLORS.classes.text.secondary} text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed`}
+                className={`${COLORS.classes.text.secondary} text-base sm:text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed px-4`}
               >
                 Pronto para transformar sua visão em realidade? Vamos conversar
                 sobre seu projeto e criar algo extraordinário
@@ -972,12 +1031,12 @@ export const Contact = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="flex justify-center mb-12"
+            className="flex justify-center mb-8 sm:mb-12"
           >
             <div
-              className={`${COLORS.classes.card} p-3 shadow-2xl shadow-cyan-400/10`}
+              className={`${COLORS.classes.card} p-2 sm:p-3 shadow-lg sm:shadow-2xl shadow-cyan-400/10`}
             >
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                 <AnimatedActionButton
                   title="MENSAGEM RÁPIDA"
                   subtitle="ENVIO DIRETO"
@@ -988,7 +1047,7 @@ export const Contact = () => {
                     formData.formType === "quick"
                       ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white border-cyan-400/50"
                       : "bg-gray-800/50 text-gray-300 border-gray-600/30 hover:border-cyan-400/30"
-                  } min-w-[180px]`}
+                  } min-w-full sm:min-w-[180px] text-xs sm:text-sm`}
                   showArrow={false}
                 />
 
@@ -1000,9 +1059,9 @@ export const Contact = () => {
                   size="md"
                   className={`${
                     formData.formType === "enhanced"
-                      ? "bg-gradient-to-r from-purple-500 to-pink-600 text-white border-purple-400/50 shadow-2xl shadow-purple-500/30"
+                      ? "bg-gradient-to-r from-purple-500 to-pink-600 text-white border-purple-400/50 shadow-lg sm:shadow-2xl shadow-purple-500/30"
                       : "bg-gray-800/50 text-white border-gray-600/30 hover:border-purple-400/30"
-                  } min-w-[180px] font-bold`}
+                  } min-w-full sm:min-w-[180px] font-bold text-xs sm:text-sm`}
                   showArrow={false}
                 />
               </div>
@@ -1016,7 +1075,7 @@ export const Contact = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             viewport={{ once: true }}
-            className="mb-16 lg:mb-20"
+            className="mb-12 sm:mb-16 lg:mb-20"
           >
             <EnhancedContactForm
               formData={formData}
@@ -1028,7 +1087,7 @@ export const Contact = () => {
           </motion.div>
         </LazyComponent>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16 lg:mb-20 contact-content">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 mb-12 sm:mb-16 lg:mb-20 contact-content">
           <LazyComponent animation="fadeUp" delay={500}>
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -1039,27 +1098,27 @@ export const Contact = () => {
               <Card
                 className={`${COLORS.classes.card} ${COLORS.classes.cardHover} group h-full`}
               >
-                <CardHeader className="pb-4 border-b border-cyan-400/20">
+                <CardHeader className="pb-3 sm:pb-4 border-b border-cyan-400/20">
                   <CardTitle
-                    className={`${COLORS.classes.text.accent} text-xl lg:text-2xl font-black flex items-center`}
+                    className={`${COLORS.classes.text.accent} text-lg sm:text-xl lg:text-2xl font-black flex items-center`}
                   >
-                    <Cpu className="w-6 h-6 mr-3" />
+                    <Cpu className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 mr-2 sm:mr-3" />
                     CONECTE-SE
                   </CardTitle>
                   <p
-                    className={`${COLORS.classes.text.tertiary} text-sm lg:text-base`}
+                    className={`${COLORS.classes.text.tertiary} text-xs sm:text-sm lg:text-base`}
                   >
                     Estou sempre disponível para novas oportunidades, desafios
                     inspiradores e parcerias inovadoras
                   </p>
                 </CardHeader>
-                <CardContent className="pt-6 space-y-6">
+                <CardContent className="pt-4 sm:pt-6 space-y-4 sm:space-y-6">
                   {contactInfoElements}
-                  <div className="pt-6 border-t border-cyan-400/20">
+                  <div className="pt-4 sm:pt-6 border-t border-cyan-400/20">
                     <p
-                      className={`${COLORS.classes.text.tertiary} text-sm flex items-start gap-2`}
+                      className={`${COLORS.classes.text.tertiary} text-xs sm:text-sm flex items-start gap-2`}
                     >
-                      <Sparkles className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0" />
+                      <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-cyan-400 mt-0.5 flex-shrink-0" />
                       Vamos transformar suas ideias em soluções digitais
                       extraordinárias com tecnologia de ponta e criatividade.
                     </p>
@@ -1079,28 +1138,28 @@ export const Contact = () => {
               <Card
                 className={`${COLORS.classes.card} ${COLORS.classes.cardHover} group h-full`}
               >
-                <CardHeader className="pb-4 border-b border-cyan-400/20">
+                <CardHeader className="pb-3 sm:pb-4 border-b border-cyan-400/20">
                   <CardTitle
-                    className={`${COLORS.classes.text.accent} text-xl lg:text-2xl font-black flex items-center`}
+                    className={`${COLORS.classes.text.accent} text-lg sm:text-xl lg:text-2xl font-black flex items-center`}
                   >
-                    <Send className="w-6 h-6 mr-3" />
+                    <Send className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 mr-2 sm:mr-3" />
                     STATUS DO SISTEMA
                   </CardTitle>
                   <p
-                    className={`${COLORS.classes.text.tertiary} text-sm lg:text-base`}
+                    className={`${COLORS.classes.text.tertiary} text-xs sm:text-sm lg:text-base`}
                   >
                     Sistema unificado de contato com prevenção de envios
                     duplicados
                   </p>
                 </CardHeader>
-                <CardContent className="pt-6 space-y-4">
-                  <div className="space-y-3">
+                <CardContent className="pt-4 sm:pt-6 space-y-3 sm:space-y-4">
+                  <div className="space-y-2 sm:space-y-3">
                     <div className="flex justify-between items-center">
                       <span className={COLORS.classes.text.secondary}>
                         Tipo Ativo:
                       </span>
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-bold ${
+                        className={`px-2 py-1 rounded-full text-xs font-bold ${
                           formData.formType === "quick"
                             ? "bg-blue-500/20 text-blue-400 border border-blue-400/30"
                             : "bg-cyan-500/20 text-cyan-400 border border-cyan-400/30"
@@ -1116,7 +1175,7 @@ export const Contact = () => {
                         Status:
                       </span>
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-bold ${
+                        className={`px-2 py-1 rounded-full text-xs font-bold ${
                           submissionState.isSubmitting
                             ? "bg-yellow-500/20 text-yellow-400 border border-yellow-400/30"
                             : submissionState.isSuccess
@@ -1150,8 +1209,10 @@ export const Contact = () => {
                       </div>
                     )}
                   </div>
-                  <div className="pt-4 border-t border-cyan-400/20">
-                    <p className={`${COLORS.classes.text.tertiary} text-sm`}>
+                  <div className="pt-3 sm:pt-4 border-t border-cyan-400/20">
+                    <p
+                      className={`${COLORS.classes.text.tertiary} text-xs sm:text-sm`}
+                    >
                       💡 <strong>Sistema Anti-Duplicação:</strong> Bloqueia
                       envios consecutivos por 30 segundos para evitar spam.
                     </p>
@@ -1171,27 +1232,27 @@ export const Contact = () => {
             viewport={{ once: true }}
           >
             <div
-              className={`${COLORS.classes.card} ${COLORS.classes.cardHover} p-8 relative overflow-hidden group`}
+              className={`${COLORS.classes.card} ${COLORS.classes.cardHover} p-4 sm:p-6 lg:p-8 relative overflow-hidden group`}
             >
-              <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-8 relative z-10">
+              <div className="flex flex-col lg:flex-row items-center gap-4 sm:gap-6 lg:gap-8 relative z-10">
                 <motion.div
                   initial={{ scale: 0, rotate: -180 }}
                   whileInView={{ scale: 1, rotate: 0 }}
                   transition={{ duration: 0.6, type: "spring" }}
                   viewport={{ once: true }}
-                  className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/30 shadow-xl shadow-cyan-400/30 group-hover:border-cyan-400/50"
+                  className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/30 shadow-lg sm:shadow-xl shadow-cyan-400/30 group-hover:border-cyan-400/50"
                   whileHover={{ rotate: 360 }}
                 >
-                  <Rocket className="w-6 h-6 text-cyan-400" />
+                  <Rocket className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-cyan-400" />
                 </motion.div>
                 <div className="text-center lg:text-left flex-1">
                   <h3
-                    className={`${COLORS.classes.text.primary} text-xl lg:text-2xl font-black mb-2`}
+                    className={`${COLORS.classes.text.primary} text-lg sm:text-xl lg:text-2xl font-black mb-1 sm:mb-2`}
                   >
                     Pronto para o próximo nível?
                   </h3>
                   <p
-                    className={`${COLORS.classes.text.secondary} text-base lg:text-lg`}
+                    className={`${COLORS.classes.text.secondary} text-sm sm:text-base lg:text-lg`}
                   >
                     Sua visão + minha expertise = Resultados extraordinários
                   </p>
@@ -1209,7 +1270,7 @@ export const Contact = () => {
                     icon={Rocket}
                     size="lg"
                     onClick={() => setFormType("enhanced")}
-                    className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-cyan-400/50 hover:border-cyan-300/70"
+                    className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-cyan-400/50 hover:border-cyan-300/70 w-full lg:w-auto"
                     showArrow={true}
                   />
                 </motion.div>

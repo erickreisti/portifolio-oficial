@@ -465,10 +465,10 @@ export const HeroNeonElements: React.FC = () => {
       {/* Camada 2: Partículas de código */}
       <FloatingCodeParticles />
 
-      {/* Camada 3: Elementos neon principais */}
+      {/* Camada 3: Elementos neon principais
       {heroNeonElements.map((element, idx) => (
         <HeroNeonElement key={`hero-neon-${idx}`} {...element} />
-      ))}
+      ))} */}
 
       {/* Camada 4: Efeito de brilho global */}
       <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-blue-500/5 animate-pulse" />

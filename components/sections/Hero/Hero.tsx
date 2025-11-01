@@ -14,9 +14,6 @@ import { usePDFDownload } from "@/hooks/usePDFDowload";
 
 /**
  * COMPONENTE DE TEXTO HERO COM MICRO-SHAKE + TYPEWRITER
- * - Texto principal com efeito de entrada letra por letra
- * - Efeito micro-shake nas letras ao hover (versão 1)
- * - Subtítulo com typewriter automático que alterna frases
  */
 const HeroText = () => {
   const colors = getSafeColors();
@@ -65,9 +62,9 @@ const HeroText = () => {
 
   return (
     <LazyComponent animation="fadeUp" delay={200}>
-      <div className="text-center w-full mb-8">
+      <div className="text-center w-full mb-6 sm:mb-8 px-2">
         {/* TEXTO PRINCIPAL COM EFEITO LETRA POR LETRA + MICRO-SHAKE */}
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white leading-tight">
+        <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight">
           {[
             "IDEIAS EXTRAORDINÁRIAS",
             "CÓDIGO EXCEPCIONAL",
@@ -75,8 +72,8 @@ const HeroText = () => {
           ].map((line, lineIndex) => (
             <motion.div
               key={lineIndex}
-              className="overflow-hidden mb-2 sm:mb-4"
-              initial={{ y: 100, opacity: 0 }}
+              className="overflow-hidden mb-1 sm:mb-2 md:mb-4"
+              initial={{ y: 80, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{
                 duration: 0.8,
@@ -88,7 +85,7 @@ const HeroText = () => {
                 <motion.span
                   key={`${lineIndex}-${charIndex}`}
                   className="inline-block mx-0.5 sm:mx-1 transition-all duration-300 bg-gradient-to-b from-white to-gray-300 bg-clip-text text-transparent"
-                  initial={{ y: 100, opacity: 0, scale: 0.8, rotate: -5 }}
+                  initial={{ y: 80, opacity: 0, scale: 0.8, rotate: -5 }}
                   animate={{
                     y: 0,
                     opacity: 1,
@@ -101,11 +98,11 @@ const HeroText = () => {
                     ease: "backOut",
                   }}
                   whileHover={{
-                    scale: 1.2,
-                    y: -5,
+                    scale: 1.1,
+                    y: -3,
                     // VERSÃO 1: MICRO-SHAKE NO HOVER - movimento lateral sutil
-                    x: [0, -2, 2, -1, 1, 0],
-                    rotate: [0, -1, 1, -0.5, 0.5, 0],
+                    x: [0, -1, 1, -0.5, 0.5, 0],
+                    rotate: [0, -0.5, 0.5, -0.25, 0.25, 0],
                     transition: {
                       duration: 0.4,
                       ease: "easeInOut",
@@ -114,7 +111,7 @@ const HeroText = () => {
                   whileTap={{
                     scale: 0.95,
                     // Shake mais intenso no click
-                    x: [0, -3, 3, -2, 2, 0],
+                    x: [0, -2, 2, -1, 1, 0],
                     transition: { duration: 0.3 },
                   }}
                 >
@@ -128,20 +125,20 @@ const HeroText = () => {
 
         {/* SUBTÍTULO COM TYPEWRITER AUTOMÁTICO */}
         <motion.div
-          className="mt-8"
+          className="mt-4 sm:mt-6 md:mt-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2 }} // Aparece depois do texto principal
         >
           <p
-            className={`text-xl sm:text-2xl lg:text-3xl font-light min-h-[60px] flex items-center justify-center ${colors.classes.text.gradient}`}
+            className={`text-base sm:text-xl lg:text-2xl font-light min-h-[40px] sm:min-h-[50px] md:min-h-[60px] flex items-center justify-center ${colors.classes.text.gradient} px-2`}
           >
             {subtitleText}
             {/* Cursor piscante */}
             <motion.span
               animate={{ opacity: [1, 0, 1] }}
               transition={{ duration: 1, repeat: Infinity }}
-              className="ml-1"
+              className="ml-0.5"
             >
               |
             </motion.span>
@@ -154,9 +151,6 @@ const HeroText = () => {
 
 /**
  * COMPONENTE DE PARTÍCULAS VISUAIS
- * - Cria partículas flutuantes com símbolos de código (</>, {})
- * - Animações GSAP para movimento suave
- * - Sistema de cleanup para performance
  */
 const TechParticles = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -170,16 +164,18 @@ const TechParticles = () => {
 
       // Tipos de partículas disponíveis
       const particleTypes = [
-        { content: "⚡", color: "text-yellow-400", size: "text-xl" },
-        { content: "🚀", color: "text-cyan-400", size: "text-xl" },
-        { content: "</>", color: "text-cyan-300", size: "text-lg" },
-        { content: "{}", color: "text-blue-300", size: "text-lg" },
+        { content: "?", color: "text-yellow-400", size: "text-lg sm:text-xl" },
+        { content: "!=", color: "text-cyan-400", size: "text-lg sm:text-xl" },
+        {
+          content: "</>",
+          color: "text-cyan-300",
+          size: "text-base sm:text-lg",
+        },
+        { content: "{}", color: "text-blue-300", size: "text-base sm:text-lg" },
       ];
 
       /**
        * Função para criar uma partícula individual
-       * - Posição aleatória na tela
-       * - Animação de entrada → flutuação → saída
        */
       const createParticle = () => {
         const type =
@@ -218,9 +214,9 @@ const TechParticles = () => {
         timeline.to(
           particle,
           {
-            y: -100,
+            y: -80,
             rotation: 360, // Rotação completa durante o movimento
-            duration: 8 + Math.random() * 4, // Duração variável
+            duration: 6 + Math.random() * 4, // Duração variável
             ease: "power1.out",
           },
           "+=0.5" // Delay após a entrada
@@ -242,7 +238,7 @@ const TechParticles = () => {
 
         // Efeito de pulsação contínua
         gsap.to(particle, {
-          scale: 1.2,
+          scale: 1.1,
           duration: 2,
           repeat: -1, // Loop infinito
           yoyo: true, // Vai e volta
@@ -251,12 +247,12 @@ const TechParticles = () => {
       };
 
       // Cria partículas iniciais com delay escalonado
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 8; i++) {
         gsap.delayedCall(i * 0.4, createParticle);
       }
 
       // Cria partículas continuamente a cada segundo
-      const interval = setInterval(createParticle, 1000);
+      const interval = setInterval(createParticle, 1200);
 
       return () => {
         clearInterval(interval);
@@ -278,9 +274,6 @@ const TechParticles = () => {
 
 /**
  * COMPONENTE DE CONEXÕES ENTRE PARTÍCULAS (CANVAS)
- * - Cria uma rede de conexões animadas entre pontos
- * - Usa Canvas API para performance
- * - Partículas se movem e se conectam quando próximas
  */
 const ParticleConnections = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -296,7 +289,6 @@ const ParticleConnections = () => {
 
     /**
      * Ajusta o canvas para o tamanho da tela
-     * Importante para responsividade
      */
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
@@ -307,19 +299,16 @@ const ParticleConnections = () => {
     window.addEventListener("resize", resizeCanvas);
 
     // Array de partículas com propriedades de movimento
-    const particles = Array.from({ length: 20 }, () => ({
+    const particles = Array.from({ length: 15 }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      vx: (Math.random() - 0.5) * 0.8, // Velocidade X
-      vy: (Math.random() - 0.5) * 0.8, // Velocidade Y
-      radius: Math.random() * 2 + 1, // Tamanho aleatório
+      vx: (Math.random() - 0.5) * 0.6, // Velocidade X reduzida para mobile
+      vy: (Math.random() - 0.5) * 0.6, // Velocidade Y reduzida para mobile
+      radius: Math.random() * 1.5 + 0.5, // Tamanho menor para mobile
     }));
 
     /**
      * Função de animação principal do canvas
-     * - Limpa o frame anterior
-     * - Atualiza posições das partículas
-     * - Desenha partículas e conexões
      */
     const animate = () => {
       // Limpa o canvas completamente
@@ -338,13 +327,13 @@ const ParticleConnections = () => {
         // Desenha a partícula como círculo
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(6, 182, 212, 0.4)"; // Cor ciano semi-transparente
+        ctx.fillStyle = "rgba(6, 182, 212, 0.3)"; // Cor ciano semi-transparente
         ctx.fill();
       });
 
       // Configurações para desenhar as conexões
-      ctx.strokeStyle = "rgba(6, 182, 212, 0.15)";
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = "rgba(6, 182, 212, 0.1)";
+      ctx.lineWidth = 0.5;
 
       // Verifica todas as combinações de partículas para conexões
       for (let i = 0; i < particles.length; i++) {
@@ -353,11 +342,11 @@ const ParticleConnections = () => {
           const dy = particles[i].y - particles[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          // Conecta partículas que estão próximas (distância < 150px)
-          if (distance < 150) {
+          // Conecta partículas que estão próximas (distância < 120px para mobile)
+          if (distance < 120) {
             // Opacidade baseada na distância (mais perto = mais opaco)
-            const opacity = 1 - distance / 150;
-            ctx.strokeStyle = `rgba(6, 182, 212, ${opacity * 0.2})`;
+            const opacity = 1 - distance / 120;
+            ctx.strokeStyle = `rgba(6, 182, 212, ${opacity * 0.15})`;
 
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
@@ -391,11 +380,7 @@ const ParticleConnections = () => {
 };
 
 /**
- * COMPONENTE DE ESTATÍSTICAS ANIMADAS COM EFEITO DE ONDA (VERSÃO 2)
- * - Números que contam progressivamente
- * - Efeito de onda conectando os elementos
- * - Animações de flutuação individual
- * - Partículas decorativas
+ * COMPONENTE DE ESTATÍSTICAS ANIMADAS COM EFEITO DE ONDA
  */
 const LiveStats = () => {
   const [projects, setProjects] = useState(0);
@@ -418,9 +403,6 @@ const LiveStats = () => {
   useEffect(() => {
     /**
      * Função para animar contadores progressivos
-     * @param setter - Função set do useState
-     * @param end - Valor final do contador
-     * @param duration - Duração da animação em ms
      */
     const animateValue = (
       setter: React.Dispatch<React.SetStateAction<number>>,
@@ -460,14 +442,14 @@ const LiveStats = () => {
   return (
     <LazyComponent animation="fadeUp" delay={400}>
       <motion.div
-        className="flex justify-center gap-6 sm:gap-8 mb-12 relative"
+        className="flex justify-center gap-3 sm:gap-6 mb-8 sm:mb-12 relative px-2"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.2, ease: "easeOut" }}
       >
-        {/* VERSÃO 2: LINHA DE ONDA CONECTANDO AS ESTATÍSTICAS */}
+        {/* LINHA DE ONDA CONECTANDO AS ESTATÍSTICAS */}
         <motion.div
-          className="absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-400/0 via-cyan-400/30 to-cyan-400/0 transform -translate-y-1/2"
+          className="absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-400/0 via-cyan-400/20 to-cyan-400/0 transform -translate-y-1/2"
           initial={{ scaleX: 0, opacity: 0 }}
           animate={{
             scaleX: waveProgress, // Expande horizontalmente
@@ -488,8 +470,8 @@ const LiveStats = () => {
             animate={{
               scale: 1,
               opacity: 1,
-              // VERSÃO 2: EFEITO DE ONDA INDIVIDUAL - flutuação suave
-              y: [0, -8, 4, -2, 0],
+              // EFEITO DE ONDA INDIVIDUAL - flutuação suave
+              y: [0, -4, 2, -1, 0],
             }}
             transition={{
               delay: 1.4 + index * 0.15, // Delay escalonado
@@ -505,8 +487,8 @@ const LiveStats = () => {
               },
             }}
             whileHover={{
-              scale: 1.15,
-              y: -8, // Eleva no hover
+              scale: 1.1,
+              y: -4, // Eleva no hover
               transition: {
                 type: "spring",
                 stiffness: 400,
@@ -515,10 +497,10 @@ const LiveStats = () => {
           >
             {/* EFEITO DE PULSO AO REDOR - halo sutil */}
             <motion.div
-              className="absolute inset-0 rounded-2xl bg-cyan-400/10"
+              className="absolute inset-0 rounded-xl bg-cyan-400/10"
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{
-                scale: [1, 1.2, 1], // Pulso de tamanho
+                scale: [1, 1.1, 1], // Pulso de tamanho
                 opacity: [0.3, 0.1, 0.3], // Pulso de opacidade
               }}
               transition={{
@@ -530,20 +512,20 @@ const LiveStats = () => {
             />
 
             {/* Número da estatística */}
-            <div className="text-2xl sm:text-3xl font-black text-cyan-400 relative z-10">
+            <div className="text-lg sm:text-2xl lg:text-3xl font-black text-cyan-400 relative z-10">
               {stat.value}
               {stat.suffix}
             </div>
             {/* Label da estatística */}
-            <div className="text-sm text-cyan-300 font-medium relative z-10">
+            <div className="text-xs sm:text-sm text-cyan-300 font-medium relative z-10">
               {stat.label}
             </div>
 
             {/* PARTÍCULAS FLUTUANTES DECORATIVAS */}
             <motion.div
-              className="absolute -top-2 -right-2 w-2 h-2 bg-cyan-400 rounded-full opacity-70"
+              className="absolute -top-1 -right-1 w-1 h-1 sm:w-2 sm:h-2 bg-cyan-400 rounded-full opacity-70"
               animate={{
-                y: [0, -10, 0], // Sobe e desce
+                y: [0, -6, 0], // Sobe e desce
                 opacity: [0, 1, 0], // Aparece e some
                 scale: [0.5, 1, 0.5], // Cresce e diminui
               }}
@@ -563,8 +545,6 @@ const LiveStats = () => {
 
 /**
  * COMPONENTE DOS BOTÕES DE AÇÃO
- * - Botão "Iniciar Projeto" com AnimatedActionButton em azul gradiente
- * - Botão "Baixar CV" com AnimatedActionButton
  */
 const ActionButtons = ({ onContactClick }: { onContactClick: () => void }) => {
   const { downloadPDF, isDownloading, progress, error, resetError } =
@@ -583,7 +563,7 @@ const ActionButtons = ({ onContactClick }: { onContactClick: () => void }) => {
   return (
     <LazyComponent animation="fadeUp" delay={500}>
       <motion.div
-        className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16"
+        className="flex flex-col sm:flex-row gap-3 sm:gap-6 justify-center items-center mb-8 sm:mb-16 px-4"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 1.6, ease: "easeOut" }}
@@ -595,7 +575,7 @@ const ActionButtons = ({ onContactClick }: { onContactClick: () => void }) => {
           icon={Rocket}
           size="lg"
           onClick={onContactClick}
-          className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-cyan-400/50 hover:border-cyan-300/70"
+          className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-cyan-400/50 hover:border-cyan-300/70 w-full sm:w-auto"
           showArrow={false}
         />
 
@@ -609,6 +589,7 @@ const ActionButtons = ({ onContactClick }: { onContactClick: () => void }) => {
           loading={isDownloading}
           progress={progress}
           disabled={isDownloading}
+          className="w-full sm:w-auto"
           showArrow={false}
         />
 
@@ -619,9 +600,9 @@ const ActionButtons = ({ onContactClick }: { onContactClick: () => void }) => {
               initial={{ opacity: 0, y: -10, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.9 }}
-              className="absolute top-full mt-2 p-3 bg-red-500/10 border border-red-500/20 rounded-lg backdrop-blur-sm z-50"
+              className="absolute top-full mt-2 p-2 sm:p-3 bg-red-500/10 border border-red-500/20 rounded-lg backdrop-blur-sm z-50"
             >
-              <p className="text-red-400 text-sm">{error}</p>
+              <p className="text-red-400 text-xs sm:text-sm">{error}</p>
               <button
                 onClick={() => resetError()}
                 className="text-red-300 text-xs hover:text-white mt-1"
@@ -638,9 +619,6 @@ const ActionButtons = ({ onContactClick }: { onContactClick: () => void }) => {
 
 /**
  * COMPONENTE DO INDICADOR DE SCROLL
- * - Seta animada para indicar que há mais conteúdo
- * - Pulsação suave para chamar atenção
- * - Leva usuário para próxima seção
  */
 const ScrollIndicator = ({
   onExploreClick,
@@ -659,17 +637,17 @@ const ScrollIndicator = ({
       >
         <motion.button
           onClick={onExploreClick}
-          className="flex flex-col items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors group focus:outline-none rounded-lg p-2"
+          className="flex flex-col items-center gap-1 sm:gap-2 text-cyan-400 hover:text-cyan-300 transition-colors group focus:outline-none rounded-lg p-1 sm:p-2"
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.95 }}
         >
-          <span className="text-sm font-medium">Explorar Mais</span>
+          <span className="text-xs sm:text-sm font-medium">Explorar Mais</span>
           <motion.div
-            animate={{ y: [0, 8, 0] }} // Seta sobe e desce
+            animate={{ y: [0, 6, 0] }} // Seta sobe e desce
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className={`w-10 h-10 rounded-full border ${colors.borders.medium} flex items-center justify-center group-hover:border-cyan-400/50 transition-colors relative`}
+            className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full border ${colors.borders.medium} flex items-center justify-center group-hover:border-cyan-400/50 transition-colors relative`}
           >
-            <ArrowDown className="w-4 h-4" />
+            <ArrowDown className="w-3 h-3 sm:w-4 sm:h-4" />
           </motion.div>
         </motion.button>
       </motion.div>
@@ -679,9 +657,6 @@ const ScrollIndicator = ({
 
 /**
  * COMPONENTE PRINCIPAL DA HERO
- * - Container principal que organiza todas as camadas
- * - Gerencia animações de entrada com GSAP
- * - Controla navegação entre seções
  */
 interface HeroProps {
   onExploreClick: () => void;
@@ -716,7 +691,6 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
 
   /**
    * Navega suavemente para a seção de contato
-   * Calcula posição considerando altura do header
    */
   const handleContactClick = () => {
     const contactSection = document.getElementById("contact");
@@ -765,7 +739,7 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
       <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-blue-500/10" />
 
       {/* CONTEÚDO PRINCIPAL - Texto, stats, botões e indicador */}
-      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col justify-center min-h-screen z-10">
+      <div className="relative w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 text-center flex flex-col justify-center min-h-screen z-10">
         <div className="hero-content-element">
           <HeroText />
         </div>

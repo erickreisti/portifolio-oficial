@@ -97,13 +97,13 @@ const STATIC_TIMELINE_DATA = [
 const STATIC_BIO_DATA = {
   paragraph1: (
     <>
-      <span className="block mb-4 text-lg leading-relaxed text-gray-200">
+      <span className="block mb-4 text-base sm:text-lg leading-relaxed text-gray-200">
         Olá! Sou <strong className="text-cyan-400">Erick Reis</strong>, um{" "}
         <strong className="text-cyan-400">Desenvolvedor FullStack</strong> com
         sólida base em tecnologia da informação.
       </span>
 
-      <span className="block mb-4 text-lg leading-relaxed text-gray-200">
+      <span className="block mb-4 text-base sm:text-lg leading-relaxed text-gray-200">
         Minha jornada começou no{" "}
         <strong className="text-cyan-400">suporte técnico</strong>, onde
         desenvolvi uma compreensão profunda de{" "}
@@ -113,7 +113,7 @@ const STATIC_BIO_DATA = {
         .
       </span>
 
-      <span className="block text-lg leading-relaxed text-gray-200">
+      <span className="block text-base sm:text-lg leading-relaxed text-gray-200">
         Com formação em{" "}
         <strong className="text-cyan-400">Sistemas de Informação</strong> e
         pós-graduação em{" "}
@@ -129,7 +129,7 @@ const STATIC_BIO_DATA = {
 
   paragraph2: (
     <>
-      <span className="block mb-4 text-lg leading-relaxed text-gray-200">
+      <span className="block mb-4 text-base sm:text-lg leading-relaxed text-gray-200">
         Minha transição do{" "}
         <strong className="text-cyan-400">
           suporte técnico para o desenvolvimento fullstack
@@ -140,7 +140,7 @@ const STATIC_BIO_DATA = {
         infraestrutura e atende às necessidades reais dos usuários.
       </span>
 
-      <span className="block text-lg leading-relaxed text-gray-200">
+      <span className="block text-base sm:text-lg leading-relaxed text-gray-200">
         Esta experiência me permite criar soluções que são não apenas{" "}
         <strong className="text-cyan-400">tecnicamente sólidas</strong>, mas
         também{" "}
@@ -213,70 +213,76 @@ const InteractiveTimeline = () => {
 
   return (
     <LazyComponent animation="fadeUp" delay={200}>
-      <div className="relative py-20">
-        <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-cyan-500/20 to-blue-500/20" />
+      <div className="relative py-12 sm:py-20">
+        {/* Linha central responsiva */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 w-0.5 sm:w-1 h-full bg-gradient-to-b from-cyan-500/20 to-blue-500/20" />
 
-        <div className="space-y-12">
+        <div className="space-y-8 sm:space-y-12">
           {timelineData.map((item, index) => {
             const isActive = activeItem === index;
             const Icon = item.icon;
+            const isEven = index % 2 === 0;
 
             return (
               <motion.div
                 key={item.year}
                 className={`relative flex items-center ${
-                  index % 2 === 0 ? "flex-row" : "flex-row-reverse"
+                  isEven ? "flex-row" : "flex-row-reverse"
                 }`}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                initial={{ opacity: 0, x: isEven ? -50 : 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
                 onMouseEnter={() => setActiveItem(index)}
               >
+                {/* Ponto da timeline */}
                 <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
                   <motion.div
-                    className={`w-6 h-6 rounded-full bg-gradient-to-r ${
+                    className={`w-4 h-4 sm:w-6 sm:h-6 rounded-full bg-gradient-to-r ${
                       item.color
-                    } border-4 border-gray-900 ${
+                    } border-2 sm:border-4 border-gray-900 ${
                       isActive ? "scale-125" : "scale-100"
                     } transition-all duration-300`}
                     whileHover={{ scale: 1.2 }}
                   />
                 </div>
 
+                {/* Conteúdo - Alternando lados */}
                 <div
-                  className={`w-5/12 ${index % 2 === 0 ? "pr-12" : "pl-12"}`}
+                  className={`w-full sm:w-5/12 ${
+                    isEven ? "sm:pr-8 lg:pr-12" : "sm:pl-8 lg:pl-12"
+                  }`}
                 >
                   <motion.div
                     className={`${COLORS.classes.card} ${
                       isActive
-                        ? "border-cyan-400/50 shadow-2xl shadow-cyan-400/20"
+                        ? "border-cyan-400/50 shadow-lg sm:shadow-2xl shadow-cyan-400/20"
                         : "border-gray-700/30"
-                    } transition-all duration-300 cursor-pointer group p-6`}
+                    } transition-all duration-300 cursor-pointer group p-4 sm:p-6`}
                     whileHover={{ y: -5, scale: 1.02 }}
                   >
-                    <div className="flex items-center gap-3 mb-4">
+                    <div className="flex items-start sm:items-center gap-3 mb-3 sm:mb-4">
                       <div
-                        className={`p-2 rounded-xl bg-gradient-to-r ${item.color}/20 border ${item.color}/30`}
+                        className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-gradient-to-r ${item.color}/20 border ${item.color}/30 flex-shrink-0`}
                       >
-                        <Icon className="w-5 h-5 text-white" />
+                        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                       </div>
-                      <div>
-                        <div className="text-cyan-400 font-mono text-sm font-bold">
+                      <div className="flex-1 min-w-0">
+                        <div className="text-cyan-400 font-mono text-xs sm:text-sm font-bold">
                           {item.year}
                         </div>
-                        <h3 className="text-white font-bold text-lg">
+                        <h3 className="text-white font-bold text-base sm:text-lg leading-tight">
                           {item.title}
                         </h3>
+                        <div className="text-cyan-300 font-mono text-xs mt-1">
+                          {item.company}
+                        </div>
                       </div>
                     </div>
 
-                    <p className="text-gray-300 text-sm mb-4 leading-relaxed">
+                    <p className="text-gray-300 text-xs sm:text-sm mb-3 sm:mb-4 leading-relaxed">
                       {item.description}
                     </p>
-                    <div className="text-cyan-300 font-mono text-xs mb-4">
-                      {item.company}
-                    </div>
 
                     <AnimatePresence>
                       {isActive && (
@@ -284,20 +290,20 @@ const InteractiveTimeline = () => {
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: "auto" }}
                           exit={{ opacity: 0, height: 0 }}
-                          className="space-y-3"
+                          className="space-y-2 sm:space-y-3"
                         >
                           <div>
-                            <div className="text-xs text-gray-400 font-semibold mb-2">
+                            <div className="text-xs text-gray-400 font-semibold mb-1 sm:mb-2">
                               ATIVIDADES PRINCIPAIS:
                             </div>
-                            <div className="flex flex-wrap gap-2">
+                            <div className="flex flex-wrap gap-1 sm:gap-2">
                               {item.projects.map((project, i) => (
                                 <motion.span
                                   key={project}
                                   initial={{ opacity: 0, scale: 0.8 }}
                                   animate={{ opacity: 1, scale: 1 }}
                                   transition={{ delay: i * 0.1 }}
-                                  className="px-2 py-1 bg-cyan-500/10 text-cyan-400 text-xs rounded-full border border-cyan-400/20"
+                                  className="px-1.5 py-0.5 sm:px-2 sm:py-1 bg-cyan-500/10 text-cyan-400 text-xs rounded-full border border-cyan-400/20"
                                 >
                                   {project}
                                 </motion.span>
@@ -306,7 +312,7 @@ const InteractiveTimeline = () => {
                           </div>
 
                           <div>
-                            <div className="text-xs text-gray-400 font-semibold mb-2">
+                            <div className="text-xs text-gray-400 font-semibold mb-1 sm:mb-2">
                               HABILIDADES:
                             </div>
                             <div className="flex flex-wrap gap-1">
@@ -316,7 +322,7 @@ const InteractiveTimeline = () => {
                                   initial={{ opacity: 0, y: 10 }}
                                   animate={{ opacity: 1, y: 0 }}
                                   transition={{ delay: i * 0.05 }}
-                                  className="px-2 py-1 bg-gray-800/50 text-gray-300 text-xs rounded border border-gray-700/30"
+                                  className="px-1.5 py-0.5 bg-gray-800/50 text-gray-300 text-xs rounded border border-gray-700/30"
                                 >
                                   {skill}
                                 </motion.span>
@@ -367,23 +373,23 @@ const StatCard = ({ stat, index }: { stat: any; index: number }) => {
     <LazyComponent animation="scale" delay={index * 100}>
       <motion.div
         ref={cardRef}
-        className={`text-center p-6 bg-gray-900/40 backdrop-blur-2xl rounded-2xl ${COLORS.borders.light} transition-all duration-400 cursor-pointer relative overflow-hidden hover:border-cyan-400/50 hover:bg-cyan-500/10 group`}
-        whileHover={{ y: -8, scale: 1.02 }}
+        className={`text-center p-4 sm:p-6 bg-gray-900/40 backdrop-blur-2xl rounded-xl sm:rounded-2xl ${COLORS.borders.light} transition-all duration-400 cursor-pointer relative overflow-hidden hover:border-cyan-400/50 hover:bg-cyan-500/10 group`}
+        whileHover={{ y: -4, scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
-        <div className="flex justify-center mb-3">
+        <div className="flex justify-center mb-2 sm:mb-3">
           <motion.div
-            className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/30 group-hover:border-cyan-400/50 transition-all duration-300"
+            className="w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/30 group-hover:border-cyan-400/50 transition-all duration-300"
             whileHover={{ scale: 1.1, rotate: 5 }}
           >
-            <stat.icon className="w-5 h-5 text-cyan-400" />
+            <stat.icon className="w-3 h-3 sm:w-5 sm:h-5 text-cyan-400" />
           </motion.div>
         </div>
-        <div className="text-2xl lg:text-3xl font-black bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-2">
+        <div className="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-1 sm:mb-2">
           {stat.number}
           <span className="text-cyan-400">{stat.suffix}</span>
         </div>
-        <div className="text-gray-400 font-medium text-sm tracking-wide transition-colors duration-300 group-hover:text-gray-200">
+        <div className="text-gray-400 font-medium text-xs sm:text-sm tracking-wide transition-colors duration-300 group-hover:text-gray-200">
           {stat.label}
         </div>
         <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/5 to-blue-400/5 opacity-0 transition-opacity duration-400 group-hover:opacity-100" />
@@ -421,22 +427,22 @@ const PassionItem = ({ item, index }: { item: any; index: number }) => {
     <LazyComponent animation="fadeUp" delay={index * 50}>
       <motion.div
         ref={itemRef}
-        className="flex items-start gap-4 p-4 rounded-xl border border-transparent transition-all duration-300 cursor-pointer relative overflow-hidden hover:bg-cyan-500/10 hover:border-cyan-400/20 group"
-        whileHover={{ x: 8, scale: 1.02 }}
+        className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg sm:rounded-xl border border-transparent transition-all duration-300 cursor-pointer relative overflow-hidden hover:bg-cyan-500/10 hover:border-cyan-400/20 group"
+        whileHover={{ x: 4, scale: 1.01 }}
         whileTap={{ scale: 0.98 }}
       >
         <motion.div
-          className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/20 transition-all duration-300 group-hover:border-cyan-400/40"
+          className="w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/20 transition-all duration-300 group-hover:border-cyan-400/40 flex-shrink-0"
           whileHover={{ scale: 1.1, rotate: 5 }}
           whileTap={{ scale: 0.95 }}
         >
-          <item.icon className="w-5 h-5 text-cyan-400 transition-colors duration-300" />
+          <item.icon className="w-3 h-3 sm:w-5 sm:h-5 text-cyan-400 transition-colors duration-300" />
         </motion.div>
         <div className="flex-1 min-w-0">
-          <p className="text-white font-semibold text-base transition-colors duration-300 group-hover:text-cyan-400 mb-1">
+          <p className="text-white font-semibold text-sm sm:text-base transition-colors duration-300 group-hover:text-cyan-400 mb-1 leading-tight">
             {item.text}
           </p>
-          <p className="text-gray-400 text-sm leading-relaxed">
+          <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">
             {item.description}
           </p>
         </div>
@@ -501,10 +507,10 @@ export const About = () => {
         </PremiumBackground>
       </LazyBackground>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 lg:py-28">
         {/* Header */}
         <motion.div
-          className="text-center mb-16 lg:mb-20"
+          className="text-center mb-12 sm:mb-16 lg:mb-20"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
@@ -515,9 +521,9 @@ export const About = () => {
             whileInView={{ scale: 1, rotate: 0 }}
             transition={{ duration: 0.6, delay: 0.1, type: "spring" }}
             viewport={{ once: true }}
-            className={`inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider ${COLORS.classes.text.accent} bg-cyan-400/10 px-6 py-3 rounded-full ${COLORS.borders.medium} backdrop-blur-2xl mb-6 relative overflow-hidden group`}
+            className={`inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider ${COLORS.classes.text.accent} bg-cyan-400/10 px-4 sm:px-6 py-2 sm:py-3 rounded-full ${COLORS.borders.medium} backdrop-blur-2xl mb-4 sm:mb-6 relative overflow-hidden group`}
           >
-            <Sparkles className="w-4 h-4 mr-3 animate-pulse" />
+            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 mr-2 sm:mr-3 animate-pulse" />
             JORNADA & EXPERTISE
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-600" />
           </motion.div>
@@ -529,7 +535,7 @@ export const About = () => {
             viewport={{ once: true }}
           >
             <h1
-              className={`text-4xl sm:text-5xl lg:text-6xl font-black ${COLORS.classes.text.primary} mb-6 leading-tight`}
+              className={`text-2xl sm:text-4xl lg:text-6xl font-black ${COLORS.classes.text.primary} mb-4 sm:mb-6 leading-tight px-2`}
             >
               MAIS DO QUE CÓDIGO,{" "}
               <span className={COLORS.classes.text.gradient}>
@@ -537,7 +543,7 @@ export const About = () => {
               </span>
             </h1>
             <p
-              className={`text-lg lg:text-xl ${COLORS.classes.text.secondary} max-w-3xl mx-auto leading-relaxed`}
+              className={`text-base sm:text-lg lg:text-xl ${COLORS.classes.text.secondary} max-w-3xl mx-auto leading-relaxed px-4`}
             >
               Conheça a mente por trás das soluções inovadoras e a paixão que
               impulsiona cada linha de código
@@ -546,15 +552,15 @@ export const About = () => {
         </motion.div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-16 lg:mb-20">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:gap-6 mb-12 sm:mb-16 lg:mb-20">
           {bioData.stats.map((stat, index) => (
             <StatCard key={stat.label} stat={stat} index={index} />
           ))}
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+        <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 lg:gap-12">
           {/* Coluna da Esquerda */}
-          <div className="w-full lg:w-7/12 flex flex-col gap-8">
+          <div className="w-full lg:w-7/12 flex flex-col gap-6 sm:gap-8">
             {/* Foto */}
             <LazyComponent animation="scale" delay={200}>
               <motion.div
@@ -565,7 +571,7 @@ export const About = () => {
                 className="flex justify-center relative"
               >
                 <motion.div
-                  className="relative h-64 w-64 sm:h-72 sm:w-72 lg:h-80 lg:w-80 rounded-2xl overflow-hidden shadow-2xl shadow-cyan-400/20"
+                  className="relative h-48 w-48 sm:h-64 sm:w-64 lg:h-80 lg:w-80 rounded-xl sm:rounded-2xl overflow-hidden shadow-lg sm:shadow-2xl shadow-cyan-400/20"
                   whileHover={{ scale: 1.05, rotateY: 5 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -585,33 +591,33 @@ export const About = () => {
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ duration: 0.5, delay: 0.8 }}
                   viewport={{ once: true }}
-                  className="absolute -bottom-3 -right-3 bg-gradient-to-br from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-full font-mono font-bold text-sm tracking-wider shadow-2xl shadow-cyan-400/40 border border-white/20 backdrop-blur-2xl"
+                  className="absolute -bottom-2 -right-2 bg-gradient-to-br from-cyan-500 to-blue-600 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-full font-mono font-bold text-xs sm:text-sm tracking-wider shadow-lg sm:shadow-2xl shadow-cyan-400/40 border border-white/20 backdrop-blur-2xl"
                   whileHover={{ scale: 1.1, rotate: 5 }}
                   whileTap={{ scale: 0.9 }}
                 >
-                  <Code className="w-3 h-3 inline mr-2" />
-                  FULLSTACK DEVELOPER
+                  <Code className="w-2 h-2 sm:w-3 sm:h-3 inline mr-1 sm:mr-2" />
+                  FULLSTACK
                 </motion.div>
               </motion.div>
             </LazyComponent>
 
             {/* Parágrafos */}
-            <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-6 sm:gap-8">
               <LazyComponent animation="fadeUp" delay={300}>
                 <motion.div
                   initial={{ opacity: 0, y: 30, x: -20 }}
                   whileInView={{ opacity: 1, y: 0, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
                   viewport={{ once: true }}
-                  className={`${COLORS.classes.card} ${COLORS.classes.cardHover} relative overflow-hidden group p-8`}
+                  className={`${COLORS.classes.card} ${COLORS.classes.cardHover} relative overflow-hidden group p-4 sm:p-6 lg:p-8`}
                   whileHover={{ y: -5 }}
                 >
                   <motion.div
-                    className="absolute top-6 left-6 w-3 h-3 bg-cyan-400 rounded-full shadow-lg shadow-cyan-400"
+                    className="absolute top-4 left-4 sm:top-6 sm:left-6 w-2 h-2 sm:w-3 sm:h-3 bg-cyan-400 rounded-full shadow-lg shadow-cyan-400"
                     animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   />
-                  <div className="relative z-10 space-y-6">
+                  <div className="relative z-10 space-y-4 sm:space-y-6">
                     {bioData.paragraph1}
                   </div>
                 </motion.div>
@@ -623,15 +629,15 @@ export const About = () => {
                   whileInView={{ opacity: 1, y: 0, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
                   viewport={{ once: true }}
-                  className={`${COLORS.classes.card} ${COLORS.classes.cardHover} relative overflow-hidden group p-8`}
+                  className={`${COLORS.classes.card} ${COLORS.classes.cardHover} relative overflow-hidden group p-4 sm:p-6 lg:p-8`}
                   whileHover={{ y: -5 }}
                 >
                   <motion.div
-                    className="absolute top-6 right-6 w-3 h-3 bg-cyan-400 rounded-full shadow-lg shadow-cyan-400"
+                    className="absolute top-4 right-4 sm:top-6 sm:right-6 w-2 h-2 sm:w-3 sm:h-3 bg-cyan-400 rounded-full shadow-lg shadow-cyan-400"
                     animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
                     transition={{ duration: 2, repeat: Infinity, delay: 1 }}
                   />
-                  <div className="relative z-10 space-y-6">
+                  <div className="relative z-10 space-y-4 sm:space-y-6">
                     {bioData.paragraph2}
                   </div>
                 </motion.div>
@@ -640,7 +646,7 @@ export const About = () => {
           </div>
 
           {/* Coluna da Direita */}
-          <div className="w-full lg:w-5/12 flex flex-col gap-6">
+          <div className="w-full lg:w-5/12 flex flex-col gap-4 sm:gap-6">
             {/* Card de Paixões */}
             <LazyComponent animation="fadeUp" delay={300}>
               <motion.div
@@ -652,19 +658,21 @@ export const About = () => {
                 <Card
                   className={`${COLORS.classes.card} ${COLORS.classes.cardHover}`}
                 >
-                  <CardHeader className="pb-4 border-b border-cyan-400/20 relative z-10">
+                  <CardHeader className="pb-3 sm:pb-4 border-b border-cyan-400/20 relative z-10">
                     <CardTitle
-                      className={`text-xl font-black ${COLORS.classes.text.accent} flex items-center mb-2`}
+                      className={`text-lg sm:text-xl font-black ${COLORS.classes.text.accent} flex items-center mb-1 sm:mb-2`}
                     >
-                      <Brain className="w-5 h-5 mr-3" />
+                      <Brain className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
                       ESPECIALIZAÇÕES
                     </CardTitle>
-                    <p className={`${COLORS.classes.text.secondary} text-sm`}>
+                    <p
+                      className={`${COLORS.classes.text.secondary} text-xs sm:text-sm`}
+                    >
                       Áreas onde minha expertise faz a diferença
                     </p>
                   </CardHeader>
 
-                  <CardContent className="pt-4 flex flex-col gap-3 relative z-10">
+                  <CardContent className="pt-3 sm:pt-4 flex flex-col gap-2 sm:gap-3 relative z-10">
                     {bioData.passions.map((item, index) => (
                       <PassionItem key={index} item={item} index={index} />
                     ))}
@@ -684,41 +692,43 @@ export const About = () => {
                 <Card
                   className={`${COLORS.classes.card} ${COLORS.classes.cardHover}`}
                 >
-                  <CardHeader className="pb-4 border-b border-cyan-400/20 relative z-10">
+                  <CardHeader className="pb-3 sm:pb-4 border-b border-cyan-400/20 relative z-10">
                     <CardTitle
-                      className={`text-xl font-black ${COLORS.classes.text.accent} flex items-center mb-2`}
+                      className={`text-lg sm:text-xl font-black ${COLORS.classes.text.accent} flex items-center mb-1 sm:mb-2`}
                     >
-                      <Shield className="w-5 h-5 mr-3" />
+                      <Shield className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
                       COMPROMISSO
                     </CardTitle>
-                    <p className={`${COLORS.classes.text.secondary} text-sm`}>
+                    <p
+                      className={`${COLORS.classes.text.secondary} text-xs sm:text-sm`}
+                    >
                       Meu padrão de excelência em cada projeto
                     </p>
                   </CardHeader>
-                  <CardContent className="pt-4 grid gap-3 relative z-10">
+                  <CardContent className="pt-3 sm:pt-4 grid gap-2 sm:gap-3 relative z-10">
                     {bioData.highlights.map((highlight, index) => (
                       <motion.div
                         key={index}
-                        className="flex items-center justify-between p-3 rounded-xl bg-gray-800/30 transition-all duration-300 cursor-pointer relative overflow-hidden hover:bg-cyan-500/10 group"
+                        className="flex items-center justify-between p-2 sm:p-3 rounded-lg sm:rounded-xl bg-gray-800/30 transition-all duration-300 cursor-pointer relative overflow-hidden hover:bg-cyan-500/10 group"
                         whileHover={{ scale: 1.02, y: -2 }}
                         whileTap={{ scale: 0.98 }}
                       >
-                        <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
                           <motion.div
-                            className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center group-hover:border-cyan-400/30 border border-transparent"
+                            className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center group-hover:border-cyan-400/30 border border-transparent"
                             whileHover={{ scale: 1.1, rotate: 360 }}
                             transition={{ duration: 0.5 }}
                           >
-                            <highlight.icon className="w-3 h-3 text-cyan-400" />
+                            <highlight.icon className="w-2 h-2 sm:w-3 sm:h-3 text-cyan-400" />
                           </motion.div>
                           <span
-                            className={`text-white font-medium text-sm group-hover:text-cyan-400`}
+                            className={`text-white font-medium text-xs sm:text-sm group-hover:text-cyan-400 truncate`}
                           >
                             {highlight.text}
                           </span>
                         </div>
                         <motion.span
-                          className="font-mono font-bold text-cyan-400 text-sm flex-shrink-0 ml-2"
+                          className="font-mono font-bold text-cyan-400 text-xs sm:text-sm flex-shrink-0 ml-2"
                           whileHover={{ scale: 1.1 }}
                         >
                           {highlight.value}
@@ -739,23 +749,23 @@ export const About = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
             viewport={{ once: true }}
-            className="mt-20"
+            className="mt-12 sm:mt-20"
           >
-            <div className="text-center mb-16">
+            <div className="text-center mb-12 sm:mb-16">
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
                 whileInView={{ scale: 1, rotate: 0 }}
                 transition={{ duration: 0.6, delay: 0.1, type: "spring" }}
                 viewport={{ once: true }}
-                className={`inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider ${COLORS.classes.text.accent} bg-cyan-400/10 px-6 py-3 rounded-full ${COLORS.borders.medium} backdrop-blur-2xl mb-6 relative overflow-hidden group`}
+                className={`inline-flex items-center text-xs font-mono font-bold uppercase tracking-wider ${COLORS.classes.text.accent} bg-cyan-400/10 px-4 sm:px-6 py-2 sm:py-3 rounded-full ${COLORS.borders.medium} backdrop-blur-2xl mb-4 sm:mb-6 relative overflow-hidden group`}
               >
-                <Calendar className="w-4 h-4 mr-3 animate-pulse" />
+                <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-2 sm:mr-3 animate-pulse" />
                 MINHA JORNADA
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-600" />
               </motion.div>
 
               <h2
-                className={`text-3xl sm:text-4xl lg:text-5xl font-black ${COLORS.classes.text.primary} mb-6`}
+                className={`text-2xl sm:text-4xl lg:text-5xl font-black ${COLORS.classes.text.primary} mb-4 sm:mb-6`}
               >
                 Linha do Tempo{" "}
                 <span className={COLORS.classes.text.gradient}>
@@ -763,7 +773,7 @@ export const About = () => {
                 </span>
               </h2>
               <p
-                className={`text-lg ${COLORS.classes.text.secondary} max-w-2xl mx-auto`}
+                className={`text-base sm:text-lg ${COLORS.classes.text.secondary} max-w-2xl mx-auto px-4`}
               >
                 Do suporte técnico ao desenvolvimento fullstack - uma jornada de
                 aprendizado contínuo
@@ -774,38 +784,38 @@ export const About = () => {
           </motion.div>
         </LazyComponent>
 
-        {/* CTA Final - COM BOTÃO ATUALIZADO */}
+        {/* CTA Final */}
         <LazyComponent animation="fadeUp" delay={800}>
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
             viewport={{ once: true }}
-            className="mt-16 lg:mt-20"
+            className="mt-12 sm:mt-16 lg:mt-20"
           >
             <motion.div
-              className={`bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-2xl p-6 rounded-2xl ${COLORS.borders.light} shadow-2xl shadow-cyan-400/10 relative overflow-hidden group`}
+              className={`bg-gradient-to-br from-gray-900/60 to-gray-800/40 backdrop-blur-2xl p-4 sm:p-6 rounded-xl sm:rounded-2xl ${COLORS.borders.light} shadow-lg sm:shadow-2xl shadow-cyan-400/10 relative overflow-hidden group`}
               whileHover={{ y: -5 }}
             >
-              <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-8 relative z-10">
+              <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 lg:gap-8 relative z-10">
                 <motion.div
                   initial={{ scale: 0, rotate: -180 }}
                   whileInView={{ scale: 1, rotate: 0 }}
                   transition={{ duration: 0.6, type: "spring" }}
                   viewport={{ once: true }}
-                  className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/30 shadow-xl shadow-cyan-400/30 group-hover:border-cyan-400/50"
+                  className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-400/30 shadow-lg sm:shadow-xl shadow-cyan-400/30 group-hover:border-cyan-400/50"
                   whileHover={{ rotate: 360 }}
                 >
-                  <Rocket className="w-6 h-6 text-cyan-400" />
+                  <Rocket className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-cyan-400" />
                 </motion.div>
-                <div className="text-center lg:text-left flex-1">
+                <div className="text-center sm:text-left flex-1">
                   <h3
-                    className={`text-xl lg:text-2xl font-black ${COLORS.classes.text.primary} mb-2`}
+                    className={`text-lg sm:text-xl lg:text-2xl font-black ${COLORS.classes.text.primary} mb-1 sm:mb-2`}
                   >
                     Pronto para o próximo nível?
                   </h3>
                   <p
-                    className={`${COLORS.classes.text.secondary} text-base lg:text-lg`}
+                    className={`${COLORS.classes.text.secondary} text-sm sm:text-base lg:text-lg`}
                   >
                     Vamos transformar sua visão em realidade com tecnologia de
                     ponta
@@ -816,7 +826,7 @@ export const About = () => {
                   whileInView={{ opacity: 1, x: 0, scale: 1 }}
                   transition={{ duration: 0.5, delay: 0.8 }}
                   viewport={{ once: true }}
-                  className="w-full lg:w-auto"
+                  className="w-full sm:w-auto"
                 >
                   <AnimatedActionButton
                     title="INICIAR PROJETO"
@@ -824,7 +834,7 @@ export const About = () => {
                     icon={Rocket}
                     size="lg"
                     onClick={handleContactClick}
-                    className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-cyan-400/50 hover:border-cyan-300/70"
+                    className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-cyan-400/50 hover:border-cyan-300/70 w-full sm:w-auto"
                     showArrow={true}
                   />
                 </motion.div>

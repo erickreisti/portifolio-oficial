@@ -121,7 +121,7 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
         style={{
           background: `rgba(15, 23, 42, ${headerOpacity})`,
           backdropFilter: `blur(${
-            isScrolled ? "20px" : "12px"
+            isScrolled ? "16px" : "10px"
           }) saturate(180%)`,
           borderBottom: isScrolled
             ? `1px solid rgba(6, 182, 212, 0.15)`
@@ -144,46 +144,63 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
           transition={{ duration: 0.5, ease: "easeOut" }}
         />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
           {/* Logo */}
           <LazyComponent animation="fadeIn" delay={200}>
             <motion.button
               onClick={() => handleNavClick("hero")}
-              className="flex items-center gap-2 group focus:outline-none rounded-lg p-1 relative"
-              whileHover={{ scale: 1.02 }}
+              aria-label="Ir para a página inicial"
+              className="flex items-center gap-2 sm:gap-3 group rounded-xl p-2 relative outline-none"
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
             >
-              <div className="flex items-center gap-2 p-2 rounded-xl bg-gradient-to-r from-gray-900/10 to-gray-800/5 backdrop-blur-sm border border-cyan-500/10 group-hover:border-cyan-400/20 transition-all duration-300 relative overflow-hidden">
+              <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-xl bg-transparent transition-all duration-300 relative overflow-hidden">
+                {/* Efeito Neon no Hover */}
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-cyan-400/5 via-transparent to-blue-400/5"
-                  initial={{ opacity: 0 }}
-                  whileHover={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
+                  className="absolute inset-0 rounded-xl bg-cyan-400/0"
+                  initial={false}
+                  whileHover={{
+                    backgroundColor: "rgba(6, 182, 212, 0.15)",
+                    boxShadow: `
+            0 0 20px rgba(6, 182, 212, 0.6),
+            0 0 40px rgba(6, 182, 212, 0.3),
+            0 0 60px rgba(6, 182, 212, 0.1)
+          `,
+                  }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
                 />
 
+                {/* Glow externo */}
                 <motion.div
-                  whileHover={{ scale: 1.1 }}
+                  className="absolute inset-0 rounded-xl blur-xl"
+                  initial={{ opacity: 0 }}
+                  whileHover={{
+                    opacity: 1,
+                    boxShadow: "0 0 30px rgba(6, 182, 212, 0.5)",
+                  }}
+                  transition={{ duration: 0.5 }}
+                />
+
+                {/* Imagem da Logo */}
+                <motion.div
+                  whileHover={{ scale: 1.15 }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
-                  className="relative"
+                  className="relative z-10"
                 >
                   <OptimizedImage
                     src="/images/hashblue.svg"
                     alt="Erick Reis Logo"
-                    width={32}
-                    height={32}
+                    width={38}
+                    height={38}
                     priority={true}
-                    className="brightness-125 drop-shadow-lg"
-                  />
-                  <motion.div
-                    className="absolute inset-0 bg-cyan-400/10 rounded-lg"
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                    transition={{ duration: 0.2 }}
+                    className="brightness-125 drop-shadow-lg w-8 h-8 sm:w-10 sm:h-10"
                   />
                 </motion.div>
-                <div className="text-left hidden sm:block">
+
+                {/* Texto do Nome e Cargo - APENAS DESKTOP/TABLET */}
+                <div className="text-left z-10 hidden sm:block">
                   <motion.h3
-                    className="text-base font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent"
+                    className="text-base sm:text-lg font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent leading-tight"
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4, duration: 0.5 }}
@@ -191,12 +208,12 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                     ÉRICK REIS
                   </motion.h3>
                   <motion.p
-                    className="text-xs font-mono text-cyan-400/80 tracking-widest"
+                    className="text-xs sm:text-sm font-mono text-cyan-400/90 tracking-widest"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5, duration: 0.5 }}
                   >
-                    FULLSTACK ENGINEER
+                    FULLSTACK
                   </motion.p>
                 </div>
               </div>
@@ -220,8 +237,8 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                   <motion.button
                     onClick={() => handleNavClick(sectionName)}
                     className={`
-                      relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300
-                      group overflow-hidden min-w-[100px] flex items-center justify-center
+                      relative px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-300
+                      group overflow-hidden min-w-[80px] sm:min-w-[100px] flex items-center justify-center
                       ${
                         isActive
                           ? "text-cyan-400"
@@ -241,8 +258,8 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                       transition={{ duration: 0.3 }}
                     />
 
-                    <span className="relative z-10 font-semibold tracking-wide flex items-center gap-2 justify-center w-full">
-                      <div className="w-6 h-6 flex items-center justify-center flex-shrink-0">
+                    <span className="relative z-10 font-semibold tracking-wide flex items-center gap-1 sm:gap-2 justify-center w-full text-xs sm:text-sm">
+                      <div className="w-4 h-4 sm:w-6 sm:h-6 flex items-center justify-center flex-shrink-0">
                         <AnimatePresence mode="wait">
                           {showIcon && (
                             <motion.div
@@ -270,14 +287,14 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                               }}
                               className="flex-shrink-0"
                             >
-                              <Icon className="w-4 h-4" />
+                              <Icon className="w-3 h-3 sm:w-4 sm:h-4" />
                             </motion.div>
                           )}
                         </AnimatePresence>
 
                         {!showIcon && (
-                          <div className="w-4 h-4 opacity-0">
-                            <Icon className="w-4 h-4" />
+                          <div className="w-3 h-3 sm:w-4 sm:h-4 opacity-0">
+                            <Icon className="w-3 h-3 sm:w-4 sm:h-4" />
                           </div>
                         )}
                       </div>
@@ -339,32 +356,13 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                 className="hover:scale-105 transition-transform duration-200"
                 showArrow={false}
               />
-
-              <AnimatePresence>
-                {error && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10, scale: 0.9 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -10, scale: 0.9 }}
-                    className="absolute top-full mt-2 right-0 p-3 bg-red-500/10 border border-red-500/20 rounded-lg backdrop-blur-sm z-50"
-                  >
-                    <p className="text-red-400 text-sm">{error}</p>
-                    <button
-                      onClick={() => resetError()}
-                      className="text-red-300 text-xs hover:text-white mt-1"
-                    >
-                      Fechar
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </motion.div>
           </LazyComponent>
 
           {/* Mobile Menu Button */}
           <LazyComponent animation="fadeIn" delay={500}>
             <motion.div
-              className="flex lg:hidden items-center gap-2"
+              className="flex lg:hidden items-center gap-1 sm:gap-2"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
             >
@@ -377,7 +375,7 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                 loading={isDownloading || isPreviewing}
                 progress={progress}
                 disabled={isDownloading || isPreviewing}
-                className="hover:scale-105"
+                className="hover:scale-105 min-w-[60px] text-xs"
                 showArrow={false}
               />
 
@@ -389,7 +387,7 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                   variant="ghost"
                   size="icon"
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                  className="w-10 h-10 rounded-xl text-white/80 hover:text-white bg-white/5 backdrop-blur-xl border border-white/10 hover:bg-white/10 transition-all duration-300 relative overflow-hidden"
+                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl text-white/80 hover:text-white bg-white/5 backdrop-blur-xl border border-white/10 hover:bg-white/10 transition-all duration-300 relative overflow-hidden"
                 >
                   <motion.div
                     animate={{
@@ -399,9 +397,9 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                     transition={{ duration: 0.3 }}
                   >
                     {isMobileMenuOpen ? (
-                      <X className="w-4 h-4" />
+                      <X className="w-3 h-3 sm:w-4 sm:h-4" />
                     ) : (
-                      <Menu className="w-4 h-4" />
+                      <Menu className="w-3 h-3 sm:w-4 sm:h-4" />
                     )}
                   </motion.div>
                 </Button>
@@ -424,7 +422,7 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                 backdropFilter: "blur(20px) saturate(180%)",
               }}
             >
-              <nav className="p-4 space-y-2">
+              <nav className="p-3 sm:p-4 space-y-1 sm:space-y-2">
                 {NAV_ITEMS.map((item, index) => {
                   const sectionName = item.href.replace("#", "");
                   const isActive = activeSection === sectionName;
@@ -440,7 +438,7 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                       <motion.button
                         onClick={() => handleNavClick(sectionName)}
                         className={`
-                          w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg transition-all duration-300 border relative overflow-hidden
+                          w-full flex items-center justify-between px-3 py-2 sm:px-4 sm:py-3 text-sm font-medium rounded-lg transition-all duration-300 border relative overflow-hidden
                           ${
                             isActive
                               ? "text-cyan-400 bg-gradient-to-r from-cyan-400/10 to-blue-400/5 border-cyan-400/20"
@@ -450,12 +448,12 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                         `}
                         initial={{ x: -30, opacity: 0, scale: 0.9 }}
                         animate={{ x: 0, opacity: 1, scale: 1 }}
-                        whileHover={{ x: 8, scale: 1.02 }}
+                        whileHover={{ x: 4, scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
                         <motion.div
                           className={`
-                            absolute left-3 w-1 h-6 rounded-full bg-gradient-to-b from-cyan-400 to-blue-400
+                            absolute left-2 sm:left-3 w-0.5 sm:w-1 h-4 sm:h-6 rounded-full bg-gradient-to-b from-cyan-400 to-blue-400
                             ${isActive ? "opacity-100" : "opacity-0"}
                           `}
                           initial={{ scaleX: 0, opacity: 0 }}
@@ -466,8 +464,8 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                           transition={{ duration: 0.3, delay: 0.1 }}
                         />
 
-                        <span className="relative z-10 font-semibold ml-6 flex items-center gap-3">
-                          <div className="w-6 h-6 flex items-center justify-center flex-shrink-0">
+                        <span className="relative z-10 font-semibold ml-4 sm:ml-6 flex items-center gap-2 sm:gap-3">
+                          <div className="w-4 h-4 sm:w-6 sm:h-6 flex items-center justify-center flex-shrink-0">
                             <AnimatePresence mode="wait">
                               {showIcon && (
                                 <motion.div
@@ -495,14 +493,14 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                                   }}
                                   className="flex-shrink-0"
                                 >
-                                  <Icon className="w-4 h-4" />
+                                  <Icon className="w-3 h-3 sm:w-4 sm:h-4" />
                                 </motion.div>
                               )}
                             </AnimatePresence>
 
                             {!showIcon && (
-                              <div className="w-4 h-4 opacity-0">
-                                <Icon className="w-4 h-4" />
+                              <div className="w-3 h-3 sm:w-4 sm:h-4 opacity-0">
+                                <Icon className="w-3 h-3 sm:w-4 sm:h-4" />
                               </div>
                             )}
                           </div>
@@ -511,7 +509,7 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
 
                         {isActive && (
                           <motion.div
-                            className="w-2 h-2 bg-cyan-400 rounded-full"
+                            className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-cyan-400 rounded-full"
                             initial={{ scale: 0, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             transition={{
@@ -528,11 +526,11 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
 
                 <LazyComponent animation="fadeIn" delay={500}>
                   <motion.div
-                    className="pt-4 border-t border-gray-700/30"
+                    className="pt-2 sm:pt-4 border-t border-gray-700/30"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                   >
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-2 gap-1 sm:gap-2">
                       <AnimatedActionButton
                         title="VISUALIZAR"
                         subtitle="VER PDF"
@@ -542,7 +540,7 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                         loading={isPreviewing}
                         progress={progress}
                         disabled={isPreviewing}
-                        className="w-full justify-center hover:scale-105"
+                        className="w-full justify-center hover:scale-105 text-xs"
                         showArrow={false}
                       />
                       <AnimatedActionButton
@@ -554,13 +552,33 @@ export const Header = ({ activeSection, onNavClick }: HeaderProps) => {
                         loading={isDownloading}
                         progress={progress}
                         disabled={isDownloading}
-                        className="w-full justify-center hover:scale-105"
+                        className="w-full justify-center hover:scale-105 text-xs"
                         showArrow={false}
                       />
                     </div>
                   </motion.div>
                 </LazyComponent>
               </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Error Message */}
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.9 }}
+              className="absolute top-full mt-2 right-4 p-2 sm:p-3 bg-red-500/10 border border-red-500/20 rounded-lg backdrop-blur-sm z-50"
+            >
+              <p className="text-red-400 text-xs sm:text-sm">{error}</p>
+              <button
+                onClick={() => resetError()}
+                className="text-red-300 text-xs hover:text-white mt-1"
+              >
+                Fechar
+              </button>
             </motion.div>
           )}
         </AnimatePresence>
