@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { useEffect, useState, useMemo, useRef } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import {
@@ -29,6 +28,143 @@ import { COLORS } from "@/lib/colors";
 interface TechLoadingProps {
   onLoadingComplete?: () => void;
 }
+
+// Componente de Partículas com GSAP - Isolado e corrigido para evitar mismatch
+const ParticleEffects = React.forwardRef<HTMLDivElement, { progress: number }>(
+  ({ progress }, ref) => {
+    const [isClient, setIsClient] = useState(false);
+    const particlesContainerRef = useRef<HTMLDivElement>(null); // Ref para o container das partículas específicas do GSAP
+
+    useEffect(() => {
+      setIsClient(true);
+    }, []);
+
+    // Efeitos GSAP aplicados apenas no cliente e após o DOM estar pronto
+    useEffect(() => {
+      if (!isClient || !particlesContainerRef.current) return;
+
+      const ctx = gsap.context(() => {
+        const particles =
+          particlesContainerRef.current?.querySelectorAll(".particle-gsap");
+        const codeElements =
+          particlesContainerRef.current?.querySelectorAll(".code-element-gsap");
+        const techElements =
+          particlesContainerRef.current?.querySelectorAll(".tech-element-gsap");
+
+        particles?.forEach((particle, i) => {
+          gsap.to(particle, {
+            x: () => gsap.utils.random(-100, 100),
+            y: () => gsap.utils.random(-50, 50),
+            rotation: () => gsap.utils.random(-180, 180),
+            opacity: () => gsap.utils.random(0.3, 0.7),
+            scale: () => gsap.utils.random(1, 1.5),
+            duration: () => gsap.utils.random(3, 6),
+            repeat: -1,
+            yoyo: true,
+            delay: i * 0.2,
+            ease: "sine.inOut",
+          });
+        });
+
+        codeElements?.forEach((el, i) => {
+          gsap.to(el, {
+            y: i % 2 === 0 ? -40 : 40, // Movimento para cima ou para baixo
+            x:
+              i % 2 === 0
+                ? gsap.utils.random(-20, 20)
+                : gsap.utils.random(-20, 20),
+            opacity: 0,
+            duration: 6 + Math.random() * 4,
+            repeat: -1,
+            repeatDelay: 0.5,
+            delay: i * 0.8,
+            ease: "easeInOut",
+            yoyo: true,
+          });
+        });
+
+        techElements?.forEach((el, i) => {
+          gsap.to(el, {
+            rotation: 360,
+            scale: 1.2,
+            opacity: 0.3,
+            duration: 8 + i * 2,
+            repeat: -1,
+            delay: i * 1.5,
+            ease: "linear",
+          });
+        });
+      }, particlesContainerRef); // Anexa o contexto ao ref correto
+
+      return () => ctx.revert(); // Limpeza correta
+    }, [isClient, progress]); // Re-executa se o progresso mudar, se necessário
+
+    if (!isClient) {
+      return null; // Não renderiza no servidor
+    }
+
+    return (
+      <div
+        ref={ref}
+        className="absolute inset-0 pointer-events-none overflow-hidden"
+      >
+        {/* Container para partículas GSAP */}
+        <div ref={particlesContainerRef} className="absolute inset-0">
+          {/* Partículas de fundo GSAP */}
+          {[...Array(15)].map((_, i) => (
+            <div
+              key={`particle-${i}`}
+              className="particle-gsap absolute w-1 h-1 bg-cyan-400/30 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                opacity: 0.3, // Estado inicial visível
+                transform: "scale(1)", // Estado inicial visível
+              }}
+            />
+          ))}
+
+          {/* Código flutuante GSAP */}
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={`code-${i}`}
+              className="code-element-gsap absolute text-cyan-400/40 font-mono text-sm font-bold hidden sm:block"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                opacity: 1, // Estado inicial visível
+              }}
+            >
+              {
+                ["<Code/>", "{}", "=>", "()", "[]", "${ }", "import", "export"][
+                  i
+                ]
+              }
+            </div>
+          ))}
+
+          {/* Elementos Tech flutuantes GSAP */}
+          {[Brain, CircuitBoard, Atom, Rocket].map((Icon, i) => (
+            <div
+              key={`tech-${i}`}
+              className="tech-element-gsap absolute text-cyan-400/20 hidden lg:block"
+              style={{
+                left: `${20 + i * 20}%`,
+                top: `${10 + Math.random() * 80}%`,
+                opacity: 0.2, // Estado inicial visível
+                transform: "rotate(0deg)", // Estado inicial visível
+              }}
+            >
+              <Icon className="w-8 h-8 sm:w-12 sm:h-12" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+);
+
+ParticleEffects.displayName = "ParticleEffects";
 
 export const TechLoading = ({ onLoadingComplete }: TechLoadingProps) => {
   const [progress, setProgress] = useState(0);
@@ -66,7 +202,7 @@ export const TechLoading = ({ onLoadingComplete }: TechLoadingProps) => {
         }
       );
 
-      // Animação contínua do background
+      // Animação contínua do background - Corrigido para usar uma classe CSS
       gsap.to(".loading-bg-gradient", {
         backgroundPosition: "200% 200%",
         duration: 8,
@@ -78,29 +214,11 @@ export const TechLoading = ({ onLoadingComplete }: TechLoadingProps) => {
     return () => ctx.revert();
   }, []);
 
-  // Animação de partículas com GSAP
-  useEffect(() => {
-    if (!particlesRef.current) return;
-
-    const ctx = gsap.context(() => {
-      const particles = particlesRef.current?.querySelectorAll(".particle");
-
-      particles?.forEach((particle, i) => {
-        gsap.to(particle, {
-          x: () => gsap.utils.random(-100, 100),
-          y: () => gsap.utils.random(-50, 50),
-          rotation: () => gsap.utils.random(-180, 180),
-          duration: () => gsap.utils.random(3, 6),
-          repeat: -1,
-          yoyo: true,
-          delay: i * 0.2,
-          ease: "sine.inOut",
-        });
-      });
-    }, particlesRef);
-
-    return () => ctx.revert();
-  }, []);
+  // Animação de partículas com GSAP - REMOVIDA pois está sendo tratada em ParticleEffects
+  // useEffect(() => {
+  //   if (!particlesRef.current) return;
+  //   // ... lógica antiga removida ...
+  // }, []);
 
   const systems = useMemo(
     () => [
@@ -275,7 +393,7 @@ export const TechLoading = ({ onLoadingComplete }: TechLoadingProps) => {
           />
         </div>
 
-        {/* Partículas Tech Animadas */}
+        {/* Partículas Tech Animadas - Agora é um componente cliente */}
         <ParticleEffects progress={progress} ref={particlesRef} />
       </div>
 
@@ -718,93 +836,7 @@ export const TechLoading = ({ onLoadingComplete }: TechLoadingProps) => {
   );
 };
 
-// Componente de Partículas com GSAP - CORRIGIDO
-const ParticleEffects = React.forwardRef<HTMLDivElement, { progress: number }>(
-  ({ progress }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className="absolute inset-0 pointer-events-none overflow-hidden"
-      >
-        {/* Partículas de fundo */}
-        {[...Array(15)].map((_, i) => (
-          <motion.div
-            key={`particle-${i}`}
-            className="particle absolute w-1 h-1 bg-cyan-400/30 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{
-              opacity: [0.3, 0.7, 0.3],
-              scale: [1, 1.5, 1],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 2,
-              repeat: Infinity,
-              delay: i * 0.3,
-            }}
-          />
-        ))}
-
-        {/* Código flutuante */}
-        {[...Array(8)].map((_, i) => (
-          <motion.div
-            key={`code-${i}`}
-            className="absolute text-cyan-400/40 font-mono text-sm font-bold hidden sm:block"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{
-              opacity: [0, 0.8, 0],
-              y: [0, -40, 0],
-              x: [0, (Math.random() - 0.5) * 50, 0],
-            }}
-            transition={{
-              duration: 6 + Math.random() * 4,
-              repeat: Infinity,
-              delay: i * 0.8,
-              ease: "easeInOut",
-            }}
-          >
-            {["<Code/>", "{}", "=>", "()", "[]", "${ }", "import", "export"][i]}
-          </motion.div>
-        ))}
-
-        {/* Elementos Tech flutuantes */}
-        {[Brain, CircuitBoard, Atom, Rocket].map((Icon, i) => (
-          <motion.div
-            key={`tech-${i}`}
-            className="absolute text-cyan-400/20 hidden lg:block"
-            style={{
-              left: `${20 + i * 20}%`,
-              top: `${10 + Math.random() * 80}%`,
-            }}
-            initial={{ opacity: 0, scale: 0, rotate: -180 }}
-            animate={{
-              opacity: [0.1, 0.3, 0.1],
-              scale: [1, 1.2, 1],
-              rotate: [0, 180, 360],
-            }}
-            transition={{
-              duration: 8 + i * 2,
-              repeat: Infinity,
-              delay: i * 1.5,
-              ease: "linear",
-            }}
-          >
-            <Icon className="w-8 h-8 sm:w-12 sm:h-12" />
-          </motion.div>
-        ))}
-      </div>
-    );
-  }
-);
-
 // Adicione display name para melhor debugging
-ParticleEffects.displayName = "ParticleEffects";
+TechLoading.displayName = "TechLoading";
 
 export default TechLoading;
